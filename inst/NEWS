@@ -1,0 +1,525 @@
+
+Package: PSCBS
+==============
+
+Version: 0.10.0 [2011-05-29]
+o Now the paired PSCBS is formally referred to as 'Paired PSCBS'.
+o Renamed options, example code and help pages to reflect new package name.
+o Updated help page references.
+o Renamed package to PSCBS (from 'psCBS').
+
+
+Version: 0.9.54 [2011-04-27]
+o Added argument 'maxC' to estimateTauLOHByMinC1ForNonAB().
+
+
+Version: 0.9.53 [2011-04-14]
+o Added argument 'max' to estimateTauAB() and estimateTauLOH().
+
+
+Version: 0.9.52 [2011-04-14]
+o BUG FIX: Argument 'minSize' of callAB() and callLOH() had no effect.
+
+
+Version: 0.9.51 [2011-04-12]
+o Added argument 'minSize' to callAB() and callLOH() for PairedPSCBS.
+o Now the a conflicting call in callLOH()/callAB() with 
+  argument xorCalls=TRUE is set to NA to contrast it from
+  a FALSE call.
+
+
+Version: 0.9.50 [2011-04-12]
+o Added argument 'xorCalls' to callLOH() and callAB() for
+  PairedPSCBS.  When TRUE (the default), a segment that 
+  is already called AB will never be called LOH, and vice versa.
+
+
+Version: 0.9.49 [2011-04-11]
+o Updated estimateTauABBySmallDH() for PairedPSCBS to use a
+  "symmetric" quantile estimator.
+o Added argument 'midpoint' to estimateTauLOHByMinC1AtNonAB().
+o BUG FIX: The recent callLOH() would not store the LOH calls.
+
+
+Version: 0.9.48 [2011-04-10]
+o Added callLOH() for PairedPSCBS, which in turn calls 
+  auxillary methods.
+o Added estimateTauLOH() for PairedPSCBS, which in turn calls 
+  auxillary methods.
+o Now callAB(..., force=FALSE) skips the caller if
+  allelic-balance calls already exist.
+o DOCUMENTATION: Update the exampe for segmentByPairedPSCBS
+  to reflect the restructured AB and LOH callers.
+
+
+Version: 0.9.47 [2011-04-08]
+o Added estimateTauABBySmallDH()
+o Added internal weightedQuantile().
+o DOCUMENTATION: Added help pages for more methods.
+o CLEANUP: Started to restructure the source code files.
+
+
+Version: 0.9.46 [2011-04-08]
+o BUG FIX: postsegmentTCN() for PairedPSCBS could generate an invalid
+  'tcnSegRows' matrix, where the indices for two consecutive segments
+  would overlap, which is invalid.  This was caught with real data,
+  but it seems to have required a very rare combination of data in
+  order for it to occur.
+
+
+Version: 0.9.45 [2011-04-05]
+o BUG FIX: estimateHighDHQuantileAtAB() for PairedPSCBS would throw
+  an error on an undefined 'trim' if verbose output was used.
+
+
+Version: 0.9.44 [2011-02-18]
+o Added estimateHighDHQuantileAtAB() for PairedPSCBS.
+
+
+Version: 0.9.43 [2011-02-06]
+o BUG FIX: plotTracks2() queired non-existing argument 'tracks'.
+
+
+Version: 0.9.42 [2011-02-03]
+o Added estimateKappa() for estimating the normal contamination.
+
+
+Version: 0.9.41 [2011-02-02]
+o Updated default for 'tauAB' of callABandHighAI() and callABandLowC1()
+  to be estimated from data using estimateTauAB().
+o Added argument 'tauTCN' to estimateTauAB().
+
+
+Version: 0.9.40 [2011-01-27]
+o Added argument 'flavor' to estimateTauAB() for estimating the
+  AB threshold using alternative methods.
+
+
+Version: 0.9.39 [2011-01-19]
+o Added trial version of new plotTracks2(), which will later replace
+  plotTracks().  Currently it only works for single chromosomes.
+o Added support functions, e.g. updateMeans().
+
+
+Version: 0.9.38 [2011-01-18]
+o DOCUMENTATION: Documented more plotTracks() arguments for PairedPSCBS.
+o BUG FIX: Now plotTracks(..., add=TRUE) for PairedPSCBS plots to 
+  the current figure/panel.
+o Now plotTracks(..., add=FALSE) for PairedPSCBS only sets up subplots
+  if argument 'tracks' specifies more than one panel.
+o Added arguments 'changepoints' and 'col' to plotTracks() for PairedPSCBS.
+
+
+Version: 0.9.37 [2011-01-18]
+o BUG FIX: 'tcnSegRows' and 'dhSegRows' where not updated by
+  extractByRegions() for PairedPSCBS.
+
+
+Version: 0.9.36 [2011-01-14]
+o Added estimateTauAB() for estimating the tauAB tuning parameter
+  when calling segments in allelic balance.  Updated 
+  example(segmentByPairedPSCBS) to illustrate how to use it.
+o Added extractByRegions() for PairedPSCBS.
+
+
+Version: 0.9.35 [2011-01-12]
+o Now postsegmentTCN(..., force=TRUE) for PairedPSCBS also updates
+  the TCN estimates even for segments where the DH segmentation did
+  not find any additional change points.
+
+
+Version: 0.9.34 [2010-12-09]
+o BUG FIX: When there were multiple chromsomes processed by
+  segmentByPairedPSCBS(), then the returned data object would
+  contain 'betaT' identical to 'betaTN'.
+
+
+Version: 0.9.33 [2010-12-07]
+o Added callLowC1ByC1() and callABandLowC1().
+
+
+Version: 0.9.32 [2010-12-03]
+o BUG FIX: In rare cases the bootstrap sanity checks can indeed produce
+  an invalid 'range', more precisely where (range[,2] >= range[,1]) is
+  not true.  This can happen if there is no variation in the bootstrap
+  estimates.  Beause of this we allow for some tolerance.
+
+
+Version: 0.9.31 [2010-12-02]
+o Added option "psCBS/sanityChecks/tolerance" for specifying the 
+  tolerance of some internal sanity checks.  
+
+
+Version: 0.9.30 [2010-12-01]
+o Rewrote all code dealing with the identification of loci belong
+  to segments.  The code is now utilizing the 'segRows' element
+  returned by DNAcopy::segment().  Lots of the code was rewritten
+  and therefore completely new bugs may have been introduced.
+
+
+Version: 0.9.25 [2010-11-30]
+o BUG FIX: Argument 'flavor' of segmentByPairedPSCBS() would be ignored
+  if multiple chromsomomes were segmented.
+o BUG FIX: extractByChromosome() for PSCBS would call it self instead
+  of extractByChromosomes().
+
+
+Version: 0.9.24 [2010-11-28]
+o BUG FIX: postsegmentTCN() did not handle loci with the same positions
+  and that are split in two different segments.  It also did not exclude
+  loci with missing values.
+
+
+Version: 0.9.23 [2010-11-28]
+o BUG FIX: The algorithm in segmentByCBS() that infers which loci (of
+  the ones share the same genomic positions) that should be exclude
+  from each segment did not take missing signals into account.
+o BUG FIX: Iff argument 'chromosome' to segmentByPairedPSCBS() was of
+  length greater than one and specified exactly one unique chromosome,
+  then exception "Number of elements in argument 'chromosome' should
+  be exactly 8712 not 86209 value(s)" would be thrown.
+
+
+Version: 0.9.22 [2010-11-27]
+o BUG FIX: bootstrapTCNandDHByRegion() would incorrectly include
+  non-polymorphic loci in the set of homozygous SNPs during resampling.
+o BUG FIX: segmentByPairedPSCBS() would not accept missing values in
+  argument 'chromosome'.
+
+
+Version: 0.9.21 [2010-11-27]
+o Now arguments '...' of segmentByPairedPSCBS() are passed to
+  the two segmentByCBS() calls.
+o Added callSegmentationOutliers(), which can be used to identify
+  single-locus outliers that have a genomic signal that is clearly
+  outside the expected range.  The dropSegmentationOutliers() sets
+  locus outliers detected by this method to missing values. 
+  This is useful for excluding total copy-number outliers that
+  otherwise can have a dramatic impact on the non-robust CBS method.
+
+
+Version: 0.9.20 [2010-11-26]
+o Added optional argument 'chromosomes' to plotTracks() to plot a
+  subset of all chromosomes.
+o Added extractByChromosomes() for PSCBS.
+o Now the default confidence intervals for plotTracks() is (0.05,0.95),
+  if existing.
+o Now all call functions estimate symmetric bootstrap quantiles for
+  convenince of plotting confidence intervals.
+o BUG FIX: callABandHighAI() for PairedPSCBS used the old DH-only
+  bootstrap method.
+o BUG FIX: The statistical sanity checks of the bootstrap estimates
+  would give an error when only single-sided bootstrap confidence
+  interval was calculated.
+o BUG FIX: The call functions, for instance callABandHighAI(), would throw
+  'Error in quantile.default(x, probs = alpha) : missing values and NaN's
+  not allowed if 'na.rm' is FALSE' unless bootstrapTCNandDHByRegion() was
+  run before.
+
+
+Version: 0.9.19 [2010-11-23]
+o ROBUSTNESS: Added more sanity checks to bootstrapTCNandDHByRegion().
+o WORKAROUND: The precision of the mean levels of DNAcopy::segment()
+  is not great enough to always compare it to that of R's estimates.
+o BUG FIX: bootstrapTCNandDHByRegion() would give an error if there was
+  only one segment.
+o BUG FIX: segmentByPairedPSCBS() and bootstrapTCNandDHByRegion() 
+  would not subset the correct set of DH signals if there were some
+  missing values in TCN.
+
+
+Version: 0.9.18 [2010-11-22]
+o Added argument 'calls' to plotTracks() for highlighing called regions.
+o Updated callAllelicBalanceByDH() and callExtremeAllelicImbalanceByDH()
+  to utilize bootstrapTCNandDHByRegion().
+o ROBUSTNESS: Now drawConfidenceBands() of PairedPSCBS silently does
+  nothing if the requested bootstrap quantiles are available.
+o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS would not
+  correctly detect if bootstrap results are already available.
+
+
+Version: 0.9.17 [2010-11-21]
+o Now plotTracks() supports tracks "tcn,c1", "tcn,c2" and "c1,c2" too.
+o Added support for flavor "tcn&dh" in segmentByPairedPSCBS(), which
+  contrary to "tcn,dh" enforces TCN and DH to have the same change
+  points.  The default flavor is now "tcn&dh".
+o Added argument 'xlim' to plotTracks() making it possible to zoom in.
+
+
+Version: 0.9.16 [2010-11-21]
+o Now joinSegments=TRUE is the default for segmentByCBS() and
+  segmentByPairedPSCBS().
+o Added argument 'quantiles' to plotTracks(), which if specified
+  draws confidence bands previously estimated from bootstrapping.
+o Added drawConfidenceBands() for PairedPSCBS.
+o Added bootstrapTCNandDHByRegion() for PairedPSCBS.
+o Added standalone joinSegments() for CBS results.
+o Now segmentByPairedPSCBS() also returns minor and major 
+  copy numbers for each segment.
+
+
+Version: 0.9.15 [2010-11-21]
+o Adjusted postsegmentTCN() such that the updated TCN segment boundaries
+  are the maximum of the DH segment and the support by the loci.  This
+  means that postsegmentTCN() will work as expected both when signals
+  where segmented with 'joinSegments' being TRUE or FALSE.
+o Updated plotTracks() for PairedPSCBS such that the TCN segmentation
+  is colored 'purple' and the DH segmentation 'orange' for TCH and DH
+  only tracks.
+
+
+Version: 0.9.14 [2010-11-20]
+o Now it is possible to specify the boundaries of the regions to
+  be segmented as known change points via argument 'knownCPs'.
+o Added argument 'joinSegments' to segmentByCBS() and 
+  segmentByPairedPSCBS() in order to specify if neighboring 
+  segments should be joined or not.
+o Now segmentByCBS() and segmentByPairedPSCBS() allow for 
+  unknown genomic positions as well as missing total CN signals.
+
+
+Version: 0.9.13 [2010-11-19]
+o Added argument 'joinSegments' to segmentByCBS() in order to specify
+  if neighboring segments should be joined or not.
+
+
+Version: 0.9.12 [2010-11-19]
+o Added plotTracks() and drawLevels() etc to CBS results.
+o Now segmentByCBS() allows for unknown genomic positions.
+o Now segmentByCBS() allows for missing signals.
+o Added argument 'preserveOrder' to segmentByCBS().  If TRUE, then
+  the loci in the returned 'data' object are ordered as the input
+  data, otherwise it is ordered along the genome.
+
+
+Version: 0.9.11 [2010-11-16]
+o Now the 'data' object returned by segmentByCBS() contains field
+  'index' if and only if the loci had to be reorder along the genome.
+o DOCUMENTATION: Added more details, references to papers, and cross
+  links to other functions to the help pages.
+o BUG FIX: In the rare cases where two loci at the same positions are
+  split up into two neighboring segments, then segmentByPairedPSCBS()
+  would fail to infer which they were if and only if the loci were not
+  ordered along the genome.  This could happen with for instance
+  Affymetrix GenomeWideSNP_6 data.
+
+
+Version: 0.9.10 [2010-11-09]
+o Added argument 'cex=1' to plotTracks().
+o BUG FIX: It was not possible to plot BAF tracks with plotTracks().
+
+
+Version: 0.9.9 [2010-11-05]
+o BUG FIX: segmentByCBS() tried to pass non-existing argument
+  'undo.split' to DNAcopy::segment().  It should be 'undo.splits'.
+
+
+Version: 0.9.8 [2010-11-04]
+o BUG FIX: There was a stray/debug stop() statement left in  
+  segmentByPairedPSCBS() causing an "error" in the rare case 
+  when loci that have the same physical locations are split
+  into two different segments.
+
+
+Version: 0.9.7 [2010-11-03]
+o ROBUSTNESS: Now bootstrapDHByRegion() uses resample() of R.utils.
+o BUG FIX: bootstrapDHByRegion() did not sample from the correct
+  unit(s) when there was only one DH signal.
+
+
+Version: 0.9.6 [2010-11-02]
+o Added arguments 'undoTCN' and 'undoDH' to segmentByPairedPSCBS().
+o Added argument 'undo' to segmentByCBS(), which corresponds to
+  undo.splits="sdundo" and undo.SD=undo, if undo < +Inf.
+o BUG FIX: Arguments 'alphaTCN' and 'alphaDH' of segmentByPairedPSCBS()
+  were not used when more than one chromosome were segmented.
+
+
+Version: 0.9.5 [2010-11-01]
+o Added arguments 'alphaAB' and 'alphaHighAI' to callABandHighAI().
+o BUG FIX: bootstrapDHByRegion() would give an error if only a single
+  quantile was requested.
+o BUG FIX: bootstrapDHByRegion() would give "Error in if (nbrOfUnits
+  > segJJ[, "dh.num.mark"]) { : missing value where TRUE/FALSE needed"
+  when 'dh.num.mark' was NA.
+
+
+Version: 0.9.4 [2010-10-25]
+o Now the default is a 95% confidence interval for calls.
+o Now segmentByCBS() also returns element 'lociNotPartOfSegment',
+  if there are segments that share end points, which can happen if
+  a change point is called in middle of a set of loci that have the
+  same genomic positions.  In such cases, 'lociNotPartOfSegment'
+  specifies which loci are *not* part of which segment.  Then by
+  identifying the loci that are within a segment by their positions
+  and excluding any of the above, one knows exactly which loci
+  CBS included in each segment.
+o BUG FIX: Now bootstrapDHByRegion() for PairedPSCBS handles the
+  rare case when markers with the same positions are split in 
+  two different segments.
+o BUG FIX: Now the correct set of loci are extracted from each TCN
+  segment, in the rare case that two neighboring TCN segments have
+  the same end points.
+
+
+Version: 0.9.3 [2010-10-25]
+o Added argument 'ciRange' to callAllelicBalance() and
+  callExtremeAllelicImbalance().
+o BUG FIX: bootstrapDHByRegion() for PairedPSCBS would bootstrap 
+  from the incorrect set of loci when the DH region contained 
+  only one locus.
+o BUG FIX: bootstrapDHByRegion() for PairedPSCBS would bootstrap 
+  from the incorrect set of loci if more than one chromosome 
+  was available.
+
+
+Version: 0.9.2 [2010-10-24]
+o BUG FIX: plotTracks() would give "Error: object 'nbrOfLoci' not found'
+  for whole-genome plots.
+
+
+Version: 0.9.1 [2010-10-20]
+o Now plotTracks() can plot whole-genome data.
+
+
+Version: 0.9.0 [2010-10-18]
+o Added arguments 'alphaTCN' and 'alphaDH' to segmentByPairedPSCBS()
+  with defaults according to the paper.
+
+
+Version: 0.8.3 [2010-10-18]
+o Now segmentByPairedPSCBS() can segment multiple chromosomes.
+
+
+Version: 0.8.2 [2010-10-17]
+o Added argument 'tbn' to segmentByPairedPSCBS() specifying whether
+  TumorBoostNormalization should be applied or not.
+
+
+Version: 0.8.1 [2010-10-10]
+o The default for segmentByPairedPSCBS() is now to segment TCN on
+  the original scale, not the sqrt().
+o Added plotTracks() for PairedPSCBS.
+
+
+Version: 0.8.0 [2010-10-06]
+o CLEAN UP: Removed all old code, native code and help pages.
+
+
+Version: 0.7.8 [2010-10-03]
+o Added optional argument 'chromosome' to segmentByCBS().
+  Note that at this point it is only used for annotating the
+  results; it can not be used to segmented multiple chromosomes
+  at ones.
+
+
+Version: 0.7.7 [2010-09-26]
+o Now subsetBySegments() and postsegmentTCN() for PairedPSCBS 
+  handles multiple chromosomes.
+
+
+Version: 0.7.6 [2010-09-24]
+o Added support to annotating and subsetting also by chromosomes,
+  as well as appending segmentation results from different chromosomes
+  together.
+
+
+Version: 0.7.5 [2010-09-21]
+o Added postsegmentTCN() for PairedPSCBS, which updates the 
+  TCN segment start and ends, estimates and counts given the
+  DH segments.
+
+
+Version: 0.7.4 [2010-09-18]
+o Added argument 'chromosome' to segmentByPairedPSCBS(), which, if given,
+  adds a chromosome column to the data and segmentation results.
+o BUG FIX: plot() for PairedPSCBS used a non-defined variable.
+
+
+Version: 0.7.3 [2010-09-16]
+o Added callABandHighAI() for calling paired PSCBS segmentation results.
+o Added internal bootstrapping functions.
+
+
+Version: 0.7.2 [2010-09-15]
+o Added more methods for the PSCBS class.
+
+
+Version: 0.7.1 [2010-09-08]
+o Added more methods for the PSCBS class.
+o Now segmentByPairedPSCBS() also returns the TumorBoost normalized data.
+
+
+Version: 0.7.0 [2010-09-04]
+o Updated segmentByPairedPSCBS() to provide two-step segmentation 
+  from first segmenting the total copy numbers and then the
+  decrease-of-heterozygosity signals.  Added utility functions for
+  plotting the results.  The code for calling allelic imbalance
+  and LOH is still to be added.
+
+
+Version: 0.6.3 [2010-09-02]
+o ROBUSTNESS: Now segmentByCBS() also works if there are no data points.
+
+
+Version: 0.6.2 [2010-07-14]
+o CLEAN UP: Added callNaiveHeterzygotes() which is a cleaned up
+  version of findheterozygous().  Added an Rd example that asserts
+  that the two are identical and compares the calls to those of
+  aroma.light::callNaiveGenotypes().
+
+
+Version: 0.6.1 [2010-07-09]
+o Added low-level segmentByPairedPSCBS(), which runs paired PSCBS
+  segmentation on a single sample and a single chromosome.
+  It only segments; it does not call segments.  This is only
+  a stub in the sense that it still does not adjust p-values etc.
+o Added low-level segmentByCBS(), which runs CBS segmentation
+  on a single sample and a single chromosome.
+o BACKWARD COMPATIBILITY: Now psCNA() returns a list of length 8.
+o Reverted psSegment() back to v0.5.6.
+
+
+Version: 0.6.0 [2010-07-08]
+o Now psSegmentPaired() returns a data frame (no longer a matrix).
+o CLEANUP: Major cleanup, i.e. renaming variables, reordering etc.
+o CLEANUP: Created psSegmentPaired() from psSegment().
+o ROBUSTNESS: Replaced all 1:n with seq(length=n) to deal with n == 0.
+o ROBUSTNESS: Now all list elements are referenced by name.
+o ROBUSTNESS: Now all iterator variables are written as ii, jj etc.
+o Using setMethodS3() of R.methodsS3 to define S3 method.
+o Dropping NAMESPACE while package is finished.  This makes it
+  easier to patch methods etc.
+
+
+Version: 0.5.6 [2010-07-07]
+o Added example(psSegment).
+o BUG FIX: Previous clean up introduced bugs.
+o BUG FIX: The dynamic library for hrmode() was not loaded.
+
+
+Version: 0.5.5 [2010-05-05]
+o CLEAN UP/ROBUSTNESS: Major code clean up.
+
+
+Version: 0.5.4 [2010-04-30]
+o Added internal hrmode().
+o CLEAN UP: Renamed source files to match function names.
+  Only only function per source file.
+
+
+Version: 0.5.3 [2010-04-22]
+o ABO updated the psCBS algorithm.
+
+
+Version: 0.5.2 [2010-0?-??]
+o ???
+
+
+Version: 0.5.1 [2010-03-31]
+o Now psSegment(..., matching.reference=TRUE) does TumorBoost 
+  normalization on the allele B fractions before segmentation.
+
+
+Version: 0.5.0 [2010-03-12]
+o Added to R-forge repository.

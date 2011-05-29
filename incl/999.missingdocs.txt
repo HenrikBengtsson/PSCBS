@@ -1,0 +1,54 @@
+ append append.PSCBS append.default arrowsC1C2 arrowsC1C2.PairedPSCBS
+ arrowsDeltaC1C2 arrowsDeltaC1C2.PairedPSCBS as.data.frame.PairedPSCBS
+ bootstrapCIs bootstrapCIs.PairedPSCBS bootstrapDHByRegion
+ bootstrapDHByRegion.PairedPSCBS callABandHighAI
+ callABandHighAI.PairedPSCBS 
+ callExtremeAllelicImbalance
+ callExtremeAllelicImbalance.PairedPSCBS callSegments
+ callSegments.PairedPSCBS drawLevels drawLevels.DNAcopy
+ drawLevels.PairedPSCBS extractByChromosome extractByChromosome.PSCBS
+ extractC1C2 extractC1C2.PairedPSCBS extractDeltaC1C2
+ extractDeltaC1C2.PairedPSCBS extractMinorMajorCNs
+ extractMinorMajorCNs.PairedPSCBS extractTCNAndDHs
+ extractTCNAndDHs.PairedPSCBS getChromosomes getChromosomes.PSCBS
+ linesC1C2 linesC1C2.PairedPSCBS linesDeltaC1C2
+ linesDeltaC1C2.PairedPSCBS nbrOfChromosomes nbrOfChromosomes.PSCBS
+ nbrOfSegments nbrOfSegments.PSCBS plot.PairedPSCBS plotC1C2
+ plotC1C2.PairedPSCBS plotDeltaC1C2 plotDeltaC1C2.PairedPSCBS
+ pointsC1C2 pointsC1C2.PairedPSCBS pointsDeltaC1C2
+ pointsDeltaC1C2.PairedPSCBS postsegmentTCN postsegmentTCN.PairedPSCBS
+ print.PairedPSCBS subsetByDhSegments subsetByDhSegments.PairedPSCBS
+ plotTracksManyChromosomes plotTracksManyChromosomes.PairedPSCBS
+ tileChromosomes tileChromosomes.PairedPSCBS
+ callExtremeAllelicImbalanceByDH
+ callExtremeAllelicImbalanceByDH.PairedPSCBS
+  as.data.frame.CBS drawLevels.CBS getChromosomes.CBS
+  nbrOfChromosomes.CBS plot.CBS plotTracksManyChromosomes.CBS
+  tileChromosomes.CBS
+  bootstrapTCNandDHByRegion bootstrapTCNandDHByRegion.PairedPSCBS
+  joinSegments joinSegments.CBS
+drawConfidenceBands drawConfidenceBands.PairedPSCBS
+ extractByChromosomes extractByChromosomes.PSCBS
+ dropSegmentationOutliers dropSegmentationOutliers.default
+ callABandLowC1 callABandLowC1.PairedPSCBS callLowC1ByC1
+ callLowC1ByC1.PairedPSCBS
+  estimateStdDevForHeterozygousBAF
+  estimateStdDevForHeterozygousBAF.PairedPSCBS extractByRegion
+  extractByRegion.PairedPSCBS extractByRegions
+  extractByRegions.PairedPSCBS
+ mergeTwoSegments mergeTwoSegments.PairedPSCBS 
+ updateMeans updateMeans.PairedPSCBS
+ dropByRegions dropByRegions.PairedPSCBS
+ extractLocusLevelC1C2 extractLocusLevelC1C2.PairedPSCBS
+ extractLocusLevelTCN extractLocusLevelTCN.PairedPSCBS
+ plotTracks2 plotTracks2.PairedPSCBS
+estimateMeanForDH estimateMeanForDH.PairedPSCBS
+applyByRegion applyByRegion.PairedPSCBS
+  estimateHighDHQuantileAtAB estimateHighDHQuantileAtAB.PairedPSCBS
+  estimateKappa estimateKappaByC1Density
+  callAllelicBalance callAllelicBalanceByDH
+estimateTauAB
+estimateTauABBySmallDH
+estimateTauLOH estimateTauLOHByMinC1ForNonAB
+ callAB callAllelicBalance.default
+callLOH
