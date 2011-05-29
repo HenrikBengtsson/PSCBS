@@ -110,7 +110,7 @@ setMethodS3("callAllelicBalance", "default", function(...) {
 # \arguments{
 #   \item{flavor}{A @character string specifying which type of
 #    call to use.}
-#   \item{tau}{(Tuning parameter) A non-negative @numeric threshold.}
+#   \item{delta}{(Tuning parameter) A non-negative @numeric threshold.}
 #   \item{alpha}{A @numeric in [0,1] specifying the upper and lower
 #     quantiles calculated by the bootstrap estimator.}
 #   \item{...}{Additional arguments passed to the caller.}
@@ -136,12 +136,12 @@ setMethodS3("callAllelicBalance", "default", function(...) {
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, tau=estimateTauAB(fit, flavor="qq(DH)"), alpha=0.05, ..., verbose=FALSE) {
+setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimateDeltaAB(fit, flavor="qq(DH)"), alpha=0.05, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
-  # Argument 'tau':
-  tau <- Arguments$getDouble(tau, range=c(0,Inf));
+  # Argument 'delta':
+  delta <- Arguments$getDouble(delta, range=c(0,Inf));
 
   # Argument 'alpha':
   alpha <- Arguments$getDouble(alpha, range=c(0,1));
@@ -154,7 +154,7 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, tau=estimateT
   }
 
   verbose && enter(verbose, "Calling segments of allelic balance from one-sided DH bootstrap confidence intervals");
-  verbose && cat(verbose, "tau (offset adjusting for bias in DH): ", tau);
+  verbose && cat(verbose, "delta (offset adjusting for bias in DH): ", delta);
   verbose && cat(verbose, "alpha (CI quantile; significance level): ", alpha);
 
   # Calculate DH confidence intervals, if not already done
@@ -173,7 +173,7 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, tau=estimateT
   # One-sided test
   verbose && enter(verbose, "Calling segments");
   value <- segs[,column, drop=TRUE];
-  call <- (value < tau);
+  call <- (value < delta);
   nbrOfCalls <- sum(call, na.rm=TRUE);
   verbose && printf(verbose, "Number of segments called allelic balance (AB): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
   verbose && exit(verbose);
@@ -181,9 +181,9 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, tau=estimateT
   segs <- cbind(segs, ab.call=call);
   fit$output <- segs;
 
-  # Append 'tau' and 'alpha' to parameters
+  # Append 'delta' and 'alpha' to parameters
   params <- fit$params;
-  params$tauAB <- tau;
+  params$deltaAB <- delta;
   params$alphaAB <- alpha;
   fit$params <- params;
 
@@ -199,6 +199,8 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, tau=estimateT
 
 ##############################################################################
 # HISTORY
+# 2011-05-29
+# o Renamed all arguments, variables, function named 'tau' to 'delta'.
 # 2011-04-14
 # o BUG FIX: Argument 'minSize' of callAB() and callLOH() had no effect.
 # 2011-04-12

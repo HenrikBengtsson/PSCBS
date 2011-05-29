@@ -122,10 +122,10 @@
 \alias{estimateKappaByC1Density}
 \alias{callAllelicBalance}
 \alias{callAllelicBalanceByDH}
-\alias{estimateTauAB}
-\alias{estimateTauABBySmallDH}
-\alias{estimateTauLOH}
-\alias{estimateTauLOHByMinC1ForNonAB}
+\alias{estimateDeltaAB}
+\alias{estimateDeltaABBySmallDH}
+\alias{estimateDeltaLOH}
+\alias{estimateDeltaLOHByMinC1ForNonAB}
 \alias{callAB}
 \alias{callAllelicBalance.default}
 \alias{callLOH}

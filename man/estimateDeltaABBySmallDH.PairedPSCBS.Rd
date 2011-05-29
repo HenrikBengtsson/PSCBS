@@ -1,17 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PairedPSCBS.estimateTauAB.R
+%  PairedPSCBS.estimateDeltaAB.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\name{estimateTauABBySmallDH.PairedPSCBS}
-\alias{estimateTauABBySmallDH.PairedPSCBS}
-\alias{PairedPSCBS.estimateTauABBySmallDH}
-\alias{estimateTauABBySmallDH.PairedPSCBS}
-\alias{estimateTauABBySmallDH,PairedPSCBS-method}
+\name{estimateDeltaABBySmallDH.PairedPSCBS}
+\alias{estimateDeltaABBySmallDH.PairedPSCBS}
+\alias{PairedPSCBS.estimateDeltaABBySmallDH}
+\alias{estimateDeltaABBySmallDH.PairedPSCBS}
+\alias{estimateDeltaABBySmallDH,PairedPSCBS-method}
 
 
 \title{Estimate a threshold for calling allelic balance from DH}
@@ -20,7 +20,7 @@
  Estimate a threshold for calling allelic balance from DH.
 }
 
-\usage{\method{estimateTauABBySmallDH}{PairedPSCBS}(fit, q1=0.05, q2=0.9, ..., verbose=FALSE)}
+\usage{\method{estimateDeltaABBySmallDH}{PairedPSCBS}(fit, q1=0.05, q2=0.9, ..., verbose=FALSE)}
 
 \arguments{
   \item{q1}{A \code{\link[base]{numeric}} value specifying the weighted quantile of the
@@ -40,9 +40,9 @@
   \item Grabs the segment-level DH estimates.
   \item Calculate segment weights proportional to the number
         of heterozygous SNPs.
-  \item Calculate tau as the 5\% quantile of the weighted DH means.
-  \item Choose the segments with means less than tau.
-  \item Calculate threshold DeltaAB as the 90\% "symmetric" quantile
+  \item Calculate \eqn{\Delta} as the 5\% quantile of the weighted DH means.
+  \item Choose the segments with means less than \eqn{\Delta}.
+  \item Calculate threshold \eqn{\Delta_{AB}} as the 90\% "symmetric" quantile
         of the observed locus-level DHs from the selected segments
         in Step 4.
         The q:th "symmetric" quantile is estimated by estimating
@@ -57,7 +57,7 @@
 
 \seealso{
   Instead of calling this method explicitly, it is recommended
-  to use the \code{\link[PSCBS:estimateTauAB.PairedPSCBS]{*estimateTauAB}()} method.
+  to use the \code{\link[PSCBS:estimateDeltaAB.PairedPSCBS]{*estimateDeltaAB}()} method.
 }
 
 

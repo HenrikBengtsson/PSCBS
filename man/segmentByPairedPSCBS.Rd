@@ -143,11 +143,11 @@ plotTracks(fit);
 # NOTE: Ideally, this should be done on whole-genome data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Explicitly estimate the threshold in DH for calling AB
-tauAB <- estimateTauAB(fit, flavor="qq(DH)", verbose=-10);
-print(tauAB);
+deltaAB <- estimateDeltaAB(fit, flavor="qq(DH)", verbose=-10);
+print(deltaAB);
 ## [1]
 
-fit <- callAB(fit, tau=tauAB, flavor="DeltaAB*", verbose=-10);
+fit <- callAB(fit, delta=deltaAB, flavor="DeltaAB*", verbose=-10);
 print(fit);
 plotTracks(fit);
 
@@ -158,11 +158,11 @@ plotTracks(fit);
 # NOTE: Ideally, this should be done on whole-genome data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Explicitly estimate the threshold in C1 for calling LOH
-tauLOH <- estimateTauLOH(fit, flavor="minC1|nonAB", verbose=-10);
-print(tauLOH);
+deltaLOH <- estimateDeltaLOH(fit, flavor="minC1|nonAB", verbose=-10);
+print(deltaLOH);
 ## [1]
 
-fit <- callLOH(fit, tau=tauLOH, flavor="SmallC1", verbose=-10);
+fit <- callLOH(fit, delta=deltaLOH, flavor="SmallC1", verbose=-10);
 print(fit);
 plotTracks(fit);
 

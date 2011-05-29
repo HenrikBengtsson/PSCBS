@@ -1,6 +1,6 @@
 ###########################################################################/**
 # @set class=PairedPSCBS
-# @RdocMethod estimateTauLOH
+# @RdocMethod estimateDeltaLOH
 #
 # @title "Estimate a threshold for calling LOH from DH"
 #
@@ -28,11 +28,11 @@
 #
 # \seealso{
 #   Internally, one of the following methods are used:
-#   @seemethod "estimateTauLOHByMinC1ForNonAB".
+#   @seemethod "estimateDeltaLOHByMinC1ForNonAB".
 # }
 #
 #*/###########################################################################  
-setMethodS3("estimateTauLOH", "PairedPSCBS", function(this, flavor=c("minC1|nonAB"), ..., max=Inf, verbose=FALSE) {
+setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|nonAB"), ..., max=Inf, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -53,31 +53,31 @@ setMethodS3("estimateTauLOH", "PairedPSCBS", function(this, flavor=c("minC1|nonA
   verbose && cat(verbose, "flavor: ", flavor);
 
   if (flavor == "minC1|nonAB") {
-    tau <- estimateTauLOHByMinC1ForNonAB(this, ..., verbose=verbose);
+    delta <- estimateDeltaLOHByMinC1ForNonAB(this, ..., verbose=verbose);
   } else {
     throw("Unkown flavor: ", flavor);
   }
 
-  verbose && printf(verbose, "tau: %.3g\n", tau);
+  verbose && printf(verbose, "delta: %.3g\n", delta);
 
   # Truncate estimate?
-  if (tau > max) {
-    warning("Estimated tau (%.3g) was greater than the maximum allowed value (%.3g).  The latter will be used instead.", tau, max);
-    tau <- max;
-    verbose && printf(verbose, "Max tau: %.3g\n", max);
-    verbose && printf(verbose, "Truncated tau: %.3g\n", tau);
+  if (delta > max) {
+    warning("Estimated delta (%.3g) was greater than the maximum allowed value (%.3g).  The latter will be used instead.", delta, max);
+    delta <- max;
+    verbose && printf(verbose, "Max delta: %.3g\n", max);
+    verbose && printf(verbose, "Truncated delta: %.3g\n", delta);
   }
 
   verbose && exit(verbose);
 
-  tau;
-}) # estimateTauLOH()
+  delta;
+}) # estimateDeltaLOH()
 
 
 
 ###########################################################################/**
 # @set class=PairedPSCBS
-# @RdocMethod estimateTauLOHByMinC1ForNonAB
+# @RdocMethod estimateDeltaLOHByMinC1ForNonAB
 #
 # @title "Estimate a threshold for calling LOH from DH"
 #
@@ -120,12 +120,12 @@ setMethodS3("estimateTauLOH", "PairedPSCBS", function(this, flavor=c("minC1|nonA
 #
 # \seealso{
 #   Instead of calling this method explicitly, it is recommended
-#   to use the @seemethod "estimateTauLOH" method.
+#   to use the @seemethod "estimateDeltaLOH" method.
 # }
 #
 # @keyword internal
 #*/###########################################################################  
-setMethodS3("estimateTauLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpoint=1/2, maxC=3, ..., verbose=FALSE) {
+setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpoint=1/2, maxC=3, ..., verbose=FALSE) {
   require("aroma.light") || throw("Package not loaded: aroma.light");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -154,7 +154,7 @@ setMethodS3("estimateTauLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpo
   segs <- as.data.frame(this);
   isAB <- segs$ab.call;
   if (is.null(isAB)) {
-    throw("Cannot estimate tau_LOH because allelic-balance calls have not been made yet.");
+    throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.");
   }
   verbose && cat(verbose, "Number of segments in allelic balance: ", sum(isAB, na.rm=TRUE));
 
@@ -198,18 +198,20 @@ setMethodS3("estimateTauLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpo
   # Sanity check
   stopifnot(muC1atNonAB < muC1atAB);
 
-  tau <- midpoint * (muC1atAB + muC1atNonAB);
-  verbose && printf(verbose, "Midpoint between the two: %.3g\n", tau);
+  delta <- midpoint * (muC1atAB + muC1atNonAB);
+  verbose && printf(verbose, "Midpoint between the two: %.3g\n", delta);
 
   verbose && exit(verbose);
 
-  tau;
-}, private=TRUE) # estimateTauLOHByMinC1AtNonAB()
+  delta;
+}, private=TRUE) # estimateDeltaLOHByMinC1AtNonAB()
 
 
 
 ############################################################################
 # HISTORY:
+# 2011-05-29
+# o Renamed all arguments, variables, function named 'tau' to 'delta'.
 # 2011-04-27
 # o Added argument 'maxC' to estimateTauLOHByMinC1ForNonAB().
 # 2011-04-14

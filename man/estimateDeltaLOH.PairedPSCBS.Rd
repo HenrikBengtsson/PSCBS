@@ -1,17 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PairedPSCBS.estimateTauLOH.R
+%  PairedPSCBS.estimateDeltaLOH.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\name{estimateTauLOH.PairedPSCBS}
-\alias{estimateTauLOH.PairedPSCBS}
-\alias{PairedPSCBS.estimateTauLOH}
-\alias{estimateTauLOH.PairedPSCBS}
-\alias{estimateTauLOH,PairedPSCBS-method}
+\name{estimateDeltaLOH.PairedPSCBS}
+\alias{estimateDeltaLOH.PairedPSCBS}
+\alias{PairedPSCBS.estimateDeltaLOH}
+\alias{estimateDeltaLOH.PairedPSCBS}
+\alias{estimateDeltaLOH,PairedPSCBS-method}
 
 
 \title{Estimate a threshold for calling LOH from DH}
@@ -20,7 +20,7 @@
  Estimate a threshold for calling LOH from DH to be used by the \code{\link[PSCBS:callLOH.PairedPSCBS]{*callLOH}()} method.
 }
 
-\usage{\method{estimateTauLOH}{PairedPSCBS}(this, flavor=c("minC1|nonAB"), ..., max=Inf, verbose=FALSE)}
+\usage{\method{estimateDeltaLOH}{PairedPSCBS}(this, flavor=c("minC1|nonAB"), ..., max=Inf, verbose=FALSE)}
 
 \arguments{
   \item{scale}{An optional \code{\link[base]{numeric}} scale factor.}
@@ -40,7 +40,7 @@
 
 \seealso{
   Internally, one of the following methods are used:
-  \code{\link[PSCBS:estimateTauLOHByMinC1ForNonAB.PairedPSCBS]{*estimateTauLOHByMinC1ForNonAB}()}.
+  \code{\link[PSCBS:estimateDeltaLOHByMinC1ForNonAB.PairedPSCBS]{*estimateDeltaLOHByMinC1ForNonAB}()}.
 }
 \keyword{internal}
 \keyword{methods}

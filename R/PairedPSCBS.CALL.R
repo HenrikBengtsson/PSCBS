@@ -1,4 +1,4 @@
-setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, tauAB=estimateTauAB(fit), alphaAB=0.05, tauHighAI=0.60, alphaHighAI=0.05, ..., verbose=FALSE) {
+setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, deltaAB=estimateDeltaAB(fit), alphaAB=0.05, deltaHighAI=0.60, alphaHighAI=0.05, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
@@ -18,10 +18,10 @@ setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, tauAB=estimateTauAB(
   fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 1));
 
   # Call allelic balance
-  fit <- callAllelicBalanceByDH(fit, tau=tauAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
+  fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
 
   # Call high allelic imbalance
-  fit <- callExtremeAllelicImbalanceByDH(fit, tau=tauHighAI, alpha=alphaHighAI, ..., verbose=less(verbose, 1));
+  fit <- callExtremeAllelicImbalanceByDH(fit, delta=deltaHighAI, alpha=alphaHighAI, ..., verbose=less(verbose, 1));
 
   verbose && exit(verbose);
 
@@ -29,7 +29,7 @@ setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, tauAB=estimateTauAB(
 }, private=TRUE) # callABandHighAI()
 
 
-setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, tauAB=estimateTauAB(fit), alphaAB=0.05, tauLowC1=0.50, alphaLowC1=0.05, ..., verbose=FALSE) {
+setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDeltaAB(fit), alphaAB=0.05, deltaLowC1=0.50, alphaLowC1=0.05, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
@@ -49,10 +49,10 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, tauAB=estimateTauAB(f
   fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 1));
 
   # Call allelic balance
-  fit <- callAllelicBalanceByDH(fit, tau=tauAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
+  fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
 
   # Call high allelic imbalance
-  fit <- callLowC1ByC1(fit, tau=tauLowC1, alpha=alphaLowC1, ..., verbose=less(verbose, 1));
+  fit <- callLowC1ByC1(fit, delta=deltaLowC1, alpha=alphaLowC1, ..., verbose=less(verbose, 1));
 
   verbose && exit(verbose);
 
@@ -62,6 +62,8 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, tauAB=estimateTauAB(f
 
 ##############################################################################
 # HISTORY
+# 2011-05-29
+# o Renamed all arguments, variables, function named 'tau' to 'delta'.
 # 2011-02-03
 # o Updated default for 'tauAB' of callABandHighAI() and callABandLowC1()
 #   to be estimated from data using estimateTauAB().

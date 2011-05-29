@@ -15,7 +15,7 @@
 
 
  \description{
-   Segments allele specific DNA copy number data to detect regions
+   Segments allele-specific DNA copy number data to detect regions
 with abnormal copy number within each parental chromosome.
 
    This package should be considered to be in an alpha or beta phase.

@@ -1,17 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PairedPSCBS.estimateTauAB.R
+%  PairedPSCBS.estimateDeltaAB.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\name{estimateTauAB.PairedPSCBS}
-\alias{estimateTauAB.PairedPSCBS}
-\alias{PairedPSCBS.estimateTauAB}
-\alias{estimateTauAB.PairedPSCBS}
-\alias{estimateTauAB,PairedPSCBS-method}
+\name{estimateDeltaAB.PairedPSCBS}
+\alias{estimateDeltaAB.PairedPSCBS}
+\alias{PairedPSCBS.estimateDeltaAB}
+\alias{estimateDeltaAB.PairedPSCBS}
+\alias{estimateDeltaAB,PairedPSCBS-method}
 
 
 \title{Estimate a threshold for calling allelic balance from DH}
@@ -20,7 +20,7 @@
  Estimate a threshold for calling allelic balance from DH to be used by the \code{\link[PSCBS:callAB.PairedPSCBS]{*callAB}()} method.
 }
 
-\usage{\method{estimateTauAB}{PairedPSCBS}(this, scale=NULL, flavor=c("qq(DH)", "q(DH)", "mad(hBAF)", "median(DH)"), ..., max=Inf, verbose=FALSE)}
+\usage{\method{estimateDeltaAB}{PairedPSCBS}(this, scale=NULL, flavor=c("qq(DH)", "q(DH)", "mad(hBAF)", "median(DH)"), ..., max=Inf, verbose=FALSE)}
 
 \arguments{
   \item{scale}{An optional \code{\link[base]{numeric}} scale factor.}
@@ -40,7 +40,7 @@
 
 \seealso{
   Internally, one of the following methods are used:
-  \code{\link[PSCBS:estimateTauABBySmallDH.PairedPSCBS]{*estimateTauABBySmallDH}()},
+  \code{\link[PSCBS:estimateDeltaABBySmallDH.PairedPSCBS]{*estimateDeltaABBySmallDH}()},
   \code{\link[PSCBS:estimateStdDevForHeterozygousBAF.PairedPSCBS]{*estimateStdDevForHeterozygousBAF}()},
   \code{\link[PSCBS:estimateMeanForDH.PairedPSCBS]{*estimateMeanForDH}()}, and
   \code{\link[PSCBS:estimateHighDHQuantileAtAB.PairedPSCBS]{*estimateHighDHQuantileAtAB}()}.

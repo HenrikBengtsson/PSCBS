@@ -3,9 +3,11 @@ Package: PSCBS
 ==============
 
 Version: 0.10.0 [2011-05-29]
-o Now the paired PSCBS is formally referred to as 'Paired PSCBS'.
+o Renamed all arguments, variables, and functions referring to 'tau' to
+  refer to 'delta' reflecting the notation of the Paired PSCBS paper.
 o Renamed options, example code and help pages to reflect new package name.
-o Updated help page references.
+o Updated references in help pages.
+o Now the paired PSCBS is formally referred to as 'Paired PSCBS'.
 o Renamed package to PSCBS (from 'psCBS').
 
 

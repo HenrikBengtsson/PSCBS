@@ -22,12 +22,12 @@
  bootstrap estimator.
 }
 
-\usage{\method{callAllelicBalanceByDH}{PairedPSCBS}(fit, tau=estimateTauAB(fit, flavor = "qq(DH)"), alpha=0.05, ..., verbose=FALSE)}
+\usage{\method{callAllelicBalanceByDH}{PairedPSCBS}(fit, delta=estimateDeltaAB(fit, flavor = "qq(DH)"), alpha=0.05, ..., verbose=FALSE)}
 
 \arguments{
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of
    call to use.}
-  \item{tau}{(Tuning parameter) A non-negative \code{\link[base]{numeric}} threshold.}
+  \item{delta}{(Tuning parameter) A non-negative \code{\link[base]{numeric}} threshold.}
   \item{alpha}{A \code{\link[base]{numeric}} in [0,1] specifying the upper and lower
     quantiles calculated by the bootstrap estimator.}
   \item{...}{Additional arguments passed to the caller.}

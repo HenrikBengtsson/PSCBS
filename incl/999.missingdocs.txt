@@ -47,8 +47,8 @@ applyByRegion applyByRegion.PairedPSCBS
   estimateHighDHQuantileAtAB estimateHighDHQuantileAtAB.PairedPSCBS
   estimateKappa estimateKappaByC1Density
   callAllelicBalance callAllelicBalanceByDH
-estimateTauAB
-estimateTauABBySmallDH
-estimateTauLOH estimateTauLOHByMinC1ForNonAB
+estimateDeltaAB
+estimateDeltaABBySmallDH
+estimateDeltaLOH estimateDeltaLOHByMinC1ForNonAB
  callAB callAllelicBalance.default
 callLOH

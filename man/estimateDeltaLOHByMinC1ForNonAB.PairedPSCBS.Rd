@@ -1,17 +1,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PairedPSCBS.estimateTauLOH.R
+%  PairedPSCBS.estimateDeltaLOH.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\name{estimateTauLOHByMinC1ForNonAB.PairedPSCBS}
-\alias{estimateTauLOHByMinC1ForNonAB.PairedPSCBS}
-\alias{PairedPSCBS.estimateTauLOHByMinC1ForNonAB}
-\alias{estimateTauLOHByMinC1ForNonAB.PairedPSCBS}
-\alias{estimateTauLOHByMinC1ForNonAB,PairedPSCBS-method}
+\name{estimateDeltaLOHByMinC1ForNonAB.PairedPSCBS}
+\alias{estimateDeltaLOHByMinC1ForNonAB.PairedPSCBS}
+\alias{PairedPSCBS.estimateDeltaLOHByMinC1ForNonAB}
+\alias{estimateDeltaLOHByMinC1ForNonAB.PairedPSCBS}
+\alias{estimateDeltaLOHByMinC1ForNonAB,PairedPSCBS-method}
 
 
 \title{Estimate a threshold for calling LOH from DH}
@@ -20,7 +20,7 @@
  Estimate a threshold for calling LOH from DH based on the location of guessed C1=0 and C1=1 peaks.
 }
 
-\usage{\method{estimateTauLOHByMinC1ForNonAB}{PairedPSCBS}(this, midpoint=1/2, maxC=3, ..., verbose=FALSE)}
+\usage{\method{estimateDeltaLOHByMinC1ForNonAB}{PairedPSCBS}(this, midpoint=1/2, maxC=3, ..., verbose=FALSE)}
 
 \arguments{
   \item{midpoint}{A \code{\link[base]{numeric}} scalar in [0,1] specifying the relative
@@ -55,7 +55,7 @@
 
 \seealso{
   Instead of calling this method explicitly, it is recommended
-  to use the \code{\link[PSCBS:estimateTauLOH.PairedPSCBS]{*estimateTauLOH}()} method.
+  to use the \code{\link[PSCBS:estimateDeltaLOH.PairedPSCBS]{*estimateDeltaLOH}()} method.
 }
 
 
