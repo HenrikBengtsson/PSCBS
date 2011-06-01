@@ -10,7 +10,7 @@
 #
 # \section{Requirements}{
 #   This package requires external packages
-#   @eval "unlist(packageDescription('PSCBS')[c('Depends', 'Imports')])",
+#   @eval "hpaste(unlist(packageDescription('PSCBS')[c('Depends', 'Imports')]))",	
 #   and also suggests @eval "packageDescription('PSCBS')$Suggests".
 # }
 #

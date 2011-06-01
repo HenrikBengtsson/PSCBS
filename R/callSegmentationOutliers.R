@@ -132,8 +132,8 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     chromosomeKK <- chromosomeKK[o];
     keepKK <- keepKK[o];
     
-    dataKK <- CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE);
-    yKKs <- smooth.CNA(dataKK, ...)$y;
+    dataKK <- DNAcopy::CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE);
+    yKKs <- DNAcopy::smooth.CNA(dataKK, ...)$y;
 
     # Sanity check
     stopifnot(length(yKKs) == nbrOfLociKK);
@@ -168,6 +168,8 @@ setMethodS3("dropSegmentationOutliers", "default", function(y, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-05-31
+# o Now explicitly using DNAcopy::nnn() to call DNAcopy functions.
 # 2010-11-27
 # o Added dropSegmentationOutliers() which sets outliers to missing values.
 # o Added callSegmentationOutliers(), which utilizes the detection method

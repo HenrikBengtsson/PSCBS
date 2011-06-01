@@ -334,7 +334,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   # WORKAROUND for the case when there are no data points.
   nbrOfNonMissingLoci <- sum(!is.na(cnData$y));
   if (nbrOfNonMissingLoci == 0) {
-    args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
+    args[[1]] <- DNAcopy::CNA(genomdat=0, chrom=0, maploc=0);
   }
 
   # In case the method writes to stdout, we capture it
@@ -435,6 +435,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
 ############################################################################
 # HISTORY:
+# 2011-05-31
+# o Now explicitly using DNAcopy::nnn() to call DNAcopy functions. 
 # 2011-04-07
 # o ROBUSTNESS: Added 'segRows' field validation in segmentByCBS().
 # 2010-12-01

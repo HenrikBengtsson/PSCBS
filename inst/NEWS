@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.10.1 [2011-05-31]
+o GENERALIZATION: The package can now be *installed* without the
+  DNAcopy package being installed.  If package is loaded without
+  DNAcopy installed, an informative message will explain how to
+  install it.
+o Added installDNAcopy(), which will install DNAcopy from Bioconductor.
+o ROBUSTNESS: Now all DNAcopy functions are called as DNAcopy::nnn().
+
+
 Version: 0.10.0 [2011-05-29]
 o Renamed all arguments, variables, and functions referring to 'tau' to
   refer to 'delta' reflecting the notation of the Paired PSCBS paper.
