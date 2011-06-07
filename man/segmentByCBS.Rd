@@ -65,7 +65,7 @@
    The "DNAcopy::segment" implementation of CBS uses approximation
    through random sampling for some estimates.  Because of this,
    repeated calls using the same signals may result in slightly
-   different results.
+   different results, unless the random seed is set/fixed.
  }
 
  \section{Missing and non-finite values}{
@@ -78,82 +78,89 @@
  }
 
  \examples{
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulating copy-number data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-set.seed(0xbeef);
+set.seed(0xBEEF)
 
 # Number of loci
-J <- 1000;
+J <- 1000
 
-mu <- double(J);
-mu[200:300] <- mu[200:300] + 1;
-mu[650:800] <- mu[650:800] - 1;
-eps <- rnorm(J, sd=1/2);
-y <- mu + eps;
-x <- sort(runif(length(y), max=length(y))) * 1e5;
-w <- runif(J);
-w[650:800] <- 0.001;
+mu <- double(J)
+mu[200:300] <- mu[200:300] + 1
+mu[650:800] <- mu[650:800] - 1
+eps <- rnorm(J, sd=1/2)
+y <- mu + eps
+x <- sort(runif(length(y), max=length(y))) * 1e5
+w <- runif(J)
+w[650:800] <- 0.001
 
 
-xlab <- "Position (Mb)";
-ylim <- c(-3,3);
-xMb <- x/1e6;
-plot(xMb,y, pch=20, col="#aaaaaa", xlab=xlab, ylim=ylim);
+xlab <- "Position (Mb)"
+ylim <- c(-3,3)
+xMb <- x/1e6
+plot(xMb,y, pch=20, col="#aaaaaa", xlab=xlab, ylim=ylim)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- segmentByCBS(y, x=x);
-print(fit);
-drawLevels(fit, col="red", lwd=2, xScale=1e-6);
+fit <- segmentByCBS(y, x=x)
+print(fit)
+drawLevels(fit, col="red", lwd=2, xScale=1e-6)
 
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # TESTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- segmentByCBS(y, x=x, seed=0xbeef);
-
-# Reverse the ordering and segment
-fitR <- segmentByCBS(rev(y), x=rev(x), seed=0xbeef);
-stopifnot(all.equal(fitR$output, fit$output));
-##stopifnot(all.equal(fitR$data[,2], fit$data[,2]));
-
-# Reverse, but preserve ordering of 'data' object
-fitRP <- segmentByCBS(rev(y), x=rev(x), preserveOrder=TRUE);
-stopifnot(all.equal(fitRP$output, fit$output));
-##stopifnot(all.equal(fitRP$data[,2], rev(x)));
+fit <- segmentByCBS(y, x=x, seed=0xBEEF)
+print(fit)
+##   ID chrom   loc.start  loc.end num.mark seg.mean
+## 1  y     0    55167.82 20774251      201   0.0164
+## 2  y     0 20774250.85 29320105       99   1.0474
+## 3  y     0 29320104.86 65874675      349  -0.0227
+## 4  y     0 65874675.06 81348129      151  -1.0813
+## 5  y     0 81348129.20 99910827      200  -0.0612
 
 
-# Change points inbetween data points at the same locus
-x[650:654] <- x[649];
-fitC <- segmentByCBS(rev(y), x=rev(x), preserveOrder=TRUE, seed=0xbeef);
-## stopifnot(!is.null(fitC$lociNotPartOfSegment));
-##stopifnot(fitC$data$maploc[unlist(fitC$lociNotPartOfSegment)] == x[649]);
+# Test #1: Reverse the ordering and segment
+fitR <- segmentByCBS(rev(y), x=rev(x), seed=0xBEEF)
+# Sanity check
+stopifnot(all.equal(fitR$output, fit$output))
+
+# Test #2: Reverse, but preserve ordering of 'data' object
+fitRP <- segmentByCBS(rev(y), x=rev(x), preserveOrder=TRUE)
+stopifnot(all.equal(fitRP$output, fit$output))
 
 
-# Allow for some missing values in signals
-y[450] <- NA;
-fitD <- segmentByCBS(y, x=x, seed=0xbeef);
+# (Test #3: Change points inbetween data points at the same locus)
+x[650:654] <- x[649]
+fitC <- segmentByCBS(rev(y), x=rev(x), preserveOrder=TRUE, seed=0xBEEF)
+
+# Test #4: Allow for some missing values in signals
+y[450] <- NA
+fitD <- segmentByCBS(y, x=x, seed=0xBEEF)
 
 
-# Allow for some missing genomic annotations
-x[495] <- NA;
-fitD <- segmentByCBS(y, x=x, seed=0xbeef, verbose=-10);
+# Test #5: Allow for some missing genomic annotations
+x[495] <- NA
+fitD <- segmentByCBS(y, x=x, seed=0xBEEF)
 
 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# MISC.
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Emulate a centromere
-x[650:699] <- NA;
-fit <- segmentByCBS(y, x=x, seed=0xbeef);
-xMb <- x/1e6;
-plot(xMb,y, pch=20, col="#aaaaaa", xlab=xlab, ylim=ylim);
-drawLevels(fit, col="red", lwd=2, xScale=1e-6);
+x[650:699] <- NA
+fit <- segmentByCBS(y, x=x, seed=0xBEEF)
+xMb <- x/1e6
+plot(xMb,y, pch=20, col="#aaaaaa", xlab=xlab, ylim=ylim)
+drawLevels(fit, col="red", lwd=2, xScale=1e-6)
 
-fitC <- segmentByCBS(y, x=x, joinSegments=TRUE, seed=0xbeef, verbose=-10);
-drawLevels(fitC, col="blue", lwd=2, xScale=1e-6);
-drawLevels(fit, col="red", lwd=2, xScale=1e-6);
+fitC <- segmentByCBS(y, x=x, joinSegments=FALSE, seed=0xBEEF)
+drawLevels(fitC, col="blue", lwd=2, xScale=1e-6)
 }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

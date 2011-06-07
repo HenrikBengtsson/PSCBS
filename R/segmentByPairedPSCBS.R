@@ -67,7 +67,7 @@
 #   The "DNAcopy::segment" implementation of CBS uses approximation
 #   through random sampling for some estimates.  Because of this,
 #   repeated calls using the same signals may result in slightly 
-#   different results, unless the random seed is fixed.  
+#   different results, unless the random seed is set/fixed.
 # }
 #
 # \section{Missing and non-finite values}{

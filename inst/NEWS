@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.10.2 [2011-06-07]
+o CLEANUP: Cleaned up the example():s.
+o Added more biocViews categories to DESCRIPTION
+
+
 Version: 0.10.1 [2011-05-31]
 o GENERALIZATION: The package can now be *installed* without the
   DNAcopy package being installed.  If package is loaded without

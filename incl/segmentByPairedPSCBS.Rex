@@ -1,48 +1,47 @@
-library("R.utils");
-library("aroma.light");
-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Load data
+# Load SNP microarray data
+# (note to package developers: this example data set may
+#  be replaced in a future release of the package)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS");
-data <- R.utils::loadObject(pathname);
+pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS")
+data <- R.utils::loadObject(pathname)
 
-# Subset to speed up example
-#data0 <- data;
-#keep <- seq(from=1, to=nrow(data), by=5);
-#data <- data[keep,,drop=FALSE];
 # Order
-o <- order(data$position);
-data <- data[o,];
-str(data);
-R.oo::attachLocally(data);
-x <- position;
-
+o <- order(data$position)
+data <- data[o,]
+str(data)
+R.oo::attachLocally(data)
+x <- position
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Paired PSCBS segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Drop single-locus outliers
-CTs <- dropSegmentationOutliers(CT, chromosome=1, x=x, verbose=-10);
+CTs <- dropSegmentationOutliers(CT, chromosome=1, x=x, verbose=-10)
 
 # Paired PSCBS segmentation
 fit <- segmentByPairedPSCBS(CTs, betaT=betaT, betaN=betaN,
-                            chromosome=1, x=x, verbose=-10);
-print(fit);
+                            chromosome=1, x=x, 
+                            seed=0xBEEF, verbose=-10)
+print(fit)
 
 # Plot results
-plotTracks(fit);
+plotTracks(fit)
+
+# Sanity check
+stopifnot(nbrOfSegments(fit) == 12)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Bootstrap segment level estimates
-# (used by the AB caller)
+# (used by the AB caller, which, if skipped here,
+#  will do it automatically)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- bootstrapTCNandDHByRegion(fit, verbose=-10);
-print(fit);
-plotTracks(fit);
+fit <- bootstrapTCNandDHByRegion(fit, verbose=-10)
+print(fit)
+plotTracks(fit)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -50,14 +49,18 @@ plotTracks(fit);
 # NOTE: Ideally, this should be done on whole-genome data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Explicitly estimate the threshold in DH for calling AB
-deltaAB <- estimateDeltaAB(fit, flavor="qq(DH)", verbose=-10);
-print(deltaAB);
-## [1] 
+# (which be done by default by the caller, if skipped here)
+deltaAB <- estimateDeltaAB(fit, flavor="qq(DH)", verbose=-10)
+print(deltaAB)
+## [1] 0.1657131
 
-fit <- callAB(fit, delta=deltaAB, flavor="DeltaAB*", verbose=-10);
-print(fit);
-plotTracks(fit);
+fit <- callAB(fit, delta=deltaAB, verbose=-10)
+print(fit)
+plotTracks(fit)
 
+# Even if not explicitly specified, the estimated 
+# threshold parameter is returned by the caller
+stopifnot(fit$params$deltaAB == deltaAB)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -65,20 +68,15 @@ plotTracks(fit);
 # NOTE: Ideally, this should be done on whole-genome data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Explicitly estimate the threshold in C1 for calling LOH
-deltaLOH <- estimateDeltaLOH(fit, flavor="minC1|nonAB", verbose=-10);
-print(deltaLOH);
-## [1] 
+# (which be done by default by the caller, if skipped here)
+deltaLOH <- estimateDeltaLOH(fit, flavor="minC1|nonAB", verbose=-10)
+print(deltaLOH)
+## [1] 0.625175
 
-fit <- callLOH(fit, delta=deltaLOH, flavor="SmallC1", verbose=-10);
-print(fit);
-plotTracks(fit);
+fit <- callLOH(fit, delta=deltaLOH, verbose=-10)
+print(fit)
+plotTracks(fit)
 
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Estimate background signals
-# NOTE: Ideally, this should be done on whole-genome data
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-kappa <- estimateKappa(fit);
-print(kappa);
-## [1] ...
-
+# Even if not explicitly specified, the estimated 
+# threshold parameter is returned by the caller
+stopifnot(fit$params$deltaLOH == deltaLOH)
