@@ -100,7 +100,7 @@ setMethodS3("drawLevels", "CBS", function(fit, xScale=1e-6, ...) {
   segs <- as.data.frame(fit);
 
   # Extract subset of segments
-  fields <- c("loc.start", "loc.end", "seg.mean");
+  fields <- c("start", "end", "mean");
   segs <- segs[,fields, drop=FALSE];
   segs <- unique(segs);
 
@@ -299,7 +299,7 @@ setMethodS3("as.data.frame", "CBS", function(x, ...) {
 
 setMethodS3("getChromosomes", "CBS", function(fit, ...) {
   segs <- fit$output;
-  na.omit(unique(segs$chrom));
+  na.omit(unique(segs$chromosome));
 })
 
 setMethodS3("nbrOfChromosomes", "CBS", function(fit, ...) {

@@ -49,7 +49,7 @@ setMethodS3("callAB", "PairedPSCBS", function(fit, flavor=c("DeltaAB*"), ..., mi
 
   # Already done?
   segs <- as.data.frame(fit);
-  calls <- segs$ab.call;
+  calls <- segs$abCall;
   if (!force && !is.null(calls)) {
     return(invisible(fit));
   }
@@ -63,10 +63,10 @@ setMethodS3("callAB", "PairedPSCBS", function(fit, flavor=c("DeltaAB*"), ..., mi
   # Don't call segments with too few data points?
   if (minSize > 1) {
     segs <- as.data.frame(fit);
-    ns <- segs$dh.num.mark;
-    calls <- segs$ab.call;
+    ns <- segs$dhNbrOfLoci;
+    calls <- segs$abCall;
     calls[ns < minSize] <- NA;
-    segs$ab.call <- calls;
+    segs$abCall <- calls;
     fit$output <- segs;
     rm(segs, ns, calls); # Not needed anymore
   }
@@ -74,12 +74,12 @@ setMethodS3("callAB", "PairedPSCBS", function(fit, flavor=c("DeltaAB*"), ..., mi
   # Don't call a segment AB if it already called LOH?
   if (xorCalls) {
     segs <- as.data.frame(fit);
-    if (is.element("loh.call", names(segs))) {
-      calls <- segs$ab.call;
-      otherCalls <- segs$loh.call;
+    if (is.element("lohCall", names(segs))) {
+      calls <- segs$abCall;
+      otherCalls <- segs$lohCall;
       # If called and already called by other caller, call it as NA.
       calls[calls & otherCalls] <- NA;
-      segs$ab.call <- calls;
+      segs$abCall <- calls;
       fit$output <- segs;
     }
   }
@@ -178,7 +178,7 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimat
   verbose && printf(verbose, "Number of segments called allelic balance (AB): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
   verbose && exit(verbose);
 
-  segs <- cbind(segs, ab.call=call);
+  segs <- cbind(segs, abCall=call);
   fit$output <- segs;
 
   # Append 'delta' and 'alpha' to parameters
@@ -199,6 +199,8 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimat
 
 ##############################################################################
 # HISTORY
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-05-29
 # o Renamed all arguments, variables, function named 'tau' to 'delta'.
 # 2011-04-14

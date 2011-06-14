@@ -26,15 +26,15 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
     prevSeg <- segs[1L,];
     for (ss in 2:nbrOfSegs) {
       currSeg <- segs[ss,];
-      currStart <- currSeg[,"loc.start"];
-      prevEnd <- prevSeg[,"loc.end"];
+      currStart <- currSeg[,"start"];
+      prevEnd <- prevSeg[,"end"];
   
       # Center CP
       xMid <- (prevEnd + currStart) / 2;
   
       # Move previous end and current start to this centered CP
-      segs[ss,"loc.start"] <- xMid;
-      segs[ss-1L,"loc.end"] <- xMid;
+      segs[ss,"start"] <- xMid;
+      segs[ss-1L,"end"] <- xMid;
   
       prevSeg <- currSeg;
     } # for (ss ...)
@@ -46,11 +46,11 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
   if (!is.null(knownCPs)) {
     if (nbrOfSegs > 0) {
       # Sanity check
-      stopifnot(knownCPs[1L] <= segs[1L,"loc.start"]);
-      segs[1L,"loc.start"] <- knownCPs[1L];
+      stopifnot(knownCPs[1L] <= segs[1L,"start"]);
+      segs[1L,"start"] <- knownCPs[1L];
       # Sanity check
-      stopifnot(segs[1L,"loc.end"] <= knownCPs[length(knownCPs)]);
-      segs[nbrOfSegs,"loc.end"] <- knownCPs[length(knownCPs)];
+      stopifnot(segs[1L,"end"] <= knownCPs[length(knownCPs)]);
+      segs[nbrOfSegs,"end"] <- knownCPs[length(knownCPs)];
     } # if (nbrOfSegs > 0)
   } # if (!is.null(knownCPs))
 
@@ -66,6 +66,8 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2010-11-21
 # o Extracted from segmentByPairedPSCBS.R
 ############################################################################

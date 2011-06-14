@@ -52,7 +52,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALS
     segRR <- segs[rr,,drop=FALSE];
 
     # Nothing todo?
-    if (is.na(segRR[["tcn.id"]]) && is.na(segRR[["dh.id"]])) {
+    if (is.na(segRR[["tcnId"]]) && is.na(segRR[["dhId"]])) {
       verbose && cat(verbose, "A divider. Nothing to do.");
       outputN <- rbind(outputN, NA);
       dataRowsN <- rbind(dataRowsN, NA);
@@ -155,8 +155,8 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALS
   sigmaCC <- apply(CC, MARGIN=2, FUN=sdFcn);
   rhoCC <- cor(CC[,1], CC[,2], use="pairwise.complete.obs");
 
-  names(muCC) <- c("c1.avg", "c2.avg");
-  names(sigmaCC) <- c("c1.sd", "c2.sd");
+  names(muCC) <- c("c1Avg", "c2Avg");
+  names(sigmaCC) <- c("c1Sd", "c2Sd");
 
   # Update data
   data <- cbind(data, CC);
@@ -217,11 +217,11 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALS
   } else {
     rhoCC <- cor(CC[,1], CC[,2], use="pairwise.complete.obs");
   }
-  names(muCC) <- c("ca.avg", "cb.avg");
-  names(sigmaCC) <- c("ca.sd", "cb.sd");
+  names(muCC) <- c("caAvg", "cbAvg");
+  names(sigmaCC) <- c("caSd", "cbSd");
 
   # Update segment table
-  outputT <- c(muCC, sigmaCC, cacb.cor=rhoCC);
+  outputT <- c(muCC, sigmaCC, cacbCor=rhoCC);
   outputT <- as.list(outputT);
   outputT <- as.data.frame(outputT);
 
@@ -234,6 +234,8 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALS
 
 #############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-01-27
 # o Added .addCACBWithStatitics().
 # o Added .addC1C2WithStatitics().

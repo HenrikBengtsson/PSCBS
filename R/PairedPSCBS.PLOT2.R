@@ -79,7 +79,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   if (!is.null(calls)) {
     verbose && enter(verbose, "Identifying calls");
 
-    pattern <- "[.]call$";
+    pattern <- "Call$";
     callColumns <- grep(pattern, colnames(segs), value=TRUE);
     if (length(callColumns) > 0) {
       keep <- sapply(calls, FUN=function(pattern) {
@@ -283,8 +283,8 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (changepoints) {
       segs <- as.data.frame(fit);
-      xStarts <- segs[,"tcn.loc.start"];
-      xEnds <- segs[,"tcn.loc.end"];
+      xStarts <- segs[,"tcnStart"];
+      xEnds <- segs[,"tcnEnd"];
       xs <- sort(unique(c(xStarts, xEnds)));
       abline(v=xScale*xs, lty=1, col="gray");
     }
@@ -302,7 +302,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
         verbose && cat(verbose, "Column: ", callColumn);
 
-        segsT <- segs[,c("dh.loc.start", "dh.loc.end", callColumn)];
+        segsT <- segs[,c("dhStart", "dhEnd", callColumn)];
         isCalled <- which(segsT[[callColumn]]);
         segsT <- segsT[isCalled,1:2,drop=FALSE];
         verbose && printf(verbose, "Number of segments called %s: %d\n",
@@ -336,6 +336,8 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-01-19
 # o Added plotTracks2().  Completely rewritten plotTracks().
 # o Created.

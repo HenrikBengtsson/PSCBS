@@ -88,13 +88,13 @@ setMethodS3("estimateDeltaAB", "PairedPSCBS", function(this, scale=NULL, flavor=
 
 ##   } else if (flavor == "DHskew") {
 ##     fit <- this;
-##     if (is.null(fit$output$dh.skew)) {
+##     if (is.null(fit$output$dhSkew)) {
 ##       verbose && enter(verbose, "Estimating DH skewness for each segment");
 ##       fit <- applyByRegion(fit, FUN=.addTcnDhStatitics, verbose=less(verbose, 5));
 ##       verbose && exit(verbose);
 ##     }
-##     mu <- fit$output$dh.mean;
-##     skew <- fit$output$dh.skew;
+##     mu <- fit$output$dhMean;
+##     skew <- fit$output$dhSkew;
 ## 
 ##     deltaSkew <- -0.55;
 ##     keep <- which(skew < deltaSkew);
@@ -164,7 +164,7 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
   # Find segments to be used for the estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find segments that have low DHs
-  idxsDH <- which(segs$dh.mean <= deltaDH);
+  idxsDH <- which(segs$dhMean <= deltaDH);
   verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH));
   verbose && str(verbose, idxsDH);
 
@@ -174,7 +174,7 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
   }
 
   # Find segments that have low TCNs
-  idxsTCN <- which(segs$tcn.mean <= deltaTCN);
+  idxsTCN <- which(segs$tcnMean <= deltaTCN);
   verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN));
   verbose && str(verbose, idxsTCN);
 
@@ -256,7 +256,7 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
   # Find segments to be used for the estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find segments that have low DHs
-  idxsDH <- which(segs$dh.mean <= deltaDH);
+  idxsDH <- which(segs$dhMean <= deltaDH);
   verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH));
   verbose && str(verbose, idxsDH);
 
@@ -266,7 +266,7 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
   }
 
   # Find segments that have low TCNs
-  idxsTCN <- which(segs$tcn.mean <= deltaTCN);
+  idxsTCN <- which(segs$tcnMean <= deltaTCN);
   verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN));
   verbose && str(verbose, idxsTCN);
 
@@ -364,7 +364,7 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
   verbose && enter(verbose, "Finding some segments that are likely to in allelic balance (AB)");
 
   # Find some segments that have low DHs
-  idxsDH <- which(segs$dh.mean <= deltaDH);
+  idxsDH <- which(segs$dhMean <= deltaDH);
   verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH));
   verbose && str(verbose, idxsDH);
 
@@ -374,7 +374,7 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
   }
 
   # Find segments that have low TCNs
-  idxsTCN <- which(segs$tcn.mean <= deltaTCN);
+  idxsTCN <- which(segs$tcnMean <= deltaTCN);
   verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN));
   verbose && str(verbose, idxsTCN);
 
@@ -526,9 +526,9 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   # Extract the region-level estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   segs <- fit$output;
-  dh <- segs$dh.mean;
+  dh <- segs$dhMean;
   stopifnot(!is.null(dh));
-  n <- segs$dh.num.mark;
+  n <- segs$dhNbrOfLoci;
 
   # Drop missing values
   keep <- (!is.na(dh) & !is.na(n));
@@ -584,6 +584,8 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-05-29
 # o Renamed all arguments, variables, function named 'tau' to 'delta'. 
 # 2011-04-11

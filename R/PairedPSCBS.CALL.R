@@ -62,6 +62,8 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDelta
 
 ##############################################################################
 # HISTORY
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-05-29
 # o Renamed all arguments, variables, function named 'tau' to 'delta'.
 # 2011-02-03

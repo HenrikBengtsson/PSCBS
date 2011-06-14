@@ -24,7 +24,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
   # Find estimates to be done
   stats <- statsFcn(1);
   stopifnot(!is.null(names(stats)));
-  statsNames <- sprintf("dh.%s", names(stats));
+  statsNames <- sprintf("dh%s", capitalize(names(stats)));
   isDone <- is.element(statsNames, names(segs));
 
   # Already done?
@@ -92,9 +92,9 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
 
     # Identify loci in segment
     chr <- segJJ$chromosome[1];
-    start <- segJJ$dh.loc.start[1];
-    stop <- segJJ$dh.loc.end[1];
-    nbrOfDHs <- segJJ[,"dh.num.mark"];
+    start <- segJJ$dhStart[1];
+    stop <- segJJ$dhEnd[1];
+    nbrOfDHs <- segJJ[,"dhNbrOfLoci"];
     if (is.na(nbrOfDHs)) nbrOfDHs <- 0L;
 
     units <- whichVector(chr == chromosome & start <= x & x <= stop);
@@ -108,8 +108,8 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
       # Sanity check
       stopifnot(!is.null(listOfDhLociNotPartOfSegment));
 
-      tcnId <- segJJ[,"tcn.id"];
-      dhId <- segJJ[,"dh.id"];
+      tcnId <- segJJ[,"tcnId"];
+      dhId <- segJJ[,"dhId"];
       dhLociNotPartOfSegment <- listOfDhLociNotPartOfSegment[[tcnId]];
       # Sanity check
       stopifnot(!is.null(dhLociNotPartOfSegment));
@@ -126,10 +126,10 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
     if (nbrOfUnits >= 1) {
       # Sanity check
       mu <- mean(rho[units], na.rm=FALSE);
-      dMu <- (mu - segJJ$dh.mean);
+      dMu <- (mu - segJJ$dhMean);
       tol <- 0.0005;
       if (abs(dMu) > tol) {
-        str(list(nbrOfUnits=nbrOfUnits, dh.num.mark=segJJ$dh.num.mark, mu=mu, dh.mean=segJJ$dh.mean, dMu=dMu, "abs(dMu)"=abs(dMu), "min(x[units])"=min(x[units])));
+        str(list(nbrOfUnits=nbrOfUnits, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=segJJ$dhMean, dMu=dMu, "abs(dMu)"=abs(dMu), "min(x[units])"=min(x[units])));
 #        stop("INTERNAL ERROR");
       }
 
@@ -211,6 +211,8 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
 
 ##############################################################################
 # HISTORY
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2010-11-22
 # o DEPRECATED: bootstrapDHByRegion() should no longer be used.
 # 2010-11-03 [HB]

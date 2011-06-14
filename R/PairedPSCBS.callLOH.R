@@ -49,7 +49,7 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
 
   # Already done?
   segs <- as.data.frame(fit);
-  calls <- segs$loh.call;
+  calls <- segs$lohCall;
   if (!force && !is.null(calls)) {
     return(invisible(fit));
   }
@@ -66,10 +66,10 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
   # Don't call segments with too few data points?
   if (minSize > 1) {
     segs <- as.data.frame(fit);
-    ns <- segs$dh.num.mark;
-    calls <- segs$loh.call;
+    ns <- segs$dhNbrOfLoci;
+    calls <- segs$lohCall;
     calls[ns < minSize] <- NA;
-    segs$loh.call <- calls;
+    segs$lohCall <- calls;
     fit$output <- segs;
     rm(segs, ns, calls); # Not needed anymore
   }
@@ -77,12 +77,12 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
   # Don't call a segment LOH if it already called AB?
   if (xorCalls) {
     segs <- as.data.frame(fit);
-    if (is.element("ab.call", names(segs))) {
-      calls <- segs$loh.call;
-      otherCalls <- segs$ab.call;
+    if (is.element("abCall", names(segs))) {
+      calls <- segs$lohCall;
+      otherCalls <- segs$abCall;
       # If called and already called by other caller, call it as NA.
       calls[calls & otherCalls] <- NA;
-      segs$loh.call <- calls;
+      segs$lohCall <- calls;
       fit$output <- segs;
     }
   }
@@ -136,8 +136,8 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
   verbose && printf(verbose, "Number of segments called low C1 (LowC1, \"LOH_C1\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
   verbose && exit(verbose);
 
-  calls <- data.frame(lowc1.call=call);
-  colnames(calls) <- sprintf("%s.call", callName);
+  calls <- data.frame(lowc1Call=call);
+  colnames(calls) <- sprintf("%sCall", callName);
   segs <- cbind(segs, calls);
   fit$output <- segs;
 
@@ -155,7 +155,7 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
 
 
 
-setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delta=0.60, alpha=0.05, ..., callName="ai.high", verbose=FALSE) {
+setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delta=0.60, alpha=0.05, ..., callName="aiHigh", verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
@@ -199,8 +199,8 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
   verbose && printf(verbose, "Number of segments called high allelic imbalance (AI/\"LOH_AI\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
   verbose && exit(verbose);
 
-  calls <- data.frame(ai.high.call=call);
-  colnames(calls) <- sprintf("%s.call", callName);
+  calls <- data.frame(aiHighCall=call);
+  colnames(calls) <- sprintf("%sCall", callName);
   segs <- cbind(segs, calls);
   fit$output <- segs;
 
@@ -219,6 +219,8 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
 
 ##############################################################################
 # HISTORY
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-05-29
 # o Renamed all arguments, variables, function named 'tau' to 'delta'.
 # 2011-04-14

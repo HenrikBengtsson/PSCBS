@@ -20,7 +20,7 @@ setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
   segs <- fit$output;
   stopifnot(!is.null(segs));
 
-  data <- segs[,c("tcn.mean", "dh.mean", "tcn.num.mark", "dh.num.mark"), drop=FALSE];
+  data <- segs[,c("tcnMean", "dhMean", "tcnNbrOfLoci", "dhNbrOfLoci"), drop=FALSE];
   data;
 })
 
@@ -131,13 +131,13 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
     nbrOfSegmentsCC <- nrow(segsCC);
     verbose && cat(verbose, "Number of segments: ", nbrOfSegmentsCC);
 
-    tcnIds <- sort(unique(segsCC[["tcn.id"]]));
+    tcnIds <- sort(unique(segsCC[["tcnId"]]));
     I <- length(tcnIds);
     for (ii in seq(length=I)) {
       tcnId <- tcnIds[ii];
       verbose && enter(verbose, sprintf("TCN segment #%d ('%s') of %d", ii, tcnId, I));
 
-      rowsII <- which(segsCC[["tcn.id"]] == tcnId);
+      rowsII <- which(segsCC[["tcnId"]] == tcnId);
       J <- length(rowsII);
       # Nothing todo?
       if (!force && J == 1) {
@@ -158,7 +158,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       verbose && print(verbose, dhSegRowsII);
 
       tcnSegRowsIIBefore <- tcnSegRowsII;
-      nbrOfTCNsBefore <- segsII[1,"tcn.num.mark"];
+      nbrOfTCNsBefore <- segsII[1,"tcnNbrOfLoci"];
 
       for (jj in seq(length=J)) {
         verbose && enter(verbose, sprintf("DH segment #%d of %d", jj, J));
@@ -176,8 +176,8 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   
         if (joinSegments) {
           # (a) The TCN segment should have identical (start,end) boundaries as the DH region
-          xStart <- seg[["dh.loc.start"]];
-          xEnd <- seg[["dh.loc.end"]];
+          xStart <- seg[["dhStart"]];
+          xEnd <- seg[["dhEnd"]];
           verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
           stopifnot(xStart <= xEnd);
 
@@ -213,12 +213,12 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
         stopifnot(length(units) == 0 || !is.na(gamma));
 
         # Update the segment boundaries, estimates and counts
-        seg[["tcn.loc.start"]] <- xStart;
-        seg[["tcn.loc.end"]] <- xEnd;
-        seg[["tcn.mean"]] <- gamma;
-        seg[["tcn.num.mark"]] <- length(units);
-        seg[["tcn.num.snps"]] <- sum(isSnp[units]);
-        seg[["tcn.num.hets"]] <- sum(isHet[units]);
+        seg[["tcnStart"]] <- xStart;
+        seg[["tcnEnd"]] <- xEnd;
+        seg[["tcnMean"]] <- gamma;
+        seg[["tcnNbrOfLoci"]] <- length(units);
+        seg[["tcnNbrOfSNPs"]] <- sum(isSnp[units]);
+        seg[["tcnNbrOfHets"]] <- sum(isHet[units]);
 
         # Sanity check
         stopifnot(nrow(seg) == length(jj));
@@ -239,7 +239,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 ##print(segsII);
 
       # Sanity check
-      nbrOfTCNsAfter <- sum(segsII[,"tcn.num.mark"], na.rm=TRUE);
+      nbrOfTCNsAfter <- sum(segsII[,"tcnNbrOfLoci"], na.rm=TRUE);
       verbose && cat(verbose, "Number of TCNs before: ", nbrOfTCNsBefore);
       verbose && cat(verbose, "Number of TCNs after: ", nbrOfTCNsAfter);
       stopifnot(nbrOfTCNsAfter >= nbrOfTCNsBefore);
@@ -284,12 +284,12 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
   verbose && enter(verbose, "Update (C1,C2) per segment");
   # Append (C1,C2) estimates
-  tcn <- segs$tcn.mean;
-  dh <- segs$dh.mean;
+  tcn <- segs$tcnMean;
+  dh <- segs$dhMean;
   C1 <- 1/2*(1-dh)*tcn;
   C2 <- tcn - C1;
-  segs$c1.mean <- C1;
-  segs$c2.mean <- C2;
+  segs$c1Mean <- C1;
+  segs$c2Mean <- C2;
   verbose && exit(verbose);
 
   # Return results
@@ -464,6 +464,8 @@ setMethodS3("extractByRegions", "PairedPSCBS", function(this, regions, ..., verb
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-04-08
 # o BUG FIX: postsegmentTCN() for PairedPSCBS could generate an invalid
 #   'tcnSegRows' matrix, where the indices for two consecutive segments

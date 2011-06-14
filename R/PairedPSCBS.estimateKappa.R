@@ -136,9 +136,9 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, adjust=1, 
   # Extract the region-level estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   segs <- this$output;
-  c1 <- segs$c1.mean;
+  c1 <- segs$c1Mean;
   stopifnot(!is.null(c1));
-  n <- segs$dh.num.mark;
+  n <- segs$dhNbrOfLoci;
 
   # Drop missing values
   keep <- (!is.na(c1) & !is.na(n));
@@ -201,6 +201,8 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, adjust=1, 
 
 #############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-04-08
 # o Added Rdoc for estimateKappaByC1Density().
 # 2011-02-03

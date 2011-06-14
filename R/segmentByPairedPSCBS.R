@@ -417,7 +417,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   fit <- segmentByCBS(CT, 
                       chromosome=chromosome, x=x, index=index,
                       joinSegments=joinSegments, knownCPs=knownCPs,
-                      alpha=alphaTCN, undo=undoTCN, ..., verbose=verbose);
+                      alpha=alphaTCN, undo=undoTCN, ...,
+                      columnNamesFlavor="PSCBS", verbose=verbose);
   verbose && str(verbose, fit);
 
   rm(list=fields); # Not needed anymore
@@ -446,14 +447,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Restructure TCN segmentation results");
   # Drop dummy columns
-  keep <- setdiff(colnames(tcnSegments), c("ID"));
+  keep <- setdiff(colnames(tcnSegments), c("id"));
   tcnSegments <- tcnSegments[,keep,drop=FALSE];
 
   # Tag fields by TCN
   names <- names(tcnSegments);
-  names <- gsub("seg.mean", "mean", names, fixed=TRUE);
-  names <- sprintf("tcn.%s", names);
-  names <- gsub("tcn.chrom", "chromosome", names, fixed=TRUE);
+  # Adding 'tcn' prefix to column names
+  names <- sprintf("tcn%s", capitalize(names));
+  names <- gsub("tcnChromosome", "chromosome", names, fixed=TRUE);
   names(tcnSegments) <- names;
   rm(names);
   verbose && print(verbose, tcnSegments);
@@ -478,12 +479,12 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   for (kk in seq(length=nbrOfSegs)) {
     tcnId <- kk;
 
-    xStart <- tcnSegments[kk,"tcn.loc.start"];
-    xEnd <- tcnSegments[kk,"tcn.loc.end"];
+    xStart <- tcnSegments[kk,"tcnStart"];
+    xEnd <- tcnSegments[kk,"tcnEnd"];
     regionTag <- sprintf("[%g,%g]", xStart, xEnd);
     verbose && enter(verbose, sprintf("Total CN segment #%d (%s) of %d", kk, regionTag, nbrOfSegs));
 
-    nbrOfTCNLociKK <- tcnSegments[kk,"tcn.num.mark"];
+    nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOrLoci"];
     verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
 
     # Extract locus data for TCN segment
@@ -495,7 +496,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
     # Sanity check
     stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK);
-    gammaT <- tcnSegments[kk,"tcn.mean"];
+    gammaT <- tcnSegments[kk,"tcnMean"];
 
     print(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
     stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
@@ -518,7 +519,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     fit <- segmentByCBS(rho, 
                         chromosome=chromosome, x=x,
                         joinSegments=joinSegments, knownCPs=knownCPsKK,
-                        alpha=alphaDH, undo=undoDH, ..., verbose=verbose);
+                        alpha=alphaDH, undo=undoDH, ...,
+                        columnNamesFlavor="PSCBS", verbose=verbose);
     verbose && str(verbose, fit);
     dhSegments <- fit$output;
     dhSegRowsKK <- fit$segRows;
@@ -541,13 +543,13 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     verbose && exit(verbose);
 
     # Drop dummy columns
-    keep <- setdiff(colnames(dhSegments), c("ID", "chrom"));
+    keep <- setdiff(colnames(dhSegments), c("id", "chromosome"));
     dhSegments <- dhSegments[,keep,drop=FALSE];
 
     # Tag fields by DH
     names <- names(dhSegments);
-    names <- gsub("seg.mean", "mean", names, fixed=TRUE);
-    names <- sprintf("dh.%s", names);
+    # Adding 'dh' prefix to column names
+    names <- sprintf("dh%s", capitalize(names));
     names(dhSegments) <- names;
     rm(names);
 
@@ -615,8 +617,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     # Append information on number of SNPs and hets in CN region
     tcnSegmentsKK <- cbind(
       tcnSegmentsKK, 
-      tcn.num.snps=nbrOfSnpsKK,
-      tcn.num.hets=nbrOfHetsKK
+      tcnNbrOrSNPs=nbrOfSnpsKK,
+      tcnNbrOfHets=nbrOfHetsKK
     );
     verbose && cat(verbose, "Total CN segmentation table (expanded):");
     verbose && print(verbose, tcnSegmentsKK);
@@ -626,8 +628,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
     # Combine TCN and DH segmentation results
     tcndhSegments <- cbind(
-      tcn.id=rep(kk, times=nrow(dhSegments)),
-      dh.id=seq(length=nrow(dhSegments)),
+      tcnId=rep(kk, times=nrow(dhSegments)),
+      dhId=seq(length=nrow(dhSegments)),
       tcnSegmentsKK,
       dhSegments
     );
@@ -655,7 +657,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 ##  stopifnot(all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE));
 
 
-  # Move 'chrom' column to the first column
+  # Move 'chromosome' column to the first column
   idx <- match("chromosome", names(segs));
   idxs <- c(idx, seq(length=ncol(segs))[-idx]);
   segs <- segs[,idxs,drop=FALSE];
@@ -663,11 +665,11 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
   verbose && enter(verbose, "Calculating (C1,C2) per segment");
   # Append (C1,C2) estimates
-  tcn <- segs$tcn.mean;
-  dh <- segs$dh.mean;
+  tcn <- segs$tcnMean;
+  dh <- segs$dhMean;
   C1 <- 1/2*(1-dh)*tcn;
   C2 <- tcn - C1;
-  segs <- cbind(segs, c1.mean=C1, c2.mean=C2);
+  segs <- cbind(segs, c1Mean=C1, c2Mean=C2);
   verbose && exit(verbose);
 
   nbrOfSegs <- nrow(segs);
@@ -723,6 +725,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o CONVENTION: Changed the column names of returned data frames. 
+#   They now follow the camelCase naming convention and are shorter.
 # 2011-05-29
 # o Renamed options to reflect new package name.
 # 2011-04-07

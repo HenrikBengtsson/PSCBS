@@ -18,21 +18,21 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, ...) {
   segT <- segsT[1,];
   fields <- colnames(segsT);
 
-  # (chromosome, tcn.id, dh.id)
+  # (chromosome, tcnId, dhId)
   idxsUsed <- 1:3;
 
   # Starts
-  idxs <- grep("[.]loc[.]start", fields);
+  idxs <- grep("Start$", fields);
   segT[,idxs] <- apply(segsT[,idxs], MARGIN=2, FUN=min, na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Ends
-  idxs <- grep("[.]loc[.]end", fields);
+  idxs <- grep("End$", fields);
   segT[,idxs] <- apply(segsT[,idxs], MARGIN=2, FUN=max, na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Counts
-  idxs <- grep("[.]num[.]", fields);
+  idxs <- grep("NbrOf", fields);
   segT[,idxs] <- apply(segsT[,idxs], MARGIN=2, FUN=sum);
   idxsUsed <- c(idxsUsed, idxs);
 
@@ -163,7 +163,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
     chrTag <- sprintf("chr%02d", chr);
 
     for (what in c("tcn", "dh")) {
-      keys <- paste(what, "loc", c("start", "end"), sep=".");
+      keys <- paste(what, c("Start", "End"), sep="");
       xStart <- seg[[keys[1]]];
       xEnd <- seg[[keys[2]]];
       verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
@@ -204,12 +204,12 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
   verbose && enter(verbose, "Update (C1,C2) per segment");
   # Append (C1,C2) estimates
-  tcn <- segs$tcn.mean;
-  dh <- segs$dh.mean;
+  tcn <- segs$tcnMean;
+  dh <- segs$dhMean;
   C1 <- 1/2*(1-dh)*tcn;
   C2 <- tcn - C1;
-  segs$c1.mean <- C1;
-  segs$c2.mean <- C2;
+  segs$c1Mean <- C1;
+  segs$c2Mean <- C2;
   verbose && exit(verbose);
 
   # Return results
@@ -225,6 +225,8 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-01-18
 # o BUG FIX: Fields 'tcnSegRows' and 'dhSegRows' were not updated by
 #   mergeTwoSegments() for PairedPSCBS.

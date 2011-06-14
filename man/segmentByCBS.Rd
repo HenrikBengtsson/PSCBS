@@ -21,7 +21,7 @@
   see [1,2].
  }
 
- \usage{\method{segmentByCBS}{default}(y, chromosome=0, x=NULL, index=seq(along = y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE)}
+ \usage{\method{segmentByCBS}{default}(y, chromosome=0, x=NULL, index=seq(along = y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, columnNamesFlavor=c("PSCBS", "DNAcopy"), seed=NULL, verbose=FALSE)}
 
  \arguments{
    \item{y}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic signals to be segmented.}
@@ -48,6 +48,8 @@
      change point locations.}
    \item{index}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length J specifying the
      genomewide indices of the loci.}
+   \item{columnNamesFlavor}{A \code{\link[base]{character}} string specifying how column names
+     of the returned data frame should be named.}
    \item{seed}{An (optional) \code{\link[base]{integer}} specifying the random seed to be
      set before calling the segmentation method.  The random seed is
      set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}
@@ -117,12 +119,12 @@ drawLevels(fit, col="red", lwd=2, xScale=1e-6)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fit <- segmentByCBS(y, x=x, seed=0xBEEF)
 print(fit)
-##   ID chrom   loc.start  loc.end num.mark seg.mean
-## 1  y     0    55167.82 20774251      201   0.0164
-## 2  y     0 20774250.85 29320105       99   1.0474
-## 3  y     0 29320104.86 65874675      349  -0.0227
-## 4  y     0 65874675.06 81348129      151  -1.0813
-## 5  y     0 81348129.20 99910827      200  -0.0612
+##   id chromosome       start      end nbrOfLoci    mean
+## 1  y          0    55167.82 20774251       201  0.0164
+## 2  y          0 20774250.85 29320105        99  1.0474
+## 3  y          0 29320104.86 65874675       349 -0.0227
+## 4  y          0 65874675.06 81348129       151 -1.0813
+## 5  y          0 81348129.20 99910827       200 -0.0612
 
 
 # Test #1: Reverse the ordering and segment

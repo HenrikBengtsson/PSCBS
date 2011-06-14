@@ -39,6 +39,8 @@
 #     change point locations.}
 #   \item{index}{An @integer @vector of length J specifying the 
 #     genomewide indices of the loci.}
+#   \item{columnNamesFlavor}{A @character string specifying how column names
+#     of the returned data frame should be named.}
 #   \item{seed}{An (optional) @integer specifying the random seed to be 
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
@@ -84,7 +86,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, columnNamesFlavor=c("PSCBS", "DNAcopy"), seed=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -151,6 +153,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
       throw("Argument 'knownCPs' should only be specified if argument 'joinSegments' is TRUE.");
     }
   }
+
+  # Argument 'columnNamesFlavor':
+  columnNamesFlavor <- match.arg(columnNamesFlavor);
 
   # Argument 'seed':
   if (!is.null(seed)) {
@@ -410,7 +415,27 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
   stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Renaming column names
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (columnNamesFlavor != "DNAcopy") {
+    segs <- fit$output;
+    names <- colnames(segs);
+    if (columnNamesFlavor == "PSCBS") {
+      names <- gsub("ID", "id", names, fixed=TRUE);
+      names <- gsub("seg.mean", "mean", names, fixed=TRUE);
+      names <- gsub("chrom", "chromosome", names, fixed=TRUE);
+      names <- gsub("num.mark", "nbrOfLoci", names, fixed=TRUE);
+      names <- gsub("loc.", "", names, fixed=TRUE); # loc.start, loc.end
+    }
+    colnames(segs) <- names;
+    fit$output <- segs;
+  }
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Join segments?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (joinSegments) {
     fit <- joinSegments(fit, range=knownCPs, verbose=verbose);
 
@@ -419,6 +444,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
     stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
     stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
   }
+
 
   verbose && cat(verbose, "Results object:");
   verbose && str(verbose, fit);
@@ -435,6 +461,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o GENERALIZATION: Added argument 'columnNamesFlavor' to segmentByCBS().
+# o CONVENTION: Changed the column names of returned data frames. 
+#   They now follow the camelCase naming convention and are shorter.
 # 2011-05-31
 # o Now explicitly using DNAcopy::nnn() to call DNAcopy functions. 
 # 2011-04-07

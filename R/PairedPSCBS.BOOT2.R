@@ -68,8 +68,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using flavor=\"tcn&dh\".");
   }
   # Sanity check (same as above, but just in case)
-  stopifnot(all(segs$tcn.loc.start == segs$dh.loc.start, na.rm=TRUE));
-  stopifnot(all(segs$tcn.loc.end == segs$dh.loc.end, na.rm=TRUE));
+  stopifnot(all(segs$tcnStart == segs$dhStart, na.rm=TRUE));
+  stopifnot(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE));
 
 
 
@@ -191,10 +191,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   for (jj in seq(length=nbrOfSegments)) {
     segJJ <- segs[jj,,drop=FALSE];
     chr <- segJJ[["chromosome"]];
-    tcnId <- segJJ[["tcn.id"]];
-    dhId <- segJJ[["dh.id"]];
+    tcnId <- segJJ[["tcnId"]];
+    dhId <- segJJ[["dhId"]];
 
-    verbose && enter(verbose, sprintf("Segment #%d (chr %d, tcn.id=%d, dh.id=%d) of %d", jj, chr, tcnId, dhId, nbrOfSegments));
+    verbose && enter(verbose, sprintf("Segment #%d (chr %d, tcnId=%d, dhId=%d) of %d", jj, chr, tcnId, dhId, nbrOfSegments));
 
     # Nothing todo?
     if (is.na(chr) && is.na(tcnId) && is.na(dhId)) {
@@ -204,9 +204,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
     verbose && print(verbose, segJJ);
 
-    nbrOfTCNs <- segJJ[,"tcn.num.mark"];
+    nbrOfTCNs <- segJJ[,"tcnNbrOfLoci"];
     if (is.na(nbrOfTCNs)) nbrOfTCNs <- 0L;
-    nbrOfDHs <- segJJ[,"dh.num.mark"];
+    nbrOfDHs <- segJJ[,"dhNbrOfLoci"];
     if (is.na(nbrOfDHs)) nbrOfDHs <- 0L;
     verbose && cat(verbose, "Number of TCNs: ", nbrOfTCNs);
     verbose && cat(verbose, "Number of DHs: ", nbrOfDHs);
@@ -306,9 +306,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     if (nbrOfTCNs > 0) {
       ys <- CT[idxsTCN];
       mu <- mean(ys, na.rm=TRUE);
-      dMu <- (mu - segJJ$tcn.mean);
+      dMu <- (mu - segJJ$tcnMean);
       if (abs(dMu) > tol) {
-        str(list(nbrOfTCNs=nbrOfTCNs, tcn.num.mark=segJJ$tcn.num.mark, mu=mu, tcn.mean=segJJ$tcn.mean, dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])));
+        str(list(nbrOfTCNs=nbrOfTCNs, tcnNbrOfLoci=segJJ$tcnNbrOfLoci, mu=mu, tcnMean=segJJ$tcnMean, dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])));
         stop("INTERNAL ERROR: Incorrect TCN mean!");
       }
     }
@@ -316,9 +316,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     if (nbrOfDHs > 0) {
       ys <- rho[idxsDH];
       mu <- mean(ys, na.rm=TRUE);
-      dMu <- (mu - segJJ$dh.mean);
+      dMu <- (mu - segJJ$dhMean);
       if (abs(dMu) > tol) {
-        str(list(nbrOfDHs=nbrOfDHs, dh.num.mark=segJJ$dh.num.mark, mu=mu, dh.mean=segJJ$dh.mean, dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])));
+        str(list(nbrOfDHs=nbrOfDHs, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=segJJ$dhMean, dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])));
         stop("INTERNAL ERROR: Incorrect DH mean!");
       }
     }
@@ -493,12 +493,12 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
           verbose && str(verbose, range);
     
           # Segmentation means
-          key <- sprintf("%s.mean", field);
+          key <- sprintf("%sMean", field);
           segMean <- segs[[key]];
           verbose && str(verbose, segMean);
   
           # Segmentation counts
-          cfield <- sprintf("%s.num.mark", ifelse(field == "tcn", "tcn", "dh"));
+          cfield <- sprintf("%sNbrOfLoci", ifelse(field == "tcn", "tcn", "dh"));
           counts <- segs[,cfield,drop=TRUE];
   
           # Compare only segments with enough data points
@@ -539,6 +539,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
 ##############################################################################
 # HISTORY
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-05-29
 # o Renamed options to reflect new package name.
 # 2010-12-03

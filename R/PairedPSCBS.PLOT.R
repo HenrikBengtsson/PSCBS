@@ -138,7 +138,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
   if (!is.null(calls)) {
     verbose && enter(verbose, "Identifying calls");
 
-    pattern <- "[.]call$";
+    pattern <- "Call$";
     callColumns <- grep(pattern, colnames(segs), value=TRUE);
     if (length(callColumns) > 0) {
       keep <- sapply(calls, FUN=function(pattern) {
@@ -295,8 +295,8 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (changepoints) {
       segs <- as.data.frame(fit);
-      xStarts <- segs[,"tcn.loc.start"];
-      xEnds <- segs[,"tcn.loc.end"];
+      xStarts <- segs[,"tcnStart"];
+      xEnds <- segs[,"tcnEnd"];
       xs <- sort(unique(c(xStarts, xEnds)));
       abline(v=xScale*xs, lty=1, col="gray");
     }
@@ -313,7 +313,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
 
         verbose && cat(verbose, "Column: ", callColumn);
 
-        segsT <- segs[,c("dh.loc.start", "dh.loc.end", callColumn)];
+        segsT <- segs[,c("dhStart", "dhEnd", callColumn)];
         isCalled <- which(segsT[[callColumn]]);
         segsT <- segsT[isCalled,1:2,drop=FALSE];
         verbose && printf(verbose, "Number of segments called %s: %d\n",
@@ -364,9 +364,9 @@ setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "dh", "c1",
   segs <- as.data.frame(fit);
 
   # Extract subset of segments
-  fields <- c("loc.start", "loc.end");
-  fields <- sprintf("%s.%s", ifelse(what == "tcn", what, "dh"), fields);
-  fields <- c(fields, sprintf("%s.mean", what));
+  fields <- c("start", "end");
+  fields <- sprintf("%s%s", ifelse(what == "tcn", what, "dh"), capitalize(fields));
+  fields <- c(fields, sprintf("%sMean", what));
   segsT <- segs[,fields, drop=FALSE];
   segsT <- unique(segsT);
 
@@ -405,8 +405,8 @@ setMethodS3("drawConfidenceBands", "PairedPSCBS", function(fit, what=c("tcn", "d
   segs <- as.data.frame(fit);
 
   # Extract subset of segments
-  fields <- c("loc.start", "loc.end");
-  fields <- sprintf("%s.%s", ifelse(what == "tcn", what, "dh"), fields);
+  fields <- c("start", "end");
+  fields <- sprintf("%s%s", ifelse(what == "tcn", what, "dh"), capitalize(fields));
 
   tags <- sprintf("%g%%", 100*quantiles);
   qFields <- sprintf("%s_%s", what, tags);
@@ -699,7 +699,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x,   chromosome
   if (!is.null(calls)) {
     verbose && enter(verbose, "Identifying calls");
 
-    pattern <- "[.]call$";
+    pattern <- "Call$";
     callColumns <- grep(pattern, colnames(segs), value=TRUE);
     if (length(callColumns) > 0) {
       keep <- sapply(calls, FUN=function(pattern) {
@@ -869,7 +869,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x,   chromosome
 
         verbose && cat(verbose, "Column: ", callColumn);
 
-        segsT <- segs[,c("dh.loc.start", "dh.loc.end", callColumn)];
+        segsT <- segs[,c("dhStart", "dhEnd", callColumn)];
         isCalled <- which(segsT[[callColumn]]);
         segsT <- segsT[isCalled,1:2,drop=FALSE];
         verbose && printf(verbose, "Number of segments called %s: %d\n",
@@ -904,6 +904,8 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x,   chromosome
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-01-19
 # o Added argument 'subplots'.
 # 2011-01-18

@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.11.0 [2011-06-14]
+o Renamed all column names of returned data frames such that
+  they follow the camelCase naming conventions in addition
+  to be somewhat shorter too.
+o GENERALIZATION: Added argument 'columnNamesFlavor' to segmentByCBS().
+
+
 Version: 0.10.2 [2011-06-07]
 o CLEANUP: Cleaned up the example():s.
 o Added more biocViews categories to DESCRIPTION

@@ -152,7 +152,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   # Getting AB calls
   segs <- as.data.frame(this);
-  isAB <- segs$ab.call;
+  isAB <- segs$abCall;
   if (is.null(isAB)) {
     throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.");
   }
@@ -163,7 +163,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
     throw("There are no segments in allelic balance.");
   }
 
-  C <- segs$tcn.mean;
+  C <- segs$tcnMean;
   keep <- which(isAB & C <= maxC);
 
   verbose && printf(verbose, "Number of segments in allelic balance and TCN <= %.2f: %d\n", maxC, length(keep));
@@ -174,8 +174,8 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   }
 
   segsT <- segs[keep,,drop=FALSE];
-  C <- segsT$tcn.mean;
-  n <- segsT$dh.num.mark;
+  C <- segsT$tcnMean;
+  n <- segsT$dhNbrOfLoci;
   w <- n/sum(n);
   C1 <- C/2;  # Called AB!
   verbose && printf(verbose, "C: %s\n", hpaste(sprintf("%.3g", C)));
@@ -188,10 +188,10 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   verbose && cat(verbose, "Number of segments not in allelic balance: ", sum(!isAB, na.rm=TRUE));
   segsNotAB <- segs[which(!isAB),,drop=FALSE];
-  C1 <- segsNotAB$c1.mean;
+  C1 <- segsNotAB$c1Mean;
   muC1atNonAB <- min(C1, na.rm=TRUE);
   idxs <- which(C1 <= muC1atNonAB);
-  n <- segsNotAB$dh.num.mark[idxs];
+  n <- segsNotAB$dhNbrOfLoci[idxs];
   verbose && printf(verbose, "Smallest C1 among segments not in allelic balance: %.3g\n", muC1atNonAB);
   verbose && printf(verbose, "There are %d segments with in total %d heterozygous SNPs with this level.\n", length(idxs), n);
 
@@ -210,6 +210,8 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
 ############################################################################
 # HISTORY:
+# 2011-06-14
+# o Updated code to recognize new column names.
 # 2011-05-29
 # o Renamed all arguments, variables, function named 'tau' to 'delta'.
 # 2011-04-27
