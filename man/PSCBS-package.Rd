@@ -54,7 +54,7 @@ with abnormal copy number within each parental chromosome.
  }
 
  \references{
-  [1] A.B. Olshen, H. Bengtsson, P. Neuvial, P. Spellman, R.A. Olshen, V.E. Seshan, \emph{Parent-specific copy number in paired tumor-normal studies using circular binary segmentation}, Bioinformatics 2011 (in press)\cr
+  [1] A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan, \emph{Parent-specific copy number in paired tumor-normal studies using circular binary segmentation}, Bioinformatics 2011 (in press)\cr
  \cr
  }
 \keyword{package}

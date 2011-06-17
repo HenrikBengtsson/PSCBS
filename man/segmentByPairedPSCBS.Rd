@@ -185,7 +185,7 @@ stopifnot(fit$params$deltaLOH == deltaLOH)
  }
 
  \references{
-  [1] A.B. Olshen, H. Bengtsson, P. Neuvial, P. Spellman, R.A. Olshen, V.E. Seshan, \emph{Parent-specific copy number in paired tumor-normal studies using circular binary segmentation}, Bioinformatics 2011 (in press)\cr
+  [1] A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan, \emph{Parent-specific copy number in paired tumor-normal studies using circular binary segmentation}, Bioinformatics 2011 (in press)\cr
  \cr
    [2] H. Bengtsson, P. Neuvial and T.P. Speed, \emph{TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays}, BMC Bioinformatics, 2010.
  }
