@@ -76,7 +76,7 @@
    before performing the segmentation.
 
    None of the input signals may have infinite values,
-   i.e. -\code{\link[base:is.finite]{Inf}} or \code{\link[base:is.finite]{Inf}}. If so, an informative error is thrown.
+   i.e. -\code{\link[base:is.finite]{Inf}} or +\code{\link[base:is.finite]{Inf}}. If so, an informative error is thrown.
  }
 
  \examples{

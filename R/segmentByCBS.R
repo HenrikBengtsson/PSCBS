@@ -67,7 +67,7 @@
 #   before performing the segmentation.
 #
 #   None of the input signals may have infinite values,
-#   i.e. -@Inf or @Inf. If so, an informative error is thrown.
+#   i.e. -@Inf or +@Inf. If so, an informative error is thrown.
 # }
 #
 # @examples "../incl/segmentByCBS.Rex"

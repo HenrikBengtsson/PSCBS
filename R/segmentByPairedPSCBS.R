@@ -14,7 +14,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{CT}{A @numeric @vector of J tumor total tumor copy number (TCN) ratios in (or close to) [0,+@Inf] (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
+#   \item{CT}{A @numeric @vector of J tumor total tumor copy number (TCN) ratios in [0,+@Inf) (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
 #   \item{betaT}{A @numeric @vector of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well).}
 #   \item{betaN}{A @numeric @vector of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well).}
 #   \item{muN}{An optional @numeric @vector of J genotype calls in 
@@ -77,7 +77,7 @@
 #   Allele B fractions may contain missing values, because such are
 #   interpreted as representing non-polymorphic loci.
 #
-#   None of the input signals may have infinite values, i.e. -@Inf or @Inf.
+#   None of the input signals may have infinite values, i.e. -@Inf or +@Inf.
 #   If so, an informative error is thrown.
 # }
 #

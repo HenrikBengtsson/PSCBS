@@ -23,7 +23,7 @@
  \usage{\method{segmentByPairedPSCBS}{default}(CT, betaT, betaN, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE)}
 
  \arguments{
-   \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total tumor copy number (TCN) ratios in (or close to) [0,+\code{\link[base:is.finite]{Inf}}] (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
+   \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total tumor copy number (TCN) ratios in [0,+\code{\link[base:is.finite]{Inf}}) (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
    \item{betaT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well).}
    \item{betaN}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well).}
    \item{muN}{An optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genotype calls in
@@ -86,7 +86,7 @@
    Allele B fractions may contain missing values, because such are
    interpreted as representing non-polymorphic loci.
 
-   None of the input signals may have infinite values, i.e. -\code{\link[base:is.finite]{Inf}} or \code{\link[base:is.finite]{Inf}}.
+   None of the input signals may have infinite values, i.e. -\code{\link[base:is.finite]{Inf}} or +\code{\link[base:is.finite]{Inf}}.
    If so, an informative error is thrown.
  }
 
