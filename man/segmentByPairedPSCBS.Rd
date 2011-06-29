@@ -23,9 +23,9 @@
  \usage{\method{segmentByPairedPSCBS}{default}(CT, betaT, betaN, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE)}
 
  \arguments{
-   \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total copy numbers to be segmented.}
-   \item{betaT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor allele B fractions (BAFs).}
-   \item{betaN}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J matched normal BAFs.}
+   \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total tumor copy number (TCN) ratios in (or close to) [0,+\code{\link[base:is.finite]{Inf}}] (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
+   \item{betaT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well).}
+   \item{betaN}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well).}
    \item{muN}{An optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genotype calls in
         \{0,1/2,1\} for AA, AB, and BB, respectively. If not given,
         they are estimated from the normal BAFs using

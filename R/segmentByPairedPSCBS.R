@@ -14,9 +14,9 @@
 # @synopsis
 #
 # \arguments{
-#   \item{CT}{A @numeric @vector of J tumor total copy numbers to be segmented.}
-#   \item{betaT}{A @numeric @vector of J tumor allele B fractions (BAFs).}
-#   \item{betaN}{A @numeric @vector of J matched normal BAFs.}
+#   \item{CT}{A @numeric @vector of J tumor total tumor copy number (TCN) ratios in (or close to) [0,+@Inf] (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
+#   \item{betaT}{A @numeric @vector of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well).}
+#   \item{betaN}{A @numeric @vector of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well).}
 #   \item{muN}{An optional @numeric @vector of J genotype calls in 
 #        \{0,1/2,1\} for AA, AB, and BB, respectively. If not given,
 #        they are estimated from the normal BAFs using
@@ -725,6 +725,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-06-28
+# o DOCUMENTATION: Clarified that argument 'CT' should be tumor copy
+#   number ratios relative to the normal.
 # 2011-06-14
 # o CONVENTION: Changed the column names of returned data frames. 
 #   They now follow the camelCase naming convention and are shorter.

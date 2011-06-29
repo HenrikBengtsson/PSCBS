@@ -3,6 +3,8 @@ Package: PSCBS
 ==============
 
 Version: 0.11.1 [2011-06-28]
+o DOCUMENTATION: Clarified that argument 'CT' should be tumor copy
+  number ratios relative to the normal.
 o DOCUMENTATION: Added Rd help for as.data.frame() of PairedPSCBS.
 
 
