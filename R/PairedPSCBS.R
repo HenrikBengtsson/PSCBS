@@ -46,6 +46,31 @@ setMethodS3("print", "PairedPSCBS", function(x, ...) {
 }, private=TRUE)
 
 
+
+###########################################################################/**
+# @RdocMethod as.data.frame
+#
+# @title "Gets the table of segments"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @data.frame, where each row corresponds to 
+#   a unique segment.
+# }
+# 
+# @author
+#
+# @keyword internal
+#*/###########################################################################  
 setMethodS3("as.data.frame", "PairedPSCBS", function(x, ...) {
   # To please R CMD check
   fit <- x;
@@ -57,6 +82,8 @@ setMethodS3("as.data.frame", "PairedPSCBS", function(x, ...) {
 
 ##############################################################################
 # HISTORY
+# 2011-06-28
+# o DOCUMENTATION: Added Rd help for as.data.frame() of PairedPSCBS.
 # 2011-04-08
 # o Added formal constructor for the PairedPSCBS class.
 # o Created.

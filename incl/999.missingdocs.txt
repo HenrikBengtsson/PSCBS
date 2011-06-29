@@ -1,5 +1,5 @@
  append append.PSCBS append.default arrowsC1C2 arrowsC1C2.PairedPSCBS
- arrowsDeltaC1C2 arrowsDeltaC1C2.PairedPSCBS as.data.frame.PairedPSCBS
+ arrowsDeltaC1C2 arrowsDeltaC1C2.PairedPSCBS 
  bootstrapCIs bootstrapCIs.PairedPSCBS bootstrapDHByRegion
  bootstrapDHByRegion.PairedPSCBS callABandHighAI
  callABandHighAI.PairedPSCBS 

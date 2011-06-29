@@ -43,7 +43,7 @@ extends list\cr
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{as.data.frame} \tab  -\cr
+ \tab \code{\link[PSCBS:as.data.frame.PairedPSCBS]{as.data.frame}} \tab Gets the table of segments.\cr
  \tab \code{\link[PSCBS:callAB.PairedPSCBS]{callAB}} \tab Calls segments that are in allelic balance.\cr
  \tab \code{\link[PSCBS:callLOH.PairedPSCBS]{callLOH}} \tab Calls segments that are in LOH.\cr
  \tab \code{callSegments} \tab  -\cr

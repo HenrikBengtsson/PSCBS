@@ -46,7 +46,7 @@ with abnormal copy number within each parental chromosome.
  }
 
  \author{
-  A.B. Olshen, H. Bengtsson, P. Neuvial, P. Spellman, R.A. Olshen, V.E. Seshan.
+  A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan.
  }
 
  \section{License}{

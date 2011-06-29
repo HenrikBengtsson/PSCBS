@@ -19,7 +19,6 @@
 \alias{arrowsC1C2.PairedPSCBS}
 \alias{arrowsDeltaC1C2}
 \alias{arrowsDeltaC1C2.PairedPSCBS}
-\alias{as.data.frame.PairedPSCBS}
 \alias{bootstrapCIs}
 \alias{bootstrapCIs.PairedPSCBS}
 \alias{bootstrapDHByRegion}

@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.11.1 [2011-06-28]
+o DOCUMENTATION: Added Rd help for as.data.frame() of PairedPSCBS.
+
+
 Version: 0.11.0 [2011-06-14]
 o Renamed all column names of returned data frames such that
   they follow the camelCase naming conventions in addition
