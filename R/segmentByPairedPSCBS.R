@@ -617,7 +617,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     # Append information on number of SNPs and hets in CN region
     tcnSegmentsKK <- cbind(
       tcnSegmentsKK, 
-      tcnNbrOrSNPs=nbrOfSnpsKK,
+      tcnNbrOfSNPs=nbrOfSnpsKK,
       tcnNbrOfHets=nbrOfHetsKK
     );
     verbose && cat(verbose, "Total CN segmentation table (expanded):");
@@ -725,6 +725,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-07-05
+# o BUG FIX: Output fields 'tcnNbrOfSNPs'and 'tcnNbrOfHets' were mistakenly
+#   labelled as 'tcnNbrOr...'.  Thanks Christine Ho at UC Berkeley for
+#   reporting on this.
 # 2011-06-28
 # o DOCUMENTATION: Clarified that argument 'CT' should be tumor copy
 #   number ratios relative to the normal.

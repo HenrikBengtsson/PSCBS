@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.11.2 [2011-07-05]
+o BUG FIX: Output fields 'tcnNbrOfSNPs'and 'tcnNbrOfHets' were 
+  mistakenly labelled as 'tcnNbrOr...'.  Thanks Christine Ho at
+  UC Berkeley for reporting on this.
+
+
 Version: 0.11.1 [2011-06-28]
 o DOCUMENTATION: Clarified that argument 'CT' should be tumor copy
   number ratios relative to the normal.
