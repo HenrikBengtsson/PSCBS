@@ -30,9 +30,10 @@
         \{0,1/2,1\} for AA, AB, and BB, respectively. If not given,
         they are estimated from the normal BAFs using
         \code{\link[aroma.light]{callNaiveGenotypes}} as described in [2].}
-   \item{chromosome}{(Optional) An \code{\link[base]{integer}} scalar
-       (or a \code{\link[base]{vector}} of length J contain a unique value).
-       Only used for annotation purposes.}
+   \item{chromosome}{(Optional) An \code{\link[base]{integer}} scalar (or a \code{\link[base]{vector}} of length J),
+        which can be used to specify which chromosome each locus belongs to
+        in case multiple chromosomes are segments.
+        This argument is also used for annotation purposes.}
    \item{x}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic locations.
             If \code{\link[base]{NULL}}, index locations \code{1:J} are used.}
    \item{alphaTCN, alphaDH}{The significance levels for segmenting total

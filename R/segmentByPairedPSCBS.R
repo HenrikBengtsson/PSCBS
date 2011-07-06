@@ -21,9 +21,10 @@
 #        \{0,1/2,1\} for AA, AB, and BB, respectively. If not given,
 #        they are estimated from the normal BAFs using
 #        @see "aroma.light::callNaiveGenotypes" as described in [2].}
-#   \item{chromosome}{(Optional) An @integer scalar 
-#       (or a @vector of length J contain a unique value).
-#       Only used for annotation purposes.}
+#   \item{chromosome}{(Optional) An @integer scalar (or a @vector of length J),
+#        which can be used to specify which chromosome each locus belongs to
+#        in case multiple chromosomes are segments.
+#        This argument is also used for annotation purposes.}
 #   \item{x}{Optional @numeric @vector of J genomic locations.
 #            If @NULL, index locations \code{1:J} are used.}
 #   \item{alphaTCN, alphaDH}{The significance levels for segmenting total
@@ -725,6 +726,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-07-06
+# o DOCUMENTATION: The description of argument 'chromosome' for 
+#   segmentByPairedPSCBS() did not describe how to segment multiple
+#   chromosomes in one call.
 # 2011-07-05
 # o BUG FIX: Output fields 'tcnNbrOfSNPs'and 'tcnNbrOfHets' were mistakenly
 #   labelled as 'tcnNbrOr...'.  Thanks Christine Ho at UC Berkeley for

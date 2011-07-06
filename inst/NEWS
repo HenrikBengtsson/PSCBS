@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.11.3 [2011-07-06]
+o ROBUSTNESS: Added a sanity check to estimateDeltaLOHByMinC1AtNonAB() for
+  PairedPSCBS object. The test asserts that there exist segments that are
+  not in allelic balance, which are needed in order to estimate DeltaLOH.
+o DOCUMENTATION: The description of argument 'chromosome' for 
+  segmentByPairedPSCBS() did not describe how to segment multiple
+  chromosomes in one call.
+
+
 Version: 0.11.2 [2011-07-05]
 o BUG FIX: Output fields 'tcnNbrOfSNPs'and 'tcnNbrOfHets' were 
   mistakenly labelled as 'tcnNbrOr...'.  Thanks Christine Ho at

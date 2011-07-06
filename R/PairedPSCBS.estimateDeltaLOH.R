@@ -186,8 +186,16 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   verbose && printf(verbose, "Weighted median of (corrected) C1 in allelic balance: %.3f\n", muC1atAB);
 
 
-  verbose && cat(verbose, "Number of segments not in allelic balance: ", sum(!isAB, na.rm=TRUE));
+  nbrOfSegments <- length(isAB);
+  nbrOfNotAB <- sum(!isAB, na.rm=TRUE);
+  verbose && printf(verbose, "Number of segments not in allelic balance: %d (%.1f%%) of %d", nbrOfNotAB, 100*nbrOfNotAB/nbrOfSegments, nbrOfSegments);
   segsNotAB <- segs[which(!isAB),,drop=FALSE];
+
+  # Sanity check
+  if (nbrOfNotAB == 0) {
+    throw(sprintf("All %d segments are in allelic balance. Cannot estimate DeltaLOH, please use a predetermined value instead. In order to estimate DeltaLOH, at least one segment must be in allelic inbalance.", nbrOfSegments));
+  }
+
   C1 <- segsNotAB$c1Mean;
   muC1atNonAB <- min(C1, na.rm=TRUE);
   idxs <- which(C1 <= muC1atNonAB);
@@ -210,6 +218,10 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
 ############################################################################
 # HISTORY:
+# 2011-07-06
+# o ROBUSTNESS: Added a sanity check to estimateDeltaLOHByMinC1AtNonAB()
+#   asserting that there exist segments that are not in allelic balance,
+#   which are needed for estimating $\mu_0$.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-05-29
