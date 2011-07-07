@@ -178,7 +178,7 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimat
   verbose && printf(verbose, "Number of segments called allelic balance (AB): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
   verbose && exit(verbose);
 
-  segs <- cbind(segs, abCall=call);
+  segs$abCall <- call;
   fit$output <- segs;
 
   # Append 'delta' and 'alpha' to parameters
@@ -199,6 +199,10 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimat
 
 ##############################################################################
 # HISTORY
+# 2011-07-07
+# o BUG FIX: Consecutive calls to callAB(..., force=TRUE) would append
+#   additional 'abCall' columns to the segmentation table instead of
+#   replacing existing calls.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-05-29
