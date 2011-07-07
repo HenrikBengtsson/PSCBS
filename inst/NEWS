@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.11.4 [2011-07-07]
+o GENERALIZATION: Now the internal estimator function that
+  estimateDeltaLOH() uses returns -Inf if all segments are called AB,
+  instead of throwing an exception.  This will in turn make callLOH()
+  call all segments to be non-LOH.
+o DOCUMENTATION: Removed obsolete references to the R-forge repository.
+
+
 Version: 0.11.3 [2011-07-06]
 o ROBUSTNESS: Added a sanity check to estimateDeltaLOHByMinC1AtNonAB() for
   PairedPSCBS object. The test asserts that there exist segments that are

@@ -1,4 +1,4 @@
-###########################################################################/**
+##########################################################################/**
 # @set class=PairedPSCBS
 # @RdocMethod callLOH
 #
@@ -98,7 +98,9 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
   # Argument 'delta':
-  delta <- Arguments$getDouble(delta, range=c(0,Inf));
+  if (delta != -Inf) {
+    delta <- Arguments$getDouble(delta, range=c(0,Inf));
+  }
 
   # Argument 'alpha':
   alpha <- Arguments$getDouble(alpha, range=c(0,1));

@@ -21,7 +21,9 @@
 # }
 #
 # \value{
-#   Returns the threshold estimate as a @numeric scalar.
+#   Returns the threshold estimate as a @numeric scalar or -@Inf.
+#   In case it is not possible to estimate the LOH threshold, then
+#   -@Inf is returned.
 # }
 #
 # @author
@@ -98,7 +100,9 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 # }
 #
 # \value{
-#   Returns the estimated LOH treshold as a @numeric scalar.
+#   Returns the estimated LOH treshold as a @numeric scalar or -@Inf.
+#   In case it is not possible to estimate the LOH threshold, then
+#   -@Inf is returned.
 # }
 #
 # \details{
@@ -152,27 +156,43 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   # Getting AB calls
   segs <- as.data.frame(this);
+  nbrOfSegments <- nrow(segs);
   isAB <- segs$abCall;
   if (is.null(isAB)) {
     throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.");
   }
-  verbose && cat(verbose, "Number of segments in allelic balance: ", sum(isAB, na.rm=TRUE));
+
+  nbrOfAB <- sum(isAB, na.rm=TRUE);
+  verbose && printf(verbose, "Number of segments in allelic balance: %d (%.1f%%) of %d\n", nbrOfAB, 100*nbrOfAB/nbrOfSegments, nbrOfSegments);
 
   # Sanity check
-  if (sum(isAB, na.rm=TRUE) == 0) {
+  if (nbrOfAB == 0) {
     throw("There are no segments in allelic balance.");
   }
 
+  nbrOfNonAB <- sum(!isAB, na.rm=TRUE);
+  verbose && printf(verbose, "Number of segments not in allelic balance: %d (%.1f%%) of %d", nbrOfNonAB, 100*nbrOfNonAB/nbrOfSegments, nbrOfSegments);
+  segsNonAB <- segs[which(!isAB),,drop=FALSE];
+
+  # Sanity check
+  if (nbrOfNonAB == 0) {
+    msg <- sprintf("All %d segments are in allelic balance. Cannot estimate DeltaLOH, which requires that at least one segment must be in allelic imbalance.  Returning -Inf instead.", nbrOfSegments);
+    warning(msg);
+    return(-Inf);
+  }
+
+
+  # Identify segments in AB and with small enough TCNs
   C <- segs$tcnMean;
   keep <- which(isAB & C <= maxC);
-
-  verbose && printf(verbose, "Number of segments in allelic balance and TCN <= %.2f: %d\n", maxC, length(keep));
+  verbose && printf(verbose, "Number of segments in allelic balance and TCN <= %.2f: %d (%.1f%%) of %d\n", maxC, length(keep), 100*length(keep)/nbrOfSegments, nbrOfSegments);
 
   # Sanity check
   if (length(keep) == 0) {
     throw("There are no segments in allelic balance with small enough total CN.");
   }
 
+  # (a) Estimate mean C1 level of AB segments
   segsT <- segs[keep,,drop=FALSE];
   C <- segsT$tcnMean;
   n <- segsT$dhNbrOfLoci;
@@ -186,20 +206,11 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   verbose && printf(verbose, "Weighted median of (corrected) C1 in allelic balance: %.3f\n", muC1atAB);
 
 
-  nbrOfSegments <- length(isAB);
-  nbrOfNotAB <- sum(!isAB, na.rm=TRUE);
-  verbose && printf(verbose, "Number of segments not in allelic balance: %d (%.1f%%) of %d", nbrOfNotAB, 100*nbrOfNotAB/nbrOfSegments, nbrOfSegments);
-  segsNotAB <- segs[which(!isAB),,drop=FALSE];
-
-  # Sanity check
-  if (nbrOfNotAB == 0) {
-    throw(sprintf("All %d segments are in allelic balance. Cannot estimate DeltaLOH, please use a predetermined value instead. In order to estimate DeltaLOH, at least one segment must be in allelic imbalance.", nbrOfSegments));
-  }
-
-  C1 <- segsNotAB$c1Mean;
+  # (b) Estimate mean C1 level of non-AB segments
+  C1 <- segsNonAB$c1Mean;
   muC1atNonAB <- min(C1, na.rm=TRUE);
   idxs <- which(C1 <= muC1atNonAB);
-  n <- segsNotAB$dhNbrOfLoci[idxs];
+  n <- segsNonAB$dhNbrOfLoci[idxs];
   verbose && printf(verbose, "Smallest C1 among segments not in allelic balance: %.3g\n", muC1atNonAB);
   verbose && printf(verbose, "There are %d segments with in total %d heterozygous SNPs with this level.\n", length(idxs), n);
 
@@ -218,6 +229,9 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
 ############################################################################
 # HISTORY:
+# 2011-07-07
+# o GENERALIZATION: Now estimateDeltaLOHByMinC1ForNonAB() returns -Inf
+#   if all segments are called AB.
 # 2011-07-06
 # o ROBUSTNESS: Added a sanity check to estimateDeltaLOHByMinC1AtNonAB()
 #   asserting that there exist segments that are not in allelic balance,

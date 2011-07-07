@@ -15,10 +15,8 @@
 # }
 #
 # \section{Installation and updates}{
-#
-#   To install this package, see instructions at 
-#   \url{http://r-forge.r-project.org/}.
-# } 
+#   To install this package, use \code{install.packages("PSCBS")}.
+# }
 #
 # \section{To get started}{
 #   To get started, see:
