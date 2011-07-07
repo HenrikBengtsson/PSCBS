@@ -193,7 +193,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   # Sanity check
   if (nbrOfNotAB == 0) {
-    throw(sprintf("All %d segments are in allelic balance. Cannot estimate DeltaLOH, please use a predetermined value instead. In order to estimate DeltaLOH, at least one segment must be in allelic inbalance.", nbrOfSegments));
+    throw(sprintf("All %d segments are in allelic balance. Cannot estimate DeltaLOH, please use a predetermined value instead. In order to estimate DeltaLOH, at least one segment must be in allelic imbalance.", nbrOfSegments));
   }
 
   C1 <- segsNotAB$c1Mean;
