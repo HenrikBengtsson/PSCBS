@@ -5,6 +5,9 @@ Package: PSCBS
 Version: 0.11.5 [2011-07-10]
 o ROBUSTNESS: Fixed partial argument matchings in arrowsC1C2() and
   arrowsDeltaC1C2() for PairedPSCBS.
+o BUG FIX: tileChromosomes() for PairedPSCBS was still assuming the
+  old naming convention of column names.  This caused plotTracks()
+  to throw an exception when plotting multiple chromosomes.
 
 
 Version: 0.11.4 [2011-07-07]

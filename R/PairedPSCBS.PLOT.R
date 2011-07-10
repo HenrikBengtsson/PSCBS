@@ -574,7 +574,10 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Offset...
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  segFields <- grep("(start|end)$", colnames(segs), value=TRUE);
+  segFields <- grep("(Start|End)$", colnames(segs), value=TRUE);
+  # Sanity check
+  stopifnot(length(segFields) > 0);
+
   for (kk in seq(along=chromosomes)) {
     chromosome <- chromosomes[kk];
     chrTag <- sprintf("Chr%02d", chromosome);
@@ -905,6 +908,8 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x,   chromosome
 ############################################################################
 # HISTORY:
 # 2011-07-10
+# o BUG FIX: tileChromosomes() for PairedPSCBS was still assuming the
+#   old naming convention of column names.
 # o ROBUSTNESS: Fixed partial argument matchings in arrowsC1C2() and
 #   arrowsDeltaC1C2() for PairedPSCBS.
 # 2011-06-14
