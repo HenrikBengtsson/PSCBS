@@ -497,7 +497,7 @@ setMethodS3("arrowsC1C2", "PairedPSCBS", function(fit, length=0.05, ...) {
   x <- xy[,1,drop=TRUE];
   y <- xy[,2,drop=TRUE];
   s <- seq(length=length(x)-1);
-  arrows(x0=x[s],y=y[s], x1=x[s+1],y1=y[s+1], code=2, length=length, ...);
+  arrows(x0=x[s],y0=y[s], x1=x[s+1],y1=y[s+1], code=2, length=length, ...);
 }, private=TRUE)
 
 
@@ -507,7 +507,7 @@ setMethodS3("arrowsDeltaC1C2", "PairedPSCBS", function(fit, length=0.05, ...) {
   x <- xy[,1,drop=TRUE];
   y <- xy[,2,drop=TRUE];
   s <- seq(length=length(x)-1);
-  arrows(x0=x[s],y=y[s], x1=x[s+1],y1=y[s+1], code=2, length=length, ...);
+  arrows(x0=x[s],y0=y[s], x1=x[s+1],y1=y[s+1], code=2, length=length, ...);
 }, private=TRUE)
 
 
@@ -904,6 +904,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x,   chromosome
 
 ############################################################################
 # HISTORY:
+# 2011-07-10
+# o ROBUSTNESS: Fixed partial argument matchings in arrowsC1C2() and
+#   arrowsDeltaC1C2() for PairedPSCBS.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-01-19

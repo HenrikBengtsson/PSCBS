@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.11.5 [2011-07-10]
+o ROBUSTNESS: Fixed partial argument matchings in arrowsC1C2() and
+  arrowsDeltaC1C2() for PairedPSCBS.
+
+
 Version: 0.11.4 [2011-07-07]
 o GENERALIZATION: Now the internal estimator function that
   estimateDeltaLOH() uses returns -Inf if all segments are called AB,
