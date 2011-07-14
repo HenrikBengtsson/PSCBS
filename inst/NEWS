@@ -10,6 +10,7 @@ o BUG FIX/ROBUSTNESS: In some cases, the segmentation table would
   package, if loaded after R.utils, overrides capitalize() in R.utils
   with another (buggy?) capitalize() function.  To avoid this, we
   now everywhere specify explicitly that we want to the one in R.utils.
+  Thanks Christine To at University of Toronto for reporting on this.
 
 
 Version: 0.11.5 [2011-07-10]
