@@ -350,6 +350,11 @@ setMethodS3("plot", "PairedPSCBS", function(x, ...) {
 
 
 setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "dh", "c1", "c2"), xScale=1e-6, ...) {
+  # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
+  # capitalize() that overrides the one we want to use. Until PSCBS
+  # gets a namespace, we do the following workaround. /HB 2011-07-14
+  capitalize <- R.utils::capitalize;
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -380,6 +385,11 @@ setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "dh", "c1",
 
 
 setMethodS3("drawConfidenceBands", "PairedPSCBS", function(fit, what=c("tcn", "dh", "c1", "c2"), quantiles=c(0.05,0.95), col=col, alpha=0.4, xScale=1e-6, ...) {
+  # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
+  # capitalize() that overrides the one we want to use. Until PSCBS
+  # gets a namespace, we do the following workaround. /HB 2011-07-14
+  capitalize <- R.utils::capitalize;
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

@@ -1,4 +1,10 @@
 setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975)), by=c("betaTN", "betaT"), ..., verbose=FALSE) {
+  # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
+  # capitalize() that overrides the one we want to use. Until PSCBS
+  # gets a namespace, we do the following workaround. /HB 2011-07-14
+  capitalize <- R.utils::capitalize;
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 

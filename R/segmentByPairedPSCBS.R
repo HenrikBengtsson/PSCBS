@@ -101,6 +101,11 @@
 # @keyword IO
 #*/########################################################################### 
 setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE) {
+  # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
+  # capitalize() that overrides the one we want to use. Until PSCBS
+  # gets a namespace, we do the following workaround. /HB 2011-07-14
+  capitalize <- R.utils::capitalize;
+
   require("R.utils") || throw("Package not loaded: R.utils");
   require("aroma.light") || throw("Package not loaded: aroma.light");
 
@@ -726,6 +731,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-07-14
+# o BUG FIX/ROBUSTNESS: In some cases, the segmentation table would 
+#   contain column names with incorrect capitalization, e.g. "tcnnbrOfLoci"
+#   instead of "tcnNbrOfLoci".  This would cause several downstream 
+#   methods to give an error.  The reason for this is that the Hmisc
+#   package, if loaded after R.utils, overrides capitalize() in R.utils
+#   with another (buggy?) capitalize() function.  To avoid this, we
+#   now everywhere specify explicitly that we want to the one in R.utils.
 # 2011-07-06
 # o DOCUMENTATION: The description of argument 'chromosome' for 
 #   segmentByPairedPSCBS() did not describe how to segment multiple

@@ -2,6 +2,16 @@
 Package: PSCBS
 ==============
 
+Version: 0.11.6 [2011-07-14]
+o BUG FIX/ROBUSTNESS: In some cases, the segmentation table would 
+  contain column names with incorrect capitalization, e.g. "tcnnbrOfLoci"
+  instead of "tcnNbrOfLoci".  This would cause several downstream 
+  methods to give an error.  The reason for this is that the Hmisc
+  package, if loaded after R.utils, overrides capitalize() in R.utils
+  with another (buggy?) capitalize() function.  To avoid this, we
+  now everywhere specify explicitly that we want to the one in R.utils.
+
+
 Version: 0.11.5 [2011-07-10]
 o ROBUSTNESS: Fixed partial argument matchings in arrowsC1C2() and
   arrowsDeltaC1C2() for PairedPSCBS.
