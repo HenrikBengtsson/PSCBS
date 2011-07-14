@@ -24,11 +24,12 @@
 
  \arguments{
    \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total tumor copy number (TCN) ratios in [0,+\code{\link[base:is.finite]{Inf}}) (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
-   \item{betaT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well).}
-   \item{betaN}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well).}
+   \item{betaT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well) or \code{\link[base]{NA}} for non-polymorphic loci.}
+   \item{betaN}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well) or \code{\link[base]{NA}} for non-polymorphic loci.}
    \item{muN}{An optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genotype calls in
-        \{0,1/2,1\} for AA, AB, and BB, respectively. If not given,
-        they are estimated from the normal BAFs using
+        \{0,1/2,1\} for AA, AB, and BB, respectively,
+        and \code{\link[base]{NA}} for non-polymorphic loci.
+        If not given, they are estimated from the normal BAFs using
         \code{\link[aroma.light]{callNaiveGenotypes}} as described in [2].}
    \item{chromosome}{(Optional) An \code{\link[base]{integer}} scalar (or a \code{\link[base]{vector}} of length J),
         which can be used to specify which chromosome each locus belongs to

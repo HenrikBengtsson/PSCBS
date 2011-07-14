@@ -15,11 +15,12 @@
 #
 # \arguments{
 #   \item{CT}{A @numeric @vector of J tumor total tumor copy number (TCN) ratios in [0,+@Inf) (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
-#   \item{betaT}{A @numeric @vector of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well).}
-#   \item{betaN}{A @numeric @vector of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well).}
+#   \item{betaT}{A @numeric @vector of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well) or @NA for non-polymorphic loci.}
+#   \item{betaN}{A @numeric @vector of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well) or @NA for non-polymorphic loci.}
 #   \item{muN}{An optional @numeric @vector of J genotype calls in 
-#        \{0,1/2,1\} for AA, AB, and BB, respectively. If not given,
-#        they are estimated from the normal BAFs using
+#        \{0,1/2,1\} for AA, AB, and BB, respectively, 
+#        and @NA for non-polymorphic loci.
+#        If not given, they are estimated from the normal BAFs using
 #        @see "aroma.light::callNaiveGenotypes" as described in [2].}
 #   \item{chromosome}{(Optional) An @integer scalar (or a @vector of length J),
 #        which can be used to specify which chromosome each locus belongs to
@@ -732,6 +733,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 ############################################################################
 # HISTORY:
 # 2011-07-14
+# o DOCUMENTATION: Added to the help that arguments betaT, betaN and muN
+#   may contain NAs for non-polymorphic loci.
 # o BUG FIX/ROBUSTNESS: In some cases, the segmentation table would 
 #   contain column names with incorrect capitalization, e.g. "tcnnbrOfLoci"
 #   instead of "tcnNbrOfLoci".  This would cause several downstream 
