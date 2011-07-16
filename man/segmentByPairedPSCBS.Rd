@@ -81,6 +81,15 @@
    different results, unless the random seed is set/fixed.
  }
 
+ \section{Whole-genome segmentation is preferred}{
+   Although it is possible to segment each chromosome independently
+   using Paired PSCBS, we strongly recommend to segment whole-genome
+   (TCN,BAF) data at once.  The reason for this is that downstream
+   CN-state calling methods, such as the AB and the LOH callers,
+   performs much better on whole-genome data.  In fact, they may
+   fail to provide valid calls if done chromsome by chromosome.
+ }
+
  \section{Missing and non-finite values}{
    The total copy number signals as well as any optional positions
    must not contain missing values, i.e. \code{\link[base]{NA}}s or \code{\link[base:is.finite]{NaN}}s.

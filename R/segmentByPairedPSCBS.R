@@ -72,6 +72,15 @@
 #   different results, unless the random seed is set/fixed.
 # }
 #
+# \section{Whole-genome segmentation is preferred}{
+#   Although it is possible to segment each chromosome independently
+#   using Paired PSCBS, we strongly recommend to segment whole-genome
+#   (TCN,BAF) data at once.  The reason for this is that downstream
+#   CN-state calling methods, such as the AB and the LOH callers,
+#   performs much better on whole-genome data.  In fact, they may
+#   fail to provide valid calls if done chromsome by chromosome.
+# }
+#
 # \section{Missing and non-finite values}{
 #   The total copy number signals as well as any optional positions
 #   must not contain missing values, i.e. @NAs or @NaNs.
@@ -732,6 +741,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-07-15
+# o DOCUMENTATION: Added a section to help("segmentByPairedPSCBS") on
+#   the importance of doing a whole-genome PSCBS segmentations if 
+#   calling AB and LOH states afterward.
 # 2011-07-14
 # o DOCUMENTATION: Added to the help that arguments betaT, betaN and muN
 #   may contain NAs for non-polymorphic loci.
