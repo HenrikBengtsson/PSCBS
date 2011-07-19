@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.11.7 [2011-07-15x]
+Version: 0.11.7 [2011-07-15]
 o DOCUMENTATION: Added a section to help("segmentByPairedPSCBS") on
   the importance of doing a whole-genome PSCBS segmentations if 
   calling AB and LOH states afterward.
