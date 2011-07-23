@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.12.0 [2011-07-23]
+o Added a namespace to the package, which will be more or less
+  a requirement in the next major release of R.
+o BUG FIX: Recently R devel automatically adds a namespace to
+  a package, if missing.  This caused some of the PSCBS examples
+  to throw an exception related to incorrect dispatching of cat().
+
+
 Version: 0.11.7 [2011-07-15]
 o DOCUMENTATION: Added a section to help("segmentByPairedPSCBS") on
   the importance of doing a whole-genome PSCBS segmentations if 

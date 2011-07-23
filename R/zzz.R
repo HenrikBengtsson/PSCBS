@@ -2,8 +2,8 @@
 # conflicts() in [R] base.
 .conflicts.OK <- TRUE
 
-## .onAttach <- function(libname, pkgname) { # Only if NAMESPACE
-.First.lib <- function(libname, pkgname) {
+## .First.lib <- function(libname, pkgname) {
+.onAttach <- function(libname, pkgname) {
   pd <- utils::packageDescription(pkgname);
 
   # Inform user if DNAcopy is missing
@@ -18,3 +18,10 @@
   packageStartupMessage(pkgname, " v", pd$Version, " (", 
     pd$Date, ") successfully loaded. See ?", pkgname, " for help."); 
 }
+
+
+############################################################################
+# HISTORY: 
+# 2011-07-23
+# o Added a namespace to the package.
+############################################################################
