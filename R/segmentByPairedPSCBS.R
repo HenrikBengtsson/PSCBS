@@ -749,6 +749,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
         (is.na(CT[dhSegRowJJ[2]]) && (dhSegRowJJ[2] <= tcnSegRowJJ[2] + 1L))
       );
     } # for (jj ...)
+    rm(CT, tcnSegRows, dhSegRows);  # Clean up
   }
 
   verbose && print(verbose, head(as.data.frame(fit)));
