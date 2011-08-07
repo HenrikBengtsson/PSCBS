@@ -672,7 +672,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   stopifnot(all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE));
 ##  stopifnot(all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE));
 
-
   # Move 'chromosome' column to the first column
   idx <- match("chromosome", names(segs));
   idxs <- c(idx, seq(length=ncol(segs))[-idx]);
@@ -727,6 +726,29 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   if (is.element(flavor, c("tcn&dh", "sqrt(tcn)&dh"))) {
     fit$params$flavor <- gsub("&", ",", flavor, fixed=TRUE); # AD HOC.
     fit <- postsegmentTCN(fit, verbose=verbose);
+
+    # Sanity check
+    CT <- fit$data$CT;
+    tcnSegRows <- fit$tcnSegRows;
+    dhSegRows <- fit$dhSegRows;
+    for (jj in 1:nrow(tcnSegRows)) {
+      tcnSegRowJJ <- unlist(tcnSegRows[jj,,drop=TRUE], use.names=FALSE);
+      dhSegRowJJ <- unlist(dhSegRows[jj,,drop=TRUE], use.names=FALSE);
+      stopifnot(
+        is.na(tcnSegRowJJ[1]) || is.na(dhSegRowJJ[1]) || 
+        # A TCN segment must start at or before a DH segment...
+        (tcnSegRowJJ[1] <= dhSegRowJJ[1]) ||
+        # ...unless there was an outlier at the left edge.
+        (is.na(CT[dhSegRowJJ[1]]) && (tcnSegRowJJ[1] - 1L <= dhSegRowJJ[1]))
+      );
+      stopifnot(
+        is.na(tcnSegRowJJ[2]) || is.na(dhSegRowJJ[2]) ||
+        # A TCN segment must end at or after a DH segment...
+        (dhSegRowJJ[2] <= tcnSegRowJJ[2]) ||
+        # ...unless there was an outlier at the right edge.
+        (is.na(CT[dhSegRowJJ[2]]) && (dhSegRowJJ[2] <= tcnSegRowJJ[2] + 1L))
+      );
+    } # for (jj ...)
   }
 
   verbose && print(verbose, head(as.data.frame(fit)));
@@ -741,6 +763,15 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-08-08
+# o BUG FIX: If dropSegmentationOutliers() would drop an outlier next to
+#   a change point, such that total copy-number signal would become NA,
+#   then the sanity checks that TCN segments always overlaps DH segments
+#   would fail.  Now the sanity checks are aware of this special case.
+# o Moved the sanity checks that tests the TCN and DH "segRows" from the
+#   bootstrapTCNandDHByRegion() to segmentByPairedPSCBS().  This is the
+#   first step to fix a failure in the sanity checks that could happend
+#   iff one first run dropSegmentationOutliers().
 # 2011-07-15
 # o DOCUMENTATION: Added a section to help("segmentByPairedPSCBS") on
 #   the importance of doing a whole-genome PSCBS segmentations if 

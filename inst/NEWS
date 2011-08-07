@@ -2,6 +2,16 @@
 Package: PSCBS
 ==============
 
+Version: 0.12.1 [2011-08-08]
+o BUG FIX: If dropSegmentationOutliers() would drop an outlier next to
+  a change point, such that total copy-number signal would become NA,
+  then the sanity checks that TCN segments always overlaps DH segments
+  would fail.  Now the sanity checks are aware of this special case.
+  These sanity checks were moved from bootstrapTCNandDHByRegion() to
+  segmentByPairedPSCBS().  Thanks Christine To at University of Toronto
+  for reporting on this.
+
+
 Version: 0.12.0 [2011-07-23]
 o Added a namespace to the package, which will be more or less
   a requirement in the next major release of R.

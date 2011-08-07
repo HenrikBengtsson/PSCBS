@@ -215,9 +215,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     tcnSegRowJJ <- unlist(tcnSegRows[jj,]);
     dhSegRowJJ <- unlist(dhSegRows[jj,]);
 
-    # Sanity check
-    stopifnot(is.na(tcnSegRowJJ[1]) || is.na(dhSegRowJJ[1]) || (tcnSegRowJJ[1] <= dhSegRowJJ[1]));
-    stopifnot(is.na(tcnSegRowJJ[2]) || is.na(dhSegRowJJ[2]) || (dhSegRowJJ[2] <= tcnSegRowJJ[2]));
+##    # Sanity check [MOVED TO segmentByPairedPSCBS()]
+##    stopifnot(is.na(tcnSegRowJJ[1]) || is.na(dhSegRowJJ[1]) || (tcnSegRowJJ[1] <= dhSegRowJJ[1]));
+##    stopifnot(is.na(tcnSegRowJJ[2]) || is.na(dhSegRowJJ[2]) || (dhSegRowJJ[2] <= tcnSegRowJJ[2]));
 
     # Indices of all loci
     idxsAll <- tcnSegRowJJ[1]:tcnSegRowJJ[2];
@@ -539,6 +539,11 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
 ##############################################################################
 # HISTORY
+# 2011-08-08
+# o Moved the sanity checks that tests the TCN and DH "segRows" from the
+#   bootstrapTCNandDHByRegion() to segmentByPairedPSCBS().  This is the
+#   first step to fix a failure in the sanity checks that could happend
+#   iff one first run dropSegmentationOutliers().
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-05-29
