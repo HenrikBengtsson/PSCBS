@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.12.2 [2011-08-27]
+o CLEANUP: Now R CMD check is no longer giving a note that the
+  package loads package 'DNAcopy' in .onAttach().
+
+
 Version: 0.12.1 [2011-08-08]
 o BUG FIX: If dropSegmentationOutliers() would drop an outlier next to
   a change point, such that the total copy-number signal becomes NA,
