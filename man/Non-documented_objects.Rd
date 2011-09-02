@@ -139,6 +139,10 @@
 \alias{nbrOfSamples}
 \alias{nbrOfSamples.DNAcopy}
 \alias{nbrOfSegments.DNAcopy}
+\alias{estimateStandardDeviation}
+\alias{estimateStandardDeviation.DNAcopy}
+\alias{extractSegmentMeansByLocus}
+\alias{extractSegmentMeansByLocus.DNAcopy}
 
 \description{
   This page contains aliases for all "non-documented" objects that

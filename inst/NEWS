@@ -6,6 +6,9 @@ Version: 0.13.1 [2011-09-02]
 o Added nbrOfLoci(), getChromosomes() and getSampleNames() for CBS.
 o Added nbrOfSegments(), nbrOfLoci(), nbrOfSamples(), getSampleNames()
   and getChromosomes() for DNAcopy.
+o Added estimateStandardDeviation() for DNAcopy.
+o Added internal extractSegmentMeansByLocus() for DNAcopy, which is
+  used by estimateStandardDeviation(..., method="res").
 
 
 Version: 0.13.0 [2011-09-01]

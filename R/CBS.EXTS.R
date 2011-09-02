@@ -9,7 +9,7 @@ setMethodS3("getChromosomes", "CBS", function(fit, ...) {
 
 setMethodS3("getSampleNames", "CBS", function(fit, ...) {
   names <- NextMethod("getSampleNames", fit, ...);
-  names <- setdiff(names, c("chromosome", "x"));
+  names <- setdiff(names, c("chromosome", "x", "index"));
   names;
 })
 
