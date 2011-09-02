@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.13.0 [2011-09-01]
+o GENERALIZATION: Now segmentByCBS() can process multiple chromosomes.
+o BUG FIX: Internal methods plotTracksManyChromosomes() and
+  tileChromosomes() for CBS did not work at all and therefore
+  neither plotTracks() for CBS with more than one chromosome.
+o Added append() for CBS objects.
+
+
 Version: 0.12.2 [2011-08-27]
 o CLEANUP: Now R CMD check is no longer giving a note that the
   package loads package 'DNAcopy' in .onAttach().

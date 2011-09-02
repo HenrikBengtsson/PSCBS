@@ -81,3 +81,22 @@ drawLevels(fit, col="red", lwd=2, xScale=1e-6)
 
 fitC <- segmentByCBS(y, x=x, joinSegments=FALSE, seed=0xBEEF)
 drawLevels(fitC, col="blue", lwd=2, xScale=1e-6)
+
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Multiple chromosomes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Appending CBS results
+fit1 <- segmentByCBS(y, chromosome=1, x=x)
+fit2 <- segmentByCBS(y, chromosome=2, x=x)
+fit <- append(fit1, fit2)
+print(fit)
+plotTracks(fit, pch=20, lwd=2, Clim=c(-3,3))
+
+
+# Segmenting multiple chromosomes at once
+chromosomeWG <- rep(1:2, each=J)
+xWG <- rep(x, times=2)
+yWG <- rep(y, times=2)
+fitWG <- segmentByCBS(yWG, chromosome=chromosomeWG, x=xWG)

@@ -102,17 +102,17 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow);
   if (length(chromosome) > 1) {
     chromosome <- Arguments$getIntegers(chromosome, length=length2, disallow=disallow);
-    # If 'chromosome' is a vector of length J, then it must contain
-    # a unique chromosome.
-    chromosomes <- sort(unique(chromosome));
-    if (length(chromosomes) > 1) {
-      throw("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "));
-    }
-    chromosome <- chromosomes;
+##    # If 'chromosome' is a vector of length J, then it must contain
+##    # a unique chromosome.
+##    chromosomes <- sort(unique(chromosome));
+##    if (length(chromosomes) > 1) {
+##      throw("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "));
+##    }
+##    chromosome <- chromosomes;
   }
 
   # For future usage
-  chrom <- rep(chromosome, times=nbrOfLoci);
+  chrom <- rep(chromosome, length.out=nbrOfLoci);
 
   # Argument 'x':
   if (is.null(x)) {
@@ -172,34 +172,25 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
   verbose && enter(verbose, "Segmenting by CBS");
 
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Retrieving segmentation function
+  # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Retrieving the fit function");
-  pkgName <- "DNAcopy";
-  # Assert that package is installed
-  isPackageInstalled(pkgName) || throw("Package is not installed: ", pkgName);
-  pkg <- packageDescription(pkgName);
-  pkgVer <- pkg$Version;
-  pkgDetails <- sprintf("%s v%s", pkgName, pkgVer);
-
-  methodName <- "segment";
-  verbose && cat(verbose, "Method: ", methodName);
-  verbose && cat(verbose, "Package: ", pkgDetails);
-
-  # We need to load package
-  require(pkgName, character.only=TRUE) || throw("Package not loaded: ", pkgName);
-
-  # Get the fit function for the segmentation method
-#  fitFcn <- getExportedValue(pkgName, methodName);
-  fitFcn <- getFromNamespace(methodName, pkgName);
-  verbose && str(verbose, "Function: ", fitFcn);
-  formals <- formals(fitFcn);
-  verbose && cat(verbose, "Formals:");
-  verbose && str(verbose, formals);
-  verbose && exit(verbose);
- 
+  if (!is.null(seed)) {
+    verbose && enter(verbose, "Setting (temporary) random seed");
+    oldRandomSeed <- NULL;
+    if (exists(".Random.seed", mode="integer")) {
+      oldRandomSeed <- get(".Random.seed", mode="integer");
+    }
+    on.exit({
+      if (!is.null(oldRandomSeed)) {
+        .Random.seed <<- oldRandomSeed;
+      }
+    }, add=TRUE);
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
+    verbose && cat(verbose, "Seed: ", seed);
+    set.seed(seed);
+    verbose && exit(verbose);
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup data
@@ -246,6 +237,101 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   verbose && str(verbose, data);
   verbose && exit(verbose);
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Multiple chromosomes?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Identify all chromosomes, excluding missing values
+  chromosomes <- sort(unique(data$chrom), na.last=NA);
+  nbrOfChromosomes <- length(chromosomes);
+  if (nbrOfChromosomes > 1) {
+    verbose && enter(verbose, "Segmenting multiple chromosomes");
+    verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
+
+    fitList <- list();
+    for (kk in seq(length=nbrOfChromosomes)) {
+      chromosomeKK <- chromosomes[kk];
+      chrTag <- sprintf("Chr%02d", chromosomeKK);
+      verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
+
+      # Extract subset
+      dataKK <- subset(data, chrom == chromosomeKK);
+      verbose && str(verbose, dataKK);
+      fields <- attachLocally(dataKK, fields=c("y", "chrom", "x", "index"));
+      rm(dataKK); # Not needed anymore
+
+      fit <- segmentByCBS(y=y,
+                chromosome=chrom, x=x,
+                undo=undo,
+                joinSegments=joinSegments,
+                columnNamesFlavor=columnNamesFlavor,
+                ..., 
+                seed=NULL,
+                verbose=verbose);
+
+      # Sanity checks
+      stopifnot(nrow(fit$data) == length(y));
+      stopifnot(all.equal(fit$data$y, y));
+
+      rm(list=fields); # Not needed anymore
+
+      verbose && print(verbose, head(as.data.frame(fit)));
+      verbose && print(verbose, tail(as.data.frame(fit)));
+      
+      fitList[[chrTag]] <- fit;
+
+      # Not needed anymore
+      rm(fit);
+      verbose && exit(verbose);
+    } # for (kk ...)
+
+    verbose && enter(verbose, "Merging");
+    fit <- Reduce(append, fitList);
+    # Not needed anymore
+    rm(fitList);
+    verbose && str(verbose, fit);
+    verbose && exit(verbose);
+
+    verbose && print(verbose, head(as.data.frame(fit)));
+    verbose && print(verbose, tail(as.data.frame(fit)));
+   
+    verbose && exit(verbose);
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Return results
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    return(fit);
+  } # if (nbrOfChromosomes > 1) 
+
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Retrieving segmentation function
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Retrieving the fit function");
+  pkgName <- "DNAcopy";
+  # Assert that package is installed
+  isPackageInstalled(pkgName) || throw("Package is not installed: ", pkgName);
+  pkg <- packageDescription(pkgName);
+  pkgVer <- pkg$Version;
+  pkgDetails <- sprintf("%s v%s", pkgName, pkgVer);
+
+  methodName <- "segment";
+  verbose && cat(verbose, "Method: ", methodName);
+  verbose && cat(verbose, "Package: ", pkgDetails);
+
+  # We need to load package
+  require(pkgName, character.only=TRUE) || throw("Package not loaded: ", pkgName);
+
+  # Get the fit function for the segmentation method
+#  fitFcn <- getExportedValue(pkgName, methodName);
+  fitFcn <- getFromNamespace(methodName, pkgName);
+  verbose && str(verbose, "Function: ", fitFcn);
+  formals <- formals(fitFcn);
+  verbose && cat(verbose, "Formals:");
+  verbose && str(verbose, formals);
+  verbose && exit(verbose);
+ 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up arguments to pass to segmentation function
@@ -309,27 +395,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
   verbose && exit(verbose);
  
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Set the random seed
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (!is.null(seed)) {
-    verbose && enter(verbose, "Setting (temporary) random seed");
-    oldRandomSeed <- NULL;
-    if (exists(".Random.seed", mode="integer")) {
-      oldRandomSeed <- get(".Random.seed", mode="integer");
-    }
-    on.exit({
-      if (!is.null(oldRandomSeed)) {
-        .Random.seed <<- oldRandomSeed;
-      }
-    }, add=TRUE);
-    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
-    verbose && cat(verbose, "Seed: ", seed);
-    set.seed(seed);
-    verbose && exit(verbose);
-  }
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Calling segmentation function
@@ -461,6 +526,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
 ############################################################################
 # HISTORY:
+# 2011-09-01
+# o GENERALIZATION: Now segmentByCBS() can process multiple chromosomes.
+# o Now the random seed is set at the very beginning of the code, which
+#   should not make a difference, i.e. it should give identical results.
 # 2011-06-14
 # o GENERALIZATION: Added argument 'columnNamesFlavor' to segmentByCBS().
 # o CONVENTION: Changed the column names of returned data frames. 

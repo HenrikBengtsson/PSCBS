@@ -144,6 +144,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Additional chromosome annotations
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data$chromosome <- data$chrom;
   data$x <- data$maploc;
   if (is.null(chrStarts)) {
     xRange <- matrix(0, nrow=length(chromosomes), ncol=2);
@@ -175,6 +176,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Offset...
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data$chromosome <- data$chrom;
   data$x <- data$maploc;
   segFields <- grep("(start|end)$", colnames(segs), value=TRUE);
   for (kk in seq(along=chromosomes)) {
@@ -255,12 +257,13 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6)
   }
 
   # To please R CMD check
-  CT <- muN <- betaT <- betaN <- betaTN <- NULL;
+  CT <- y <- muN <- betaT <- betaN <- betaTN <- NULL;
   rm(CT, muN, betaT, betaN, betaTN);
   attachLocally(data);
   x <- xScale * x;
   vs <- xScale * fit$chromosomeStats[,1:2];
   mids <- (vs[,1]+vs[,2])/2;
+  CT <- y;
 
   nbrOfLoci <- length(x);
   chromosomes <- getChromosomes(fit);
@@ -308,6 +311,11 @@ setMethodS3("nbrOfChromosomes", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-09-01
+# o BUG FIX: plotTracksManyChromosomes() for CBS gave an error because
+#   internal variable 'CT' was not defined.
+# o BUG FIX: tileChromosomes() for CBS not identify the chromosomes of
+#   the loci, and hence generated corrupt/missing values while tiling.
 # 2010-11-19
 # o Created from PairedPSCBS.R.
 ############################################################################ 

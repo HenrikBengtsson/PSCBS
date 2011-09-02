@@ -128,6 +128,7 @@
 \alias{callAB}
 \alias{callAllelicBalance.default}
 \alias{callLOH}
+\alias{append.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
