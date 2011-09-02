@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.13.1 [2011-09-02]
+o Added nbrOfLoci(), getChromosomes() and getSampleNames() for CBS.
+o Added nbrOfSegments(), nbrOfLoci(), nbrOfSamples(), getSampleNames()
+  and getChromosomes() for DNAcopy.
+
+
 Version: 0.13.0 [2011-09-01]
 o GENERALIZATION: Now segmentByCBS() can process multiple chromosomes.
 o BUG FIX: Internal methods plotTracksManyChromosomes() and

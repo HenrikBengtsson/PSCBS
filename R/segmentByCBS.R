@@ -262,6 +262,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
       fit <- segmentByCBS(y=y,
                 chromosome=chrom, x=x,
+                index=index,
                 undo=undo,
                 joinSegments=joinSegments,
                 columnNamesFlavor=columnNamesFlavor,
@@ -526,6 +527,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
 ############################################################################
 # HISTORY:
+# 2011-09-02
+# o Forgot to pass on argument 'index' in multi-chromosome processing.
 # 2011-09-01
 # o GENERALIZATION: Now segmentByCBS() can process multiple chromosomes.
 # o Now the random seed is set at the very beginning of the code, which

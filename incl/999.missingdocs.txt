@@ -53,3 +53,6 @@ estimateDeltaLOH estimateDeltaLOHByMinC1ForNonAB
  callAB callAllelicBalance.default
 callLOH
 append.CBS
+  getChromosomes.DNAcopy getSampleNames getSampleNames.CBS
+  getSampleNames.DNAcopy nbrOfLoci nbrOfLoci.CBS nbrOfLoci.DNAcopy
+  nbrOfSamples nbrOfSamples.DNAcopy nbrOfSegments.DNAcopy

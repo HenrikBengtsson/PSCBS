@@ -129,6 +129,16 @@
 \alias{callAllelicBalance.default}
 \alias{callLOH}
 \alias{append.CBS}
+\alias{getChromosomes.DNAcopy}
+\alias{getSampleNames}
+\alias{getSampleNames.CBS}
+\alias{getSampleNames.DNAcopy}
+\alias{nbrOfLoci}
+\alias{nbrOfLoci.CBS}
+\alias{nbrOfLoci.DNAcopy}
+\alias{nbrOfSamples}
+\alias{nbrOfSamples.DNAcopy}
+\alias{nbrOfSegments.DNAcopy}
 
 \description{
   This page contains aliases for all "non-documented" objects that

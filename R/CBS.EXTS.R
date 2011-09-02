@@ -1,3 +1,19 @@
+setMethodS3("nbrOfLoci", "CBS", function(fit, ...) {
+  nrow(fit$data);
+})
+
+setMethodS3("getChromosomes", "CBS", function(fit, ...) {
+  chromosomes <- fit$data$chromosome;
+  sort(unique(chromosomes));
+})
+
+setMethodS3("getSampleNames", "CBS", function(fit, ...) {
+  names <- NextMethod("getSampleNames", fit, ...);
+  names <- setdiff(names, c("chromosome", "x"));
+  names;
+})
+
+
 setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
   # To please R CMD check
   this <- x;
@@ -53,6 +69,8 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-09-02
+# o Added nbrOfLoci(), getChromosomes() and getSampleNames() for CBS.
 # 2010-11-19
 # o Added append() for CBS objects.
 ############################################################################

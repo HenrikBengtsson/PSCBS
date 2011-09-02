@@ -92,7 +92,7 @@ fit1 <- segmentByCBS(y, chromosome=1, x=x)
 fit2 <- segmentByCBS(y, chromosome=2, x=x)
 fit <- append(fit1, fit2)
 print(fit)
-plotTracks(fit, pch=20, lwd=2, Clim=c(-3,3))
+plotTracks(fit, subset=NULL, pch=20, lwd=2, Clim=c(-3,3))
 
 
 # Segmenting multiple chromosomes at once
@@ -100,3 +100,10 @@ chromosomeWG <- rep(1:2, each=J)
 xWG <- rep(x, times=2)
 yWG <- rep(y, times=2)
 fitWG <- segmentByCBS(yWG, chromosome=chromosomeWG, x=xWG)
+print(fitWG)
+plotTracks(fitWG, subset=NULL, pch=20, lwd=2, Clim=c(-3,3))
+
+# Assert same results
+fit$data[,"index"] <- fitWG$data[,"index"] # Ignore 'index'
+stopifnot(all.equal(fitWG$data, fit$data))
+stopifnot(all.equal(fitWG$output, fit$output))
