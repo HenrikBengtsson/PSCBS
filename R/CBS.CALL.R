@@ -369,8 +369,9 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 # }
 #
 # \value{
-#  Returns a @see "PSCBS::CBS" object where @logical column
-#  'outlierCall' has been appended to the segmentation table.
+#  Returns a @see "PSCBS::CBS" object where @logical columns
+#  'negOutlierCall' and 'posOutlierCall' have been appended
+#  to the segmentation table.
 # }
 #
 # \section{The UCSF caller}{
@@ -413,7 +414,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
   # Allocate calls
   nbrOfLoci <- nbrOfLoci(fit);
   naValue <- as.logical(NA);
-  calls <- rep(naValue, times=nbrOfLoci);
+  negOutlierCall <- posOutlierCall <- rep(naValue, times=nbrOfLoci);
 
   if (method == "ucsf-mad") {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -484,12 +485,14 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
       # Call outliers
       naValue <- as.logical(NA);
       callsSS <- rep(naValue, times=length(dySS));
-      callsSS[-tau <= dySS & dySS <= +tau] <- FALSE;
-      callsSS[dySS > +tau] <- TRUE;
-      callsSS[dySS < -tau] <- TRUE;
+      callsSS[-tau <= dySS & dySS <= +tau] <- 0L;
+      callsSS[dySS > +tau] <- +1L;
+      callsSS[dySS < -tau] <- -1L;
 
       # Record
-      calls[idxs] <- callsSS;
+      negOutlierCall[idxs] <- (callsSS < 0L);
+      posOutlierCall[idxs] <- (callsSS > 0L);
+
       sds[ss] <- sdSS;
     } # for (ss ...)
 
@@ -501,7 +504,8 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
 
   # Sanity check
-  stopifnot(length(calls) == nbrOfLoci);
+  stopifnot(length(negOutlierCall) == nbrOfLoci);
+  stopifnot(length(posOutlierCall) == nbrOfLoci);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -509,7 +513,8 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # (a) segmentation table
   data <- fit$data;
-  data$outlierCall <- calls;
+  data$negOutlierCall <- negOutlierCall;
+  data$posOutlierCall <- posOutlierCall;
   fit$data <- data;
 
   # (b) parameters

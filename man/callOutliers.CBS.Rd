@@ -32,8 +32,9 @@
 }
 
 \value{
- Returns a \code{\link[PSCBS]{CBS}} object where \code{\link[base]{logical}} column
- 'outlierCall' has been appended to the segmentation table.
+ Returns a \code{\link[PSCBS]{CBS}} object where \code{\link[base]{logical}} columns
+ 'negOutlierCall' and 'posOutlierCall' have been appended
+ to the segmentation table.
 }
 
 \section{The UCSF caller}{

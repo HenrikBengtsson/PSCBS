@@ -500,6 +500,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   fit$data <- data;
 
   segs <- fit$output;
+
   names <- colnames(segs);
   names <- gsub("ID", "id", names, fixed=TRUE);
   names <- gsub("seg.mean", "mean", names, fixed=TRUE);
