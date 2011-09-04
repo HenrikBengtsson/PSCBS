@@ -25,9 +25,9 @@
 
  \arguments{
    \item{y}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic signals to be segmented.}
-   \item{chromosome}{(Optional) An \code{\link[base]{integer}} scalar
-       (or a \code{\link[base]{vector}} of length J contain a unique value).
-       Only used for annotation purposes.}
+   \item{chromosome}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of length J, specifying
+       the chromosome of each loci.  If a scalar, it is expanded to
+       a vector of length J.}
    \item{x}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic locations.
             If \code{\link[base]{NULL}}, index locations \code{1:J} are used.}
    \item{w}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} in [0,1] of J weights.}
@@ -59,7 +59,8 @@
  }
 
  \details{
-   Internally \code{\link[DNAcopy]{segment}} is used to segment the signals.
+   Internally \code{\link[DNAcopy]{segment}} of \pkg{DNAcopy} is used to
+   segment the signals.
    This segmentation method support weighted segmentation.
  }
 
