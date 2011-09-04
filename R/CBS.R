@@ -72,11 +72,11 @@ setMethodS3("as.data.frame", "CBS", function(x, ...) {
 setMethodS3("getLocusData", "CBS", function(fit, ...) {
   data <- fit$data;
   data;
-})
+}, private=TRUE)
 
 setMethodS3("getSegments", "CBS", function(fit, ...) {
   fit$output;
-})
+}, private=TRUE)
 
 setMethodS3("nbrOfLoci", "CBS", function(fit, ...) {
   nrow(getLocusData(fit));

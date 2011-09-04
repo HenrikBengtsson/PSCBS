@@ -61,7 +61,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
   verbose && exit(verbose);
 
   fit;
-}) # joinSegments()
+}, private=TRUE) # joinSegments()
 
 
 ############################################################################

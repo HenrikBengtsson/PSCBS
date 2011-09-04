@@ -203,7 +203,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
   verbose && exit(verbose);
 
   fit;
-}) # tileChromosomes()
+}, private=TRUE) # tileChromosomes()
 
 
 
@@ -284,7 +284,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6)
   if (!is.null(onEnd)) onEnd(gh=gh);
 
   invisible(gh);
-}) # plotTracksManyChromosomes()
+}, private=TRUE) # plotTracksManyChromosomes()
 
 
 
