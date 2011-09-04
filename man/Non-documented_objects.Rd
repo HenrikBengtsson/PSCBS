@@ -143,6 +143,17 @@
 \alias{estimateStandardDeviation.DNAcopy}
 \alias{extractSegmentMeansByLocus}
 \alias{extractSegmentMeansByLocus.DNAcopy}
+\alias{as.CBS}
+\alias{as.DNAcopy}
+\alias{as.character.CBS}
+\alias{extractByChromosomes.CBS}
+\alias{getLocusData}
+\alias{getLocusData.CBS}
+\alias{getSegments}
+\alias{getSegments.CBS}
+\alias{nbrOfSegments.CBS}
+\alias{print.CBS}
+\alias{subset.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

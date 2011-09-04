@@ -39,8 +39,6 @@
 #     change point locations.}
 #   \item{index}{An @integer @vector of length J specifying the 
 #     genomewide indices of the loci.}
-#   \item{columnNamesFlavor}{A @character string specifying how column names
-#     of the returned data frame should be named.}
 #   \item{seed}{An (optional) @integer specifying the random seed to be 
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
@@ -48,7 +46,7 @@
 # }
 #
 # \value{
-#   Returns the fit object.
+#   Returns a @see "CBS" object.
 # }
 # 
 # \details{
@@ -70,7 +68,10 @@
 #   i.e. -@Inf or +@Inf. If so, an informative error is thrown.
 # }
 #
-# @examples "../incl/segmentByCBS.Rex"
+# \examples{
+#   @include "../incl/segmentByCBS.Rex"
+#   @include "../incl/segmentByCBS,tests.Rex"
+# }
 #
 # @author
 #
@@ -86,7 +87,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, columnNamesFlavor=c("PSCBS", "DNAcopy"), seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,9 +154,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
       throw("Argument 'knownCPs' should only be specified if argument 'joinSegments' is TRUE.");
     }
   }
-
-  # Argument 'columnNamesFlavor':
-  columnNamesFlavor <- match.arg(columnNamesFlavor);
 
   # Argument 'seed':
   if (!is.null(seed)) {
@@ -265,7 +263,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
                 index=index,
                 undo=undo,
                 joinSegments=joinSegments,
-                columnNamesFlavor=columnNamesFlavor,
                 ..., 
                 seed=NULL,
                 verbose=verbose);
@@ -474,7 +471,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
   fit$params <- params;
 
-  class(fit) <- c("CBS", class(fit));
+#  class(fit) <- c("CBS", class(fit));
+  class(fit) <- c("CBS");
 
   # Sanity checks
   segRows <- fit$segRows;
@@ -485,20 +483,29 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Renaming column names
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (columnNamesFlavor != "DNAcopy") {
-    segs <- fit$output;
-    names <- colnames(segs);
-    if (columnNamesFlavor == "PSCBS") {
-      names <- gsub("ID", "id", names, fixed=TRUE);
-      names <- gsub("seg.mean", "mean", names, fixed=TRUE);
-      names <- gsub("chrom", "chromosome", names, fixed=TRUE);
-      names <- gsub("num.mark", "nbrOfLoci", names, fixed=TRUE);
-      names <- gsub("loc.", "", names, fixed=TRUE); # loc.start, loc.end
-    }
-    colnames(segs) <- names;
-    fit$output <- segs;
-  }
+  data <- fit$data;
+  names <- colnames(data);
+  names <- gsub("chrom", "chromosome", names, fixed=TRUE);
+  names <- gsub("maploc", "x", names, fixed=TRUE);
+  colnames(data) <- names;
 
+  # Drop 'CNA' class and DNAcopy attributes
+  class(data) <- c("data.frame");
+  attr(data, "data.type") <- NULL;
+
+  fit$data <- data;
+
+  segs <- fit$output;
+  names <- colnames(segs);
+  names <- gsub("ID", "id", names, fixed=TRUE);
+  names <- gsub("seg.mean", "mean", names, fixed=TRUE);
+  names <- gsub("chrom", "chromosome", names, fixed=TRUE);
+  names <- gsub("num.mark", "nbrOfLoci", names, fixed=TRUE);
+  names <- gsub("loc.", "", names, fixed=TRUE); # loc.start, loc.end
+  colnames(segs) <- names;
+  fit$output <- segs;
+
+  
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Join segments?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -527,6 +534,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
 ############################################################################
 # HISTORY:
+# 2011-09-03
+# o Now segmentByCBS() always returns a CBS object.  To coerce to a
+#   DNAcopy object (as defined in the DNAcopy class) use as.DNAcopy().
+# o Removed argument 'columnNamesFlavor'.
 # 2011-09-02
 # o Forgot to pass on argument 'index' in multi-chromosome processing.
 # 2011-09-01

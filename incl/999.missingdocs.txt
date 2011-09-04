@@ -58,3 +58,6 @@ append.CBS
   nbrOfSamples nbrOfSamples.DNAcopy nbrOfSegments.DNAcopy
   estimateStandardDeviation estimateStandardDeviation.DNAcopy
   extractSegmentMeansByLocus extractSegmentMeansByLocus.DNAcopy
+  as.CBS as.DNAcopy as.character.CBS extractByChromosomes.CBS
+  getLocusData getLocusData.CBS getSegments getSegments.CBS
+  nbrOfSegments.CBS print.CBS subset.CBS

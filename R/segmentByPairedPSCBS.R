@@ -434,7 +434,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
                       chromosome=chromosome, x=x, index=index,
                       joinSegments=joinSegments, knownCPs=knownCPs,
                       alpha=alphaTCN, undo=undoTCN, ...,
-                      columnNamesFlavor="PSCBS", verbose=verbose);
+                      verbose=verbose);
   verbose && str(verbose, fit);
 
   rm(list=fields); # Not needed anymore
@@ -536,7 +536,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
                         chromosome=chromosome, x=x,
                         joinSegments=joinSegments, knownCPs=knownCPsKK,
                         alpha=alphaDH, undo=undoDH, ...,
-                        columnNamesFlavor="PSCBS", verbose=verbose);
+                        verbose=verbose);
     verbose && str(verbose, fit);
     dhSegments <- fit$output;
     dhSegRowsKK <- fit$segRows;
@@ -764,6 +764,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-09-03
+# o Updated code to not use deprecated argument 'columnNamesFlavor'
+#   of segmentByCBS().
 # 2011-08-08
 # o BUG FIX: If dropSegmentationOutliers() would drop an outlier next to
 #   a change point, such that total copy-number signal would become NA,

@@ -21,7 +21,7 @@
   see [1,2].
  }
 
- \usage{\method{segmentByCBS}{default}(y, chromosome=0, x=NULL, index=seq(along = y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, columnNamesFlavor=c("PSCBS", "DNAcopy"), seed=NULL, verbose=FALSE)}
+ \usage{\method{segmentByCBS}{default}(y, chromosome=0, x=NULL, index=seq(along = y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE)}
 
  \arguments{
    \item{y}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic signals to be segmented.}
@@ -48,8 +48,6 @@
      change point locations.}
    \item{index}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length J specifying the
      genomewide indices of the loci.}
-   \item{columnNamesFlavor}{A \code{\link[base]{character}} string specifying how column names
-     of the returned data frame should be named.}
    \item{seed}{An (optional) \code{\link[base]{integer}} specifying the random seed to be
      set before calling the segmentation method.  The random seed is
      set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}
@@ -57,7 +55,7 @@
  }
 
  \value{
-   Returns the fit object.
+   Returns a \code{\link{CBS}} object.
  }
 
  \details{
@@ -80,7 +78,7 @@
  }
 
  \examples{
-
+  
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulating copy-number data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -99,21 +97,20 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-xlab <- "Position (Mb)"
-ylim <- c(-3,3)
-xMb <- x/1e6
-plot(xMb,y, pch=20, col="#aaaaaa", xlab=xlab, ylim=ylim)
-
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segment
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fit <- segmentByCBS(y, x=x)
 print(fit)
+
+
+xlab <- "Position (Mb)"
+ylim <- c(-3,3)
+xMb <- x/1e6
+plot(xMb,y, pch=20, col="#aaaaaa", xlab=xlab, ylim=ylim)
 drawLevels(fit, col="red", lwd=2, xScale=1e-6)
 
-
-
+  
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # TESTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -174,7 +171,7 @@ fit1 <- segmentByCBS(y, chromosome=1, x=x)
 fit2 <- segmentByCBS(y, chromosome=2, x=x)
 fit <- append(fit1, fit2)
 print(fit)
-plotTracks(fit, subset=NULL, pch=20, lwd=2, Clim=c(-3,3))
+plotTracks(fit, subset=NULL, lwd=2, Clim=c(-3,3))
 
 
 # Segmenting multiple chromosomes at once
@@ -183,13 +180,14 @@ xWG <- rep(x, times=2)
 yWG <- rep(y, times=2)
 fitWG <- segmentByCBS(yWG, chromosome=chromosomeWG, x=xWG)
 print(fitWG)
-plotTracks(fitWG, subset=NULL, pch=20, lwd=2, Clim=c(-3,3))
+plotTracks(fitWG, subset=NULL, lwd=2, Clim=c(-3,3))
 
 # Assert same results
 fit$data[,"index"] <- fitWG$data[,"index"] # Ignore 'index'
 stopifnot(all.equal(fitWG$data, fit$data))
 stopifnot(all.equal(fitWG$output, fit$output))
-}
+
+ }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 

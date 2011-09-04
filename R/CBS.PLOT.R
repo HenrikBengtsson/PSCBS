@@ -30,7 +30,7 @@
 # @keyword IO
 # @keyword internal
 #*/########################################################################### 
-setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=".", cex=1, grid=FALSE, Clim=c(0,6), xScale=1e-6, ..., add=FALSE) {
+setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", cex=1, grid=FALSE, Clim=c(0,6), xScale=1e-6, ..., add=FALSE) {
   # To please R CMD check
   fit <- x;
  
@@ -46,14 +46,13 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=".", cex=1, grid=
   xScale <- Arguments$getNumeric(xScale, range=c(0,Inf));
 
   # Extract the input data
-  data <- fit$data;
+  data <- getLocusData(fit);
   if (is.null(data)) {
     throw("Cannot plot segmentation results. No input data available.");
   }
 
   chromosomes <- getChromosomes(fit);
   chromosome <- chromosomes[1];
-  data$x <- data$maploc;
   x <- data$x;
   CT <- data[,3];
   nbrOfLoci <- length(x);
@@ -78,7 +77,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=".", cex=1, grid=
 
   pchT <- if (scatter) { pch } else { NA };
 
-  plot(x, CT, pch=pchT, cex=cex, col="black", ylim=Clim, ylab="TCN");
+  plot(x, CT, pch=pchT, cex=cex, col=col, ylim=Clim, ylab="TCN");
   stext(side=3, pos=1, chrTag);
   if (grid) {
     abline(h=seq(from=0, to=Clim[2], by=2), lty=3, col="gray");
@@ -144,8 +143,6 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Additional chromosome annotations
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data$chromosome <- data$chrom;
-  data$x <- data$maploc;
   if (is.null(chrStarts)) {
     xRange <- matrix(0, nrow=length(chromosomes), ncol=2);
     for (kk in seq(along=chromosomes)) {
@@ -176,8 +173,6 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Offset...
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data$chromosome <- data$chrom;
-  data$x <- data$maploc;
   segFields <- grep("(start|end)$", colnames(segs), value=TRUE);
   for (kk in seq(along=chromosomes)) {
     chromosome <- chromosomes[kk];
@@ -212,7 +207,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
 
 
 
-setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6), xScale=1e-6, ..., subset=0.1, add=FALSE, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6), xScale=1e-6, ..., subset=NULL, add=FALSE, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
   # To please R CMD check
   fit <- x;
  
@@ -226,7 +221,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6)
 
   # Argument 'subset':
   if (!is.null(subset)) {
-    subset <- Arguments$getDouble(subset);
+    subset <- Arguments$getDouble(subset, range=c(0,1));
   }
 
   # Argument 'verbose':
@@ -250,7 +245,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6)
   }
 
   # Subset of the loci?
-  if (!is.null(subset)) {
+  if (!is.null(subset) && subset < 1) {
     n <- nrow(data);
     keep <- sample(n, size=subset*n);
     data <- data[keep,];
@@ -292,22 +287,6 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6)
 }) # plotTracksManyChromosomes()
 
 
-
-setMethodS3("as.data.frame", "CBS", function(x, ...) {
-  # To please R CMD check
-  fit <- x;
-
-  fit$output;
-})
-
-setMethodS3("getChromosomes", "CBS", function(fit, ...) {
-  segs <- fit$output;
-  na.omit(unique(segs$chromosome));
-})
-
-setMethodS3("nbrOfChromosomes", "CBS", function(fit, ...) {
-  length(getChromosomes(fit, ...));
-})
 
 ############################################################################
 # HISTORY:

@@ -1,3 +1,88 @@
+###########################################################################/**
+# @set class=CBS
+# @RdocMethod as.DNAcopy
+#
+# @title "Coerces a CBS object to a DNAcopy object"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{fit}{A @see "CBS" object."}
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @see "DNAcopy" object (of the \pkg{DNAcopy} package).
+# }
+#
+# \examples{
+#   @include "../incl/segmentByCBS.Rex"
+#   @include "../incl/as.DNAcopy.Rex"
+# }
+#
+# @author
+#
+# \seealso{
+#   \code{\link[PSCBS:as.CBS.DNAcopy]{as.CBS()}}.
+#   @seeclass
+# }
+#
+# @keyword internal
+#*/########################################################################### 
+setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup the 'data' field
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data <- fit$data;
+
+  # Drop any 'index' column
+  keep <- setdiff(colnames(data), "index");
+  data <- data[,keep];
+
+  # Rename column names
+  names <- colnames(data);
+  names[names == "chromosome"] <- "chrom";
+  names[names == "x"] <- "maploc";
+  colnames(data) <- names;
+
+  class(data) <- c("CNA", "data.frame");
+  attr(data, "data.type") <- "logratio";
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup the 'output' field
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  output <- fit$output;
+
+  # Rename column names
+  names <- colnames(output);
+  names[names == "id"] <- "ID";
+  names[names == "chromosome"] <- "chrom";
+  names[names == "start"] <- "loc.start";
+  names[names == "end"] <- "loc.end";
+  names[names == "nbrOfLoci"] <- "num.mark";
+  names[names == "mean"] <- "seg.mean";
+  colnames(output) <- names;
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup up 'DNAcopy' object
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  res <- list();
+  res$data <- data;
+  res$output <- output;
+  res$call <- NA;
+  class(res) <- "DNAcopy";
+
+  res;
+}) # as.DNAcopy()
+
+
+
 setMethodS3("nbrOfSegments", "DNAcopy", function(fit, ...) {
   segs <- fit$output;
   nrow(segs);
@@ -136,6 +221,8 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1, ...
 
 ############################################################################
 # HISTORY:
+# 2011-09-03
+# o Added as.DNAcopy() for CBS to coerce a CBS object to a DNAcopy object.
 # 2011-09-02
 # o Added internal extractSegmentMeansByLocus() for DNAcopy, which is
 #   used by estimateStandardDeviation(..., method="res").

@@ -1,0 +1,85 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Do not modify this file since it was automatically generated from:
+% 
+%  CBS.R
+% 
+% by the Rdoc compiler part of the R.oo package.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \name{CBS}
+\docType{class}
+\alias{CBS}
+
+
+ \title{The CBS class}
+
+ \description{
+   A CBS object holds results from the
+   Circular Binary Segmentation (CBS) method
+   for \emph{one} sample for one or more chromosomes.
+
+  Package:  PSCBS \cr
+\bold{Class CBS}\cr
+
+\code{list}\cr
+\code{~~|}\cr
+\code{~~+--}\code{CBS}\cr
+
+\bold{Directly known subclasses:}\cr
+\cr
+
+public class \bold{CBS}\cr
+extends list\cr
+
+
+ }
+
+ \usage{CBS(...)}
+
+ \arguments{
+  \item{...}{Not used.}
+ }
+
+ \section{Fields and Methods}{
+  \bold{Methods:}\cr
+\tabular{rll}{
+ \tab \code{append} \tab  -\cr
+ \tab \code{as} \tab  -\cr
+ \tab \code{as.character} \tab  -\cr
+ \tab \code{as.data.frame} \tab  -\cr
+ \tab \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy}} \tab Coerces a CBS object to a DNAcopy object.\cr
+ \tab \code{drawLevels} \tab  -\cr
+ \tab \code{extractByChromosomes} \tab  -\cr
+ \tab \code{getChromosomes} \tab  -\cr
+ \tab \code{getLocusData} \tab  -\cr
+ \tab \code{getSegments} \tab  -\cr
+ \tab \code{joinSegments} \tab  -\cr
+ \tab \code{nbrOfChromosomes} \tab  -\cr
+ \tab \code{nbrOfLoci} \tab  -\cr
+ \tab \code{nbrOfSegments} \tab  -\cr
+ \tab \code{plot} \tab  -\cr
+ \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
+ \tab \code{plotTracksManyChromosomes} \tab  -\cr
+ \tab \code{print} \tab  -\cr
+ \tab \code{tileChromosomes} \tab  -\cr
+}
+
+
+ \bold{Methods inherited from list}:\cr
+all.equal, as.data.frame, attachLocally, callHooks, relist, within
+
+
+ }
+
+ \section{Difference to DNAcopy object}{
+   A CBS object is similar to DNAcopy objects with the major
+   difference that a CBS object holds only one sample, whereas
+   a DNAcopy object can hold more than one sample.
+ }
+
+ \section{See also}{
+   \code{\link{segmentByCBS}}()
+ }
+
+ \author{Henrik Bengtsson}
+\keyword{classes}

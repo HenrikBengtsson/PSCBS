@@ -22,7 +22,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
   nbrOfSegs <- nrow(segs);
   if (nbrOfSegs > 1) {
     verbose && enter(verbose, "Centering change points");
-    x <- fit$data$maploc;
+    x <- fit$data$x;
     prevSeg <- segs[1L,];
     for (ss in 2:nbrOfSegs) {
       currSeg <- segs[ss,];
@@ -66,6 +66,8 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
 
 ############################################################################
 # HISTORY:
+# 2011-09-04
+# o Updated joinSegments() to be aware of new column names in CBS.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2010-11-21
