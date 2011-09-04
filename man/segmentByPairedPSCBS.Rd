@@ -72,9 +72,10 @@
 
  \details{
    Internally \code{\link{segmentByCBS}}() is used for segmentation.
+   The Paired PSCBS segmentation method does \emph{not} support weights.
+ }
 
-   This segmentation method does \emph{not} support weights.
-
+ \section{Reproducibility}{
    The "DNAcopy::segment" implementation of CBS uses approximation
    through random sampling for some estimates.  Because of this,
    repeated calls using the same signals may result in slightly

@@ -61,7 +61,9 @@
  \details{
    Internally \code{\link[DNAcopy]{segment}} is used to segment the signals.
    This segmentation method support weighted segmentation.
+ }
 
+ \section{Reproducibility}{
    The "DNAcopy::segment" implementation of CBS uses approximation
    through random sampling for some estimates.  Because of this,
    repeated calls using the same signals may result in slightly
@@ -103,7 +105,7 @@ w[650:800] <- 0.001
 fit <- segmentByCBS(y, x=x)
 print(fit)
 
-
+      
 xlab <- "Position (Mb)"
 ylim <- c(-3,3)
 xMb <- x/1e6

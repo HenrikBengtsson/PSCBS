@@ -63,9 +63,10 @@
 # 
 # \details{
 #   Internally @see "segmentByCBS" is used for segmentation.
+#   The Paired PSCBS segmentation method does \emph{not} support weights.
+# }
 #
-#   This segmentation method does \emph{not} support weights.
-#
+# \section{Reproducibility}{
 #   The "DNAcopy::segment" implementation of CBS uses approximation
 #   through random sampling for some estimates.  Because of this,
 #   repeated calls using the same signals may result in slightly 
@@ -291,7 +292,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   if (any(!ok)) {
     verbose && enter(verbose, "Dropping loci with unknown locations");
     verbose && cat(verbose, "Number of loci dropped: ", sum(!ok));
-    data <- data[ok,];
+    data <- data[ok,,drop=FALSE];
     verbose && exit(verbose);
   }
   rm(ok); # Not needed anymore
@@ -307,7 +308,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   o <- order(data$chromosome, data$x, decreasing=FALSE, na.last=TRUE);
   # Any change?
   if (any(o != seq(along=o))) {
-    data <- data[o,];
+    data <- data[o,,drop=FALSE];
   }
   rm(o); # Not needed anymore
   verbose && str(verbose, data);
@@ -441,8 +442,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
   # Sanity check
   stopifnot(nrow(fit$data) == nrow(data));
-  stopifnot(all(fit$data$chrom == data$chromosome));
-  stopifnot(all(fit$data$maploc == data$x));
+  stopifnot(all(fit$data$chromosome == data$chromosome));
+  stopifnot(all(fit$data$x == data$x));
   stopifnot(all(fit$data$index == data$index));
   stopifnot(all.equal(fit$data$y, data$CT));
 
@@ -507,7 +508,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     rowStart <- tcnSegRows[kk,1];
     rowEnd <- tcnSegRows[kk,2];
     rows <- rowStart:rowEnd;
-    dataKK <- data[rows,];
+    dataKK <- data[rows,,drop=FALSE];
     nbrOfLociKK <- nrow(dataKK);
 
     # Sanity check
@@ -571,8 +572,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
     # Special case: If there where not enough data to segment DH...
     if (nrow(dhSegments) == 0) {
-      dhSegments <- dhSegments[as.integer(NA),];
-      dhSegRowsKK <- dhSegRowsKK[as.integer(NA),];
+      dhSegments <- dhSegments[as.integer(NA),,drop=FALSE];
+      dhSegRowsKK <- dhSegRowsKK[as.integer(NA),,drop=FALSE];
     }
 
     verbose && cat(verbose, "DH segmentation table:");
@@ -764,6 +765,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
 ############################################################################
 # HISTORY:
+# 2011-09-04
+# o ROBUSTNESS: Added drop=FALSE to matrix subsettings.
+# o CLEANUP: Removed all references to/usage of DNAcopy fields, which
+#   are no longer part of the CBS class.
 # 2011-09-03
 # o Updated code to not use deprecated argument 'columnNamesFlavor'
 #   of segmentByCBS().

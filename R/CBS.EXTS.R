@@ -150,8 +150,194 @@ setMethodS3("subset", "CBS", function(x, chromlist=NULL, ...) {
 }, private=TRUE)
 
 
+
+###########################################################################/**
+# @set "class=CBS"
+# @RdocMethod extractSegmentMeansByLocus
+#
+# @title "Extracts segments means at each locus" 
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#  Returns a @numeric @vector of length @seemethod "nbrOfLoci".
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @keyword internal 
+#*/###########################################################################  
+setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
+  data <- fit$data;
+  chromosome <- data$chromosome;
+  x <- data$x;
+  y <- data[,3];
+
+  segs <- fit$output;
+  nbrOfSegments <- nrow(segs);
+  nbrOfLoci <- nbrOfLoci(fit);
+
+  yS <- y;
+  for (ss in seq(length=nbrOfSegments)) {
+    seg <- segs[ss,];
+    idxs <- which(seg$chromosome == chromosome & 
+                  seg$start <= x & x <= seg$end);
+    idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
+
+    ySS <- y[idxs];
+    ok <- is.finite(ySS);
+
+    # Sanity check
+    ## stopifnot(sum(ok) == seg$nbrOfLoci); # Not dealing with ties
+
+    mu <- mean(ySS[ok]);
+    yS[idxs] <- mu;
+  } # for (ss ...)
+
+  yS;
+}, private=TRUE) # extractSegmentMeansByLocus()
+
+
+
+###########################################################################/**
+# @set "class=CBS"
+# @RdocMethod estimateStandardDeviation
+#
+# @title "Estimates the whole-genome standard deviation of the signals"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{chromosomes}{An optional @vector specifying the subset of 
+#    chromosomes used for the estimate.  If @NULL, all chromosomes are used.}
+#  \item{method}{A @character string specifying the method used.}
+#  \item{estimator}{A @character string or a @function specifying the
+#    internal estimator.}
+#  \item{na.rm}{If @TRUE, missing values are dropped, otherwise not.}
+#  \item{weights}{An optional @double @vector of @seemethod "nbrOfLoci" 
+#    non-negative weights.}
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#  Returns a non-negative @numeric scale.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @keyword internal 
+#*/###########################################################################  
+setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, method=c("diff", "res", "abs"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'chromosomes':
+  if (!is.null(chromosomes)) {
+  }
+ 
+  # Argument 'method':
+  method <- match.arg(method);
+
+  # Argument 'estimator':
+  estimator <- match.arg(estimator);
+
+
+  # Argument 'weights':
+  if (!is.null(weights)) {
+    nbrOfLoci <- nbrOfLoci(fit);
+    weights <- Arguments$getNumerics(weights, range=c(0,Inf), 
+                                     length=rep(nbrOfLoci, times=2));
+  }
+
+
+  # Get the estimator function
+  if (!is.null(weights)) {
+    estimator <- sprintf("weighted %s", estimator);
+    estimator <- R.utils::toCamelCase(estimator);
+  }  
+  estimatorFcn <- get(estimator, mode="function");
+
+
+  # Subset by chromosomes?
+  if (!is.null(chromosomes)) {
+    fit <- extractByChromosomes(fit, chromosomes=chromosomes);
+  }
+
+  nbrOfLoci <- nbrOfLoci(fit);
+  # Nothing to do?
+  if (nbrOfLoci <= 1) {
+    sigma <- as.double(NA);
+    attr(sigma, "nbrOfLoci") <- nbrOfLoci;
+    attr(sigma, "df") <- as.integer(NA);
+    return(sigma);
+  }
+
+  y <- fit$data[,3];
+
+  if (method == "diff") {
+    dy <- diff(y);
+    # Weighted estimator?
+    if (!is.null(weights)) {
+      # Calculate weights per pair
+      weights <- (weights[1:(nbrOfLoci-1)]+weights[2:nbrOfLoci])/2;
+      sigma <- estimatorFcn(dy, w=weights, na.rm=na.rm)/sqrt(2);
+    } else {
+      sigma <- estimatorFcn(dy, na.rm=na.rm)/sqrt(2);
+    }
+    df <- length(dy);
+  } else if (method == "res") {
+    yS <- extractSegmentMeansByLocus(fit);
+    dy <- y - yS;
+    if (!is.null(weights)) {
+      sigma <- estimatorFcn(dy, w=weights, na.rm=na.rm);
+    } else {
+      sigma <- estimatorFcn(dy, na.rm=na.rm);
+    }
+    df <- length(dy);
+  } else if (method == "abs") {
+    if (!is.null(weights)) {
+      sigma <- estimatorFcn(y, w=weights, na.rm=na.rm);
+    } else {
+      sigma <- estimatorFcn(y, na.rm=na.rm);
+    }
+    df <- length(y);
+  } else {
+    throw("Method no implemented: ", method);
+  }
+
+  attr(sigma, "nbrOfLoci") <- nbrOfLoci;
+  attr(sigma, "df") <- df;
+
+  sigma;
+}) # estimateStandardDeviation()
+
+
+
 ############################################################################
 # HISTORY:
+# 2011-09-04
+# o Added estimateStandardDeviation() for CBS.
+# o Added extractSegmentMeansByLocus() for CBS.
 # 2011-09-03
 # o Added as.CBS() for DNAcopy to coerce a DNAcopy object to a CBS object.
 # 2011-09-02

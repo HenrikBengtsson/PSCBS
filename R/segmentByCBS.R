@@ -52,7 +52,9 @@
 # \details{
 #   Internally @see "DNAcopy::segment" is used to segment the signals.
 #   This segmentation method support weighted segmentation.
+# }
 #
+# \section{Reproducibility}{
 #   The "DNAcopy::segment" implementation of CBS uses approximation
 #   through random sampling for some estimates.  Because of this,
 #   repeated calls using the same signals may result in slightly 
@@ -70,6 +72,7 @@
 #
 # \examples{
 #   @include "../incl/segmentByCBS.Rex"
+#   @include "../incl/segmentByCBS,plot.Rex"
 #   @include "../incl/segmentByCBS,tests.Rex"
 # }
 #
@@ -213,7 +216,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   if (any(!ok)) {
     verbose && enter(verbose, "Dropping loci with unknown locations");
     verbose && cat(verbose, "Number of loci dropped: ", sum(!ok));
-    data <- data[ok,];
+    data <- data[ok,,drop=FALSE];
     verbose && exit(verbose);
   }
   rm(ok); # Not needed anymore
@@ -229,7 +232,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   o <- order(data$chrom, data$x, decreasing=FALSE, na.last=TRUE);
   # Any change?
   if (any(o != seq(along=o))) {
-    data <- data[o,];
+    data <- data[o,,drop=FALSE];
   }
   rm(o); # Not needed anymore
   verbose && str(verbose, data);
@@ -534,6 +537,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 
 ############################################################################
 # HISTORY:
+# 2011-09-04
+# o ROBUSTNESS: Added drop=FALSE to matrix subsettings.
 # 2011-09-03
 # o Now segmentByCBS() always returns a CBS object.  To coerce to a
 #   DNAcopy object (as defined in the DNAcopy class) use as.DNAcopy().

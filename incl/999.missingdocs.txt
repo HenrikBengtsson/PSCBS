@@ -61,3 +61,4 @@ append.CBS
   as.CBS as.DNAcopy as.character.CBS extractByChromosomes.CBS
   getLocusData getLocusData.CBS getSegments getSegments.CBS
   nbrOfSegments.CBS print.CBS subset.CBS
+callAmplifications callGainsAndLosses callOutliers

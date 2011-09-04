@@ -2,19 +2,15 @@
 Package: PSCBS
 ==============
 
-
-Version: 0.13.1 [2011-09-03]
-o Added nbrOfLoci(), nbrOfSegments(), nbrOfChromosomes() and 
-  getChromosomes() for CBS.
+Version: 0.13.1 [2011-09-04]
+o Added formal class CBS, which holds the segmentation results
+  returned by segmentByCBS().  Several methods are available for
+  CBS objects, e.g. nbrOfLoci(), nbrOfSegments(), nbrOfChromosomes(),
+  getChromosomes(), estimateStandardDeviation() etc.
 o Now segmentByCBS() always returns a CBS object.  To coerce to a
   DNAcopy object (as defined in the DNAcopy class) use as.DNAcopy().
 o Added coerce methods as.DNAcopy() for CBS objects and as.CBS()
   for DNAcopy objects.
-o Added nbrOfSegments(), nbrOfLoci(), nbrOfSamples(), getSampleNames()
-  and getChromosomes() for DNAcopy.
-o Added estimateStandardDeviation() for DNAcopy.
-o Added internal extractSegmentMeansByLocus() for DNAcopy, which is
-  used by estimateStandardDeviation(..., method="res").
 
 
 Version: 0.13.0 [2011-09-01]

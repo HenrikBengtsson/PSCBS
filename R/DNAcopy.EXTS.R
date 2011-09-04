@@ -68,6 +68,11 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   names[names == "mean"] <- "seg.mean";
   colnames(output) <- names;
 
+  # Drop chromosome splitter
+  isSplitter <- lapply(output, FUN=is.na);
+  isSplitter <- Reduce("&", isSplitter);
+  output <- output[!isSplitter,,];
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup up 'DNAcopy' object
@@ -221,6 +226,8 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1, ...
 
 ############################################################################
 # HISTORY:
+# 2011-09-04
+# o as.DNAcopy() did not drop "splitters" for the segment table
 # 2011-09-03
 # o Added as.DNAcopy() for CBS to coerce a CBS object to a DNAcopy object.
 # 2011-09-02

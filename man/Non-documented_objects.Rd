@@ -154,6 +154,9 @@
 \alias{nbrOfSegments.CBS}
 \alias{print.CBS}
 \alias{subset.CBS}
+\alias{callAmplifications}
+\alias{callGainsAndLosses}
+\alias{callOutliers}
 
 \description{
   This page contains aliases for all "non-documented" objects that

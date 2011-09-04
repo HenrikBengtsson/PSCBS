@@ -49,6 +49,7 @@ extends list\cr
  \tab \code{as.data.frame} \tab  -\cr
  \tab \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy}} \tab Coerces a CBS object to a DNAcopy object.\cr
  \tab \code{drawLevels} \tab  -\cr
+ \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr
  \tab \code{extractByChromosomes} \tab  -\cr
  \tab \code{getChromosomes} \tab  -\cr
  \tab \code{getLocusData} \tab  -\cr
