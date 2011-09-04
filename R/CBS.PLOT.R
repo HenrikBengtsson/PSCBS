@@ -77,7 +77,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", c
 
   pchT <- if (scatter) { pch } else { NA };
 
-  plot(x, CT, pch=pchT, cex=cex, col=col, ylim=Clim, ylab="TCN");
+  plot(x, CT, pch=pchT, cex=cex, col=col, ..., ylim=Clim, ylab="TCN");
   stext(side=3, pos=1, chrTag);
   if (grid) {
     abline(h=seq(from=0, to=Clim[2], by=2), lty=3, col="gray");
@@ -150,10 +150,10 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
       idxs <- which(data$chromosome == chromosome);
       x <- data$x[idxs];
       r <- range(x, na.rm=TRUE);
-      r <- r / 1e6;
+##      r <- r / 1e6; ### <= ???
       r[1] <- floor(r[1]);
       r[2] <- ceiling(r[2]);
-      r <- 1e6 * r;
+##      r <- 1e6 * r; 
       xRange[kk,] <- r;
     } # for (kk ...)
 
@@ -207,7 +207,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, chrStarts=NULL, ..., verbose
 
 
 
-setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6), xScale=1e-6, ..., subset=NULL, add=FALSE, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", Clim=c(0,6), xScale=1e-6, ..., subset=NULL, add=FALSE, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
   # To please R CMD check
   fit <- x;
  
@@ -274,9 +274,11 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, pch=".", Clim=c(0,6)
   xlim <- range(x, na.rm=TRUE);
   xlab <- "Genomic position";
 
+  pchT <- if (scatter) { pch } else { NA };
+
   plot(NA, xlim=xlim, ylim=Clim, xlab=xlab, ylab="TCN", axes=FALSE);
   if (!is.null(onBegin)) onBegin(gh=gh);
-  points(x, CT, pch=pch, col="gray");
+  points(x, CT, pch=pchT, col=col, ...);
   mtext(text=chrTags, side=rep(c(1,3), length.out=length(chrTags)), at=mids, line=0.1, cex=0.7);
   abline(v=vs, lty=3);
   axis(side=2); box();

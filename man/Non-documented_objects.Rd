@@ -163,6 +163,7 @@
 \alias{sampleName.CBS}
 \alias{sampleName<-}
 \alias{sampleName<-.CBS}
+\alias{segmentByCBS.CNA}
 
 \description{
   This page contains aliases for all "non-documented" objects that
