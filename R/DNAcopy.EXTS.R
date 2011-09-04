@@ -34,20 +34,24 @@
 # @keyword internal
 #*/########################################################################### 
 setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
+  sampleName <- getSampleName(fit);
+  if (is.na(sampleName)) sampleName <- "<NA>";
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the 'data' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- fit$data;
 
-  # Drop any 'index' column
-  keep <- setdiff(colnames(data), "index");
+  # Keep only certain columns
+  keep <- match(c("chromosome", "x"), colnames(data));
+  keep <- c(keep, 3L);
   data <- data[,keep];
 
+  # Sanity check
+  stopifnot(ncol(data) == 3);
+
   # Rename column names
-  names <- colnames(data);
-  names[names == "chromosome"] <- "chrom";
-  names[names == "x"] <- "maploc";
-  colnames(data) <- names;
+  colnames(data) <- c("chrom", "maploc", sampleName);
 
   class(data) <- c("CNA", "data.frame");
   attr(data, "data.type") <- "logratio";
@@ -57,21 +61,23 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   # Setup the 'output' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   output <- fit$output;
+  rownames <- rownames(output);
 
-  # Rename column names
-  names <- colnames(output);
-  names[names == "id"] <- "ID";
-  names[names == "chromosome"] <- "chrom";
-  names[names == "start"] <- "loc.start";
-  names[names == "end"] <- "loc.end";
-  names[names == "nbrOfLoci"] <- "num.mark";
-  names[names == "mean"] <- "seg.mean";
-  colnames(output) <- names;
+  output <- data.frame(
+    ID        = sampleName,
+    chrom     = output$chromosome,
+    loc.start = output$start,
+    loc.end   = output$end,
+    num.mark  = output$nbrOfLoci,
+    seg.mean  = output$mean,
+    stringsAsFactors=FALSE
+  );
+  rownames(output) <- rownames;
 
   # Drop chromosome splitter
   isSplitter <- lapply(output, FUN=is.na);
   isSplitter <- Reduce("&", isSplitter);
-  output <- output[!isSplitter,,];
+  output <- output[!isSplitter,];
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -227,7 +233,7 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1, ...
 ############################################################################
 # HISTORY:
 # 2011-09-04
-# o as.DNAcopy() did not drop "splitters" for the segment table
+# o as.DNAcopy() did not drop "splitters" for the segment table.
 # 2011-09-03
 # o Added as.DNAcopy() for CBS to coerce a CBS object to a DNAcopy object.
 # 2011-09-02

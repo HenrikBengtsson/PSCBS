@@ -49,6 +49,8 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 
   s <- sprintf("%s:", class(fit)[1]);
 
+  s <- c(s, sprintf("Sample name: %s", getSampleName(fit)));
+
   s <- c(s, sprintf("Number of segments: %d", nbrOfSegments(fit)));
 
   s <- c(s, sprintf("Number of loci: %d", nbrOfLoci(fit)));
@@ -68,6 +70,33 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 setMethodS3("as.data.frame", "CBS", function(x, ...) {
   getSegments(x, ...);
 })
+
+setMethodS3("getSampleName", "CBS", function(fit, ...) {
+  name <- fit$sampleName;
+  if (is.null(name)) {
+    name <- as.character(NA);
+  }
+  name;
+}, private=TRUE)
+
+setMethodS3("sampleName", "CBS", function(fit, ...) {
+  getSampleName(fit);
+}, private=TRUE)
+
+"sampleName<-" <- function(x, value) {
+  UseMethod("sampleName<-");
+}
+
+setMethodS3("sampleName<-", "CBS", function(x, value) {
+  fit <- x;
+
+  # Argument 'value':
+  value <- Arguments$getCharacter(value);
+
+  fit$sampleName <- value;
+  fit;
+}, private=TRUE, addVarArgs=FALSE)
+
 
 setMethodS3("getLocusData", "CBS", function(fit, ...) {
   data <- fit$data;
@@ -154,6 +183,8 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-09-04
+# o Added getSampleName() for CBS.
 # 2011-09-03
 # o Added print() and as.character() for CBS.
 # o Added CBS() constructor. Although it rairly will be used

@@ -157,6 +157,12 @@
 \alias{callAmplifications}
 \alias{callGainsAndLosses}
 \alias{callOutliers}
+\alias{getSampleName}
+\alias{getSampleName.CBS}
+\alias{sampleName}
+\alias{sampleName.CBS}
+\alias{sampleName<-}
+\alias{sampleName<-.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

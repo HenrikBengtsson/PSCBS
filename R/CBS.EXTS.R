@@ -12,6 +12,8 @@
 #
 # \arguments{
 #   \item{fit}{A @see "DNAcopy" object (of the \pkg{DNAcopy} package.)}
+#   \item{sample}{An index specifying which sample to extract, 
+#     if more than one exists.}
 #   \item{...}{Not used.}
 # }
 #
@@ -28,42 +30,61 @@
 #
 # @keyword internal
 #*/########################################################################### 
-setMethodS3("as.CBS", "DNAcopy", function(fit, ...) {
+setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data <- fit$data;
+  sample <- Arguments$getIndex(sample, max=ncol(data)-2L);
+
+
+  sampleName <- colnames(data)[3];
+  if (sampleName == "<NA>") sampleName <- as.character(NA);
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the 'data' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- fit$data;
+  rownames <- rownames(data);
 
-  # Rename column names
-  names <- colnames(data);
-  names[names == "chrom"] <- "chromosome";
-  names[names == "maploc"] <- "x";
-  colnames(data) <- names;
-
-  # Drop 'CNA' class and DNAcopy attributes
-  class(data) <- c("data.frame");
-  attr(data, "data.type") <- NULL;
+  data <- data.frame(
+    chromosome = data$chrom,
+    x          = data$maploc,
+    y          = data[,3],
+    stringsAsFactors=FALSE
+  );
+  rownames(data) <- rownames;
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the 'output' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   output <- fit$output;
+  rownames <- rownames(output);
 
-  # Rename column names
-  names <- colnames(output);
-  names[names == "ID"] <- "id";
-  names[names == "chrom"] <- "chromosome";
-  names[names == "loc.start"] <- "start";
-  names[names == "loc.end"] <- "end";
-  names[names == "num.mark"] <- "nbrOfLoci";
-  names[names == "seg.mean"] <- "mean";
-  colnames(output) <- names;
+  output <- data.frame(
+    chromosome = output$chrom,
+    start      = output$loc.start,
+    end        = output$loc.end,
+    nbrOfLoci  = as.integer(output$num.mark),
+    mean       = output$seg.mean,
+    stringsAsFactors=FALSE
+  );
+  rownames(output) <- rownames;
+
+  # Add chromosome splitter
+  ats <- which(diff(output$chromosome) != 0) + 1L;
+  idxs <- seq(length=nrow(output)+length(ats));
+  expand <- match(idxs, idxs[-ats]);
+  output <- output[expand,];
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup up 'CBS' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   res <- list();
+  res$sampleName <- sampleName;
   res$data <- data;
   res$output <- output;
   res$params <- list();

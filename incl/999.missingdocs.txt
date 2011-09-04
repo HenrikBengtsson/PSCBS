@@ -62,3 +62,5 @@ append.CBS
   getLocusData getLocusData.CBS getSegments getSegments.CBS
   nbrOfSegments.CBS print.CBS subset.CBS
 callAmplifications callGainsAndLosses callOutliers
+  getSampleName getSampleName.CBS sampleName sampleName.CBS
+  sampleName<- sampleName<-.CBS
