@@ -65,3 +65,4 @@ callAmplifications callGainsAndLosses callOutliers
   getSampleName getSampleName.CBS sampleName sampleName.CBS
   sampleName<- sampleName<-.CBS
 segmentByCBS.CNA
+ extractCallsByLocus extractCallsByLocus.CBS

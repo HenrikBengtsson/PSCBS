@@ -75,7 +75,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   rownames(output) <- rownames;
 
   # Drop chromosome splitter
-  isSplitter <- lapply(output, FUN=is.na);
+  isSplitter <- lapply(output[-1], FUN=is.na);
   isSplitter <- Reduce("&", isSplitter);
   output <- output[!isSplitter,];
 

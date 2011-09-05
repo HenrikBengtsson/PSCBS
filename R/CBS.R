@@ -98,10 +98,35 @@ setMethodS3("sampleName<-", "CBS", function(x, value) {
 }, private=TRUE, addVarArgs=FALSE)
 
 
-setMethodS3("getLocusData", "CBS", function(fit, ...) {
+setMethodS3("getLocusData", "CBS", function(fit, addCalls=NULL, ...) {
+  # Argument 'addCalls':
+  if (is.logical(addCalls)) {
+    addCalls <- Arguments$getLogical(addCalls);
+    if (!addCalls) {
+      addCalls <- NULL;
+    }
+  } else {
+    addCalls <- Arguments$getCharacters(addCalls);
+  }
+
   data <- fit$data;
+
+  # Append segment calls?
+  if (length(addCalls) > 0) {
+    callsL <- extractCallsByLocus(fit);
+    if (is.character(addCalls)) {
+      callsL <- callsL[,addCalls];
+    }
+
+    # Sanity check
+    stopifnot(nrow(callsL) == nrow(data));
+
+    data <- cbind(data, callsL);
+  }
+
   data;
-}, private=TRUE)
+}, private=TRUE) # getLocusData()
+
 
 setMethodS3("getSegments", "CBS", function(fit, ...) {
   fit$output;
@@ -184,6 +209,7 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 ############################################################################
 # HISTORY:
 # 2011-09-04
+# o Added argument 'addCalls' to getLocusData().
 # o Added getSampleName() for CBS.
 # 2011-09-03
 # o Added print() and as.character() for CBS.

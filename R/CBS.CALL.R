@@ -534,11 +534,64 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
 
 
+setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
+  nbrOfLoci <- nbrOfLoci(fit);
+
+  # Extract locus data
+  data <- fit$data;
+
+  # Extract segment data
+  segs <- fit$output;
+
+  # Identify segment calls
+  callCols <- grep("Call$", colnames(segs));
+  nbrOfCalls <- length(callCols);
+
+  # Sanity check
+  stopifnot(nbrOfCalls > 0);
+
+  chromosome <- data$chromosome;
+  x <- data$x;
+  y <- data[,3];
+
+  # Allocate locus calls
+  naValue <- as.logical(NA);
+  callsL <- matrix(naValue, nrow=nbrOfLoci, ncol=nbrOfCalls);
+  colnames(callsL) <- colnames(segs)[callCols];
+  callsL <- as.data.frame(callsL);
+
+  # For each segment...
+  for (ss in seq(length=nrow(segs))) {
+    seg <- segs[ss,];
+    idxs <- which(chromosome == seg$chromosome & 
+                  seg$start <= x & x <= seg$end);
+    idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
+    # Sanity check
+##    stopifnot(length(idxs) == seg$nbrOfLoci);
+
+    callsSS <- seg[callCols];
+    for (cc in 1:nbrOfCalls) {
+      callsL[idxs,cc] <- callsSS[,cc];
+    }
+  } # for (ss ...)
+
+  # The calls for loci that have missing annotations or observations, 
+  # should also be missing, i.e. NA.
+  nok <- (is.na(chromosome) | is.na(x) | is.na(y));
+  callsL[nok,] <- as.logical(NA);
+
+  # Sanity check
+  stopifnot(nrow(callsL) == nbrOfLoci);
+  stopifnot(ncol(callsL) == nbrOfCalls);
+
+  callsL;
+}, private=TRUE) # extractCallsByLocus()
 
 
 ############################################################################
 # HISTORY:
 # 2011-09-04
+# o Added extractCallsByLocus().
 # o Adopted the calling methods from ditto of the DNAcopy class.
 # 2011-09-01
 # o Now callGainsAndLosses() returns a DNAcopy where the segmentation

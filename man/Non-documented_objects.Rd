@@ -164,6 +164,8 @@
 \alias{sampleName<-}
 \alias{sampleName<-.CBS}
 \alias{segmentByCBS.CNA}
+\alias{extractCallsByLocus}
+\alias{extractCallsByLocus.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
