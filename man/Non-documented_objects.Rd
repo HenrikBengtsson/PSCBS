@@ -166,6 +166,16 @@
 \alias{segmentByCBS.CNA}
 \alias{extractCallsByLocus}
 \alias{extractCallsByLocus.CBS}
+\alias{getSignalType}
+\alias{getSignalType.CBS}
+\alias{signalType}
+\alias{signalType.CBS}
+\alias{signalType<-}
+\alias{signalType<-.CBS}
+\alias{writeLocusData}
+\alias{writeLocusData.CBS}
+\alias{writeSegments}
+\alias{writeSegments.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

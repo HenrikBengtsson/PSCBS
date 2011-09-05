@@ -60,7 +60,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the 'output' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  output <- fit$output;
+  output <- getSegments(fit, splitter=FALSE);
   rownames <- rownames(output);
 
   output <- data.frame(
@@ -73,11 +73,6 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
     stringsAsFactors=FALSE
   );
   rownames(output) <- rownames;
-
-  # Drop chromosome splitter
-  isSplitter <- lapply(output[-1], FUN=is.na);
-  isSplitter <- Reduce("&", isSplitter);
-  output <- output[!isSplitter,];
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

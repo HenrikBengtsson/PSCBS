@@ -66,3 +66,6 @@ callAmplifications callGainsAndLosses callOutliers
   sampleName<- sampleName<-.CBS
 segmentByCBS.CNA
  extractCallsByLocus extractCallsByLocus.CBS
+ getSignalType getSignalType.CBS signalType signalType.CBS
+ signalType<- signalType<-.CBS
+  writeLocusData writeLocusData.CBS writeSegments writeSegments.CBS

@@ -51,7 +51,9 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 
   s <- c(s, sprintf("Sample name: %s", getSampleName(fit)));
 
-  s <- c(s, sprintf("Number of segments: %d", nbrOfSegments(fit)));
+  s <- c(s, sprintf("Signal type: %s", getSignalType(fit)));
+
+  s <- c(s, sprintf("Number of segments: %d", nbrOfSegments(fit, splitter=FALSE)));
 
   s <- c(s, sprintf("Number of loci: %d", nbrOfLoci(fit)));
 
@@ -70,6 +72,30 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 setMethodS3("as.data.frame", "CBS", function(x, ...) {
   getSegments(x, ...);
 })
+
+setMethodS3("getSignalType", "CBS", function(fit, ...) {
+  type <- fit$signalType;
+  type;
+})
+
+setMethodS3("signalType", "CBS", function(fit, ...) {
+  getSignalType(fit);
+})
+
+"signalType<-" <- function(x, value) {
+  UseMethod("signalType<-");
+}
+
+setMethodS3("signalType<-", "CBS", function(x, value) {
+  fit <- x;
+
+  # Argument 'value':
+  value <- Arguments$getCharacter(value);
+
+  fit$signalType <- value;
+  fit;
+}, private=TRUE, addVarArgs=FALSE)
+
 
 setMethodS3("getSampleName", "CBS", function(fit, ...) {
   name <- fit$sampleName;
@@ -128,8 +154,20 @@ setMethodS3("getLocusData", "CBS", function(fit, addCalls=NULL, ...) {
 }, private=TRUE) # getLocusData()
 
 
-setMethodS3("getSegments", "CBS", function(fit, ...) {
-  fit$output;
+setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
+  # Argument 'splitters':
+  splitters <- Arguments$getLogical(splitters);
+
+  segs <- fit$output;
+
+  # Drop chromosome splitters?
+  if (!splitters) {
+    isSplitter <- lapply(segs, FUN=is.na);
+    isSplitter <- Reduce("&", isSplitter);
+    segs <- segs[!isSplitter,];
+  }
+
+  segs;
 }, private=TRUE)
 
 setMethodS3("nbrOfLoci", "CBS", function(fit, ...) {
@@ -137,7 +175,7 @@ setMethodS3("nbrOfLoci", "CBS", function(fit, ...) {
 })
 
 setMethodS3("nbrOfSegments", "CBS", function(fit, ...) {
-  nrow(getSegments(fit));
+  nrow(getSegments(fit, ...));
 })
 
 setMethodS3("nbrOfChromosomes", "CBS", function(fit, ...) {
@@ -205,10 +243,190 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 }) # append()
 
 
+setMethodS3("writeLocusData", "CBS", function(fit, filename=sprintf("%s,byLocus.tsv", getSampleName(fit)), path=NULL, sep="\t", nbrOfDecimals=4L, addHeader=TRUE, createdBy=NULL, overwrite=FALSE, skip=FALSE, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Arguments 'filename' & 'path':
+  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
+
+  # Argument 'nbrOfDecimals':
+  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
+
+
+  # File already exists?
+  if (isFile(pathname)) {
+    # Skip?
+    if (skip) {
+      return(pathname);
+    }
+
+    # Overwrite!
+    file.remove(pathname);
+  }
+
+  # Write to temporary file
+  pathnameT <- pushTemporaryFile(pathname);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Extract data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data <- getLocusData(fit, ...);
+
+  # Round of floating points
+  if (!is.null(nbrOfDecimals)) {
+    cols <- colnames(data);
+    for (key in cols) {
+      values <- data[[key]];
+      if (is.double(values)) {
+        values <- round(values, digits=nbrOfDecimals);
+        data[[key]] <- values;
+      }
+    } # for (key ...)
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Build header
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (addHeader) {
+    sigmaDelta <- estimateStandardDeviation(fit, method="diff");
+#    sigmaResiduals <- estimateStandardDeviation(fit, method="res");
+
+    createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z");
+    hdr <- c(
+      sampleName=getSampleName(fit),
+      segmentationMethod=sprintf("segment() of %s", attr(fit, "pkgDetails")),
+      nbrOfLoci=nbrOfLoci(fit),
+      nbrOfSegments=nbrOfSegments(fit),
+      joinSegments=fit$params$joinSegments,
+      signalType=getSignalType(fit),
+      sigmaDelta=sprintf("%.4f", sigmaDelta),
+#      sigmaResiduals=sprintf("%.4f", sigmaResiduals),
+      createdBy=createdBy,
+      createdOn=createdOn,
+      nbrOfDecimals=nbrOfDecimals,
+      nbrOfColumns=ncol(data),
+      columnNames=paste(colnames(data), collapse=", "),
+      columnClasses=paste(sapply(data, FUN=function(x) class(x)[1]), collapse=", ")
+    );
+    bfr <- paste("# ", names(hdr), ": ", hdr, sep="");
+
+    cat(file=pathnameT, bfr, sep="\n");
+  } # if (addHeader)
+
+  write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep, 
+                                          row.names=FALSE, col.names=TRUE);
+
+  pathname <- popTemporaryFile(pathnameT);
+
+  pathname;  
+}) # writeLocusData()
+
+
+
+setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", getSampleName(fit)), path=NULL, addHeader=TRUE, createdBy=NULL, sep="\t", nbrOfDecimals=4L, splitters=FALSE, overwrite=FALSE, skip=FALSE, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Arguments 'filename' & 'path':
+  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
+
+  # Argument 'nbrOfDecimals':
+  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
+
+
+  # File already exists?
+  if (isFile(pathname)) {
+    # Skip?
+    if (skip) {
+      return(pathname);
+    }
+
+    # Overwrite!
+    file.remove(pathname);
+  }
+
+  # Write to temporary file
+  pathnameT <- pushTemporaryFile(pathname);
+
+
+  sampleName <- getSampleName(fit);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Extract data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data <- getSegments(fit, splitters=splitters);
+  data$id <- sampleName;
+
+  # Round of floating points
+  if (!is.null(nbrOfDecimals)) {
+    cols <- c("start", "end");
+    for (key in cols) {
+      values <- data[[key]];
+      if (is.double(values)) {
+        values <- round(values, digits=0);
+        data[[key]] <- values;
+      }
+    } # for (key ...)
+
+    cols <- colnames(data);
+    cols <- setdiff(cols, c("chromosome", "start", "end", "nbrOfLoci"));
+    for (key in cols) {
+      values <- data[[key]];
+      if (is.double(values)) {
+        values <- round(values, digits=nbrOfDecimals);
+        data[[key]] <- values;
+      }
+    } # for (key ...) 
+ }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Build header
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (addHeader) {
+    sigmaDelta <- estimateStandardDeviation(fit, method="diff");
+#    sigmaResiduals <- estimateStandardDeviation(fit, method="res");
+
+    createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z");
+    hdr <- c(
+      sampleName=sampleName,
+      segmentationMethod=sprintf("segment() of %s", attr(fit, "pkgDetails")),
+      nbrOfLoci=nbrOfLoci(fit),
+      nbrOfSegments=nbrOfSegments(fit),
+      joinSegments=fit$params$joinSegments,
+      signalType=getSignalType(fit),
+      sigmaDelta=sprintf("%.4f", sigmaDelta),
+#      sigmaResiduals=sprintf("%.4f", sigmaResiduals),
+      createdBy=createdBy,
+      createdOn=createdOn,
+      nbrOfDecimals=nbrOfDecimals,
+      nbrOfColumns=ncol(data),
+      columnNames=paste(colnames(data), collapse=", "),
+      columnClasses=paste(sapply(data, FUN=function(x) class(x)[1]), collapse=", ")
+    );
+    bfr <- paste("# ", names(hdr), ": ", hdr, sep="");
+
+    cat(file=pathnameT, bfr, sep="\n");
+  } # if (addHeader)
+
+  write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep, 
+                                          row.names=FALSE, col.names=TRUE);
+
+  pathname <- popTemporaryFile(pathnameT);
+
+  pathname;  
+}) # writeSegments()
+
 
 ############################################################################
 # HISTORY:
 # 2011-09-04
+# o Added writeSegments() for CBS.
+# o Added writeLocusData() for CBS.
+# o Added getSignalType() for CBS.
 # o Added argument 'addCalls' to getLocusData().
 # o Added getSampleName() for CBS.
 # 2011-09-03

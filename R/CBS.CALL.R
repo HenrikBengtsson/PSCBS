@@ -547,8 +547,6 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   callCols <- grep("Call$", colnames(segs));
   nbrOfCalls <- length(callCols);
 
-  # Sanity check
-  stopifnot(nbrOfCalls > 0);
 
   chromosome <- data$chromosome;
   x <- data$x;
@@ -570,7 +568,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 ##    stopifnot(length(idxs) == seg$nbrOfLoci);
 
     callsSS <- seg[callCols];
-    for (cc in 1:nbrOfCalls) {
+    for (cc in seq(length=nbrOfCalls)) {
       callsL[idxs,cc] <- callsSS[,cc];
     }
   } # for (ss ...)

@@ -52,12 +52,16 @@ extends list\cr
  \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr
  \tab \code{extractByChromosomes} \tab  -\cr
  \tab \code{getChromosomes} \tab  -\cr
+ \tab \code{getSignalType} \tab  -\cr
  \tab \code{nbrOfChromosomes} \tab  -\cr
  \tab \code{nbrOfLoci} \tab  -\cr
  \tab \code{nbrOfSegments} \tab  -\cr
  \tab \code{plot} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
  \tab \code{print} \tab  -\cr
+ \tab \code{signalType} \tab  -\cr
+ \tab \code{writeLocusData} \tab  -\cr
+ \tab \code{writeSegments} \tab  -\cr
 }
 
 
