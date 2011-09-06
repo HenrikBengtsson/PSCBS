@@ -61,10 +61,14 @@ extends list\cr
  \tab \code{getFractionOfGenomeGained} \tab  -\cr
  \tab \code{getFractionOfGenomeLost} \tab  -\cr
  \tab \code{getSignalType} \tab  -\cr
+ \tab \code{highlightGainsAndLosses} \tab  -\cr
  \tab \code{isWholeChromosomeGained} \tab  -\cr
  \tab \code{isWholeChromosomeLost} \tab  -\cr
+ \tab \code{nbrOfAmplifications} \tab  -\cr
  \tab \code{nbrOfChromosomes} \tab  -\cr
+ \tab \code{nbrOfGains} \tab  -\cr
  \tab \code{nbrOfLoci} \tab  -\cr
+ \tab \code{nbrOfLosses} \tab  -\cr
  \tab \code{nbrOfSegments} \tab  -\cr
  \tab \code{plot} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr

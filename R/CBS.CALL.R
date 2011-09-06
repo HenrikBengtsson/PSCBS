@@ -611,7 +611,12 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
   res2 <- res1 / chrLengths;
   names(res2) <- gsub("Call$", "Fraction", callTypes);
 
-  res <- cbind(chromosome=unique(segs$chromosome), length=chrLengths, res1, res2);  
+  res3 <- cbind(res1, res2);
+
+  res <- data.frame(chromosome=unique(segs$chromosome), length=chrLengths);
+  if (nrow(res3) > 0) {
+    res <- cbind(res, res3);
+  }
   rownames(res) <- NULL;
 
   res;
@@ -653,7 +658,12 @@ setMethodS3("isWholeChromosomeGained", "CBS", function(fit, minFraction=0.99, ..
   minFraction <- Arguments$getDouble(minFraction, range=c(0,1));
 
   stats <- getCallStatistics(fit, ...);
-  res <- (stats$gainFraction >= minFraction);
+  calls <- stats$gainFraction;
+  if (is.null(calls)) {
+    return(rep(NA, times=nbrOfChromosomes(fit)));
+  }
+
+  res <- (calls >= minFraction);
   names(res) <- stats$chromosome;
   attr(res, "minFraction") <- minFraction;
 
@@ -666,12 +676,47 @@ setMethodS3("isWholeChromosomeLost", "CBS", function(fit, minFraction=0.99, ...)
   minFraction <- Arguments$getDouble(minFraction, range=c(0,1));
 
   stats <- getCallStatistics(fit, ...);
-  res <- (stats$lossFraction >= minFraction);
+  calls <- stats$lossFraction;
+  if (is.null(calls)) {
+    return(rep(NA, times=nbrOfChromosomes(fit)));
+  }
+
+  res <- (calls >= minFraction);
   names(res) <- stats$chromosome;
   attr(res, "minFraction") <- minFraction;
 
   res;
-}) # isWholeChromosomeGained()
+}) # isWholeChromosomeLost()
+
+
+setMethodS3("nbrOfLosses", "CBS", function(fit, ...) {
+  stats <- getSegments(fit, ...);
+  calls <- stats$lossCall;
+  if (is.null(calls)) {
+    return(as.integer(NA));
+  }
+  sum(calls, na.rm=TRUE);
+})
+
+
+setMethodS3("nbrOfGains", "CBS", function(fit, ...) {
+  stats <- getSegments(fit, ...);
+  calls <- stats$gainCall;
+  if (is.null(calls)) {
+    return(as.integer(NA));
+  }
+  sum(calls, na.rm=TRUE);
+})
+
+
+setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
+  stats <- getSegments(fit, ...);
+  calls <- stats$amplificationCall;
+  if (is.null(calls)) {
+    return(as.integer(NA));
+  }
+  sum(calls, na.rm=TRUE);
+})
 
 
 

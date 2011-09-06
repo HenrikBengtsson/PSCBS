@@ -53,7 +53,7 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 
   s <- c(s, sprintf("Signal type: %s", getSignalType(fit)));
 
-  s <- c(s, sprintf("Number of segments: %d", nbrOfSegments(fit, splitter=FALSE)));
+  s <- c(s, sprintf("Number of segments: %d", nbrOfSegments(fit)));
 
   s <- c(s, sprintf("Number of loci: %d", nbrOfLoci(fit)));
 
@@ -65,6 +65,29 @@ setMethodS3("as.character", "CBS", function(x, ...) {
   chrs <- getChromosomes(fit);
   s <- c(s, sprintf("Chromosomes: [%d] %s", length(chrs), hpaste(chrs)));
 
+  s <- c(s, sprintf("Standard deviation: %g", estimateStandardDeviation(fit)));
+
+  tt <- grep("Call$", colnames(getLocusData(fit)), value=TRUE);
+  s <- c(s, sprintf("Locus calls: [%d] %s", length(tt), hpaste(tt)));
+
+  segs <- getSegments(fit);
+  callCols <- grep("Call$", colnames(segs), value=TRUE);
+  callTypes <- gsub("Call$", "", callCols);
+  s <- c(s, sprintf("Types of segment calls: [%d] %s", length(callTypes), hpaste(callTypes)));
+  for (kk in seq(along=callCols)) {
+    key <- callCols[kk];
+    type <- callTypes[kk];
+    n <- sum(segs[,key], na.rm=TRUE);
+    if (type == "loss") {
+      nC <- sum(isWholeChromosomeLost(fit));
+    } else if (type == "gain") {
+      nC <- sum(isWholeChromosomeGained(fit));
+    } else {
+      nC <- NA;
+    }
+    s <- c(s, sprintf("Number of chromosomes (segments) called '%s': %d (%d)", type, nC, n));
+  }
+
   GenericSummary(s);
 })
 
@@ -75,6 +98,7 @@ setMethodS3("as.data.frame", "CBS", function(x, ...) {
 
 setMethodS3("getSignalType", "CBS", function(fit, ...) {
   type <- fit$signalType;
+  if (is.null(type)) type <- as.character(NA);
   type;
 })
 
@@ -178,8 +202,8 @@ setMethodS3("nbrOfLoci", "CBS", function(fit, ...) {
   nrow(getLocusData(fit));
 })
 
-setMethodS3("nbrOfSegments", "CBS", function(fit, ...) {
-  nrow(getSegments(fit, ...));
+setMethodS3("nbrOfSegments", "CBS", function(fit, splitter=FALSE, ...) {
+  nrow(getSegments(fit, splitter=splitter, ...));
 })
 
 setMethodS3("nbrOfChromosomes", "CBS", function(fit, ...) {

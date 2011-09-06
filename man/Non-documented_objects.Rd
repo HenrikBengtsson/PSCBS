@@ -196,6 +196,12 @@
 \alias{isWholeChromosomeGained.CBS}
 \alias{isWholeChromosomeLost}
 \alias{isWholeChromosomeLost.CBS}
+\alias{nbrOfAmplifications}
+\alias{nbrOfAmplifications.CBS}
+\alias{nbrOfGains}
+\alias{nbrOfGains.CBS}
+\alias{nbrOfLosses}
+\alias{nbrOfLosses.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
