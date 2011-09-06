@@ -79,3 +79,4 @@ segmentByCBS.CNA
   isWholeChromosomeLost isWholeChromosomeLost.CBS
   nbrOfAmplifications nbrOfAmplifications.CBS nbrOfGains nbrOfGains.CBS
   nbrOfLosses nbrOfLosses.CBS
+highlightGainsAndLosses highlightGainsAndLosses.CBS

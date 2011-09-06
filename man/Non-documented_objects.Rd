@@ -202,6 +202,8 @@
 \alias{nbrOfGains.CBS}
 \alias{nbrOfLosses}
 \alias{nbrOfLosses.CBS}
+\alias{highlightGainsAndLosses}
+\alias{highlightGainsAndLosses.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
