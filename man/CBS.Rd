@@ -54,7 +54,15 @@ extends list\cr
  \tab \code{getCallStatistics} \tab  -\cr
  \tab \code{getChromosomeRanges} \tab  -\cr
  \tab \code{getChromosomes} \tab  -\cr
+ \tab \code{getFGA} \tab  -\cr
+ \tab \code{getFGG} \tab  -\cr
+ \tab \code{getFGL} \tab  -\cr
+ \tab \code{getFractionOfGenomeAltered} \tab  -\cr
+ \tab \code{getFractionOfGenomeGained} \tab  -\cr
+ \tab \code{getFractionOfGenomeLost} \tab  -\cr
  \tab \code{getSignalType} \tab  -\cr
+ \tab \code{isWholeChromosomeGained} \tab  -\cr
+ \tab \code{isWholeChromosomeLost} \tab  -\cr
  \tab \code{nbrOfChromosomes} \tab  -\cr
  \tab \code{nbrOfLoci} \tab  -\cr
  \tab \code{nbrOfSegments} \tab  -\cr

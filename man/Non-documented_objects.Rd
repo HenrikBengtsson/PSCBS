@@ -180,6 +180,22 @@
 \alias{getCallStatistics.CBS}
 \alias{getChromosomeRanges}
 \alias{getChromosomeRanges.CBS}
+\alias{getFGA}
+\alias{getFGA.CBS}
+\alias{getFGG}
+\alias{getFGG.CBS}
+\alias{getFGL}
+\alias{getFGL.CBS}
+\alias{getFractionOfGenomeAltered}
+\alias{getFractionOfGenomeAltered.CBS}
+\alias{getFractionOfGenomeGained}
+\alias{getFractionOfGenomeGained.CBS}
+\alias{getFractionOfGenomeLost}
+\alias{getFractionOfGenomeLost.CBS}
+\alias{isWholeChromosomeGained}
+\alias{isWholeChromosomeGained.CBS}
+\alias{isWholeChromosomeLost}
+\alias{isWholeChromosomeLost.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -71,3 +71,9 @@ segmentByCBS.CNA
   writeLocusData writeLocusData.CBS writeSegments writeSegments.CBS
  getCallStatistics getCallStatistics.CBS getChromosomeRanges
  getChromosomeRanges.CBS
+  getFGA getFGA.CBS getFGG getFGG.CBS getFGL getFGL.CBS
+  getFractionOfGenomeAltered getFractionOfGenomeAltered.CBS
+  getFractionOfGenomeGained getFractionOfGenomeGained.CBS
+  getFractionOfGenomeLost getFractionOfGenomeLost.CBS
+  isWholeChromosomeGained isWholeChromosomeGained.CBS
+  isWholeChromosomeLost isWholeChromosomeLost.CBS

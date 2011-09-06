@@ -618,6 +618,63 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
 }) # getCallStatistics()
 
 
+setMethodS3("getFractionOfGenomeLost", "CBS", function(fit, ...) {
+  stats <- getCallStatistics(fit, ...);
+  mean(stats$lossFraction, na.rm=TRUE);
+})
+
+setMethodS3("getFGL", "CBS", function(fit, ...) {
+  getFractionOfGenomeLost(fit, ...);
+})  
+
+setMethodS3("getFractionOfGenomeGained", "CBS", function(fit, ...) {
+  stats <- getCallStatistics(fit, ...);
+  mean(stats$gainFraction, na.rm=TRUE);
+})
+
+
+setMethodS3("getFGG", "CBS", function(fit, ...) {
+  getFractionOfGenomeGained(fit, ...);
+})  
+
+
+setMethodS3("getFractionOfGenomeAltered", "CBS", function(fit, ...) {
+  getFractionOfGenomeLost(fit, ...) + getFractionOfGenomeGained(fit, ...);
+})
+
+
+setMethodS3("getFGA", "CBS", function(fit, ...) {
+  getFractionOfGenomeAltered(fit, ...);
+})
+
+
+setMethodS3("isWholeChromosomeGained", "CBS", function(fit, minFraction=0.99, ...) {
+  # Argument 'minFraction':
+  minFraction <- Arguments$getDouble(minFraction, range=c(0,1));
+
+  stats <- getCallStatistics(fit, ...);
+  res <- (stats$gainFraction >= minFraction);
+  names(res) <- stats$chromosome;
+  attr(res, "minFraction") <- minFraction;
+
+  res;
+}) # isWholeChromosomeGained()
+
+
+setMethodS3("isWholeChromosomeLost", "CBS", function(fit, minFraction=0.99, ...) {
+  # Argument 'minFraction':
+  minFraction <- Arguments$getDouble(minFraction, range=c(0,1));
+
+  stats <- getCallStatistics(fit, ...);
+  res <- (stats$lossFraction >= minFraction);
+  names(res) <- stats$chromosome;
+  attr(res, "minFraction") <- minFraction;
+
+  res;
+}) # isWholeChromosomeGained()
+
+
+
 ############################################################################
 # HISTORY:
 # 2011-09-05
