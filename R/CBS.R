@@ -70,7 +70,7 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 
 
 setMethodS3("as.data.frame", "CBS", function(x, ...) {
-  getSegments(x, ...);
+  getSegments(x, splitter=FALSE, ...);
 })
 
 setMethodS3("getSignalType", "CBS", function(fit, ...) {
@@ -165,6 +165,10 @@ setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
     isSplitter <- lapply(segs, FUN=is.na);
     isSplitter <- Reduce("&", isSplitter);
     segs <- segs[!isSplitter,];
+  }
+
+  if (nrow(segs) > 0) {
+    segs$id <- getSampleName(fit);
   }
 
   segs;
@@ -358,7 +362,6 @@ setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", get
   # Extract data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getSegments(fit, splitters=splitters);
-  data$id <- sampleName;
 
   # Round of floating points
   if (!is.null(nbrOfDecimals)) {

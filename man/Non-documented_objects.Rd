@@ -176,6 +176,10 @@
 \alias{writeLocusData.CBS}
 \alias{writeSegments}
 \alias{writeSegments.CBS}
+\alias{getCallStatistics}
+\alias{getCallStatistics.CBS}
+\alias{getChromosomeRanges}
+\alias{getChromosomeRanges.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

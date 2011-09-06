@@ -354,8 +354,38 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
 
 
 
+setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
+  # To please R CMD check, cf. subset()
+  chromosome <- NULL; rm(chromosome);
+
+  segs <- getSegments(fit, splitter=FALSE);
+  chromosomes <- sort(unique(segs$chromosome));
+
+  # Allocate
+  naValue <- as.double(NA);
+  res <- matrix(naValue, nrow=length(chromosomes), ncol=3);
+  rownames(res) <- chromosomes;
+  colnames(res) <- c("start", "end", "length");
+
+  # Get start and end of each chromosome.
+  for (ii in seq(length=nrow(res))) {
+    chr <- chromosomes[ii];
+    segsII <- subset(segs, chromosome == chr);
+    res[ii,"start"] <- min(segsII$start, na.rm=TRUE);
+    res[ii,"end"] <- max(segsII$end, na.rm=TRUE);
+  } # for (ii ...)
+
+  res[,"length"] <- res[,"end"] - res[,"start"] + 1L;
+
+  res;
+}) # getChromosomeRanges()
+
+
+
 ############################################################################
 # HISTORY:
+# 2011-09-05
+# o Added getChromosomeRanges() for CBS.
 # 2011-09-04
 # o Added estimateStandardDeviation() for CBS.
 # o Added extractSegmentMeansByLocus() for CBS.

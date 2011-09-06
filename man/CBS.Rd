@@ -51,6 +51,8 @@ extends list\cr
  \tab \code{drawLevels} \tab  -\cr
  \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr
  \tab \code{extractByChromosomes} \tab  -\cr
+ \tab \code{getCallStatistics} \tab  -\cr
+ \tab \code{getChromosomeRanges} \tab  -\cr
  \tab \code{getChromosomes} \tab  -\cr
  \tab \code{getSignalType} \tab  -\cr
  \tab \code{nbrOfChromosomes} \tab  -\cr

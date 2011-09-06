@@ -586,10 +586,44 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 }, private=TRUE) # extractCallsByLocus()
 
 
+setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
+  # To please R CMD check, cf. subset()
+  chromosome <- NULL; rm(chromosome);
+
+  # Sum length of calls per type and chromosome
+  segs <- getSegments(fit, splitter=FALSE);
+  segs$length <- segs[,"end"] - segs[,"start"] + 1L;
+  segs <- segs[order(segs$chromosome),];
+
+  callTypes <- grep("Call$", colnames(segs), value=TRUE);
+  res <- lapply(callTypes, FUN=function(type) {
+    coeffs <- as.integer(segs[,type]);
+    lens <- coeffs * segs$length;
+    lens <- by(lens, INDICES=segs$chromosome, FUN=sum, na.rm=TRUE);
+    as.vector(lens);
+  });
+  names(res) <- gsub("Call$", "Length", callTypes);
+  res1 <- as.data.frame(res);
+
+  # Get chromosome lengths
+  chrLengths <- getChromosomeRanges(fit)[,"length"];
+
+  res2 <- res1 / chrLengths;
+  names(res2) <- gsub("Call$", "Fraction", callTypes);
+
+  res <- cbind(chromosome=unique(segs$chromosome), length=chrLengths, res1, res2);  
+  rownames(res) <- NULL;
+
+  res;
+}) # getCallStatistics()
+
+
 ############################################################################
 # HISTORY:
+# 2011-09-05
+# o Added getCallStatistics() for CBS.
 # 2011-09-04
-# o Added extractCallsByLocus().
+# o Added extractCallsByLocus() for CBS.
 # o Adopted the calling methods from ditto of the DNAcopy class.
 # 2011-09-01
 # o Now callGainsAndLosses() returns a DNAcopy where the segmentation
