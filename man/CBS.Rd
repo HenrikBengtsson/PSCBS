@@ -48,6 +48,7 @@ extends list\cr
  \tab \code{as.character} \tab  -\cr
  \tab \code{as.data.frame} \tab  -\cr
  \tab \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy}} \tab Coerces a CBS object to a DNAcopy object.\cr
+ \tab \code{drawCentromeres} \tab  -\cr
  \tab \code{drawLevels} \tab  -\cr
  \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr
  \tab \code{extractByChromosomes} \tab  -\cr
@@ -61,7 +62,7 @@ extends list\cr
  \tab \code{getFractionOfGenomeGained} \tab  -\cr
  \tab \code{getFractionOfGenomeLost} \tab  -\cr
  \tab \code{getSignalType} \tab  -\cr
- \tab \code{highlightGainsAndLosses} \tab  -\cr
+ \tab \code{highlightCalls} \tab  -\cr
  \tab \code{isWholeChromosomeGained} \tab  -\cr
  \tab \code{isWholeChromosomeLost} \tab  -\cr
  \tab \code{nbrOfAmplifications} \tab  -\cr
