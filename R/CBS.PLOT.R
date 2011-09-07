@@ -136,7 +136,7 @@ setMethodS3("drawLevels", "CBS", function(fit, xScale=1e-6, ...) {
 })
 
 
-setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="green", gain="red", "amplification"="blue"), lwd=3, meanCol="purple", ..., xScale=1e-6, byIndex=FALSE, verbose=FALSE) {
+setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red", gain="green", "amplification"="blue"), lwd=3, meanCol="purple", ..., xScale=1e-6, byIndex=FALSE, verbose=FALSE) {
   segs <- getSegments(fit, splitter=FALSE);
 
   # Identify segment calls

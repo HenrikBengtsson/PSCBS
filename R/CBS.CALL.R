@@ -62,7 +62,9 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   # Allocate calls
   naValue <- as.logical(NA);
   nbrOfSegments <- nbrOfSegments(fit);
-  gainCalls <- lossCalls <- rep(naValue, times=nbrOfSegments);
+  segs <- getSegments(fit, splitter=TRUE);
+  nbrOfRows <- nrow(segs);
+  gainCalls <- lossCalls <- rep(naValue, times=nbrOfRows);
 
   if (method == "ucsf-mad") {
     # Default arguments
@@ -99,10 +101,10 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 
     # Calculate segment statistics (utilizing DNAcopy methods)
     stats <- segments.summary(as.DNAcopy(fit));
-    kept <- is.element(rownames(fit$output), rownames(stats));
+    kept <- is.element(rownames(segs), rownames(stats));
 
     naValue <- as.double(NA);
-    mu <- rep(naValue, times=nbrOfSegments);
+    mu <- rep(naValue, times=nbrOfRows);
 
     # The segmented mean levels
     mu[kept] <- stats$seg.median;
@@ -132,15 +134,15 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   }
 
   # Sanity check
-  stopifnot(length(lossCalls) == nbrOfSegments);
-  stopifnot(length(gainCalls) == nbrOfSegments);
+  stopifnot(length(lossCalls) == nbrOfRows);
+  stopifnot(length(gainCalls) == nbrOfRows);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Update 'DNAcopy' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # (a) segmentation table
-  segs <- fit$output;
+  segs <- getSegments(fit, splitter=TRUE);
   segs$lossCall <- lossCalls;
   segs$gainCall <- gainCalls;
   fit$output <- segs;
@@ -613,7 +615,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
 
   res3 <- cbind(res1, res2);
 
-  res <- data.frame(chromosome=unique(segs$chromosome), length=chrLengths);
+  res <- data.frame(chromosome=getChromosomes(fit), length=chrLengths);
   if (nrow(res3) > 0) {
     res <- cbind(res, res3);
   }
