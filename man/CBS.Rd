@@ -63,6 +63,7 @@ extends list\cr
  \tab \code{getFractionOfGenomeLost} \tab  -\cr
  \tab \code{getSignalType} \tab  -\cr
  \tab \code{highlightCalls} \tab  -\cr
+ \tab \code{highlightLocusCalls} \tab  -\cr
  \tab \code{isWholeChromosomeGained} \tab  -\cr
  \tab \code{isWholeChromosomeLost} \tab  -\cr
  \tab \code{nbrOfAmplifications} \tab  -\cr

@@ -202,14 +202,14 @@
 \alias{nbrOfGains.CBS}
 \alias{nbrOfLosses}
 \alias{nbrOfLosses.CBS}
-\alias{highlightGainsAndLosses}
-\alias{highlightGainsAndLosses.CBS}
 \alias{drawCentromeres}
 \alias{drawCentromeres.CBS}
 \alias{getChromosomeOffsets}
 \alias{getChromosomeOffsets.CBS}
 \alias{highlightCalls}
 \alias{highlightCalls.CBS}
+\alias{highlightLocusCalls}
+\alias{highlightLocusCalls.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

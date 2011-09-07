@@ -79,6 +79,6 @@ segmentByCBS.CNA
   isWholeChromosomeLost isWholeChromosomeLost.CBS
   nbrOfAmplifications nbrOfAmplifications.CBS nbrOfGains nbrOfGains.CBS
   nbrOfLosses nbrOfLosses.CBS
-highlightGainsAndLosses highlightGainsAndLosses.CBS
   drawCentromeres drawCentromeres.CBS getChromosomeOffsets
   getChromosomeOffsets.CBS highlightCalls highlightCalls.CBS
+ highlightLocusCalls highlightLocusCalls.CBS

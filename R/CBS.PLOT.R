@@ -30,7 +30,7 @@
 # @keyword IO
 # @keyword internal
 #*/########################################################################### 
-setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", cex=1, grid=FALSE, Clim="auto", xScale=1e-6, Clab="auto", ..., byIndex=FALSE, add=FALSE) {
+setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", cex=1, grid=FALSE, Clim="auto", xScale=1e-6, Clab="auto", ..., byIndex=FALSE, mar=c(3,4,1,2)+1, add=FALSE) {
   # To please R CMD check
   fit <- x;
 
@@ -92,8 +92,8 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", c
     x <- xScale * x;
   }
 
-  if (!add) {
-    par(mar=c(1,4,1,2)+1);
+  if (!add && !is.null(mar)) {
+    par(mar=mar);
   }
 
 
@@ -139,7 +139,9 @@ setMethodS3("drawLevels", "CBS", function(fit, xScale=1e-6, ...) {
 setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red", gain="green", "amplification"="blue"), lwd=3, meanCol="purple", ..., xScale=1e-6, byIndex=FALSE, verbose=FALSE) {
   segs <- getSegments(fit, splitter=FALSE);
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify segment calls
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   callFields <- grep("Call$", colnames(segs));
   callTypes <- gsub("Call$", "", colnames(segs)[callFields]);
   nbrOfCalls <- length(callFields);
@@ -151,28 +153,19 @@ setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red"
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Textual and threshold annotations
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  params <- fit$params$callGainsAndLosses;
-  if (!is.null(params)) {
-    sigma <- params$sigmaMAD;
-    scale <- params$scale;
-    muR <- params$muR;
-
-    # Draw thresholds used for calling
-    abline(h=params$muR, col="gray", lty=3);
-    abline(h=params$tauLoss, col=callCols["loss"], lty=3);
-    abline(h=params$tauGain, col=callCols["gain"], lty=3);
-    paramsGL <- substitute(paste(ng, " gains & ", nl, " losses [", hat(sigma)[MAD]==x, ", ", scale==y, ", ", hat(mu)[R]==z, "]"), list(ng=sum(segs$gainCall, na.rm=TRUE), nl=sum(segs$lossCall, na.rm=TRUE), x=round(sigma, digits=3), y=scale, z=muR));
-  }
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Tile chromosomes
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- tileChromosomes(fit);
   verbose && str(verbose, fitT);
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Highlight threshold levels
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  params <- fit$params$callGainsAndLosses;
+  abline(h=params$muR, col="gray", lty=3);
+  abline(h=params$tauLoss, col=callCols["loss"], lty=3);
+  abline(h=params$tauGain, col=callCols["gain"], lty=3);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -215,8 +208,66 @@ setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red"
       }
     } # for (tt ...)
   } # for (ss ...)
-  rm(segsT);
 }) # highlightCalls()
+
+
+
+setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25, posOutlier=24), callCols=c(negOutlier="blue", posOutlier="blue"), lwd=2, ..., xScale=1e-6, byIndex=FALSE, verbose=FALSE) {
+  data <- getLocusData(fit);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Identify segment calls
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  callFields <- grep("Call$", colnames(data));
+  callTypes <- gsub("Call$", "", colnames(data)[callFields]);
+  nbrOfCalls <- length(callFields);
+
+  # Nothing todo?
+  if (nbrOfCalls == 0) {
+    return();
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Tile chromosomes
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fitT <- tileChromosomes(fit);
+  verbose && str(verbose, fitT);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Highlight gains and losses
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  dataT <- getLocusData(fitT);
+  chr <- dataT[,"chromosome"];
+  x <- dataT[,"x"];
+  y <- dataT[,3];
+  nbrOfLoci <- nbrOfLoci(fitT);
+
+  # For each non-neutral segment
+  for (tt in seq(along=callTypes)) {
+    field <- callFields[tt];
+    type <- callTypes[tt];
+
+    isCalled <- dataT[[field]];
+    idxs <- which(isCalled);
+
+    if (length(idxs) == 0) {
+      next;
+    }
+
+    if (byIndex) {
+      xs <- idxs;
+    } else {
+      xs <- x[idxs] * xScale;
+    }
+    ys <- y[idxs];
+    pch <- callPchs[type];
+    col <- callCols[type];
+    points(xs, ys, pch=pch, col=col, lwd=lwd, ...);
+  } # for (tt ...)
+}) # highlightLocusCalls()
+
 
 
 setMethodS3("getChromosomeOffsets", "CBS", function(fit, resolution=1e6, ...) {
@@ -329,7 +380,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 
-setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", Clim=c(0,6), xScale=1e-6, Clab="TCN", ..., subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", Clim=c(0,6), xScale=1e-6, xlab="Genomic position", Clab="TCN", ..., subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, mar=c(3,4,1,2)+1, verbose=FALSE) {
   # To please R CMD check
   fit <- x;
  
@@ -357,13 +408,13 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Tile chromosomes
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  fit <- tileChromosomes(fit);
-  verbose && str(verbose, fit);
+  fitT <- tileChromosomes(fit);
+  verbose && str(verbose, fitT);
   # Sanity check
-  stopifnot(!is.null(fit$chromosomeStats));
+  stopifnot(!is.null(fitT$chromosomeStats));
 
   # Extract the input data
-  data <- fit$data;
+  data <- fitT$data;
   if (is.null(data)) {
     throw("Cannot plot segmentation results. No input data available.");
   }
@@ -380,13 +431,14 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   rm(CT, muN, betaT, betaN, betaTN);
   attachLocally(data);
   x <- xScale * x;
-  chrStats <- fit$chromosomeStats;
+  chrStats <- fitT$chromosomeStats;
+  chrStats <- chrStats[-nrow(chrStats),,drop=FALSE];
   vs <- xScale * chrStats[,1:2];
   mids <- (vs[,1]+vs[,2])/2;
   CT <- y;
 
   nbrOfLoci <- length(x);
-  chromosomes <- getChromosomes(fit);
+  chromosomes <- getChromosomes(fitT);
   chrLabels <- sprintf("%02d", chromosomes);
 
   if (byIndex) {
@@ -395,25 +447,26 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
     xs <- x;
   }
 
-  if (!add) {
-    par(mar=c(1,4,1,2)+1);
+  if (!add && !is.null(mar)) {
+    par(mar=mar);
   }
 
-  gh <- fit;
+  gh <- fitT;
   gh$xScale <- xScale;
 
   xlim <- xScale*range(chrStats[,c("start","end")], na.rm=TRUE);
-  xlab <- "Genomic position";
 
   pchT <- if (scatter) { pch } else { NA };
 
   plot(NA, xlim=xlim, ylim=Clim, xlab=xlab, ylab=Clab, axes=FALSE);
   if (!is.null(onBegin)) onBegin(gh=gh);
   points(xs, CT, pch=pchT, col=col, ...);
-  mtext(text=chrLabels, side=rep(c(1,3), length.out=length(chrLabels)), at=mids, line=0.1, cex=0.9);
+  side <- rep(c(1,3), length.out=length(chrLabels));
+  mtext(text=chrLabels, side=side, at=mids, line=0.1, cex=0.9);
   abline(v=vs, lty=3);
-  axis(side=2); box();
-  drawLevels(fit, xScale=xScale, byIndex=byIndex);
+  axis(side=2); 
+  box();
+  drawLevels(fitT, xScale=xScale, byIndex=byIndex);
   if (!is.null(onEnd)) onEnd(gh=gh);
 
   invisible(gh);
@@ -458,7 +511,10 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, xScale=1e-6, col
 
 ############################################################################
 # HISTORY:
+# 2011-09-07
+# o Added highlightLocusCalls().
 # 2011-09-06
+# o Added highlightCalls().
 # o Added getChromosomeOffsets().
 # 2011-09-01
 # o BUG FIX: plotTracksManyChromosomes() for CBS gave an error because
