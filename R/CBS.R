@@ -186,7 +186,7 @@ setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
 
   # Drop chromosome splitters?
   if (!splitters) {
-    isSplitter <- lapply(segs, FUN=is.na);
+    isSplitter <- lapply(segs[-1], FUN=is.na);
     isSplitter <- Reduce("&", isSplitter);
     segs <- segs[!isSplitter,];
   }
