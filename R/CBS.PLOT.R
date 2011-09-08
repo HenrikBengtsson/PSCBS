@@ -30,7 +30,7 @@
 # @keyword IO
 # @keyword internal
 #*/########################################################################### 
-setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", cex=1, grid=FALSE, Clim="auto", xScale=1e-6, Clab="auto", ..., byIndex=FALSE, mar=c(3,4,1,2)+1, add=FALSE) {
+setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", cex=1, grid=FALSE, Clim="auto", xScale=1e-6, Clab="auto", ..., byIndex=FALSE, mar=c(3,4,1,2)+1, add=FALSE) {
   # To please R CMD check
   fit <- x;
 
@@ -59,7 +59,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", c
 
   # Argument 'fit':
   if (nbrOfChromosomes(fit) > 1) {
-    res <- plotTracksManyChromosomes(fit, scatter=scatter, pch=pch, Clim=Clim, xScale=xScale, Clab=Clab, ..., byIndex=byIndex, add=add);
+    res <- plotTracksManyChromosomes(fit, scatter=scatter, pch=pch, Clim=Clim, xScale=xScale, Clab=Clab, ..., byIndex=byIndex, mar=mar, add=add);
     return(res);
   }
 
@@ -108,7 +108,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", c
     abline(h=seq(from=yrange[1], to=yrange[2], by=2), lty=3, col="gray");
     abline(h=0, lty=1, col="black");
   }
-  drawLevels(fit, col="purple", xScale=xScale);
+  drawLevels(fit, col=meanCol, xScale=xScale);
 
   invisible();  
 }) # plotTracks()
@@ -119,7 +119,7 @@ setMethodS3("plot", "CBS", function(x, ...) {
 })
 
 
-setMethodS3("drawLevels", "CBS", function(fit, xScale=1e-6, ...) {
+setMethodS3("drawLevels", "CBS", function(fit, col="purple", xScale=1e-6, ...) {
   # Get segmentation results
   segs <- as.data.frame(fit);
 
@@ -132,7 +132,7 @@ setMethodS3("drawLevels", "CBS", function(fit, xScale=1e-6, ...) {
   colnames(segs) <- c("loc.start", "loc.end", "seg.mean");
   dummy <- list(output=segs);
   class(dummy) <- "DNAcopy";
-  drawLevels(dummy, xScale=xScale, ...);
+  drawLevels(dummy, col=col, xScale=xScale, ...);
 })
 
 
@@ -212,7 +212,7 @@ setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red"
 
 
 
-setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25, posOutlier=24), callCols=c(negOutlier="blue", posOutlier="blue"), lwd=2, ..., xScale=1e-6, byIndex=FALSE, verbose=FALSE) {
+setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25, posOutlier=24), callCols=c(negOutlier="blue", posOutlier="blue"), ..., xScale=1e-6, byIndex=FALSE, verbose=FALSE) {
   data <- getLocusData(fit);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -264,7 +264,7 @@ setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25
     ys <- y[idxs];
     pch <- callPchs[type];
     col <- callCols[type];
-    points(xs, ys, pch=pch, col=col, lwd=lwd, ...);
+    points(xs, ys, pch=pch, col=col, ...);
   } # for (tt ...)
 }) # highlightLocusCalls()
 
@@ -380,7 +380,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 
-setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", Clim=c(0,6), xScale=1e-6, xlab="Genomic position", Clab="TCN", ..., subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, mar=c(3,4,1,2)+1, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", Clim=c(0,6), xScale=1e-6, xlab="Genomic position", Clab="TCN", ..., subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, mar=c(3,4,1,2)+1, verbose=FALSE) {
   # To please R CMD check
   fit <- x;
  
@@ -462,11 +462,11 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   if (!is.null(onBegin)) onBegin(gh=gh);
   points(xs, CT, pch=pchT, col=col, ...);
   side <- rep(c(1,3), length.out=length(chrLabels));
-  mtext(text=chrLabels, side=side, at=mids, line=0.1, cex=0.9);
+  mtext(text=chrLabels, side=side, at=mids, line=0.1, cex=0.7*par("cex"));
   abline(v=vs, lty=3);
   axis(side=2); 
   box();
-  drawLevels(fitT, xScale=xScale, byIndex=byIndex);
+  drawLevels(fitT, col=meanCol, xScale=xScale, byIndex=byIndex);
   if (!is.null(onEnd)) onEnd(gh=gh);
 
   invisible(gh);

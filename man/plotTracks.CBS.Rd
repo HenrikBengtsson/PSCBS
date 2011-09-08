@@ -21,7 +21,7 @@
   Each type of track is plotted in its own panel.
  }
 
- \usage{\method{plotTracks}{CBS}(x, scatter=TRUE, pch=20, col="gray", cex=1, grid=FALSE, Clim="auto", xScale=1e-06, Clab="auto", ..., byIndex=FALSE, mar=c(3, 4, 1, 2) + 1, add=FALSE)}
+ \usage{\method{plotTracks}{CBS}(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", cex=1, grid=FALSE, Clim="auto", xScale=1e-06, Clab="auto", ..., byIndex=FALSE, mar=c(3, 4, 1, 2) + 1, add=FALSE)}
 
  \arguments{
    \item{x}{A result object returned by \code{\link{segmentByCBS}}().}
