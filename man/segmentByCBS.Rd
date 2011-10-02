@@ -9,14 +9,16 @@
  \name{segmentByCBS}
 \alias{segmentByCBS.default}
 \alias{segmentByCBS}
+ \alias{segmentByCBS.data.frame}
+ \alias{segmentByCBS.CNA}
+ \alias{segmentByCBS}
 
  \title{Segment genomic signals using the CBS method}
 
  \description{
   Segment genomic signals using the CBS method of the \pkg{DNAcopy} package.
   This is a convenient low-level wrapper for the \code{DNAcopy::segment()}
-  method.  It is intended to be applied to one sample and one chromosome
-  at the time.
+  method.  It is intended to be applied to a sample at the time.
   For more details on the Circular Binary Segmentation (CBS) method
   see [1,2].
  }
@@ -30,11 +32,14 @@
        a vector of length J.}
    \item{x}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic locations.
             If \code{\link[base]{NULL}}, index locations \code{1:J} are used.}
+   \item{index}{An optional \code{\link[base]{integer}} \code{\link[base]{vector}} of length J specifying
+     the genomewide indices of the loci.}
    \item{w}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} in [0,1] of J weights.}
    \item{undo}{A non-negative \code{\link[base]{numeric}}.  If less than +\code{\link[base:is.finite]{Inf}}, then
        arguments \code{undo.splits="sdundo"} and \code{undo.SD=undo}
        are passed to \code{DNAcopy::segment()}.}
-   \item{...}{Additional arguments passed to the segmentation function.}
+   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
+       segmentation function.}
    \item{joinSegments}{If \code{\link[base:logical]{TRUE}}, there are no gaps between neighboring
      segments.
      If \code{\link[base:logical]{FALSE}}, the boundaries of a segment are defined by the support
@@ -46,8 +51,6 @@
    }
    \item{knownCPs}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of known
      change point locations.}
-   \item{index}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length J specifying the
-     genomewide indices of the loci.}
    \item{seed}{An (optional) \code{\link[base]{integer}} specifying the random seed to be
      set before calling the segmentation method.  The random seed is
      set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}
@@ -65,7 +68,7 @@
  }
 
  \section{Reproducibility}{
-   The "DNAcopy::segment" implementation of CBS uses approximation
+   The \code{DNAcopy::segment()} implementation of CBS uses approximation
    through random sampling for some estimates.  Because of this,
    repeated calls using the same signals may result in slightly
    different results, unless the random seed is set/fixed.
@@ -195,14 +198,15 @@ stopifnot(all.equal(fitWG$output, fit$output))
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \references{
-  [1] A.B. Olshen, E.S. Venkatraman (aka Venkatraman E. Seshan),
-      R. Lucito and M. Wigler, \emph{Circular binary segmentation for
-      the analysis of array-based DNA copy number data},
-      Biostatistics, 2004.\cr
-  [2] E.S. Venkatraman and A.B. Olshen, \emph{A faster circular binary
-      segmentation algorithm for the analysis of array CGH data}.
-      Bioinformatics, 2007.\cr
+  [1] A.B. Olshen, E.S. Venkatraman (aka Venkatraman E. Seshan), R. Lucito and M. Wigler, \emph{Circular binary segmentation for the analysis of array-based DNA copy number data}, Biostatistics, 2004
+ \cr
+  [2] E.S. Venkatraman and A.B. Olshen, \emph{A faster circular binary segmentation algorithm for the analysis of array CGH data}, Bioinformatics, 2007
+ \cr
  }
 
+ \seealso{
+   To segment allele-specific tumor copy-number signals from a tumor
+   with a matched normal, see \code{\link{segmentByPairedPSCBS}}().
+ }
 
 \keyword{IO}

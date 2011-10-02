@@ -21,12 +21,18 @@
 # \section{To get started}{
 #   To get started, see:
 #   \enumerate{
-#     \item @see "segmentByPairedPSCBS" 
+#     \item @see "segmentByCBS" - segments total copy-numbers, or
+#           any other unimodal genomic signals
+#           using the CBS method [3,4].
+#     \item @see "segmentByPairedPSCBS" - segments allele-specific 
+#           tumor signal from a tumor with a matched normal
+#           using the Paired PSCBS method [1,2].
 #   }
 # }
 # 
-# \section{How to cite this package}{
-#   Please use [1] to cite this package.
+# \section{How to cite}{
+#   Please use [1] and [2] to cite when using Paired PSCBS,
+#   and [3] and [4] when using CBS.
 # }
 #
 # \author{
@@ -39,6 +45,9 @@
 # 
 # \references{
 #  [1] @include "../incl/OlshenA_etal_2011.Rd" \cr
+#  [2] @include "../incl/BengtssonH_etal_2010.Rd" \cr 
+#  [3] @include "../incl/OlshenVenkatraman_2004.Rd" \cr
+#  [4] @include "../incl/VenkatramanOlshen_2007.Rd" \cr
 # }
 #*/#########################################################################
 

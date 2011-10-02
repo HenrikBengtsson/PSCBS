@@ -1,5 +1,6 @@
 ###########################################################################/**
 # @RdocDefault segmentByPairedPSCBS
+# @alias segmentByPairedPSCBS.data.frame
 # @alias segmentByPairedPSCBS
 #
 # @title "Segment total copy numbers and allele B fractions using the Paired PSCBS method"
@@ -97,16 +98,19 @@
 #
 # @author
 #
+# \references{
+#  [1] @include "../incl/OlshenA_etal_2011.Rd" \cr
+#  [2] @include "../incl/BengtssonH_etal_2010.Rd" \cr
+# }
+#
 # \seealso{
 #   Internally, @see "aroma.light::callNaiveGenotypes" is used to 
 #   call naive genotypes, @see "aroma.light::normalizeTumorBoost" is 
 #   used for TumorBoost normalization, and @see "segmentByCBS" is used 
 #   to segment TCN and DH separately.
-# }
 #
-# \references{
-#  [1] @include "../incl/OlshenA_etal_2011.Rd" \cr
-#   [2] H. Bengtsson, P. Neuvial and T.P. Speed, \emph{TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays}, BMC Bioinformatics, 2010.
+#   To segment total copy-numbers, or any other unimodal signals,
+#   see @see "segmentByCBS".
 # }
 #
 # @keyword IO
@@ -149,12 +153,15 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # Argument 'betaN':
   betaN <- Arguments$getDoubles(betaN, length=length2, disallow="Inf");
 
-
   # Argument 'chromosome':
-  disallow <- c("Inf");
-  chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow);
-  if (length(chromosome) > 1) {
-    chromosome <- Arguments$getIntegers(chromosome, length=length2, disallow=disallow);
+  if (is.null(chromosome)) {
+    chromosome <- 0L; 
+  } else {
+    disallow <- c("Inf");
+    chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow);
+    if (length(chromosome) > 1) {
+      chromosome <- Arguments$getIntegers(chromosome, length=length2, disallow=disallow);
+    }
   }
 
   # Argument 'x':
@@ -763,8 +770,22 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 }) # segmentByPairedPSCBS()
 
 
+
+setMethodS3("segmentByPairedPSCBS", "data.frame", function(CT, ...) {
+  # To please R CMD check
+  data <- CT;
+
+
+  segmentByPairedPSCBS(CT=data$CT, betaT=data$betaT, betaN=data$betaN, 
+                   muN=data$muN, chromosome=data$chromosome, x=data$x, ...);
+})
+
+
 ############################################################################
 # HISTORY:
+# 2011-10-02
+# o Added segmentByPairedPSCBS() for data.frame such that the locus-level
+#   data arguments can also be passed via a data.frame. 
 # 2011-09-04
 # o ROBUSTNESS: Added drop=FALSE to matrix subsettings.
 # o CLEANUP: Removed all references to/usage of DNAcopy fields, which

@@ -60,7 +60,7 @@ extends list\cr
  \tab \code{getFGL} \tab  -\cr
  \tab \code{getFractionOfGenomeAltered} \tab  -\cr
  \tab \code{getFractionOfGenomeGained} \tab  -\cr
- \tab \code{getFractionOfGenomeLost} \tab  -\cr
+ \tab \code{\link[PSCBS:getFractionOfGenomeLost.CBS]{getFractionOfGenomeLost}} \tab Calculates the fraction of the genome lost, gained, or aberrant either way.\cr
  \tab \code{getSignalType} \tab  -\cr
  \tab \code{highlightCalls} \tab  -\cr
  \tab \code{highlightLocusCalls} \tab  -\cr

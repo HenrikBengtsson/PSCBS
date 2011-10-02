@@ -625,6 +625,44 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
 }) # getCallStatistics()
 
 
+
+###########################################################################/**
+# @set "class=CBS"
+# @RdocMethod getFractionOfGenomeLost
+# @aliasmethod getFractionOfGenomeGained
+# @aliasmethod getFractionOfGenomeAltered
+# @aliasmethod getFGL
+# @aliasmethod getFGG
+# @aliasmethod getFGA
+#
+# @title "Calculates the fraction of the genome lost, gained, or aberrant either way"
+#
+# \description{
+#  @get "title" (in sense of total copy numbers).
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#  Returns a @double in [0,1].
+# }
+#
+# @author
+#
+# \references{
+#   [1] Fridlyand et al. (2006)\cr
+# }
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @keyword internal 
+#*/###########################################################################  
 setMethodS3("getFractionOfGenomeLost", "CBS", function(fit, ...) {
   stats <- getCallStatistics(fit, ...);
   mean(stats$lossFraction, na.rm=TRUE);
@@ -639,20 +677,19 @@ setMethodS3("getFractionOfGenomeGained", "CBS", function(fit, ...) {
   mean(stats$gainFraction, na.rm=TRUE);
 })
 
-
 setMethodS3("getFGG", "CBS", function(fit, ...) {
   getFractionOfGenomeGained(fit, ...);
 })  
-
 
 setMethodS3("getFractionOfGenomeAltered", "CBS", function(fit, ...) {
   getFractionOfGenomeLost(fit, ...) + getFractionOfGenomeGained(fit, ...);
 })
 
-
 setMethodS3("getFGA", "CBS", function(fit, ...) {
   getFractionOfGenomeAltered(fit, ...);
 })
+
+
 
 
 setMethodS3("isWholeChromosomeGained", "CBS", function(fit, minFraction=0.99, ...) {
@@ -724,6 +761,10 @@ setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-02
+# o DOCUMENTATION: Added an Rdoc help page for getFractionOfGenomeLost(),
+#   getFractionOfGenomeGained(), getFractionOfGenomeAltered(), getFGL(), 
+#   getFGG() and getFGA().
 # 2011-09-05
 # o Added getCallStatistics() for CBS.
 # 2011-09-04

@@ -5,26 +5,71 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 }, private=TRUE)
 
 
-setMethodS3("callSegments", "PairedPSCBS", function(fit, ...) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # 2. Calling regions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Call region
-  # a. Classifying non-LOH regions as balanced or not balanced
-  # b. Testing for LOH in the Tumor
-}) # callSegments()
-
-
-
+###########################################################################/**
+# @set "class=PairedPSCBS"
+# @RdocMethod extractTCNAndDHs
+#
+# @title "Extract TCN and DH mean levels per segment"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @data.frame.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seemethod "extractMinorMajorCNs".
+#   @seeclass
+# }
+#*/###########################################################################  
 setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
   segs <- fit$output;
   stopifnot(!is.null(segs));
 
   data <- segs[,c("tcnMean", "dhMean", "tcnNbrOfLoci", "dhNbrOfLoci"), drop=FALSE];
   data;
-})
+}, protected=TRUE)
 
 
+
+###########################################################################/**
+# @set "class=PairedPSCBS"
+# @RdocMethod extractMinorMajorCNs
+# @aliasmethod extractC1C2
+#
+# @title "Extract minor and major copy-number mean levels per segment"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @data.frame.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seemethod "extractTCNAndDHs"
+#   @seeclass
+# }
+#*/###########################################################################  
 setMethodS3("extractMinorMajorCNs", "PairedPSCBS", function(fit, ...) {
   data <- extractTCNAndDHs(fit, ...);
 
@@ -38,19 +83,21 @@ setMethodS3("extractMinorMajorCNs", "PairedPSCBS", function(fit, ...) {
   colnames(data)[1:2] <- c("C1", "C2");
 
   data;
-}, private=TRUE)
+}, protected=TRUE)
 
 
 setMethodS3("extractC1C2", "PairedPSCBS", function(...) {
   extractMinorMajorCNs(...);
-})
+}, protected=TRUE)
+
+
 
 setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
   xy <- extractC1C2(...);
   X <- xy[,1:2,drop=FALSE];
   dX <- matrixStats::colDiffs(X);
   dX;
-}, private=TRUE)
+}, protected=TRUE)
 
 
 
@@ -464,6 +511,8 @@ setMethodS3("extractByRegions", "PairedPSCBS", function(this, regions, ..., verb
 
 ############################################################################
 # HISTORY:
+# 2011-10-02
+# o CLEANUP: Dropped empty callSegments() for PairedPSCBS.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-04-08

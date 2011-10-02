@@ -4,13 +4,13 @@
  bootstrapDHByRegion.PairedPSCBS callABandHighAI
  callABandHighAI.PairedPSCBS 
  callExtremeAllelicImbalance
- callExtremeAllelicImbalance.PairedPSCBS callSegments
- callSegments.PairedPSCBS drawLevels drawLevels.DNAcopy
+ callExtremeAllelicImbalance.PairedPSCBS 
+ drawLevels drawLevels.DNAcopy
  drawLevels.PairedPSCBS extractByChromosome extractByChromosome.PSCBS
- extractC1C2 extractC1C2.PairedPSCBS extractDeltaC1C2
+ extractC1C2 extractDeltaC1C2
  extractDeltaC1C2.PairedPSCBS extractMinorMajorCNs
- extractMinorMajorCNs.PairedPSCBS extractTCNAndDHs
- extractTCNAndDHs.PairedPSCBS getChromosomes getChromosomes.PSCBS
+ extractTCNAndDHs
+ getChromosomes getChromosomes.PSCBS
  linesC1C2 linesC1C2.PairedPSCBS linesDeltaC1C2
  linesDeltaC1C2.PairedPSCBS nbrOfChromosomes nbrOfChromosomes.PSCBS
  nbrOfSegments nbrOfSegments.PSCBS plot.PairedPSCBS plotC1C2
@@ -64,17 +64,16 @@ append.CBS
 callAmplifications callGainsAndLosses callOutliers
   getSampleName getSampleName.CBS sampleName sampleName.CBS
   sampleName<- sampleName<-.CBS
-segmentByCBS.CNA
  extractCallsByLocus extractCallsByLocus.CBS
  getSignalType getSignalType.CBS signalType signalType.CBS
  signalType<- signalType<-.CBS
   writeLocusData writeLocusData.CBS writeSegments writeSegments.CBS
  getCallStatistics getCallStatistics.CBS getChromosomeRanges
  getChromosomeRanges.CBS
-  getFGA getFGA.CBS getFGG getFGG.CBS getFGL getFGL.CBS
-  getFractionOfGenomeAltered getFractionOfGenomeAltered.CBS
-  getFractionOfGenomeGained getFractionOfGenomeGained.CBS
-  getFractionOfGenomeLost getFractionOfGenomeLost.CBS
+  getFGA getFGG getFGL
+  getFractionOfGenomeAltered
+  getFractionOfGenomeGained
+  getFractionOfGenomeLost
   isWholeChromosomeGained isWholeChromosomeGained.CBS
   isWholeChromosomeLost isWholeChromosomeLost.CBS
   nbrOfAmplifications nbrOfAmplifications.CBS nbrOfGains nbrOfGains.CBS

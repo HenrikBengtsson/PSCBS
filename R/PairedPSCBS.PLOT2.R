@@ -336,7 +336,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   verbose && exit(verbose);
 
   invisible();  
-}) # plotTracks2()
+}, protected=TRUE) # plotTracks2()
 
 
 

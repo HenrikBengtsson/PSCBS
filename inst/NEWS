@@ -3,8 +3,17 @@ Package: PSCBS
 ==============
 
 Version: 0.13.3 [2011-10-02]
-o DOCUMENTATION: Added Rdoc help to mergeTwoSegments() and
-  dropByRegions() for PairedPSCBS.
+o GENERALIZATION: Now segmentByCBS() and segmentByPairedPSCBS()
+  also accepts a data.frame of locus-level data with column names
+  matching the locus-level arguments accepted by the corresponding
+  method.
+o DOCUMENTATION: Update references in help pages.
+o DOCUMENTATION: Added Rdoc help for mergeTwoSegments() and
+  dropByRegions() of PairedPSCBS.
+o DOCUMENTATION: Added Rdoc help for getFractionOfGenomeLost(),
+  getFractionOfGenomeGained(), getFractionOfGenomeAltered(), 
+  getFGL(), getFGG(), and getFGA() of CBS.
+o CLEANUP: Dropped empty callSegments() for PairedPSCBS.
 
 
 Version: 0.13.2 [2011-09-30]

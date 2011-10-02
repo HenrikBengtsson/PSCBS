@@ -9,6 +9,7 @@
  \name{segmentByPairedPSCBS}
 \alias{segmentByPairedPSCBS.default}
 \alias{segmentByPairedPSCBS}
+ \alias{segmentByPairedPSCBS.data.frame}
  \alias{segmentByPairedPSCBS}
 
  \title{Segment total copy numbers and allele B fractions using the Paired PSCBS method}
@@ -189,17 +190,21 @@ stopifnot(fit$params$deltaLOH == deltaLOH)
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
+ \references{
+  [1] A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan, \emph{Parent-specific copy number in paired tumor-normal studies using circular binary segmentation}, Bioinformatics, 2011
+ \cr
+  [2] H. Bengtsson, P. Neuvial and T.P. Speed, \emph{TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays}, BMC Bioinformatics, 2010
+ \cr
+ }
+
  \seealso{
    Internally, \code{\link[aroma.light]{callNaiveGenotypes}} is used to
    call naive genotypes, \code{\link[aroma.light]{normalizeTumorBoost}} is
    used for TumorBoost normalization, and \code{\link{segmentByCBS}}() is used
    to segment TCN and DH separately.
- }
 
- \references{
-  [1] A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan, \emph{Parent-specific copy number in paired tumor-normal studies using circular binary segmentation}, Bioinformatics 2011 (in press)\cr
- \cr
-   [2] H. Bengtsson, P. Neuvial and T.P. Speed, \emph{TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays}, BMC Bioinformatics, 2010.
+   To segment total copy-numbers, or any other unimodal signals,
+   see \code{\link{segmentByCBS}}().
  }
 
 

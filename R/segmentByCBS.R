@@ -1,13 +1,15 @@
 ###########################################################################/**
 # @RdocDefault segmentByCBS
+# @alias segmentByCBS.data.frame
+# @alias segmentByCBS.CNA
+# @alias segmentByCBS
 #
 # @title "Segment genomic signals using the CBS method"
 #
 # \description{
 #  @get "title" of the \pkg{DNAcopy} package.
 #  This is a convenient low-level wrapper for the \code{DNAcopy::segment()}
-#  method.  It is intended to be applied to one sample and one chromosome
-#  at the time.
+#  method.  It is intended to be applied to a sample at the time.
 #  For more details on the Circular Binary Segmentation (CBS) method 
 #  see [1,2].
 # }
@@ -21,11 +23,14 @@
 #       a vector of length J.}
 #   \item{x}{Optional @numeric @vector of J genomic locations.
 #            If @NULL, index locations \code{1:J} are used.}
+#   \item{index}{An optional @integer @vector of length J specifying
+#     the genomewide indices of the loci.}
 #   \item{w}{Optional @numeric @vector in [0,1] of J weights.}
 #   \item{undo}{A non-negative @numeric.  If less than +@Inf, then
 #       arguments \code{undo.splits="sdundo"} and \code{undo.SD=undo}
 #       are passed to \code{DNAcopy::segment()}.}
-#   \item{...}{Additional arguments passed to the segmentation function.}
+#   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
+#       segmentation function.}
 #   \item{joinSegments}{If @TRUE, there are no gaps between neighboring
 #     segments.
 #     If @FALSE, the boundaries of a segment are defined by the support
@@ -37,8 +42,6 @@
 #   }
 #   \item{knownCPs}{Optional @numeric @vector of known 
 #     change point locations.}
-#   \item{index}{An @integer @vector of length J specifying the 
-#     genomewide indices of the loci.}
 #   \item{seed}{An (optional) @integer specifying the random seed to be 
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
@@ -56,7 +59,7 @@
 # }
 #
 # \section{Reproducibility}{
-#   The "DNAcopy::segment" implementation of CBS uses approximation
+#   The \code{DNAcopy::segment()} implementation of CBS uses approximation
 #   through random sampling for some estimates.  Because of this,
 #   repeated calls using the same signals may result in slightly 
 #   different results, unless the random seed is set/fixed.
@@ -80,18 +83,17 @@
 # @author
 #
 # \references{
-#  [1] A.B. Olshen, E.S. Venkatraman (aka Venkatraman E. Seshan), 
-#      R. Lucito and M. Wigler, \emph{Circular binary segmentation for 
-#      the analysis of array-based DNA copy number data},
-#      Biostatistics, 2004.\cr
-#  [2] E.S. Venkatraman and A.B. Olshen, \emph{A faster circular binary
-#      segmentation algorithm for the analysis of array CGH data}. 
-#      Bioinformatics, 2007.\cr
+#  [1] @include "../incl/OlshenVenkatraman_2004.Rd" \cr
+#  [2] @include "../incl/VenkatramanOlshen_2007.Rd" \cr
 # }
 #
+# \seealso{
+#   To segment allele-specific tumor copy-number signals from a tumor
+#   with a matched normal, see @see "segmentByPairedPSCBS".
+# }
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -103,17 +105,21 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   length2 <- rep(nbrOfLoci, times=2);
 
   # Argument 'chromosome':
-  disallow <- c("Inf");
-  chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow);
-  if (length(chromosome) > 1) {
-    chromosome <- Arguments$getIntegers(chromosome, length=length2, disallow=disallow);
-##    # If 'chromosome' is a vector of length J, then it must contain
-##    # a unique chromosome.
-##    chromosomes <- sort(unique(chromosome));
-##    if (length(chromosomes) > 1) {
-##      throw("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "));
-##    }
-##    chromosome <- chromosomes;
+  if (is.null(chromosome)) {
+    chromosome <- 0L;
+  } else {
+    disallow <- c("Inf");
+    chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow);
+    if (length(chromosome) > 1) {
+      chromosome <- Arguments$getIntegers(chromosome, length=length2, disallow=disallow);
+  ##    # If 'chromosome' is a vector of length J, then it must contain
+  ##    # a unique chromosome.
+  ##    chromosomes <- sort(unique(chromosome));
+  ##    if (length(chromosomes) > 1) {
+  ##      throw("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "));
+  ##    }
+  ##    chromosome <- chromosomes;
+    }
   }
 
   # For future usage
@@ -128,7 +134,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
   }
 
   # Argument 'index':
-  index <- Arguments$getIndices(index);
+  if (is.null(index)) {
+    index <- seq(along=y);
+  } else {
+    index <- Arguments$getIndices(index);
+  }
 
   # Argument 'w':
   hasWeights <- !is.null(w);
@@ -536,9 +546,20 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0, x=NULL, index=s
 }) # segmentByCBS()
 
 
+setMethodS3("segmentByCBS", "data.frame", function(y, ...) {
+  # To please R CMD check
+  data <- y;
+
+  segmentByCBS(y=data$y, chromosome=data$chromosome, x=data$x, index=data$index, w=data$w, ...);
+})
+
+
 
 ############################################################################
 # HISTORY:
+# 2011-10-02
+# o Added segmentByCBS() for data.frame such that the locus-level data
+#   arguments can also be passed via a data.frame.
 # 2011-09-04
 # o ROBUSTNESS: Added drop=FALSE to matrix subsettings.
 # 2011-09-03

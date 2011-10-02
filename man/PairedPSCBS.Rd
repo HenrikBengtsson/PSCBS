@@ -46,15 +46,10 @@ extends list\cr
  \tab \code{\link[PSCBS:as.data.frame.PairedPSCBS]{as.data.frame}} \tab Gets the table of segments.\cr
  \tab \code{\link[PSCBS:callAB.PairedPSCBS]{callAB}} \tab Calls segments that are in allelic balance.\cr
  \tab \code{\link[PSCBS:callLOH.PairedPSCBS]{callLOH}} \tab Calls segments that are in LOH.\cr
- \tab \code{callSegments} \tab  -\cr
  \tab \code{\link[PSCBS:estimateDeltaAB.PairedPSCBS]{estimateDeltaAB}} \tab Estimate a threshold for calling allelic balance from DH.\cr
  \tab \code{\link[PSCBS:estimateDeltaLOH.PairedPSCBS]{estimateDeltaLOH}} \tab Estimate a threshold for calling LOH from DH.\cr
  \tab \code{\link[PSCBS:estimateKappa.PairedPSCBS]{estimateKappa}} \tab Estimate global background in segmented copy numbers.\cr
- \tab \code{extractC1C2} \tab  -\cr
- \tab \code{extractTCNAndDHs} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.PairedPSCBS]{plotTracks}} \tab Plots parental specific copy numbers along the genome.\cr
- \tab \code{plotTracks2} \tab  -\cr
- \tab \code{plotTracksManyChromosomes} \tab  -\cr
 }
 
 
