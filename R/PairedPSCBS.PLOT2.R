@@ -219,6 +219,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
         naValue <- as.double(NA);
         rho <- rep(naValue, length=nbrOfLoci);
         rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
+        y <- rho;
         colT <- if (is.null(col)) colMu[isHet] else col;
         ylab <- "DH";
         ylim <- Blim;
@@ -243,7 +244,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
     tracks <- gsub("[-*]", "", tracks[keep]);
 
     # Keep only supported tracks
-    tracksWithLevels <- c("tcn", "c1", "c2", "dh");
+    tracksWithLevels <- c("tcn", "betaTN", "c1", "c2", "dh");
     stopifnot(all(is.element(tracks, tracksWithLevels)));
     tracks <- intersect(tracks, tracksWithLevels);
 
@@ -263,6 +264,8 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
         colT <- "blue";
       } else if (track == "c2") {
         colT <- "red";
+      } else if (track == "betaTN") {
+        colT <- "orange";
       } else if (track == "dh") {
         colT <- "orange";
       } else {
@@ -270,8 +273,11 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
       }
 
       # Nothing to do?
-      drawConfidenceBands(fit, what=track, quantiles=quantiles, 
-                          col=colT, xScale=xScale);
+      if (track != "betaTN") {
+        drawConfidenceBands(fit, what=track, quantiles=quantiles, 
+    
+                        col=colT, xScale=xScale);
+      }
       drawLevels(fit, what=track, col=colT, lwd=lwd, xScale=xScale);
 
       verbose && exit(verbose);
@@ -336,6 +342,9 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
 ############################################################################
 # HISTORY:
+# 2011-09-30
+# o BUG FIX: plotTracks2(..., panels="dh") gave an error due to a
+#   forgotten assigment.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-01-19

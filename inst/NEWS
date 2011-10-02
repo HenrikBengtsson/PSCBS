@@ -2,6 +2,18 @@
 Package: PSCBS
 ==============
 
+Version: 0.13.3 [2011-10-02]
+o DOCUMENTATION: Added Rdoc help to mergeTwoSegments() and
+  dropByRegions() for PairedPSCBS.
+
+
+Version: 0.13.2 [2011-09-30]
+o GENERALIZATION: Now drawLevels() for PairedPSCBS allows for drawing
+  segmentation results in 'betaT' space.
+o BUG FIX: plotTracks2(..., panels="dh") gave an error due to a
+  forgotten assigment.
+
+
 Version: 0.13.1 [2011-09-06]
 o Added formal class CBS, which holds the segmentation results
   returned by segmentByCBS().  Several methods are available for

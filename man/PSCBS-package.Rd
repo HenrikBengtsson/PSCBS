@@ -24,8 +24,8 @@ with abnormal copy number within each parental chromosome.
 
  \section{Requirements}{
    This package requires external packages
-   R.methodsS3 (>= 1.2.1), R.utils (>= 1.7.8), DNAcopy (>= 1.24.0),
-   and also suggests DNAcopy (>= 1.24.0), aroma.light (>= 1.20.0), matrixStats (>= 0.2.2), R.oo (>= 1.8.1), Hmisc (>= 3.8-3).
+   R.methodsS3 (>= 1.2.1), R.utils (>= 1.8.2), DNAcopy (>= 1.24.0),
+   and also suggests DNAcopy (>= 1.24.0), aroma.light (>= 1.20.0), matrixStats (>= 0.2.2), R.oo (>= 1.8.2), Hmisc (>= 3.8-3).
  }
 
  \section{Installation and updates}{

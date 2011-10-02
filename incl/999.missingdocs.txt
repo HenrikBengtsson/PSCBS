@@ -36,9 +36,9 @@ drawConfidenceBands drawConfidenceBands.PairedPSCBS
   estimateStdDevForHeterozygousBAF.PairedPSCBS extractByRegion
   extractByRegion.PairedPSCBS extractByRegions
   extractByRegions.PairedPSCBS
- mergeTwoSegments mergeTwoSegments.PairedPSCBS 
+ mergeTwoSegments 
  updateMeans updateMeans.PairedPSCBS
- dropByRegions dropByRegions.PairedPSCBS
+ dropByRegions 
  extractLocusLevelC1C2 extractLocusLevelC1C2.PairedPSCBS
  extractLocusLevelTCN extractLocusLevelTCN.PairedPSCBS
  plotTracks2 plotTracks2.PairedPSCBS

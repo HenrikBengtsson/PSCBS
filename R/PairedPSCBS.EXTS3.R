@@ -1,7 +1,54 @@
-setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, ...) {
+###########################################################################/**
+# @set "class=PairedPSCBS"
+# @RdocMethod mergeTwoSegments
+#
+# @title "Merge two neighboring segments"
+#
+# \description{
+#   @get "title" by recalculating segment statistics.
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{left}{An @integer specifying the segments (left, left+1)
+#    to be merged.}
+#  \item{verbose}{A @logical or a @see "R.utils::Verbose" object.}
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @see "PairedPSCBS" with one less segment.
+# }
+#
+# @author
+#
+# \seealso{
+#   To drop regions (a connected set of segments) 
+#   see @seemethod "dropByRegions".
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, verbose=FALSE, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nbrOfSegments(this);
   # Argument 'left':
   left <- Arguments$getIndex(left, max=nbrOfSegments-1L);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Merging to segments");
+  verbose && printf(verbose, "Segments to be merged: %s & %s\n", left, left+1);
+  verbose && cat(verbose, "Number of segments before merging: ", nbrOfSegments);
+  verbose && cat(verbose, "Number of segments after merging: ", nbrOfSegments-1L);
 
   segs <- this$output;
   tcnSegRows <- this$tcnSegRows;
@@ -12,7 +59,9 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, ...) {
 
   # Sanity check
   chrs <- segsT[["chromosome"]];
-  stopifnot(chrs[1] == chrs[2]);
+  if (chrs[1] != chrs[2]) {
+    throw("Cannot merge segments that are on different chromosomes: ", chrs[1], " != ", chrs[2]);
+  }
 
   # Merge segments
   segT <- segsT[1,];
@@ -64,11 +113,50 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, ...) {
   # Update the mean estimates.
   res <- updateMeans(res);
 
+  verbose && exit(verbose);
+
   res;
 }, private=TRUE)
 
 
-setMethodS3("dropByRegions", "PairedPSCBS", function(this, regions, H=1, ...) {
+
+###########################################################################/**
+# @set "class=PairedPSCBS"
+# @RdocMethod dropByRegions
+#
+# @title "Drops chromosomal regions (a connected set of segments)"
+#
+# \description{
+#   @get "title" each of a cetain size (number of segments).
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{regions}{An @integer @vector of length R specifying the indices
+#    of the left most segment in each of the R regions to be dropped.}
+#  \item{H}{A non-negative @integer specifying the size of each region,
+#    i.e. the number of segments per region.}
+#  \item{...}{Additional arguments passed to @seemethod "extractByRegions".}
+#  \item{verbose}{A @logical or a @see "R.utils::Verbose" object.}
+# }
+#
+# \value{
+#   Returns a @see "PairedPSCBS" with (at most) R*H segments dropped.
+#   If some regions overlap (share segments), then fewer than R*H segments
+#   are dropped.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("dropByRegions", "PairedPSCBS", function(this, regions, H=1, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nbrOfSegments(this);
   # Argument 'regions':
   regions <- Arguments$getIndices(regions, max=nbrOfSegments);
@@ -76,25 +164,47 @@ setMethodS3("dropByRegions", "PairedPSCBS", function(this, regions, H=1, ...) {
   # Argument 'H':
   H <- Arguments$getInteger(H, range=c(0,Inf));
 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Dropping regions of a certain length");
+
+  verbose && cat(verbose, "Left-most segments of regions to be dropped:");
+  verbose && str(verbose, regions);
+  verbose && cat(verbose, "Number of segments in each region: ", H);
+
   # Nothing to do?
   if (H == 0) {
+    verbose && cat(verbose, "Nothing to do. No segments will be dropped.");
+    verbose && exit(verbose);
     return(this);
-  } else if (H > 1) {
-    # Identify regions to drop
-    Hs <- seq(length=H);
-    regions <- regions - 1L;
-    regions <- as.list(regions);
-    regions <- lapply(regions, FUN=function(region) region + Hs);
-    regions <- unlist(regions, use.names=FALSE);
-    regions <- unique(regions);  
   }
+
+  # Identify regions to drop
+  Hs <- seq(length=H);
+  regions <- regions - 1L;
+  regions <- as.list(regions);
+  regions <- lapply(regions, FUN=function(region) region + Hs);
+  regions <- unlist(regions, use.names=FALSE);
+  regions <- sort(unique(regions));
+  verbose && cat(verbose, "Final set of segments to be dropped:");
+  verbose && str(verbose, regions);
 
   # Identify regions to keep
   allRegions <- seq(length=nbrOfSegments);
   keepRegions <- setdiff(allRegions, regions);
+  verbose && cat(verbose, "Final set of segments to be kept:");
+  verbose && str(verbose, keepRegions);
 
   res <- extractByRegions(this, regions=keepRegions, ...);
   res$dropped <- extractByRegions(this, regions=regions, ...);
+
+  verbose && exit(verbose);
 
   res;
 }, private=TRUE)
@@ -225,6 +335,9 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-02
+# o DOCUMENTATION: Added Rdoc help to mergeTwoSegments() & dropByRegions().
+# o Added verbose statements to the above to functions.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-01-18

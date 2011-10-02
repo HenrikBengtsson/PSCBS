@@ -100,11 +100,9 @@
 \alias{extractByRegions}
 \alias{extractByRegions.PairedPSCBS}
 \alias{mergeTwoSegments}
-\alias{mergeTwoSegments.PairedPSCBS}
 \alias{updateMeans}
 \alias{updateMeans.PairedPSCBS}
 \alias{dropByRegions}
-\alias{dropByRegions.PairedPSCBS}
 \alias{extractLocusLevelC1C2}
 \alias{extractLocusLevelC1C2.PairedPSCBS}
 \alias{extractLocusLevelTCN}
