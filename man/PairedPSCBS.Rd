@@ -19,13 +19,17 @@
 
 \code{list}\cr
 \code{~~|}\cr
-\code{~~+--}\code{PairedPSCBS}\cr
+\code{~~+--}\code{\link[PSCBS]{AbstractCBS}}\cr
+\code{~~~~~~~|}\cr
+\code{~~~~~~~+--}\code{\link[PSCBS]{PSCBS}}\cr
+\code{~~~~~~~~~~~~|}\cr
+\code{~~~~~~~~~~~~+--}\code{PairedPSCBS}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public class \bold{PairedPSCBS}\cr
-extends list\cr
+extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
 
@@ -43,7 +47,6 @@ extends list\cr
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{\link[PSCBS:as.data.frame.PairedPSCBS]{as.data.frame}} \tab Gets the table of segments.\cr
  \tab \code{\link[PSCBS:callAB.PairedPSCBS]{callAB}} \tab Calls segments that are in allelic balance.\cr
  \tab \code{\link[PSCBS:callLOH.PairedPSCBS]{callLOH}} \tab Calls segments that are in LOH.\cr
  \tab \code{\link[PSCBS:estimateDeltaAB.PairedPSCBS]{estimateDeltaAB}} \tab Estimate a threshold for calling allelic balance from DH.\cr
@@ -52,6 +55,12 @@ extends list\cr
  \tab \code{\link[PSCBS:plotTracks.PairedPSCBS]{plotTracks}} \tab Plots parental specific copy numbers along the genome.\cr
 }
 
+
+ \bold{Methods inherited from PSCBS}:\cr
+append, as.data.frame, extractByChromosomes
+
+ \bold{Methods inherited from AbstractCBS}:\cr
+append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getSegments, nbrOfChromosomes, nbrOfSegments, plotTracks
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within

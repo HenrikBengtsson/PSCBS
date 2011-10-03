@@ -7,12 +7,10 @@ o GENERALIZATION: Now segmentByCBS() and segmentByPairedPSCBS()
   also accepts a data.frame of locus-level data with column names
   matching the locus-level arguments accepted by the corresponding
   method.
-o DOCUMENTATION: Update references in help pages.
-o DOCUMENTATION: Added Rdoc help for mergeTwoSegments() and
-  dropByRegions() of PairedPSCBS.
-o DOCUMENTATION: Added Rdoc help for getFractionOfGenomeLost(),
-  getFractionOfGenomeGained(), getFractionOfGenomeAltered(), 
-  getFGL(), getFGG(), and getFGA() of CBS.
+o GENERALIZATION: Now all segmentation result classes (CBS and PSCBS)
+  inherits from the AbstractCBS class, which provides methods such
+  as getSampleName(), getChromosomes() and getSegments().
+o DOCUMENTATION: Added lots of more help pages.
 o CLEANUP: Dropped empty callSegments() for PairedPSCBS.
 
 

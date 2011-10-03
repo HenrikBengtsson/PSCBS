@@ -728,7 +728,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     params = params
   );
 
-  class(fit) <- c("PairedPSCBS", "PSCBS");
+  class(fit) <- c("PairedPSCBS", "PSCBS", "AbstractCBS");
 
   # Update 
   if (is.element(flavor, c("tcn&dh", "sqrt(tcn)&dh"))) {

@@ -35,9 +35,8 @@ with abnormal copy number within each parental chromosome.
  \section{To get started}{
    To get started, see:
    \enumerate{
-     \item \code{\link{segmentByCBS}}() - segments total copy-numbers, or
-           any other unimodal genomic signals
-           using the CBS method [3,4].
+     \item \code{\link{segmentByCBS}}() - segments total copy-numbers, or any
+           other unimodal genomic signals, using the CBS method [3,4].
      \item \code{\link{segmentByPairedPSCBS}}() - segments allele-specific
            tumor signal from a tumor with a matched normal
            using the Paired PSCBS method [1,2].

@@ -486,7 +486,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   fit$params <- params;
 
 #  class(fit) <- c("CBS", class(fit));
-  class(fit) <- c("CBS");
+  class(fit) <- c("CBS", "AbstractCBS");
 
   # Sanity checks
   segRows <- fit$segRows;

@@ -13,7 +13,6 @@
 
 % Other missing docs
 \alias{append}
-\alias{append.PSCBS}
 \alias{append.default}
 \alias{arrowsC1C2}
 \alias{arrowsC1C2.PairedPSCBS}
@@ -38,15 +37,12 @@
 \alias{extractMinorMajorCNs}
 \alias{extractTCNAndDHs}
 \alias{getChromosomes}
-\alias{getChromosomes.PSCBS}
 \alias{linesC1C2}
 \alias{linesC1C2.PairedPSCBS}
 \alias{linesDeltaC1C2}
 \alias{linesDeltaC1C2.PairedPSCBS}
 \alias{nbrOfChromosomes}
-\alias{nbrOfChromosomes.PSCBS}
 \alias{nbrOfSegments}
-\alias{nbrOfSegments.PSCBS}
 \alias{plot.PairedPSCBS}
 \alias{plotC1C2}
 \alias{plotC1C2.PairedPSCBS}
@@ -121,7 +117,6 @@
 \alias{callAB}
 \alias{callAllelicBalance.default}
 \alias{callLOH}
-\alias{append.CBS}
 \alias{getChromosomes.DNAcopy}
 \alias{getSampleNames}
 \alias{getSampleNames.CBS}
@@ -196,6 +191,15 @@
 \alias{highlightCalls.CBS}
 \alias{highlightLocusCalls}
 \alias{highlightLocusCalls.CBS}
+\alias{append.AbstractCBS}
+\alias{as.data.frame.PSCBS}
+\alias{extractByChromosome.AbstractCBS}
+\alias{extractByChromosomes.AbstractCBS}
+\alias{getSampleName.AbstractCBS}
+\alias{plotTracks.AbstractCBS}
+\alias{print.AbstractCBS}
+\alias{sampleName.AbstractCBS}
+\alias{sampleName<-.AbstractCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

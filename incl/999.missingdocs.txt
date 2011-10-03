@@ -1,4 +1,4 @@
- append append.PSCBS append.default arrowsC1C2 arrowsC1C2.PairedPSCBS
+ append append.default arrowsC1C2 arrowsC1C2.PairedPSCBS
  arrowsDeltaC1C2 arrowsDeltaC1C2.PairedPSCBS 
  bootstrapCIs bootstrapCIs.PairedPSCBS bootstrapDHByRegion
  bootstrapDHByRegion.PairedPSCBS callABandHighAI
@@ -10,10 +10,10 @@
  extractC1C2 extractDeltaC1C2
  extractDeltaC1C2.PairedPSCBS extractMinorMajorCNs
  extractTCNAndDHs
- getChromosomes getChromosomes.PSCBS
+ getChromosomes
  linesC1C2 linesC1C2.PairedPSCBS linesDeltaC1C2
- linesDeltaC1C2.PairedPSCBS nbrOfChromosomes nbrOfChromosomes.PSCBS
- nbrOfSegments nbrOfSegments.PSCBS plot.PairedPSCBS plotC1C2
+ linesDeltaC1C2.PairedPSCBS nbrOfChromosomes
+ nbrOfSegments plot.PairedPSCBS plotC1C2
  plotC1C2.PairedPSCBS plotDeltaC1C2 plotDeltaC1C2.PairedPSCBS
  pointsC1C2 pointsC1C2.PairedPSCBS pointsDeltaC1C2
  pointsDeltaC1C2.PairedPSCBS postsegmentTCN postsegmentTCN.PairedPSCBS
@@ -52,7 +52,6 @@ estimateDeltaABBySmallDH
 estimateDeltaLOH estimateDeltaLOHByMinC1ForNonAB
  callAB callAllelicBalance.default
 callLOH
-append.CBS
   getChromosomes.DNAcopy getSampleNames getSampleNames.CBS
   getSampleNames.DNAcopy nbrOfLoci nbrOfLoci.CBS nbrOfLoci.DNAcopy
   nbrOfSamples nbrOfSamples.DNAcopy nbrOfSegments.DNAcopy
@@ -81,3 +80,7 @@ callAmplifications callGainsAndLosses callOutliers
   drawCentromeres drawCentromeres.CBS getChromosomeOffsets
   getChromosomeOffsets.CBS highlightCalls highlightCalls.CBS
  highlightLocusCalls highlightLocusCalls.CBS
+ append.AbstractCBS as.data.frame.PSCBS
+ extractByChromosome.AbstractCBS extractByChromosomes.AbstractCBS
+ getSampleName.AbstractCBS plotTracks.AbstractCBS print.AbstractCBS
+ sampleName.AbstractCBS sampleName<-.AbstractCBS

@@ -33,55 +33,17 @@ setConstructorS3("PairedPSCBS", function(fit=list(), ...) {
     throw("Argument 'fit' is not a list: ", class(fit)[1]);
   }
 
-  extend(fit, "PairedPSCBS");
-})
-
-
-setMethodS3("print", "PairedPSCBS", function(x, ...) {
-  # To please R CMD check
-  fit <- x;
-
-  segs <- as.data.frame(fit, ...);
-  print(segs);
-}, private=TRUE)
-
-
-
-###########################################################################/**
-# @RdocMethod as.data.frame
-#
-# @title "Gets the table of segments"
-#
-# \description{
-#  @get "title".
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{...}{Not used.}
-# }
-#
-# \value{
-#   Returns a @data.frame, where each row corresponds to 
-#   a unique segment.
-# }
-# 
-# @author
-#
-# @keyword internal
-#*/###########################################################################  
-setMethodS3("as.data.frame", "PairedPSCBS", function(x, ...) {
-  # To please R CMD check
-  fit <- x;
-
-  fit$output;
+  extend(PSCBS(fit=fit, ...), "PairedPSCBS");
 })
 
 
 
 ##############################################################################
 # HISTORY
+# 2011-10-02
+# o CLEANUP: Moved print() and as.data.frame() to PSCBS.
+# o Added Rdoc help.
+# o Now the constructor of PairedPSCBS calls that of PSCBS.
 # 2011-06-28
 # o DOCUMENTATION: Added Rd help for as.data.frame() of PairedPSCBS.
 # 2011-04-08

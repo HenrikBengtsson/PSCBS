@@ -23,13 +23,15 @@
 
 \code{list}\cr
 \code{~~|}\cr
-\code{~~+--}\code{CBS}\cr
+\code{~~+--}\code{\link[PSCBS]{AbstractCBS}}\cr
+\code{~~~~~~~|}\cr
+\code{~~~~~~~+--}\code{CBS}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
 public class \bold{CBS}\cr
-extends list\cr
+extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 
 
  }
@@ -43,10 +45,10 @@ extends list\cr
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{append} \tab  -\cr
+ \tab \code{\link[PSCBS:append.CBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{as} \tab  -\cr
  \tab \code{as.character} \tab  -\cr
- \tab \code{as.data.frame} \tab  -\cr
+ \tab \code{\link[PSCBS:as.data.frame.CBS]{as.data.frame}} \tab Gets the table of segments.\cr
  \tab \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy}} \tab Coerces a CBS object to a DNAcopy object.\cr
  \tab \code{drawCentromeres} \tab  -\cr
  \tab \code{drawLevels} \tab  -\cr
@@ -54,7 +56,6 @@ extends list\cr
  \tab \code{extractByChromosomes} \tab  -\cr
  \tab \code{getCallStatistics} \tab  -\cr
  \tab \code{getChromosomeRanges} \tab  -\cr
- \tab \code{getChromosomes} \tab  -\cr
  \tab \code{getFGA} \tab  -\cr
  \tab \code{getFGG} \tab  -\cr
  \tab \code{getFGL} \tab  -\cr
@@ -67,19 +68,19 @@ extends list\cr
  \tab \code{isWholeChromosomeGained} \tab  -\cr
  \tab \code{isWholeChromosomeLost} \tab  -\cr
  \tab \code{nbrOfAmplifications} \tab  -\cr
- \tab \code{nbrOfChromosomes} \tab  -\cr
  \tab \code{nbrOfGains} \tab  -\cr
  \tab \code{nbrOfLoci} \tab  -\cr
  \tab \code{nbrOfLosses} \tab  -\cr
- \tab \code{nbrOfSegments} \tab  -\cr
  \tab \code{plot} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
- \tab \code{print} \tab  -\cr
  \tab \code{signalType} \tab  -\cr
  \tab \code{writeLocusData} \tab  -\cr
  \tab \code{writeSegments} \tab  -\cr
 }
 
+
+ \bold{Methods inherited from AbstractCBS}:\cr
+append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getSegments, nbrOfChromosomes, nbrOfSegments, plotTracks
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within

@@ -34,15 +34,39 @@
 # \author{Henrik Bengtsson}
 #*/###########################################################################  
 setConstructorS3("CBS", function(...) {
-  extend(list(data=NULL, output=NULL), "CBS");
+  extend(AbstractCBS(list(data=NULL, output=NULL)), "CBS");
 })
 
 
-setMethodS3("print", "CBS", function(x, ...) {
-  print(as.character(x));
-})
-
-
+###########################################################################/**
+# @RdocMethod as.data.frame
+#
+# @title "Gets the table of segments"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @data.frame, where each row corresponds to 
+#   a unique segment.
+# }
+# 
+# @author
+#
+# \seealso{
+#   Utilizes @seemethod "getSegments".
+#   @seeclass.
+# }
+#
+# @keyword internal
+#*/###########################################################################  
 setMethodS3("as.character", "CBS", function(x, ...) {
   # To please R CMD check
   fit <- x;
@@ -121,32 +145,6 @@ setMethodS3("signalType<-", "CBS", function(x, value) {
 }, private=TRUE, addVarArgs=FALSE)
 
 
-setMethodS3("getSampleName", "CBS", function(fit, ...) {
-  name <- fit$sampleName;
-  if (is.null(name)) {
-    name <- as.character(NA);
-  }
-  name;
-}, private=TRUE)
-
-setMethodS3("sampleName", "CBS", function(fit, ...) {
-  getSampleName(fit);
-}, private=TRUE)
-
-"sampleName<-" <- function(x, value) {
-  UseMethod("sampleName<-");
-}
-
-setMethodS3("sampleName<-", "CBS", function(x, value) {
-  fit <- x;
-
-  # Argument 'value':
-  value <- Arguments$getCharacter(value);
-
-  fit$sampleName <- value;
-  fit;
-}, private=TRUE, addVarArgs=FALSE)
-
 
 setMethodS3("getLocusData", "CBS", function(fit, addCalls=NULL, ...) {
   # Argument 'addCalls':
@@ -202,22 +200,34 @@ setMethodS3("nbrOfLoci", "CBS", function(fit, ...) {
   nrow(getLocusData(fit));
 })
 
-setMethodS3("nbrOfSegments", "CBS", function(fit, splitter=FALSE, ...) {
-  nrow(getSegments(fit, splitter=splitter, ...));
-})
-
-setMethodS3("nbrOfChromosomes", "CBS", function(fit, ...) {
-  length(getChromosomes(fit, ...));
-})
-
-setMethodS3("getChromosomes", "CBS", function(fit, ...) {
-  data <- getLocusData(fit);
-  chromosomes <- data$chromosome;
-  chromosomes <- chromosomes[!is.na(chromosomes)];
-  sort(unique(chromosomes));
-})
-
-
+###########################################################################/**
+# @RdocMethod append
+#
+# @title "Appends one segmentation result to another"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{x, other}{The two @see "CBS" objects to be combined.}
+#  \item{other}{A @see "PSCBS" object.}
+#  \item{addSplit}{If @TRUE, a "divider" is added between chromosomes.}
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @see "CBS" object of the same class as argument \code{x}.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
 setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
   # To please R CMD check
   this <- x;
@@ -269,6 +279,7 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 
   res;
 }) # append()
+
 
 
 setMethodS3("writeLocusData", "CBS", function(fit, filename=sprintf("%s,byLocus.tsv", getSampleName(fit)), path=NULL, sep="\t", nbrOfDecimals=4L, addHeader=TRUE, createdBy=NULL, overwrite=FALSE, skip=FALSE, ...) {
@@ -450,6 +461,10 @@ setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", get
 
 ############################################################################
 # HISTORY:
+# 2011-10-02
+# o CLEANUP: Moved getChromosomes(), nbrOfChromosomes(), nbrOfSegments()
+#   and print() to AbstractCBS.
+# o Now the CBS class extends the AbstractCBS class.
 # 2011-09-04
 # o Added writeSegments() for CBS.
 # o Added writeLocusData() for CBS.
