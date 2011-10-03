@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.13.3 [2011-10-02]
+Version: 0.13.3 [2011-10-03]
 o GENERALIZATION: Now segmentByCBS() and segmentByPairedPSCBS()
   also accepts a data.frame of locus-level data with column names
   matching the locus-level arguments accepted by the corresponding

@@ -37,9 +37,10 @@
  }
 
  \section{The UCSF caller}{
-   "Previously, we defined a segment to be gained/lost if it were at
-    least two times the sample MAD away from the median segmented value."
-    (D. Albertson 2011-07-18)
+   If \code{method == "ucsf-mad"}, then segments are called using [1], i.e.
+   a segment is called gained or lost if its segment level is
+   at least two standard deviations away from the median segment level
+   on Chr1-22, where standard deviation is estimated using MAD.
  }
 
  \examples{
@@ -84,6 +85,11 @@ fitC <- callOutliers(fitC)
  }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+
+ \references{
+   [1] Fridlyand et al. \emph{Breast tumor copy number aberration
+       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
+ }
 
  \seealso{
    \code{\link[PSCBS:callAmplifications.CBS]{*callAmplifications}()}.

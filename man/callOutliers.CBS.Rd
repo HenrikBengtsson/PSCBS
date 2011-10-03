@@ -6,7 +6,6 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \name{callOutliers.CBS}
 \alias{callOutliers.CBS}
 \alias{CBS.callOutliers}
@@ -38,6 +37,7 @@
 }
 
 \section{The UCSF caller}{
+  If \code{method == "ucsf-mad"}, then loci are called using [1];
  "Finally, to identify single technical or biological outliers such
   as high level amplifications, the presence of the outliers within
   a segment was allowed by assigning the original observed log2ratio
@@ -48,7 +48,8 @@
 \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
 \references{
-  [1] Fridlyand et al. (2006)\cr
+  [1] Fridlyand et al. \emph{Breast tumor copy number aberration
+      phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 }
 
 \seealso{

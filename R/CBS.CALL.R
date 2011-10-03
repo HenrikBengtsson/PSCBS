@@ -25,9 +25,10 @@
 # }
 #
 # \section{The UCSF caller}{
-#   "Previously, we defined a segment to be gained/lost if it were at 
-#    least two times the sample MAD away from the median segmented value."
-#    (D. Albertson 2011-07-18)
+#   If \code{method == "ucsf-mad"}, then segments are called using [1], i.e.
+#   a segment is called gained or lost if its segment level is
+#   at least two standard deviations away from the median segment level
+#   on Chr1-22, where standard deviation is estimated using MAD.
 # }
 #
 # \examples{
@@ -36,6 +37,11 @@
 # }
 # 
 # @author
+#
+# \references{
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
+# }
 #
 # \seealso{
 #   @seemethod "callAmplifications".
@@ -167,7 +173,6 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 
 
 ###########################################################################/**
-# @set "class=CBS"
 # @RdocMethod callAmplifications
 #
 # @title "Calls (focal) amplifications" 
@@ -195,15 +200,15 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 # }
 #
 # \section{The UCSF caller}{
-#   "Previously, we defined a segment to be gained/lost if it were at 
-#    least two times the sample MAD away from the median segmented value."
-#    (D. Albertson 2011-07-18)
+#   If \code{method == "ucsf-exp"}, then segments are called using [1], i.e.
+#   a segment is called an amplification if ...
 # }
 #
 # @author
 #
 # \references{
-#   [1] Fridlyand et al. (2006)\cr
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
 # \seealso{
@@ -350,7 +355,6 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 
 
 ###########################################################################/**
-# @set "class=CBS"
 # @RdocMethod callOutliers
 #
 # @title "Calls outliers" 
@@ -377,6 +381,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 # }
 #
 # \section{The UCSF caller}{
+#   If \code{method == "ucsf-mad"}, then loci are called using [1];
 #  "Finally, to identify single technical or biological outliers such 
 #   as high level amplifications, the presence of the outliers within 
 #   a segment was allowed by assigning the original observed log2ratio
@@ -387,7 +392,8 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 # @author
 #
 # \references{
-#   [1] Fridlyand et al. (2006)\cr
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
 # \seealso{
@@ -587,6 +593,56 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 }, private=TRUE) # extractCallsByLocus()
 
 
+
+###########################################################################/**
+# @RdocMethod getCallStatistics
+#
+# @title "Calculates various call statistics per chromosome"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#  Returns a CxK @data.frame, where C is the number of chromosomes
+#  and (K-2)/2 is the number of call types.
+#  The first column is the chromosome index and the second is the
+#  length of the chromosome.
+#  The following columns contains call summaries per chromosome.
+#  For each chromosome and call type, the total length of such calls
+#  on that chromosome is reported together how large of a fraction
+#  of the chromosome such calls occupy.
+# }
+#
+# \details{
+#   The estimators implemented here are based solely on the 
+#   segmentation results, which is very fast.  
+#   In the original proposal by Fridlyand et al. [1], the authors
+#   estimates the parameters by converting segment-level calls back
+#   to locus-level calls and there do the calculations.  
+#   The difference between the two approaches should be minor, 
+#   particularly for large density arrays.
+# }
+#
+# @author
+#
+# \references{
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
+# }
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @keyword internal 
+#*/###########################################################################  
 setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
   # To please R CMD check, cf. subset()
   chromosome <- NULL; rm(chromosome);
@@ -626,7 +682,6 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
 
 
 ###########################################################################/**
-# @set "class=CBS"
 # @RdocMethod getFractionOfGenomeLost
 # @aliasmethod getFractionOfGenomeGained
 # @aliasmethod getFractionOfGenomeAltered
@@ -637,7 +692,8 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
 # @title "Calculates the fraction of the genome lost, gained, or aberrant either way"
 #
 # \description{
-#  @get "title" (in sense of total copy numbers).
+#  @get "title" (in sense of total copy numbers),
+#  using definitions closely related to those presented in [1].
 # }
 #
 # @synopsis
@@ -653,10 +709,12 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
 # @author
 #
 # \references{
-#   [1] Fridlyand et al. (2006)\cr
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
 # \seealso{
+#   Internally, @seemethod "getCallStatistics" is used.
 #   @seeclass
 # }
 #
@@ -760,6 +818,8 @@ setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-03
+# o DOCUMENTATION: Added more help pages.
 # 2011-10-02
 # o DOCUMENTATION: Added an Rdoc help page for getFractionOfGenomeLost(),
 #   getFractionOfGenomeGained(), getFractionOfGenomeAltered(), getFGL(), 

@@ -6,7 +6,6 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \name{getFractionOfGenomeLost.CBS}
 \alias{getFractionOfGenomeLost.CBS}
 \alias{CBS.getFractionOfGenomeLost}
@@ -37,7 +36,8 @@
 \title{Calculates the fraction of the genome lost, gained, or aberrant either way}
 
 \description{
- Calculates the fraction of the genome lost, gained, or aberrant either way (in sense of total copy numbers).
+ Calculates the fraction of the genome lost, gained, or aberrant either way (in sense of total copy numbers),
+ using definitions closely related to those presented in [1].
 }
 
 \usage{\method{getFractionOfGenomeLost}{CBS}(fit, ...)}
@@ -53,10 +53,12 @@
 \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
 \references{
-  [1] Fridlyand et al. (2006)\cr
+  [1] Fridlyand et al. \emph{Breast tumor copy number aberration
+      phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 }
 
 \seealso{
+  Internally, \code{\link[PSCBS:getCallStatistics.CBS]{*getCallStatistics}()} is used.
   For more information see \code{\link{CBS}}.
 }
 

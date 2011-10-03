@@ -54,7 +54,7 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
  \tab \code{drawLevels} \tab  -\cr
  \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr
  \tab \code{extractByChromosomes} \tab  -\cr
- \tab \code{getCallStatistics} \tab  -\cr
+ \tab \code{\link[PSCBS:getCallStatistics.CBS]{getCallStatistics}} \tab Calculates various call statistics per chromosome.\cr
  \tab \code{getChromosomeRanges} \tab  -\cr
  \tab \code{getFGA} \tab  -\cr
  \tab \code{getFGG} \tab  -\cr
@@ -70,7 +70,6 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
  \tab \code{nbrOfAmplifications} \tab  -\cr
  \tab \code{nbrOfGains} \tab  -\cr
  \tab \code{nbrOfLosses} \tab  -\cr
- \tab \code{plot} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
  \tab \code{signalType} \tab  -\cr
  \tab \code{writeLocusData} \tab  -\cr

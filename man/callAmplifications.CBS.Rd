@@ -6,7 +6,6 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 \name{callAmplifications.CBS}
 \alias{callAmplifications.CBS}
 \alias{CBS.callAmplifications}
@@ -39,15 +38,15 @@
 }
 
 \section{The UCSF caller}{
-  "Previously, we defined a segment to be gained/lost if it were at
-   least two times the sample MAD away from the median segmented value."
-   (D. Albertson 2011-07-18)
+  If \code{method == "ucsf-exp"}, then segments are called using [1], i.e.
+  a segment is called an amplification if ...
 }
 
 \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
 \references{
-  [1] Fridlyand et al. (2006)\cr
+  [1] Fridlyand et al. \emph{Breast tumor copy number aberration
+      phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 }
 
 \seealso{

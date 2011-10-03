@@ -116,7 +116,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
 
 setMethodS3("plot", "CBS", function(x, ...) {
   plotTracks(x, ...);
-})
+}, protected=TRUE)
 
 
 setMethodS3("drawLevels", "CBS", function(fit, col="purple", xScale=1e-6, ...) {
