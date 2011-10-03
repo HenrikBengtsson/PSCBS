@@ -6,27 +6,27 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{nbrOfSegments.AbstractCBS}
-\alias{nbrOfSegments.AbstractCBS}
-\alias{AbstractCBS.nbrOfSegments}
-\alias{nbrOfSegments.AbstractCBS}
-\alias{nbrOfSegments,AbstractCBS-method}
+ \name{plotTracks.AbstractCBS}
+\alias{plotTracks.AbstractCBS}
+\alias{AbstractCBS.plotTracks}
+\alias{plotTracks.AbstractCBS}
+\alias{plotTracks,AbstractCBS-method}
 
 
- \title{Gets the number of segments}
+ \title{Plots the segmentation result along the genome}
 
  \description{
-   Gets the number of segments.
+   Plots the segmentation result along the genome.
  }
 
- \usage{\method{nbrOfSegments}{AbstractCBS}(this, splitters=FALSE, ...)}
+ \usage{\method{plotTracks}{AbstractCBS}(...)}
 
  \arguments{
-  \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.}
+  \item{...}{...}
  }
 
  \value{
-   Returns an \code{\link[base]{integer}}.
+   Returns nothing.
  }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

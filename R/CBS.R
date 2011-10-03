@@ -14,7 +14,7 @@
 # @synopsis
 #
 # \arguments{
-#  \item{...}{Not used.}
+#  \item{...}{Arguments passed to the constructor of @see "AbstractCBS".}
 # }
 #
 # \section{Fields and Methods}{
@@ -28,13 +28,13 @@
 # }
 #
 # \section{See also}{
-#   @see "segmentByCBS"
+#  The @see "segmentByCBS" method returns an object of this class.
 # }
 #
 # \author{Henrik Bengtsson}
 #*/###########################################################################  
 setConstructorS3("CBS", function(...) {
-  extend(AbstractCBS(list(data=NULL, output=NULL)), "CBS");
+  extend(AbstractCBS(list(data=NULL, output=NULL), ...), "CBS");
 })
 
 
@@ -196,9 +196,6 @@ setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
   segs;
 }, private=TRUE)
 
-setMethodS3("nbrOfLoci", "CBS", function(fit, ...) {
-  nrow(getLocusData(fit));
-})
 
 ###########################################################################/**
 # @RdocMethod append
@@ -255,13 +252,14 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locus data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  res$data <- rbind(this$data, other$data);
+  data <- getLocusData(this);
+  res$data <- rbind(data, getLocusData(other));
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Segmentation data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  indexOffset <- nrow(this$data);
+  indexOffset <- nrow(data);
   fields <- c("output", "segRows");
   for (field in fields[-1]) {
     other[[field]] <- other[[field]] + indexOffset;
@@ -462,8 +460,8 @@ setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", get
 ############################################################################
 # HISTORY:
 # 2011-10-02
-# o CLEANUP: Moved getChromosomes(), nbrOfChromosomes(), nbrOfSegments()
-#   and print() to AbstractCBS.
+# o CLEANUP: Moved getChromosomes(), nbrOfChromosomes(), nbrOfSegments(),
+#   nbrOfLoci() and print() to AbstractCBS.
 # o Now the CBS class extends the AbstractCBS class.
 # 2011-09-04
 # o Added writeSegments() for CBS.

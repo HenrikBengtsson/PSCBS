@@ -63,7 +63,6 @@
 \alias{tileChromosomes.PairedPSCBS}
 \alias{callExtremeAllelicImbalanceByDH}
 \alias{callExtremeAllelicImbalanceByDH.PairedPSCBS}
-\alias{as.data.frame.CBS}
 \alias{drawLevels.CBS}
 \alias{getChromosomes.CBS}
 \alias{nbrOfChromosomes.CBS}
@@ -191,15 +190,17 @@
 \alias{highlightCalls.CBS}
 \alias{highlightLocusCalls}
 \alias{highlightLocusCalls.CBS}
-\alias{append.AbstractCBS}
 \alias{as.data.frame.PSCBS}
 \alias{extractByChromosome.AbstractCBS}
 \alias{extractByChromosomes.AbstractCBS}
-\alias{getSampleName.AbstractCBS}
-\alias{plotTracks.AbstractCBS}
 \alias{print.AbstractCBS}
-\alias{sampleName.AbstractCBS}
-\alias{sampleName<-.AbstractCBS}
+\alias{setSampleName}
+\alias{setLocusData}
+\alias{setLocusData.AbstractCBS}
+\alias{setSegments}
+\alias{setSegments.AbstractCBS}
+\alias{getLocusData.PSCBS}
+\alias{tileChromosomes.AbstractCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

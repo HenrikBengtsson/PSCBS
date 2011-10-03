@@ -6,23 +6,23 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{nbrOfChromosomes.AbstractCBS}
-\alias{nbrOfChromosomes.AbstractCBS}
-\alias{AbstractCBS.nbrOfChromosomes}
-\alias{nbrOfChromosomes.AbstractCBS}
-\alias{nbrOfChromosomes,AbstractCBS-method}
+ \name{nbrOfLoci.AbstractCBS}
+\alias{nbrOfLoci.AbstractCBS}
+\alias{AbstractCBS.nbrOfLoci}
+\alias{nbrOfLoci.AbstractCBS}
+\alias{nbrOfLoci,AbstractCBS-method}
 
 
- \title{Gets the number of chromosomes}
+ \title{Gets the number of loci}
 
  \description{
-   Gets the number of chromosomes.
+   Gets the number of loci.
  }
 
- \usage{\method{nbrOfChromosomes}{AbstractCBS}(this, ...)}
+ \usage{\method{nbrOfLoci}{AbstractCBS}(fit, splitters=FALSE, ...)}
 
  \arguments{
-  \item{...}{Arguments passed to \code{\link[PSCBS:getChromosomes.AbstractCBS]{*getChromosomes}()}.}
+  \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getLocusData.AbstractCBS]{*getLocusData}()}.}
  }
 
  \value{
@@ -32,7 +32,6 @@
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \seealso{
-   \code{\link[PSCBS:getChromosomes.AbstractCBS]{*getChromosomes}()}.
    For more information see \code{\link{AbstractCBS}}.
  }
 \keyword{internal}

@@ -22,7 +22,7 @@
  tileChromosomes tileChromosomes.PairedPSCBS
  callExtremeAllelicImbalanceByDH
  callExtremeAllelicImbalanceByDH.PairedPSCBS
-  as.data.frame.CBS drawLevels.CBS getChromosomes.CBS
+ drawLevels.CBS getChromosomes.CBS
   nbrOfChromosomes.CBS plot.CBS plotTracksManyChromosomes.CBS
   tileChromosomes.CBS
   bootstrapTCNandDHByRegion bootstrapTCNandDHByRegion.PairedPSCBS
@@ -80,7 +80,10 @@ callAmplifications callGainsAndLosses callOutliers
   drawCentromeres drawCentromeres.CBS getChromosomeOffsets
   getChromosomeOffsets.CBS highlightCalls highlightCalls.CBS
  highlightLocusCalls highlightLocusCalls.CBS
- append.AbstractCBS as.data.frame.PSCBS
+ as.data.frame.PSCBS
  extractByChromosome.AbstractCBS extractByChromosomes.AbstractCBS
- getSampleName.AbstractCBS plotTracks.AbstractCBS print.AbstractCBS
- sampleName.AbstractCBS sampleName<-.AbstractCBS
+ print.AbstractCBS
+setSampleName
+  setLocusData setLocusData.AbstractCBS setSegments
+  setSegments.AbstractCBS
+getLocusData.PSCBS tileChromosomes.AbstractCBS

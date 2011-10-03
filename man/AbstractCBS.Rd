@@ -22,7 +22,7 @@
 \code{~~+--}\emph{\code{AbstractCBS}}\cr
 
 \bold{Directly known subclasses:}\cr
-\link[PSCBS]{CBS}, \link[PSCBS]{PairedPSCBS}, \emph{\link[PSCBS]{PSCBS}}\cr
+\emph{\link[PSCBS]{CBS}}, \emph{\link[PSCBS]{PairedPSCBS}}, \emph{\link[PSCBS]{PSCBS}}\cr
 
 public abstract class \bold{AbstractCBS}\cr
 extends list\cr
@@ -33,23 +33,26 @@ extends list\cr
   \code{\link{CBS}} and \code{\link{PairedPSCBS}}.
  }
 
- \usage{AbstractCBS(fit=list(), ...)}
+ \usage{AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)}
 
  \arguments{
    \item{fit}{A \code{\link[base]{list}} structure containing the segmentation results.}
+   \item{sampleName}{A \code{\link[base]{character}} string.}
    \item{...}{Not used.}
  }
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{append} \tab  -\cr
+ \tab \code{\link[PSCBS:append.AbstractCBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{\link[PSCBS:as.data.frame.AbstractCBS]{as.data.frame}} \tab Gets the table of segments.\cr
  \tab \code{\link[PSCBS:getChromosomes.AbstractCBS]{getChromosomes}} \tab Gets the set of chromosomes.\cr
+ \tab \code{\link[PSCBS:getLocusData.AbstractCBS]{getLocusData}} \tab Gets the locus-level data.\cr
  \tab \code{\link[PSCBS:getSegments.AbstractCBS]{getSegments}} \tab Gets the segments.\cr
  \tab \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{nbrOfChromosomes}} \tab Gets the number of chromosomes.\cr
+ \tab \code{\link[PSCBS:nbrOfLoci.AbstractCBS]{nbrOfLoci}} \tab Gets the number of loci.\cr
  \tab \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{nbrOfSegments}} \tab Gets the number of segments.\cr
- \tab \code{plotTracks} \tab  -\cr
+ \tab \code{\link[PSCBS:plotTracks.AbstractCBS]{plotTracks}} \tab Plots the segmentation result along the genome.\cr
 }
 
 

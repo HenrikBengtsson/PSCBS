@@ -42,6 +42,12 @@ setMethodS3("as.data.frame", "PSCBS", function(x, ...) {
 })
 
 
+setMethodS3("getLocusData", "PSCBS", function(fit, ...) {
+  data <- fit$data;
+  data;
+})
+
+ 
 ###########################################################################/**
 # @RdocMethod getSegments
 #

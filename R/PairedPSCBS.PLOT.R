@@ -116,7 +116,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
   verbose && enter(verbose, "Plotting PSCN tracks");
 
   # Extract the input data
-  data <- fit$data;
+  data <- getLocusData(fit);
   if (is.null(data)) {
     throw("Cannot plot segmentation results. No input data available.");
   }
@@ -561,8 +561,8 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data and segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- fit$data;
-  segs <- fit$output;
+  data <- getLocusData(fit);
+  segs <- getSegments(fit);
 
   # Identify all chromosome
   chromosomes <- getChromosomes(fit);
@@ -716,7 +716,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
   verbose && str(verbose, fit);
 
   # Extract the input data
-  data <- fit$data;
+  data <- getLocusData(fit);
   if (is.null(data)) {
     throw("Cannot plot segmentation results. No input data available.");
   }

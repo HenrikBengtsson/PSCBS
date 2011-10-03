@@ -10,10 +10,11 @@
 #  @see "CBS" and @see "PairedPSCBS".
 # }
 # 
-# \usage{AbstractCBS(fit=list(), ...)}
+# @synopsis
 #
 # \arguments{
 #   \item{fit}{A @list structure containing the segmentation results.}
+#   \item{sampleName}{A @character string.}
 #   \item{...}{Not used.}
 # }
 #
@@ -23,7 +24,13 @@
 # 
 # @author
 #*/###########################################################################
-setConstructorS3("AbstractCBS", function(fit=list(), ...) {
+setConstructorS3("AbstractCBS", function(fit=list(), sampleName=fit$sampleName, ...) {
+  # Argument 'sampleName':
+  if (!is.null(sampleName)) {
+    sampleName <- Arguments$getCharacter(sampleName);
+  }
+
+  fit$sampleName <- sampleName;
   extend(fit, "AbstractCBS");
 })
 
@@ -34,34 +41,227 @@ setMethodS3("print", "AbstractCBS", function(x, ...) {
 
   segs <- as.data.frame(fit, ...);
   print(segs);
-}, private=TRUE)
+}, protected=TRUE)
 
 
+
+###########################################################################/**
+# @RdocMethod getSampleName
+# @aliasmethod sampleName
+#
+# @title "Gets the name of the sample segmented"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @character string.
+# }
+# 
+# @author
+#
+# \seealso{
+#   @seemethod "setSampleName".
+#   @seeclass.
+# }
+#*/###########################################################################  
 setMethodS3("getSampleName", "AbstractCBS", function(fit, ...) {
   name <- fit$sampleName;
   if (is.null(name)) {
     name <- as.character(NA);
   }
   name;
-}, private=TRUE)
+}, protected=TRUE)
 
 setMethodS3("sampleName", "AbstractCBS", function(fit, ...) {
   getSampleName(fit);
-}, private=TRUE)
+}, protected=TRUE)
+
+
+###########################################################################/**
+# @RdocMethod setSampleName
+# @aliasmethod sampleName<-
+#
+# @title "Sets the name of the sample segmented"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{name}{A @character string.}
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns (invisibly) an updated object.
+# }
+# 
+# @author
+#
+# \seealso{
+#   @seeclass.
+# }
+#
+# @keyword internal
+#*/###########################################################################  
+setMethodS3("setSampleName", "AbstractCBS", function(fit, name, ...) {
+  # Argument 'value':
+  name <- Arguments$getCharacter(name);
+
+  fit$sampleName <- name;
+
+  invisible(fit);
+}, protected=TRUE)
+
+
+setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
+  setSampleName(x, value);
+}, protected=TRUE, addVarArgs=FALSE)
 
 "sampleName<-" <- function(x, value) {
   UseMethod("sampleName<-");
 }
 
-setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
-  fit <- x;
 
-  # Argument 'value':
-  value <- Arguments$getCharacter(value);
 
-  fit$sampleName <- value;
-  fit;
-}, private=TRUE, addVarArgs=FALSE)
+###########################################################################/**
+# @RdocMethod getLocusData
+#
+# @title "Gets the locus-level data"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{splitters}{If @TRUE, "splitters" between chromosomes are 
+#     preserved, otherwise dropped.}
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a JxL @data.frame, where J in the number of loci,
+#   and L is the number of locus-specific fields.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("getLocusData", "AbstractCBS", abstract=TRUE);
+
+setMethodS3("setLocusData", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+
+###########################################################################/**
+# @RdocMethod nbrOfLoci
+#
+# @title "Gets the number of loci"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{splitters, ...}{Arguments passed to @seemethod "getLocusData".}
+# }
+#
+# \value{
+#   Returns an @integer.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
+  data <- getLocusData(fit, splitters=splitters, ...);
+  nrow(data);
+})
+
+
+
+###########################################################################/**
+# @RdocMethod getSegments
+#
+# @title "Gets the segments"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{splitters}{If @TRUE, "splitters" between chromosomes are 
+#     preserved, otherwise dropped.}
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a SxK @data.frame, where S in the number of segments,
+#   and K is the number of segment-specific fields.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
+
+setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+
+
+###########################################################################/**
+# @RdocMethod nbrOfSegments
+#
+# @title "Gets the number of segments"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{splitters, ...}{Arguments passed to @seemethod "getSegments".}
+# }
+#
+# \value{
+#   Returns an @integer.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...) {
+  nrow(getSegments(this, splitters=splitters, ...));
+})
+
 
 
 ###########################################################################/**
@@ -112,7 +312,7 @@ setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{...}{Not used.}
+#  \item{...}{Arguments passed to @seemethod "getSegments".}
 # }
 #
 # \value{
@@ -127,7 +327,7 @@ setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
 # }
 #*/###########################################################################  
 setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
-  segs <- getSegments(this);
+  segs <- getSegments(this, ...);
   chromosomes <- sort(unique(segs$chromosome), na.last=TRUE);
 
   # Drop NA dividers
@@ -151,7 +351,7 @@ setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{...}{Not used.}
+#  \item{...}{Arguments passed to @seemethod "getChromosomes".}
 # }
 #
 # \value{
@@ -167,69 +367,6 @@ setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
 #*/###########################################################################  
 setMethodS3("nbrOfChromosomes", "AbstractCBS", function(this, ...) {
   length(getChromosomes(this, ...));
-})
-
-
-
-###########################################################################/**
-# @RdocMethod getSegments
-#
-# @title "Gets the segments"
-#
-# \description{
-#   @get "title".
-# }
-# 
-# @synopsis
-#
-# \arguments{
-#  \item{splitters}{If @TRUE, "splitters" between chromosomes are 
-#     preserved, otherwise dropped.}
-#  \item{...}{Not used.}
-# }
-#
-# \value{
-#   Returns a SxK @data.frame, where S in the number of segments,
-#   and K is the number of segment-specific fields.
-# }
-#
-# @author
-#
-# \seealso{
-#   @seeclass
-# }
-#*/###########################################################################  
-setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
-
-
-
-###########################################################################/**
-# @RdocMethod nbrOfSegments
-#
-# @title "Gets the number of segments"
-#
-# \description{
-#   @get "title".
-# }
-# 
-# @synopsis
-#
-# \arguments{
-#  \item{...}{Not used.}
-# }
-#
-# \value{
-#   Returns an @integer.
-# }
-#
-# @author
-#
-# \seealso{
-#   @seeclass
-# }
-#*/###########################################################################  
-setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...) {
-  nrow(getSegments(this, splitters=splitters, ...));
 })
 
 
@@ -255,7 +392,6 @@ setMethodS3("extractByChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE
 
 
 ###########################################################################/**
-# @set "class=PSCBS"
 # @RdocMethod append
 #
 # @title "Appends one segmentation result to another"
@@ -285,7 +421,36 @@ setMethodS3("extractByChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE
 setMethodS3("append", "AbstractCBS", abstract=TRUE);
 
 
+
+###########################################################################/**
+# @RdocMethod plotTracks
+#
+# @title "Plots the segmentation result along the genome"
+#
+# \description{
+#   @get "title".
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{...}{...}
+# }
+#
+# \value{
+#   Returns nothing.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
 setMethodS3("plotTracks", "AbstractCBS", abstract=TRUE);
+
+
+setMethodS3("tileChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
 ############################################################################

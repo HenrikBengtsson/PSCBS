@@ -79,7 +79,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
   nbrOfLoci <- length(x);
 
   # Extract the segmentation
-  segs <- fit$output;
+  segs <- getSegments(fit);
 
 
   if (chromosome != 0) {
@@ -308,8 +308,8 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data and segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- fit$data;
-  segs <- fit$output;
+  data <- getLocusData(fit);
+  segs <- getSegments(fit);
 
   # Identify all chromosome
   chromosomes <- getChromosomes(fit);
@@ -414,7 +414,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   stopifnot(!is.null(fitT$chromosomeStats));
 
   # Extract the input data
-  data <- fitT$data;
+  data <- getLocusData(fitT);
   if (is.null(data)) {
     throw("Cannot plot segmentation results. No input data available.");
   }

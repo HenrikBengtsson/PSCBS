@@ -24,7 +24,7 @@
 \code{~~~~~~~+--}\emph{\code{PSCBS}}\cr
 
 \bold{Directly known subclasses:}\cr
-\link[PSCBS]{PairedPSCBS}\cr
+\emph{\link[PSCBS]{PairedPSCBS}}\cr
 
 public abstract class \bold{PSCBS}\cr
 extends \emph{\link[PSCBS]{AbstractCBS}}\cr
@@ -48,11 +48,12 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
  \tab \code{\link[PSCBS:append.PSCBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{as.data.frame} \tab  -\cr
  \tab \code{extractByChromosomes} \tab  -\cr
+ \tab \code{getLocusData} \tab  -\cr
 }
 
 
  \bold{Methods inherited from AbstractCBS}:\cr
-append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getSegments, nbrOfChromosomes, nbrOfSegments, plotTracks
+append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getLocusData, getSampleName, getSegments, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within

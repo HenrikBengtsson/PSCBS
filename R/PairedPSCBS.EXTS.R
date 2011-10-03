@@ -130,7 +130,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the data and segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  data <- fit$data;
+  data <- getLocusData(fit);
 
   segs <- fit$output;
   keep <- is.finite(segs$chromosome);
@@ -418,7 +418,7 @@ setMethodS3("extractByRegions", "PairedPSCBS", function(this, regions, ..., verb
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data and estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- fit$data;
+  data <- getLocusData(fit);
   tcnSegRows <- fit$tcnSegRows;
   dhSegRows <- fit$dhSegRows;
   segs <- fit$output;

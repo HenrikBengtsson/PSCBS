@@ -440,12 +440,11 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
 
     # Genomic annotations
-    data <- fit$data;
+    data <- getLocusData(fit);
     chromosome <- data$chromosome;
     x <- data$x;
 
     # CN signals
-    data <- fit$data;
     y <- data[,3];
 
     # Segmented CN signals
@@ -514,7 +513,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
   # Update 'DNAcopy' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # (a) segmentation table
-  data <- fit$data;
+  data <- getLocusData(fit);
   data$negOutlierCall <- negOutlierCall;
   data$posOutlierCall <- posOutlierCall;
   fit$data <- data;
@@ -540,7 +539,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   nbrOfLoci <- nbrOfLoci(fit);
 
   # Extract locus data
-  data <- fit$data;
+  data <- getLocusData(fit);
 
   # Extract segment data
   segs <- fit$output;

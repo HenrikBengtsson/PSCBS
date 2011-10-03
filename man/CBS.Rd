@@ -25,12 +25,12 @@
 \code{~~|}\cr
 \code{~~+--}\code{\link[PSCBS]{AbstractCBS}}\cr
 \code{~~~~~~~|}\cr
-\code{~~~~~~~+--}\code{CBS}\cr
+\code{~~~~~~~+--}\emph{\code{CBS}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public class \bold{CBS}\cr
+public abstract class \bold{CBS}\cr
 extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 
 
@@ -39,7 +39,7 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
  \usage{CBS(...)}
 
  \arguments{
-  \item{...}{Not used.}
+  \item{...}{Arguments passed to the constructor of \code{\link{AbstractCBS}}.}
  }
 
  \section{Fields and Methods}{
@@ -69,7 +69,6 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
  \tab \code{isWholeChromosomeLost} \tab  -\cr
  \tab \code{nbrOfAmplifications} \tab  -\cr
  \tab \code{nbrOfGains} \tab  -\cr
- \tab \code{nbrOfLoci} \tab  -\cr
  \tab \code{nbrOfLosses} \tab  -\cr
  \tab \code{plot} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
@@ -80,7 +79,7 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 
 
  \bold{Methods inherited from AbstractCBS}:\cr
-append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getSegments, nbrOfChromosomes, nbrOfSegments, plotTracks
+append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getLocusData, getSampleName, getSegments, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
@@ -95,7 +94,7 @@ all.equal, as.data.frame, attachLocally, callHooks, relist, within
  }
 
  \section{See also}{
-   \code{\link{segmentByCBS}}()
+  The \code{\link{segmentByCBS}}() method returns an object of this class.
  }
 
  \author{Henrik Bengtsson}

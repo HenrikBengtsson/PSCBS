@@ -497,7 +497,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Renaming column names
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- fit$data;
+  data <- getLocusData(fit);
   names <- colnames(data);
   names <- gsub("chrom", "chromosome", names, fixed=TRUE);
   names <- gsub("maploc", "x", names, fixed=TRUE);

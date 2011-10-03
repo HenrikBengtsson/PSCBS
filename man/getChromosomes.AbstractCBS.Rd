@@ -22,7 +22,7 @@
  \usage{\method{getChromosomes}{AbstractCBS}(this, ...)}
 
  \arguments{
-  \item{...}{Not used.}
+  \item{...}{Arguments passed to \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.}
  }
 
  \value{

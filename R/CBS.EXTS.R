@@ -117,7 +117,7 @@ setMethodS3("extractByChromosomes", "CBS", function(x, chromosomes, ...) {
   # Locus data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   chromosome <- NULL; rm(chromosome); # To please R CMD check
-  data <- this$data;
+  data <- getLocusData(this);
   class <- class(data);
   class(data) <- "data.frame";
   data <- subset(data, chromosome %in% chromosomes);
@@ -135,8 +135,9 @@ setMethodS3("extractByChromosomes", "CBS", function(x, chromosomes, ...) {
   }
 
   # Identify chromosome offsets
-  chrStarts <- match(getChromosomes(this), this$data$chromosome);
-  chrEnds <- c(chrStarts[-1]-1L, nrow(this$data));
+  data <- getLocusData(this);
+  chrStarts <- match(getChromosomes(this), data$chromosome);
+  chrEnds <- c(chrStarts[-1]-1L, nrow(data));
   chrLengths <- chrEnds - chrStarts + 1L;
 
   chrLengthsExcl <- chrLengths;
@@ -201,7 +202,7 @@ setMethodS3("subset", "CBS", function(x, chromlist=NULL, ...) {
 # @keyword internal 
 #*/###########################################################################  
 setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
-  data <- fit$data;
+  data <- getLocusData(fit);
   chromosome <- data$chromosome;
   x <- data$x;
   y <- data[,3];
@@ -313,7 +314,8 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
     return(sigma);
   }
 
-  y <- fit$data[,3];
+  data <- getLocusData(fit);
+  y <- data[,3];
 
   if (method == "diff") {
     dy <- diff(y);

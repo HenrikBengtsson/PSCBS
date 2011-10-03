@@ -56,7 +56,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   verbose && enter(verbose, "Plotting PSCN panels");
 
   # Extract the input data
-  data <- fit$data;
+  data <- getLocusData(fit);
   if (is.null(data)) {
     throw("Cannot plot segmentation results. No input data available.");
   }

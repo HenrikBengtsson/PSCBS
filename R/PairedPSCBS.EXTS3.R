@@ -213,7 +213,7 @@ setMethodS3("dropByRegions", "PairedPSCBS", function(this, regions, H=1, ..., ve
 
 
 setMethodS3("extractLocusLevelC1C2", "PairedPSCBS", function(fit, ...) {
-  data <- fit$data;
+  data <- getLocusData(fit);
   C <- data$CT;
   rho <- data$rho;
   C1 <- 1/2*(1-rho)*C;
@@ -223,7 +223,7 @@ setMethodS3("extractLocusLevelC1C2", "PairedPSCBS", function(fit, ...) {
 
 
 setMethodS3("extractLocusLevelTCN", "PairedPSCBS", function(fit, ...) {
-  data <- fit$data;
+  data <- getLocusData(fit);
   C <- data$CT;
 }, private=TRUE) # extractLocusLevelTCN()
 
@@ -245,7 +245,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the data and segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  data <- fit$data;
+  data <- getLocusData(fit);
 
   segs <- fit$output;
   keep <- is.finite(segs$chromosome);

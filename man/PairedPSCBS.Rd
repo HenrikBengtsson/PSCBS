@@ -23,12 +23,12 @@
 \code{~~~~~~~|}\cr
 \code{~~~~~~~+--}\code{\link[PSCBS]{PSCBS}}\cr
 \code{~~~~~~~~~~~~|}\cr
-\code{~~~~~~~~~~~~+--}\code{PairedPSCBS}\cr
+\code{~~~~~~~~~~~~+--}\emph{\code{PairedPSCBS}}\cr
 
 \bold{Directly known subclasses:}\cr
 \cr
 
-public class \bold{PairedPSCBS}\cr
+public abstract class \bold{PairedPSCBS}\cr
 extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
@@ -57,10 +57,10 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
  \bold{Methods inherited from PSCBS}:\cr
-append, as.data.frame, extractByChromosomes
+append, as.data.frame, extractByChromosomes, getLocusData
 
  \bold{Methods inherited from AbstractCBS}:\cr
-append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getSegments, nbrOfChromosomes, nbrOfSegments, plotTracks
+append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getLocusData, getSampleName, getSegments, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within

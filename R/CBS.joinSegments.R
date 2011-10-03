@@ -22,7 +22,8 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
   nbrOfSegs <- nrow(segs);
   if (nbrOfSegs > 1) {
     verbose && enter(verbose, "Centering change points");
-    x <- fit$data$x;
+    data <- getLocusData(fit);
+    x <- data$x;
     prevSeg <- segs[1L,];
     for (ss in 2:nbrOfSegs) {
       currSeg <- segs[ss,];

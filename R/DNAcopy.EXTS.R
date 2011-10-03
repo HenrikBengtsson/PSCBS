@@ -40,7 +40,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the 'data' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- fit$data;
+  data <- getLocusData(fit);
 
   # Keep only certain columns
   keep <- match(c("chromosome", "x"), colnames(data));
