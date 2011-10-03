@@ -47,22 +47,14 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.CBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{as} \tab  -\cr
- \tab \code{as.character} \tab  -\cr
- \tab \code{\link[PSCBS:as.data.frame.CBS]{as.data.frame}} \tab Gets the table of segments.\cr
  \tab \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy}} \tab Coerces a CBS object to a DNAcopy object.\cr
  \tab \code{drawCentromeres} \tab  -\cr
  \tab \code{drawLevels} \tab  -\cr
  \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr
  \tab \code{extractByChromosomes} \tab  -\cr
- \tab \code{\link[PSCBS:getCallStatistics.CBS]{getCallStatistics}} \tab Calculates various call statistics per chromosome.\cr
- \tab \code{getChromosomeRanges} \tab  -\cr
- \tab \code{getFGA} \tab  -\cr
- \tab \code{getFGG} \tab  -\cr
- \tab \code{getFGL} \tab  -\cr
  \tab \code{getFractionOfGenomeAltered} \tab  -\cr
  \tab \code{getFractionOfGenomeGained} \tab  -\cr
  \tab \code{\link[PSCBS:getFractionOfGenomeLost.CBS]{getFractionOfGenomeLost}} \tab Calculates the fraction of the genome lost, gained, or aberrant either way.\cr
- \tab \code{getSignalType} \tab  -\cr
  \tab \code{highlightCalls} \tab  -\cr
  \tab \code{highlightLocusCalls} \tab  -\cr
  \tab \code{isWholeChromosomeGained} \tab  -\cr
@@ -71,7 +63,6 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
  \tab \code{nbrOfGains} \tab  -\cr
  \tab \code{nbrOfLosses} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
- \tab \code{signalType} \tab  -\cr
  \tab \code{writeLocusData} \tab  -\cr
  \tab \code{writeSegments} \tab  -\cr
 }

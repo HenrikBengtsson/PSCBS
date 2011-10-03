@@ -380,7 +380,7 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
   res[,"length"] <- res[,"end"] - res[,"start"] + 1L;
 
   res;
-}) # getChromosomeRanges()
+}, protected=TRUE) # getChromosomeRanges()
 
 
 

@@ -113,22 +113,25 @@ setMethodS3("as.character", "CBS", function(x, ...) {
   }
 
   GenericSummary(s);
-})
+}, protected=TRUE)
 
 
 setMethodS3("as.data.frame", "CBS", function(x, ...) {
   getSegments(x, splitter=FALSE, ...);
-})
+}, protected=TRUE)
+
 
 setMethodS3("getSignalType", "CBS", function(fit, ...) {
   type <- fit$signalType;
   if (is.null(type)) type <- as.character(NA);
   type;
-})
+}, protected=TRUE)
+
 
 setMethodS3("signalType", "CBS", function(fit, ...) {
   getSignalType(fit);
-})
+}, protected=TRUE)
+
 
 "signalType<-" <- function(x, value) {
   UseMethod("signalType<-");

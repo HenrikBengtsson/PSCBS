@@ -677,7 +677,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
   rownames(res) <- NULL;
 
   res;
-}) # getCallStatistics()
+}, protected=TRUE) # getCallStatistics()
 
 
 
@@ -725,26 +725,27 @@ setMethodS3("getFractionOfGenomeLost", "CBS", function(fit, ...) {
   mean(stats$lossFraction, na.rm=TRUE);
 })
 
-setMethodS3("getFGL", "CBS", function(fit, ...) {
-  getFractionOfGenomeLost(fit, ...);
-})  
-
 setMethodS3("getFractionOfGenomeGained", "CBS", function(fit, ...) {
   stats <- getCallStatistics(fit, ...);
   mean(stats$gainFraction, na.rm=TRUE);
 })
 
-setMethodS3("getFGG", "CBS", function(fit, ...) {
-  getFractionOfGenomeGained(fit, ...);
-})  
-
 setMethodS3("getFractionOfGenomeAltered", "CBS", function(fit, ...) {
   getFractionOfGenomeLost(fit, ...) + getFractionOfGenomeGained(fit, ...);
 })
 
+# Shortcuts
+setMethodS3("getFGL", "CBS", function(fit, ...) {
+  getFractionOfGenomeLost(fit, ...);
+}, protected=TRUE)  
+
+setMethodS3("getFGG", "CBS", function(fit, ...) {
+  getFractionOfGenomeGained(fit, ...);
+}, protected=TRUE)  
+
 setMethodS3("getFGA", "CBS", function(fit, ...) {
   getFractionOfGenomeAltered(fit, ...);
-})
+}, protected=TRUE)
 
 
 

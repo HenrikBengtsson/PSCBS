@@ -85,7 +85,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   class(res) <- "DNAcopy";
 
   res;
-}) # as.DNAcopy()
+}, protected=TRUE) # as.DNAcopy()
 
 
 
