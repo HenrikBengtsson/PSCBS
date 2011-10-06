@@ -47,7 +47,6 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.CBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{as} \tab  -\cr
- \tab \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy}} \tab Coerces a CBS object to a DNAcopy object.\cr
  \tab \code{drawCentromeres} \tab  -\cr
  \tab \code{drawLevels} \tab  -\cr
  \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr

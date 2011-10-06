@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.13.4 [2011-10-06]
+o Now internal getChromosomeRanges() of CBS returns a data.frame
+  instead of a matrix, and first column is now 'chromosome'.
+o Added optional argument 'regions' to getCallStatistics() of CBS
+  in order to calculate call statistics on subsets of chromosomes,
+  e.g. chromosome arms.
+
+
 Version: 0.13.3 [2011-10-03]
 o GENERALIZATION: Now segmentByCBS() and segmentByPairedPSCBS()
   also accepts a data.frame of locus-level data with column names

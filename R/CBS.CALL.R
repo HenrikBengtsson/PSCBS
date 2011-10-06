@@ -606,14 +606,19 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 # @synopsis
 #
 # \arguments{
+#  \item{regions}{An optional @data.frame with columns "chromosome", 
+#     "start", and "end" specifying the regions of interest to calculate
+#     statistics for.  If @NULL, all of the genome is used.}
 #  \item{...}{Not used.}
 # }
 #
 # \value{
-#  Returns a CxK @data.frame, where C is the number of chromosomes
-#  and (K-2)/2 is the number of call types.
-#  The first column is the chromosome index and the second is the
-#  length of the chromosome.
+#  Returns a CxK @data.frame, where C is the number of regions that
+#  meet the criteria setup by argument \code{regions} 
+#  and (K-4)/2 is the number of call types.
+#  The first column is the chromosome index, the second and the third
+#  are the first and last position, and the fourth the length
+#  (=last-first+1) of the chromosome.
 #  The following columns contains call summaries per chromosome.
 #  For each chromosome and call type, the total length of such calls
 #  on that chromosome is reported together how large of a fraction
@@ -643,12 +648,51 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #
 # @keyword internal 
 #*/###########################################################################  
-setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
+setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
   # To please R CMD check, cf. subset()
   chromosome <- NULL; rm(chromosome);
 
-  # Sum length of calls per type and chromosome
+  # Argument 'regions':
+  if (is.null(regions)) {
+    # Get chromosome lengths
+    regions <- getChromosomeRanges(fit)[,c("chromosome", "start", "end")];
+  }
+  regions <- as.data.frame(regions);
+  stopifnot(all(is.element(c("chromosome", "start", "end"), colnames(regions))));
+  stopifnot(!any(duplicated(regions$chromosome)));
+
+  # Calculate lengths
+  regions$length <- regions[,"end"] - regions[,"start"] + 1L;
+
+  # Filter out segments within the requested regions
+  segsT <- NULL;
   segs <- getSegments(fit, splitter=FALSE);
+  for (rr in seq(length=nrow(regions))) {
+    regionRR <- regions[rr,];
+    chrRR <- regionRR[,"chromosome"];
+    startRR <- regionRR[,"start"];
+    endRR <- regionRR[,"end"];
+    if (is.na(chrRR) || is.na(startRR) || is.na(endRR)) {
+      next;
+    }
+
+    # Select regions that (at least) overlapping with the region
+    segsRR <- subset(segs, chromosome == chrRR & start <= endRR & end >= startRR);
+
+    # Skip?
+    if (nrow(segsRR) == 0) {
+      next;
+    }
+
+    # Adjust ranges
+    segsRR$start[segsRR$start < startRR] <- startRR;
+    segsRR$end[segsRR$end < endRR] <- endRR;
+
+    segsT <- rbind(segsT, segsRR);
+  } # for (rr ...)
+  segs <- segsT;
+
+  # Sum length of calls per type and chromosome
   segs$length <- segs[,"end"] - segs[,"start"] + 1L;
   segs <- segs[order(segs$chromosome),];
 
@@ -662,15 +706,19 @@ setMethodS3("getCallStatistics", "CBS", function(fit, ...) {
   names(res) <- gsub("Call$", "Length", callTypes);
   res1 <- as.data.frame(res);
 
-  # Get chromosome lengths
-  chrLengths <- getChromosomeRanges(fit)[,"length"];
+  # Extract selected regions
+  idxs <- match(unique(segs$chromosome), regions$chromosome);
+  regionsT <- regions[idxs,];
 
-  res2 <- res1 / chrLengths;
+  # Sanity check
+  stopifnot(nrow(regionsT) == nrow(res1));
+
+  res2 <- res1 / regionsT[,"length"];
   names(res2) <- gsub("Call$", "Fraction", callTypes);
 
   res3 <- cbind(res1, res2);
 
-  res <- data.frame(chromosome=getChromosomes(fit), length=chrLengths);
+  res <- regionsT;
   if (nrow(res3) > 0) {
     res <- cbind(res, res3);
   }
@@ -819,6 +867,10 @@ setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-06
+# o Added optional argument 'regions' to getCallStatistics() for CBS.
+# o Now getCallStatistics() for CBS also returns 'start' and 'end'
+#   position of each chromosome.
 # 2011-10-03
 # o DOCUMENTATION: Added more help pages.
 # 2011-10-02

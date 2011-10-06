@@ -303,7 +303,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   }
 
 
-  verbose && enter(verbose, "Tile chromosomes");
+  verbose && enter(verbose, "Tiling chromosomes");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data and segments
@@ -317,9 +317,17 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Additional chromosome annotations
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  chrOffsets <- getChromosomeOffsets(fit, ...);
   chrStats <- getChromosomeRanges(fit);
-  chrStats <- rbind(chrStats, c(1,NA,NA));
+
+  # Build an "empty" row with start == 1.
+  chrStatsKK <- chrStats[1,,drop=FALSE][NA,,drop=FALSE];
+  chrStatsKK[,"start"] <- 1L;
+
+  # Append empty row
+  chrStats <- rbind(chrStats, chrStatsKK);
+
+  # Offset (start,stop)
+  chrOffsets <- getChromosomeOffsets(fit, ...);
   chrStats[,"start"] <- chrStats[,"start"] + chrOffsets;
   chrStats[,"end"] <- chrStats[,"end"] + chrOffsets;
 
@@ -433,7 +441,8 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   x <- xScale * x;
   chrStats <- fitT$chromosomeStats;
   chrStats <- chrStats[-nrow(chrStats),,drop=FALSE];
-  vs <- xScale * chrStats[,1:2];
+  chrRanges <- as.matrix(chrStats[,c("start","end")]);
+  vs <- xScale * chrRanges;
   mids <- (vs[,1]+vs[,2])/2;
   CT <- y;
 
@@ -454,7 +463,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   gh <- fitT;
   gh$xScale <- xScale;
 
-  xlim <- xScale*range(chrStats[,c("start","end")], na.rm=TRUE);
+  xlim <- xScale*range(chrRanges, na.rm=TRUE);
 
   pchT <- if (scatter) { pch } else { NA };
 
@@ -479,7 +488,7 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, xScale=1e-6, col
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'genomeData':
   stopifnot(inherits(genomeData, "data.frame"));
-  stopifnot(is.element("chrom", colnames(genomeData)));
+  stopifnot(is.element("chromosome", colnames(genomeData)));
   stopifnot(is.element("centroStart", colnames(genomeData)));
   stopifnot(is.element("centroEnd", colnames(genomeData)));
 
@@ -511,6 +520,9 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, xScale=1e-6, col
 
 ############################################################################
 # HISTORY:
+# 2011-10-06
+# o ROBUSTNESS: Now plotTracksManyChromosomes() extract (start,end)
+#   information by names (no longer assuming certain indices).
 # 2011-09-07
 # o Added highlightLocusCalls().
 # 2011-09-06

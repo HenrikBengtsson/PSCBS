@@ -1,5 +1,5 @@
 #########################################################################/**
-# @RdocPackage PSCBS
+# @RdocPackage "PSCBS"
 #
 # \description{
 #   @eval "packageDescription('PSCBS')$Description".

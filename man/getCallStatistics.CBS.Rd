@@ -19,17 +19,22 @@
  Calculates various call statistics per chromosome.
 }
 
-\usage{\method{getCallStatistics}{CBS}(fit, ...)}
+\usage{\method{getCallStatistics}{CBS}(fit, regions=NULL, ...)}
 
 \arguments{
+ \item{regions}{An optional \code{\link[base]{data.frame}} with columns "chromosome",
+    "start", and "end" specifying the regions of interest to calculate
+    statistics for.  If \code{\link[base]{NULL}}, all of the genome is used.}
  \item{...}{Not used.}
 }
 
 \value{
- Returns a CxK \code{\link[base]{data.frame}}, where C is the number of chromosomes
- and (K-2)/2 is the number of call types.
- The first column is the chromosome index and the second is the
- length of the chromosome.
+ Returns a CxK \code{\link[base]{data.frame}}, where C is the number of regions that
+ meet the criteria setup by argument \code{regions}
+ and (K-4)/2 is the number of call types.
+ The first column is the chromosome index, the second and the third
+ are the first and last position, and the fourth the length
+ (=last-first+1) of the chromosome.
  The following columns contains call summaries per chromosome.
  For each chromosome and call type, the total length of such calls
  on that chromosome is reported together how large of a fraction

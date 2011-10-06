@@ -379,6 +379,12 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
 
   res[,"length"] <- res[,"end"] - res[,"start"] + 1L;
 
+  # Sanity check
+  stopifnot(nrow(res) == length(chromosomes));
+
+  res <- as.data.frame(res);
+  res <- cbind(chromosome=chromosomes, res);
+
   res;
 }, protected=TRUE) # getChromosomeRanges()
 
@@ -386,6 +392,9 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-06
+# o Now getChromosomeRanges() of CBS returns a data.frame instead of 
+#   a matrix, and first column is now 'chromosome'.
 # 2011-09-05
 # o Added getChromosomeRanges() for CBS.
 # 2011-09-04
