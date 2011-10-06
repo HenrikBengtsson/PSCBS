@@ -8,10 +8,11 @@
 
  \name{PSCBS-package}
 \alias{PSCBS-package}
-\alias{PSCBS}
+
 \docType{package}
 
 \title{Package PSCBS}
+
 
 
  \description{

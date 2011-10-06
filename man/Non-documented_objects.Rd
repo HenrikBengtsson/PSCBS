@@ -163,7 +163,6 @@
 \alias{writeSegments}
 \alias{writeSegments.CBS}
 \alias{getCallStatistics}
-\alias{getCallStatistics.CBS}
 \alias{getChromosomeRanges}
 \alias{getChromosomeRanges.CBS}
 \alias{getFGA}

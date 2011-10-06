@@ -686,10 +686,13 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
 
     # Adjust ranges
     segsRR$start[segsRR$start < startRR] <- startRR;
-    segsRR$end[segsRR$end < endRR] <- endRR;
+    segsRR$end[segsRR$end > endRR] <- endRR;
+
+    segsRR$fullLength <- endRR - startRR + 1L;
 
     segsT <- rbind(segsT, segsRR);
   } # for (rr ...)
+
   segs <- segsT;
 
   # Sum length of calls per type and chromosome
@@ -723,6 +726,14 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
     res <- cbind(res, res3);
   }
   rownames(res) <- NULL;
+
+  # Sanity checks
+  res <- res[,grep("Fraction", colnames(res))];
+  for (key in colnames(res)) {
+    rho <- res[,key];
+    stopifnot(all(rho >= 0, na.rm=TRUE));
+    stopifnot(all(rho <= 1, na.rm=TRUE));
+  }
 
   res;
 }, protected=TRUE) # getCallStatistics()

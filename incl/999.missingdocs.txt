@@ -67,7 +67,7 @@ callAmplifications callGainsAndLosses callOutliers
  getSignalType getSignalType.CBS signalType signalType.CBS
  signalType<- signalType<-.CBS
   writeLocusData writeLocusData.CBS writeSegments writeSegments.CBS
- getCallStatistics getCallStatistics.CBS getChromosomeRanges
+ getCallStatistics getChromosomeRanges
  getChromosomeRanges.CBS
   getFGA getFGG getFGL
   getFractionOfGenomeAltered

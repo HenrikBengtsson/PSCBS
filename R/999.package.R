@@ -1,5 +1,6 @@
 #########################################################################/**
 # @RdocPackage "PSCBS"
+# @eval "rd <- gsub('\\alias{PSCBS}', '', rd, fixed=TRUE); ''"
 #
 # \description{
 #   @eval "packageDescription('PSCBS')$Description".
