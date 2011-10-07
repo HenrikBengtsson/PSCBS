@@ -738,6 +738,8 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   }
   rownames(res) <- NULL;
 
+  res <- cbind(label=I(sprintf("chr%d", res[,"chromosome"])), res);
+
   # Sanity checks
   resT <- res[,grep("Fraction", colnames(res))];
   for (key in colnames(resT)) {
@@ -920,8 +922,8 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   } # for (rr ...)
   regions[,"length"] <- regions[,"end"] - regions[,"start"] + 1L;
   callStats <- getCallStatistics(fit, regions=regions);
-  label <- sprintf("chr%04dp", callStats$chromosome);
-  callStatsP <- cbind(label=I(label), callStats);
+  callStats$label <- sprintf("%sp", callStats$label);
+  callStatsP <- callStats;
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -948,8 +950,8 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   regions[,"length"] <- regions[,"end"] - regions[,"start"] + 1L;
 
   callStats <- getCallStatistics(fit, regions=regions);
-  label <- sprintf("chr%04dq", callStats$chromosome);
-  callStatsQ <- cbind(label=I(label), callStats);
+  callStats$label <- sprintf("%sq", callStats$label);
+  callStatsQ <- callStats;
 
 
 
@@ -962,12 +964,8 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   rm(regions, callStatsP, callStatsQ);
 
   # Reorder
-  o <- order(callStats$label);
+  o <- order(callStats$chromosome, callStats$start);
   callStats <- callStats[o,];
-
-  # Remove workaround to sort as chr1, chr2, ..., chr10, ...
-  # (without having to import gtools::mixedorder()).
-  callStats$label <- gsub("chr[0]*", "chr", callStats$label);
 
   callStats;
 }, protected=TRUE); # getCallStatisticsByArms()
@@ -1004,6 +1002,7 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
 ############################################################################
 # HISTORY:
 # 2011-10-07
+# o Now getCallStatistics() for CBS also returns a 'label' column.
 # o Added getCallStatisticsByArms() and callArms() for CBS.
 # 2011-10-06
 # o Added optional argument 'regions' to getCallStatistics() for CBS.
