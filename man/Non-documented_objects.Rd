@@ -202,6 +202,10 @@
 \alias{tileChromosomes.AbstractCBS}
 \alias{highlightArmCalls}
 \alias{highlightArmCalls.CBS}
+\alias{callArms}
+\alias{callArms.CBS}
+\alias{getCallStatisticsByArms}
+\alias{getCallStatisticsByArms.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

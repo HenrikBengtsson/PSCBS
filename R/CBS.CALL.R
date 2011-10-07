@@ -886,9 +886,125 @@ setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
 })
 
 
+setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
+  # To please/trick R CMD check
+  chromosome <- x <- NULL; rm(chromosome, x);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'genomeData':
+  genomeData <- as.data.frame(genomeData);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # p-arm
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  regions <- getChromosomeRanges(fit);
+  regions$end <- genomeData$centroStart;
+  regions$start <- pmin(regions$start, regions$end);
+
+  # Shrink regions
+  for (rr in seq(length=nrow(regions))) {
+    chr <- regions[rr,"chromosome"];
+    x0 <- regions[rr,"start"];
+    x1 <- regions[rr,"end"];
+    xs <- subset(fit$data, chromosome == chr & x0 <= x & x <= x1)$x;
+    if (length(xs) > 0) {
+      range <- range(xs, na.rm=TRUE);
+      x0 <- max(c(x0, range[1]), na.rm=TRUE);
+      x1 <- min(c(x1, range[2]), na.rm=TRUE);
+      regions[rr,"start"] <- x0;
+      regions[rr,"end"] <- x1;
+    }
+  } # for (rr ...)
+  regions[,"length"] <- regions[,"end"] - regions[,"start"] + 1L;
+  callStats <- getCallStatistics(fit, regions=regions);
+  label <- sprintf("chr%04dp", callStats$chromosome);
+  callStatsP <- cbind(label=I(label), callStats);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # q-arm
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  regions <- getChromosomeRanges(fit);
+  regions$start <- genomeData$centroEnd;
+  regions$end <- pmax(regions$end, regions$start);
+
+  # Shrink regions
+  for (rr in seq(length=nrow(regions))) {
+    chr <- regions[rr,"chromosome"];
+    x0 <- regions[rr,"start"];
+    x1 <- regions[rr,"end"];
+    xs <- subset(fit$data, chromosome == chr & x0 <= x & x <= x1)$x;
+    if (length(xs) > 0) {
+      range <- range(xs, na.rm=TRUE);
+      x0 <- max(c(x0, range[1]), na.rm=TRUE);
+      x1 <- min(c(x1, range[2]), na.rm=TRUE);
+      regions[rr,"start"] <- x0;
+      regions[rr,"end"] <- x1;
+    }
+  } # for (rr ...)
+  regions[,"length"] <- regions[,"end"] - regions[,"start"] + 1L;
+
+  callStats <- getCallStatistics(fit, regions=regions);
+  label <- sprintf("chr%04dq", callStats$chromosome);
+  callStatsQ <- cbind(label=I(label), callStats);
+
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Merge
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  callStats <- rbind(callStatsP, callStatsQ);
+
+  # Not needed anymore
+  rm(regions, callStatsP, callStatsQ);
+
+  # Reorder
+  o <- order(callStats$label);
+  callStats <- callStats[o,];
+
+  # Remove workaround to sort as chr1, chr2, ..., chr10, ...
+  # (without having to import gtools::mixedorder()).
+  callStats$label <- gsub("chr[0]*", "chr", callStats$label);
+
+  callStats;
+}, protected=TRUE); # getCallStatisticsByArms()
+
+
+setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'minFraction':
+  minFraction <- Arguments$getDouble(minFraction, range=c(0,1));
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # p-arm
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  callStats <- getCallStatisticsByArms(fit, genomeData=genomeData);
+
+  callTypes <- grep("Fraction", colnames(callStats), value=TRUE);
+  callTypes <- gsub("Fraction", "", callTypes);
+
+  keys <- sprintf("%sFraction", callTypes);
+  rhos <- callStats[,keys];
+  calls <- (rhos >= minFraction);
+  colnames(calls) <- sprintf("%sCall", callTypes);
+
+  callStats <- cbind(callStats, calls);
+
+  callStats;
+}, protected=TRUE); # callArms()
+
+
 
 ############################################################################
 # HISTORY:
+# 2011-10-07
+# o Added getCallStatisticsByArms() and callArms() for CBS.
 # 2011-10-06
 # o Added optional argument 'regions' to getCallStatistics() for CBS.
 # o Now getCallStatistics() for CBS also returns 'start' and 'end'

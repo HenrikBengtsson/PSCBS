@@ -523,8 +523,64 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", 
 }) # drawCentromeres()
 
 
+setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.95, callCols=c("loss"="red", "gain"="green"),   xScale=1e-6, ...) {
+  # To please/trick R CMD check
+  chromosome <- x <- NULL; rm(chromosome, x);
+
+  callStats <- callArms(fit, genomeData=genomeData, minFraction=minFraction);
+
+  callTypes <- grep("Fraction", colnames(callStats), value=TRUE);
+  callTypes <- gsub("Fraction", "", callTypes);
+
+  callTypes <- intersect(callTypes, c("loss", "gain"));
+
+  # Adjust (start, end)
+  offsets <- getChromosomeOffsets(fit);
+  offsets <- offsets[callStats[,"chromosome"]];
+  callStats[,c("start","end")] <- offsets + callStats[,c("start","end")];
+
+  nbrOfRegions <- nrow(callStats);
+
+  # Nothing todo?
+  if (nbrOfRegions == 0) {
+    return(invisible(callStats));
+  }
+
+
+  usr <- par("usr");
+  dy <- diff(usr[3:4]);
+  yy <- usr[3]+c(0,0.05*dy);
+  abline(h=usr[3]+0.95*0.05*dy, lty=1, col="gray");
+
+  xx <- callStats[,c("start", "end")];
+  xx <- as.matrix(xx);
+  xx <- xx * xScale;
+
+  for (type in callTypes) {
+    col <- callCols[type];
+    keyA <- sprintf("%sFraction", type);
+    keyB <- sprintf("%sCall", type);
+    for (kk in seq(length=nbrOfRegions)) {
+      xs <- xx[kk,];
+      if (callStats[kk, keyA] > 0) {
+        ys <- rep(yy[1]+callStats[kk, keyA]*0.05*dy, times=2);
+        lines(x=xs, y=ys, col=col);
+        if (callStats[kk, keyB]) {
+          rect(xs[1], yy[1], xs[2], yy[2], col=col, border=NA);
+        }
+      }
+    }
+  } # for (type ...)
+
+  invisible(callStats);
+}, protected=TRUE); # highlightArmCalls()
+
+
+
 ############################################################################
 # HISTORY:
+# 2011-10-07
+# o Added highlightArmCalls() for CBS.
 # 2011-10-06
 # o Now drawCentromeres() for CBS can also plot start and stop.
 # o ROBUSTNESS: Now plotTracksManyChromosomes() extract (start,end)
