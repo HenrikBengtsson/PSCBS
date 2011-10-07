@@ -482,7 +482,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
 }, private=TRUE) # plotTracksManyChromosomes()
 
 
-setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, xScale=1e-6, col="gray", lty=3, ..., byIndex=FALSE) {
+setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", "end"), xScale=1e-6, col="gray", lty=3, ..., byIndex=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -493,8 +493,8 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, xScale=1e-6, col
   stopifnot(is.element("centroEnd", colnames(genomeData)));
 
   # Calculate the midpoints of the centromeres
-  genomeData$centroMid <- (genomeData$centroStart + genomeData$centroEnd) / 2;
-
+  colnames(genomeData) <- tolower(gsub("centro", "", colnames(genomeData)));
+  genomeData$mid <- (genomeData$start + genomeData$end) / 2;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Tile chromosomes
@@ -508,11 +508,16 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, xScale=1e-6, col
   offsets <- chrStats[,"start"] - chrStats[1,"start"];
 
   # Centroid locations in the tiled space
-  offsetsT <- offsets[seq(along=genomeData$centroMid)];
-  midsT <- genomeData$centroMid + offsetsT;
+  offsetsT <- offsets[seq(length=nrow(genomeData))];
 
-  ats <- xScale*midsT;
-  abline(v=ats, col=col, lty=lty, ...);
+  xx <- genomeData[,what,drop=FALSE];
+  xx <- as.matrix(xx);
+  xx <- offsetsT + xx;
+
+  ats <- xScale * xx;
+  for (cc in seq(length=ncol(xx))) {
+    abline(v=ats[,cc], col=col, lty=lty, ...);
+  }
 
   invisible(ats);
 }) # drawCentromeres()
@@ -521,6 +526,7 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, xScale=1e-6, col
 ############################################################################
 # HISTORY:
 # 2011-10-06
+# o Now drawCentromeres() for CBS can also plot start and stop.
 # o ROBUSTNESS: Now plotTracksManyChromosomes() extract (start,end)
 #   information by names (no longer assuming certain indices).
 # 2011-09-07

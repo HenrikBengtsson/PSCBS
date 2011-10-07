@@ -19,12 +19,14 @@
  Calculates various call statistics per chromosome.
 }
 
-\usage{\method{getCallStatistics}{CBS}(fit, regions=NULL, ...)}
+\usage{\method{getCallStatistics}{CBS}(fit, regions=NULL, shrinkRegions=TRUE, ...)}
 
 \arguments{
  \item{regions}{An optional \code{\link[base]{data.frame}} with columns "chromosome",
     "start", and "end" specifying the regions of interest to calculate
     statistics for.  If \code{\link[base]{NULL}}, all of the genome is used.}
+ \item{shrinkRegions}{If \code{\link[base:logical]{TRUE}}, regions are shrunk to the support of
+    the data.}
  \item{...}{Not used.}
 }
 

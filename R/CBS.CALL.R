@@ -609,6 +609,8 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #  \item{regions}{An optional @data.frame with columns "chromosome", 
 #     "start", and "end" specifying the regions of interest to calculate
 #     statistics for.  If @NULL, all of the genome is used.}
+#  \item{shrinkRegions}{If @TRUE, regions are shrunk to the support of 
+#     the data.}
 #  \item{...}{Not used.}
 # }
 #
@@ -648,7 +650,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #
 # @keyword internal 
 #*/###########################################################################  
-setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
+setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegions=TRUE, ...) {
   # To please R CMD check, cf. subset()
   chromosome <- NULL; rm(chromosome);
 
@@ -661,9 +663,6 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
   stopifnot(all(is.element(c("chromosome", "start", "end"), colnames(regions))));
   stopifnot(!any(duplicated(regions$chromosome)));
 
-  # Calculate lengths
-  regions$length <- regions[,"end"] - regions[,"start"] + 1L;
-
   # Filter out segments within the requested regions
   segsT <- NULL;
   segs <- getSegments(fit, splitter=FALSE);
@@ -672,16 +671,25 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
     chrRR <- regionRR[,"chromosome"];
     startRR <- regionRR[,"start"];
     endRR <- regionRR[,"end"];
-    if (is.na(chrRR) || is.na(startRR) || is.na(endRR)) {
+    if (is.na(chrRR) || is.na(startRR) || is.na(endRR) || endRR - startRR == 0) {
       next;
     }
 
     # Select regions that (at least) overlapping with the region
     segsRR <- subset(segs, chromosome == chrRR & start <= endRR & end >= startRR);
 
-    # Skip?
+    # Sanity check
     if (nrow(segsRR) == 0) {
-      next;
+      print(list(segs=segs, chrRR=chrRR, endRR=endRR, startRR=startRR));
+    }
+    stopifnot(nrow(segsRR) > 0);
+
+    if (shrinkRegions) {
+      range <- range(c(segsRR$start, segsRR$end), na.rm=TRUE);
+      startRR <- max(startRR, range[1], na.rm=TRUE);
+      endRR <- min(endRR, range[2], na.rm=TRUE);
+      regions[rr,"end"] <- endRR;
+      regions[rr,"start"] <- startRR;
     }
 
     # Adjust ranges
@@ -698,7 +706,6 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
   # Sum length of calls per type and chromosome
   segs$length <- segs[,"end"] - segs[,"start"] + 1L;
   segs <- segs[order(segs$chromosome),];
-
   callTypes <- grep("Call$", colnames(segs), value=TRUE);
   res <- lapply(callTypes, FUN=function(type) {
     coeffs <- as.integer(segs[,type]);
@@ -716,6 +723,10 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
   # Sanity check
   stopifnot(nrow(regionsT) == nrow(res1));
 
+  # Calculate lengths
+  regionsT$length <- regionsT[,"end"] - regionsT[,"start"] + 1L;
+  stopifnot(all(regionsT$length >= 0));
+
   res2 <- res1 / regionsT[,"length"];
   names(res2) <- gsub("Call$", "Fraction", callTypes);
 
@@ -728,9 +739,9 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, ...) {
   rownames(res) <- NULL;
 
   # Sanity checks
-  res <- res[,grep("Fraction", colnames(res))];
-  for (key in colnames(res)) {
-    rho <- res[,key];
+  resT <- res[,grep("Fraction", colnames(res))];
+  for (key in colnames(resT)) {
+    rho <- resT[,key];
     stopifnot(all(rho >= 0, na.rm=TRUE));
     stopifnot(all(rho <= 1, na.rm=TRUE));
   }
