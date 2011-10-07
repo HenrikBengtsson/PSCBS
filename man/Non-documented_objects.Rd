@@ -200,6 +200,8 @@
 \alias{setSegments.AbstractCBS}
 \alias{getLocusData.PSCBS}
 \alias{tileChromosomes.AbstractCBS}
+\alias{highlightArmCalls}
+\alias{highlightArmCalls.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

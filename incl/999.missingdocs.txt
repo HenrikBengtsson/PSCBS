@@ -87,3 +87,4 @@ setSampleName
   setLocusData setLocusData.AbstractCBS setSegments
   setSegments.AbstractCBS
 getLocusData.PSCBS tileChromosomes.AbstractCBS
+highlightArmCalls highlightArmCalls.CBS
