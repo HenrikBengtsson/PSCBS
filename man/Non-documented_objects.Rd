@@ -206,6 +206,8 @@
 \alias{callArms.CBS}
 \alias{getCallStatisticsByArms}
 \alias{getCallStatisticsByArms.CBS}
+\alias{drawChromosomes}
+\alias{drawChromosomes.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

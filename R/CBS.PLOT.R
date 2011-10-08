@@ -482,6 +482,48 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
 }, private=TRUE) # plotTracksManyChromosomes()
 
 
+
+setMethodS3("drawChromosomes", "CBS", function(x, lty=3, xScale=1e-6, ..., byIndex=FALSE, verbose=FALSE) {
+  # To please R CMD check
+  fit <- x;
+ 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'fit':
+
+  # Argument 'xScale':
+  xScale <- Arguments$getNumeric(xScale, range=c(0,Inf));
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Tile chromosomes
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fitT <- tileChromosomes(fit);
+  verbose && str(verbose, fitT);
+  # Sanity check
+  stopifnot(!is.null(fitT$chromosomeStats));
+
+  chrStats <- fitT$chromosomeStats;
+  chrStats <- chrStats[-nrow(chrStats),,drop=FALSE];
+  chrRanges <- as.matrix(chrStats[,c("start","end")]);
+  vs <- xScale * chrRanges;
+  mids <- (vs[,1]+vs[,2])/2;
+  chromosomes <- getChromosomes(fitT);
+  chrLabels <- sprintf("%02d", chromosomes);
+  side <- rep(c(1,3), length.out=length(chrLabels));
+  mtext(text=chrLabels, side=side, at=mids, line=0.1, cex=0.7*par("cex"));
+  abline(v=vs, lty=lty);
+}, private=TRUE) # drawChromosomes()
+
+
+
 setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", "end"), xScale=1e-6, col="gray", lty=3, ..., byIndex=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
@@ -579,6 +621,8 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
 
 ############################################################################
 # HISTORY:
+# 2011-10-08
+# o Added drawChromosomes() for CBS.
 # 2011-10-07
 # o Added highlightArmCalls() for CBS.
 # 2011-10-06

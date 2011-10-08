@@ -90,3 +90,4 @@ getLocusData.PSCBS tileChromosomes.AbstractCBS
 highlightArmCalls highlightArmCalls.CBS
  callArms callArms.CBS getCallStatisticsByArms
  getCallStatisticsByArms.CBS
+drawChromosomes drawChromosomes.CBS
