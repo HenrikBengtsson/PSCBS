@@ -671,18 +671,21 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     chrRR <- regionRR[,"chromosome"];
     startRR <- regionRR[,"start"];
     endRR <- regionRR[,"end"];
-    if (is.na(chrRR) || is.na(startRR) || is.na(endRR) || endRR - startRR == 0) {
+    if (is.na(chrRR) || is.na(startRR) || is.na(endRR)) {
       next;
     }
-
+    
     # Select regions that (at least) overlapping with the region
     segsRR <- subset(segs, chromosome == chrRR & start <= endRR & end >= startRR);
 
-    # Sanity check
+    # Special case
     if (nrow(segsRR) == 0) {
-      print(list(segs=segs, chrRR=chrRR, endRR=endRR, startRR=startRR));
+      segsRR <- segs[1,][NA,];
+      segsRR$chromosome <- chrRR;
+      segsRR$start <- startRR;
+      segsRR$end <- endRR;
+      segsRR$nbrOfLoci <- 0L;
     }
-    stopifnot(nrow(segsRR) > 0);
 
     if (shrinkRegions) {
       range <- range(c(segsRR$start, segsRR$end), na.rm=TRUE);
@@ -747,6 +750,8 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     stopifnot(all(rho >= 0, na.rm=TRUE));
     stopifnot(all(rho <= 1, na.rm=TRUE));
   }
+
+  stopifnot(nrow(res) == nrow(regions));
 
   res;
 }, protected=TRUE) # getCallStatistics()
@@ -1002,6 +1007,8 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
 ############################################################################
 # HISTORY:
 # 2011-10-07
+# o Now getCallStatistics() for CBS always return statistics for
+#   all regions requested, even empty ones.
 # o Now getCallStatistics() for CBS also returns a 'label' column.
 # o Added getCallStatisticsByArms() and callArms() for CBS.
 # 2011-10-06
