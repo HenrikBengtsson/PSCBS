@@ -25,7 +25,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
   verbose && enter(verbose, "Resample DH signals and reestimate DH mean levels");
 
   data <- getLocusData(fit);
-  segs <- fit$output;
+  segs <- getSegments(fit);
 
   # Find estimates to be done
   stats <- statsFcn(1);

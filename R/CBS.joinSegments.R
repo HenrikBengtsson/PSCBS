@@ -17,7 +17,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
 
 
   verbose && enter(verbose, "Joining segments");  
-  segs <- fit$output;
+  segs <- getSegments(fit);
 
   nbrOfSegs <- nrow(segs);
   if (nbrOfSegs > 1) {

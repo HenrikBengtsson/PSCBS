@@ -33,7 +33,7 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 # }
 #*/###########################################################################  
 setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
-  segs <- fit$output;
+  segs <- getSegments(fit);
   stopifnot(!is.null(segs));
 
   data <- segs[,c("tcnMean", "dhMean", "tcnNbrOfLoci", "dhNbrOfLoci"), drop=FALSE];
@@ -132,7 +132,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   data <- getLocusData(fit);
 
-  segs <- fit$output;
+  segs <- getSegments(fit);
   keep <- is.finite(segs$chromosome);
   segs <- segs[keep,,drop=FALSE];
   tcnSegRows <- fit$tcnSegRows[keep,,drop=FALSE];
@@ -421,7 +421,7 @@ setMethodS3("extractByRegions", "PairedPSCBS", function(this, regions, ..., verb
   data <- getLocusData(fit);
   tcnSegRows <- fit$tcnSegRows;
   dhSegRows <- fit$dhSegRows;
-  segs <- fit$output;
+  segs <- getSegments(fit);
   params <- fit$params;
 
   # Sanity checks

@@ -72,17 +72,17 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, verbose=FALS
 
   # Starts
   idxs <- grep("Start$", fields);
-  segT[,idxs] <- apply(segsT[,idxs], MARGIN=2, FUN=min, na.rm=TRUE);
+  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=min, na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Ends
   idxs <- grep("End$", fields);
-  segT[,idxs] <- apply(segsT[,idxs], MARGIN=2, FUN=max, na.rm=TRUE);
+  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=max, na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Counts
   idxs <- grep("NbrOf", fields);
-  segT[,idxs] <- apply(segsT[,idxs], MARGIN=2, FUN=sum);
+  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=sum);
   idxsUsed <- c(idxsUsed, idxs);
 
   # "Invalidate" remaining entries
@@ -247,7 +247,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   data <- getLocusData(fit);
 
-  segs <- fit$output;
+  segs <- getSegments(fit);
   keep <- is.finite(segs$chromosome);
   segs <- segs[keep,,drop=FALSE];
 
@@ -335,6 +335,8 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-8
+# o ROBUSTIFICATION: Uses drop=FALSE in mergeTwoSegments() for PairedPSCBS.
 # 2011-10-02
 # o DOCUMENTATION: Added Rdoc help to mergeTwoSegments() & dropByRegions().
 # o Added verbose statements to the above to functions.

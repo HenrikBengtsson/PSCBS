@@ -45,6 +45,20 @@ setMethodS3("print", "AbstractCBS", function(x, ...) {
 
 
 
+
+setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attributes=FALSE, ...) {
+  # Compare class attributes
+  res <- all.equal(class(target), class(current));
+  if (!isTRUE(res)) {
+    return(res);
+  }
+
+  # Don't compare other attributes
+  NextMethod("all.equal", target, current, check.attributes=check.attributes, ...);
+}, protected=TRUE)
+
+
+
 ###########################################################################/**
 # @RdocMethod getSampleName
 # @aliasmethod sampleName
@@ -255,11 +269,47 @@ setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 # @author
 #
 # \seealso{
+#   @seemethod "nbrOfChangePoints"
+#   @seemethod "nbrOfChromosomes"
 #   @seeclass
 # }
 #*/###########################################################################  
 setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...) {
   nrow(getSegments(this, splitters=splitters, ...));
+})
+
+
+
+###########################################################################/**
+# @RdocMethod nbrOfChangePoints
+#
+# @title "Gets the number of change points"
+#
+# \description{
+#   @get "title", which is defined as the number of segments minus
+#   the number of chromosomes.
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{splitters, ...}{Arguments passed to @seemethod "getSegments".}
+# }
+#
+# \value{
+#   Returns an @integer.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seemethod "nbrOfSegments"
+#   @seemethod "nbrOfChromosomes"
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ...) {
+  nbrOfSegments(fit, splitters=FALSE) - nbrOfChromosomes(fit);
 })
 
 
@@ -452,9 +502,18 @@ setMethodS3("plotTracks", "AbstractCBS", abstract=TRUE);
 
 setMethodS3("tileChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
+setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
 
 ############################################################################
 # HISTORY:
+# 2011-10-08
+# o Added abstract updateMeans() for AbstractCBS.
+# o Added abstract mergeTwoSegments() for AbstractCBS.
+# o Added all.equal() for AbstractCBS.
+# o Added nbrOfChangePoints() for AbstractCBS.
 # 2011-10-02
 # o Created.
 ############################################################################

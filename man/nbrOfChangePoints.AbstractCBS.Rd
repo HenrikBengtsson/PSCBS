@@ -6,20 +6,21 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{nbrOfSegments.AbstractCBS}
-\alias{nbrOfSegments.AbstractCBS}
-\alias{AbstractCBS.nbrOfSegments}
-\alias{nbrOfSegments.AbstractCBS}
-\alias{nbrOfSegments,AbstractCBS-method}
+ \name{nbrOfChangePoints.AbstractCBS}
+\alias{nbrOfChangePoints.AbstractCBS}
+\alias{AbstractCBS.nbrOfChangePoints}
+\alias{nbrOfChangePoints.AbstractCBS}
+\alias{nbrOfChangePoints,AbstractCBS-method}
 
 
- \title{Gets the number of segments}
+ \title{Gets the number of change points}
 
  \description{
-   Gets the number of segments.
+   Gets the number of change points, which is defined as the number of segments minus
+   the number of chromosomes.
  }
 
- \usage{\method{nbrOfSegments}{AbstractCBS}(this, splitters=FALSE, ...)}
+ \usage{\method{nbrOfChangePoints}{AbstractCBS}(fit, ...)}
 
  \arguments{
   \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.}
@@ -32,7 +33,7 @@
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \seealso{
-   \code{\link[PSCBS:nbrOfChangePoints.AbstractCBS]{*nbrOfChangePoints}()}
+   \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{*nbrOfSegments}()}
    \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{*nbrOfChromosomes}()}
    For more information see \code{\link{AbstractCBS}}.
  }

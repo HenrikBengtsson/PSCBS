@@ -75,9 +75,11 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1, ...) {
 
   # Add chromosome splitter
   ats <- which(diff(output$chromosome) != 0) + 1L;
-  idxs <- seq(length=nrow(output)+length(ats));
-  expand <- match(idxs, idxs[-ats]);
-  output <- output[expand,];
+  if (length(ats) > 0) {
+    idxs <- seq(length=nrow(output)+length(ats));
+    expand <- match(idxs, idxs[-ats]);
+    output <- output[expand,];
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,7 +90,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1, ...) {
   res$data <- data;
   res$output <- output;
   res$params <- list();
-  class(res) <- c("CBS");
+  class(res) <- class(CBS());
 
   res;
 }) # as.CBS()
@@ -207,7 +209,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
   x <- data$x;
   y <- data[,3];
 
-  segs <- fit$output;
+  segs <- getSegments(fit);
   nbrOfSegments <- nrow(segs);
   nbrOfLoci <- nbrOfLoci(fit);
 
@@ -392,6 +394,9 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-08
+# o BUG FIX: The object returned by as.CBS() of DNAcopy did not have the
+#   correct class hierarchy.
 # 2011-10-06
 # o Now getChromosomeRanges() of CBS returns a data.frame instead of 
 #   a matrix, and first column is now 'chromosome'.

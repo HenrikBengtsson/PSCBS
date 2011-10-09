@@ -366,13 +366,12 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sanity checks
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  stopifnot(nbrOfLoci(fitT) == nbrOfLoci(fit));
-  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit));
-
   segs <- getSegments(fit);
   segsT <- getSegments(fitT);
   segs <- segs[,!is.element(colnames(segs), c("start", "end"))];
   segsT <- segsT[,!is.element(colnames(segsT), c("start", "end"))];
+str(segs);
+str(segsT);
   stopifnot(all.equal(segsT, segs));
 
   data <- getLocusData(fit);
@@ -380,6 +379,9 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   data <- segs[,!is.element(colnames(data), c("x"))];
   dataT <- segsT[,!is.element(colnames(dataT), c("x"))];
   stopifnot(all.equal(dataT, data));
+
+  stopifnot(nbrOfLoci(fitT) == nbrOfLoci(fit));
+  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit));
 
   verbose && exit(verbose);
 

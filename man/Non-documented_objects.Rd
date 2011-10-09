@@ -208,6 +208,15 @@
 \alias{getCallStatisticsByArms.CBS}
 \alias{drawChromosomes}
 \alias{drawChromosomes.CBS}
+\alias{all.equal.AbstractCBS}
+\alias{all.equal.CBS}
+\alias{mergeNonCalledSegments}
+\alias{mergeNonCalledSegments.CBS}
+\alias{mergeTwoSegments.AbstractCBS}
+\alias{nbrOfChangePoints}
+\alias{mergeTwoSegments.CBS}
+\alias{updateMeans.AbstractCBS}
+\alias{updateMeans.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

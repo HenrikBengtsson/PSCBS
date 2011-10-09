@@ -269,7 +269,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     degree <- Arguments$getDouble(degree, range=c(1, Inf));
 
 
-    segs <- fit$output;
+    segs <- getSegments(fit);
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     # Rule #1: Only consider segments that are short enough
@@ -333,7 +333,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   # Update 'DNAcopy' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # (a) segmentation table
-  segs <- fit$output;
+  segs <- getSegments(fit);
   segs$amplificationCall <- calls;
   fit$output <- segs;
 
@@ -459,7 +459,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
     # CN residuals (relative to segment means)
     dy <- y - yS;
 
-    segs <- fit$output;
+    segs <- getSegments(fit);
 
     # Allocate per-segment SD estimates
     nbrOfSegments <- nbrOfSegments(fit);
@@ -548,7 +548,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   data <- getLocusData(fit);
 
   # Extract segment data
-  segs <- fit$output;
+  segs <- getSegments(fit);
 
   # Identify segment calls
   callCols <- grep("Call$", colnames(segs));
@@ -1004,8 +1004,109 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
 
 
 
+
+###########################################################################/**
+# @RdocMethod mergeNonCalledSegments
+# 
+# @title "Merge neighboring segments that are not called"
+#
+# \description{
+#   @get "title"
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+#  \item{verbose}{@see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns an object of the same class 
+#   with the same of fewer number of segments.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @keyword internal 
+#*/###########################################################################  
+setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+ 
+  verbose && enter(verbose, "Merging neighboring segments that are not called");
+
+  # Identify call columns
+  segs <- getSegments(fit);
+  keep <- grep("Call$", colnames(segs));
+  nbrOfCalls <- length(keep);
+
+  # Sanity check
+  stopifnot(nbrOfCalls > 0);
+
+  chromosomes <- getChromosomes(fit);
+  fitList <- list();
+  for (cc in seq(along=chromosomes)) {
+    chromosome <- chromosomes[cc];
+    verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", cc, chromosome, length(chromosomes)));
+
+
+    fitCC <- extractByChromosome(fit, chromosome=chromosome);
+    n0 <- nbrOfSegments(fitCC);
+
+    # Until no more neighboring non-called segments exists
+    while (TRUE) {
+      segs <- getSegments(fitCC);
+      calls <- as.matrix(segs[,keep]);
+
+      # Find two neighboring segments that are not called
+      isCalled <- rowAnys(calls, na.rm=TRUE);
+      verbose && printf(verbose, "Number of segments not called: %d of %d\n", sum(!isCalled, na.rm=TRUE), length(isCalled));
+
+      notCalled <- which(!isCalled);
+      delta <- diff(notCalled);
+      left <- notCalled[which(delta == 1)[1]];
+
+      # No more segments to merge?
+      if (is.na(left)) {
+        break;
+      }
+
+      fitCC <- mergeTwoSegments(fitCC, left=left);
+    } # while (...)
+
+    n1 <- nbrOfSegments(fitCC);
+    verbose && printf(verbose, "Number of segments merged: %d of %d\n", n0-n1, n0);
+
+    fitList[[cc]] <- fitCC;
+    verbose && exit(verbose);
+  } # for (cc ...)
+
+  verbose && enter(verbose, "Building result");
+  res <- Reduce(append, fitList);
+  verbose && exit(verbose);
+
+  verbose && exit(verbose);
+
+  res;
+}, protected=TRUE); # mergeNonCalledSegments()
+
+
 ############################################################################
 # HISTORY:
+# 2011-10-08
+# o Added mergeNonCalledSegments() for CBS.
 # 2011-10-07
 # o Now getCallStatistics() for CBS always return statistics for
 #   all regions requested, even empty ones.

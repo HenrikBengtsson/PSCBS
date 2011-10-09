@@ -525,7 +525,7 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the region-level estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  segs <- fit$output;
+  segs <- getSegments(fit);
   dh <- segs$dhMean;
   stopifnot(!is.null(dh));
   n <- segs$dhNbrOfLoci;

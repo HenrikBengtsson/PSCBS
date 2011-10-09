@@ -91,3 +91,7 @@ highlightArmCalls highlightArmCalls.CBS
  callArms callArms.CBS getCallStatisticsByArms
  getCallStatisticsByArms.CBS
 drawChromosomes drawChromosomes.CBS
+ all.equal.AbstractCBS all.equal.CBS mergeNonCalledSegments
+ mergeNonCalledSegments.CBS mergeTwoSegments.AbstractCBS
+ nbrOfChangePoints
+mergeTwoSegments.CBS updateMeans.AbstractCBS updateMeans.CBS

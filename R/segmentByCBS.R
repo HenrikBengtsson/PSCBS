@@ -512,7 +512,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   segs <- fit$output;
 
   names <- colnames(segs);
-  names <- gsub("ID", "id", names, fixed=TRUE);
+  names <- gsub("ID", "sampleName", names, fixed=TRUE);
   names <- gsub("seg.mean", "mean", names, fixed=TRUE);
   names <- gsub("chrom", "chromosome", names, fixed=TRUE);
   names <- gsub("num.mark", "nbrOfLoci", names, fixed=TRUE);

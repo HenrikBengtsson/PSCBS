@@ -471,7 +471,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Restructure TCN segmentation results");
   # Drop dummy columns
-  keep <- setdiff(colnames(tcnSegments), c("id"));
+  keep <- setdiff(colnames(tcnSegments), c("sampleName"));
   tcnSegments <- tcnSegments[,keep,drop=FALSE];
 
   # Tag fields by TCN
@@ -567,7 +567,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     verbose && exit(verbose);
 
     # Drop dummy columns
-    keep <- setdiff(colnames(dhSegments), c("id", "chromosome"));
+    keep <- setdiff(colnames(dhSegments), c("sampleName", "chromosome"));
     dhSegments <- dhSegments[,keep,drop=FALSE];
 
     # Tag fields by DH

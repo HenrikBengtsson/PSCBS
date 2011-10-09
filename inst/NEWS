@@ -2,7 +2,18 @@
 Package: PSCBS
 ==============
 
+Version: 0.13.5 [2011-10-08]
+o Added updateMeans() and mergeTwoSegments() for CBS.
+o Relabelled column 'id' to 'sampleName' returned by getSegments().
+o ROBUSTNESS: Now using getSegments() everywhere possible.
+o BUG FIX: For so called "splitter" rows, not all columns returned
+  by getSegments() of CBS were missing values.
+o BUG FIX: The object returned by as.CBS() of DNAcopy did not have the
+  correct class hierarchy.
+
+
 Version: 0.13.4 [2011-10-08]
+o Added all.equal() for AbstractCBS, which does not compare attributes.
 o Now internal getChromosomeRanges() of CBS returns a data.frame
   instead of a matrix, and first column is now 'chromosome'.
 o Added optional argument 'regions' to getCallStatistics() of CBS

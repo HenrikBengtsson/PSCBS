@@ -38,6 +38,33 @@ setConstructorS3("CBS", function(...) {
 })
 
 
+setMethodS3("all.equal", "CBS", function(target, current, check.attributes=FALSE, ...) {
+  # Compare class attributes
+  res <- all.equal(class(target), class(current));
+  if (!isTRUE(res)) {
+    return(res);
+  }
+
+  # WORKAROUND: segmentByCBS() return getSegments(fit)$id without NA:s for
+  # splitters, unless append() is used.
+  # TO DO: Fix segmentByCBS() /HB 2011-10-08
+  segs <- getSegments(target);
+  isSplitter <- lapply(segs[-1], FUN=is.na);
+  isSplitter <- Reduce("&", isSplitter);
+  segs[isSplitter, "sampleName"] <- NA;
+  target$output <- segs;
+
+  segs <- getSegments(current);
+  isSplitter <- lapply(segs[-1], FUN=is.na);
+  isSplitter <- Reduce("&", isSplitter);
+  segs[isSplitter, "sampleName"] <- NA;
+  current$output <- segs;
+
+  NextMethod("all.equal", target, current, check.attributes=check.attributes, ...);
+}, protected=TRUE)
+
+
+
 ###########################################################################/**
 # @RdocMethod as.data.frame
 #
@@ -185,15 +212,23 @@ setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
 
   segs <- fit$output;
 
-  # Drop chromosome splitters?
-  if (!splitters) {
-    isSplitter <- lapply(segs[-1], FUN=is.na);
-    isSplitter <- Reduce("&", isSplitter);
-    segs <- segs[!isSplitter,];
+  isSplitter <- lapply(segs[-1], FUN=is.na);
+  isSplitter <- Reduce("&", isSplitter);
+
+  # Add 'sampleName' column?
+  if (nrow(segs) > 0) {
+    sampleName <- rep(getSampleName(fit), times=nrow(segs));
+    sampleName[isSplitter] <- as.character(NA);
+    if (!is.element("sampleName", colnames(segs))) {
+      segs <- cbind(sampleName=I(sampleName), segs);
+    } else {
+      segs[,"sampleName"] <- sampleName;
+    }
   }
 
-  if (nrow(segs) > 0) {
-    segs$id <- getSampleName(fit);
+  # Drop chromosome splitters?
+  if (!splitters) {
+    segs <- segs[!isSplitter,];
   }
 
   segs;
@@ -460,8 +495,187 @@ setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", get
 }) # writeSegments()
 
 
+
+setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+ 
+  verbose && enter(verbose, "Updating mean level estimates");
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Extract the data and segmentation results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  data <- getLocusData(fit);
+
+  segs <- getSegments(fit);
+  keep <- is.finite(segs$chromosome);
+  segs <- segs[keep,,drop=FALSE];
+
+  nbrOfSegments <- nrow(segs);
+  verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
+
+  chromosome <- data$chromosome;
+  x <- data$x;
+  y <- data$y;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Update segments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  for (ss in seq(length=nbrOfSegments)) {
+    verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
+    seg <- segs[ss,];
+
+    chr <- seg[["chromosome"]];
+    chrTag <- sprintf("chr%02d", chr);
+
+    keys <- c("start", "end");
+    xStart <- seg[[keys[1]]];
+    xEnd <- seg[[keys[2]]];
+    verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
+    # Nothing todo?
+    if (is.na(xStart) && is.na(xEnd)) {
+      next;
+    }
+
+    stopifnot(xStart <= xEnd);
+
+    # (b) Identify units
+    units <- which(chromosome == chr & xStart <= x & x <= xEnd);
+
+    # (c) Adjust for missing values
+    value <- y;
+    keep <- which(!is.na(value[units]));
+    units <- units[keep];
+
+    # (d) Update mean
+    gamma <- mean(value[units]);
+
+    # Sanity check
+    stopifnot(length(units) == 0 || !is.na(gamma));
+
+    # Update the segment boundaries, estimates and counts
+    key <- "mean";
+    seg[[key]] <- gamma;
+
+    segs[ss,] <- seg;
+
+    verbose && exit(verbose);
+  } # for (ss ...)
+
+  # Return results
+  res <- fit;
+  res$output <- segs;
+
+  verbose && exit(verbose);
+
+  res;
+}, protected=TRUE) # updateMeans()
+
+
+
+setMethodS3("mergeTwoSegments", "CBS", function(this, left, verbose=FALSE, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  nbrOfSegments <- nbrOfSegments(this);
+  # Argument 'left':
+  left <- Arguments$getIndex(left, max=nbrOfSegments-1L);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Merging to segments");
+  verbose && printf(verbose, "Segments to be merged: %s & %s\n", left, left+1);
+  verbose && cat(verbose, "Number of segments before merging: ", nbrOfSegments);
+  verbose && cat(verbose, "Number of segments after merging: ", nbrOfSegments-1L);
+
+  segs <- getSegments(this);
+  segRows <- this$segRows;
+
+  rows <- c(left,left+1);
+  segsT <- segs[rows,,drop=FALSE];
+
+  # Sanity check
+  chrs <- segsT[["chromosome"]];
+  if (chrs[1] != chrs[2]) {
+    throw("Cannot merge segments that are on different chromosomes: ", chrs[1], " != ", chrs[2]);
+  }
+
+  # Merge segments
+  segT <- segsT[1,];
+  fields <- colnames(segsT);
+  idxsUsed <- c();
+
+  # (id) [as in label]
+  idxs <- grep("(I|i)d$", fields);
+  idxsUsed <- c(idxsUsed, idxs);
+
+  # (chromosome)
+  idxs <- grep("chromosome$", fields);
+  idxsUsed <- c(idxsUsed, idxs);
+
+  # Starts
+  idxs <- grep("(S|s)tart$", fields);
+  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=min, na.rm=TRUE);
+  idxsUsed <- c(idxsUsed, idxs);
+
+  # Ends
+  idxs <- grep("(E|e)nd$", fields);
+  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=max, na.rm=TRUE);
+  idxsUsed <- c(idxsUsed, idxs);
+
+  # Counts
+  idxs <- grep("(N|n)brOf", fields);
+  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=sum);
+  idxsUsed <- c(idxsUsed, idxs);
+
+  # "Invalidate" remaining entries
+  idxsTodo <- setdiff(seq(along=fields), idxsUsed);
+  segT[,idxsTodo] <- NA;
+
+  # Update segment table
+  segs[rows[1],] <- segT;
+  segs <- segs[-rows[2],];
+
+  # Update 'segRows' tables
+  segRows[rows[1],2] <- segRows[rows[2],2];
+  segRows <- segRows[-rows[2],];
+ 
+  # Create results object
+  res <- this;
+  res$output <- segs;
+  res$segRows <- segRows;
+
+  # Update the mean estimates.
+  res <- updateMeans(res);
+
+  verbose && exit(verbose);
+
+  res;
+}, protected=TRUE) # mergeTwoSegments()
+
+
+
 ############################################################################
 # HISTORY:
+# 2011-10-08
+# o Relabelled column 'id' to 'sampleName' returned by getSegments().
+# o BUG FIX: getSegments() for CBS would not set 'id' for "splitter" rows.
+# o Added mergeTwoSegments() for CBS.
+# o Added updateMeans() for CBS.
+# o Added all.equal() for CBS.
 # 2011-10-02
 # o CLEANUP: Moved getChromosomes(), nbrOfChromosomes(), nbrOfSegments(),
 #   nbrOfLoci() and print() to AbstractCBS.
