@@ -31,7 +31,7 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
  
   verbose && enter(verbose, "Extracting subset by regions");
 
-  verbose && cat(verbose, "Number of segments: ", length(regions));
+  verbose && cat(verbose, "Number of regions: ", length(regions));
   verbose && str(verbose, regions);
 
 
@@ -56,7 +56,7 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Subset segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  verbose && enter(verbose, "Update 'output'");
+  verbose && enter(verbose, "Update table of segments");
   segsT <- segs[regions,,drop=FALSE];
   verbose && str(verbose, segsT);
   verbose && exit(verbose);
@@ -65,7 +65,7 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Subset data accordingly
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  verbose && enter(verbose, "Update 'data'");
+  verbose && enter(verbose, "Update locus data");
 
   segRows <- tcnSegRows;
   segRows <- segRows[regions,,drop=FALSE];

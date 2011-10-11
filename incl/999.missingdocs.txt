@@ -71,3 +71,4 @@
  updateMeans.CBS updateMeans.PairedPSCBS writeLocusData
  writeLocusData.CBS
  writeSegments
+extractRegions.CBS

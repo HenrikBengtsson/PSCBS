@@ -82,6 +82,122 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 
 
 
+setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE) {
+  fit <- this;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  updateSegRows <- function(segRows, regions) {
+    segRows <- segRows[regions,,drop=FALSE];
+    ns <- segRows[,2] - segRows[,1] + 1L;
+    from <- c(1L, cumsum(ns)[-length(ns)]);
+    to <- from + (ns - 1L);
+    segRows[,1] <- from;
+    segRows[,2] <- to;
+    verbose && str(verbose, segRows);
+    segRows;
+  } # updateSegRows()
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'regions':
+  regions <- Arguments$getIndices(regions, max=nbrOfSegments(fit));
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+ 
+  verbose && enter(verbose, "Extracting subset by regions");
+
+  verbose && cat(verbose, "Number of regions: ", length(regions));
+  verbose && str(verbose, regions);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Extract data and estimates
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data <- getLocusData(fit);
+  segRows <- fit$segRows;
+  segs <- getSegments(fit);
+  params <- fit$params;
+
+  # Sanity checks
+  stopifnot(all(!is.na(data$chromosome) & !is.na(data$x)));
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Subset segments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  verbose && enter(verbose, "Update table of segments");
+  segsT <- segs[regions,,drop=FALSE];
+  verbose && str(verbose, segsT);
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Subset data accordingly
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  verbose && enter(verbose, "Update locus data");
+
+  segRows <- segRows[regions,,drop=FALSE];
+  from <- segRows[[1]];
+  to <- segRows[[2]];
+  ok <- (!is.na(from) & !is.na(to));
+  from <- from[ok];
+  to <- to[ok];
+  keep <- logical(nrow(data));
+  for (rr in seq(along=from)) {
+    keep[from[rr]:to[rr]] <- TRUE;
+  }
+  keep <- which(keep);
+  verbose && printf(verbose, "Identified %d (%.2f%%) of %d data rows:\n", length(keep), 100*length(keep)/nrow(data), nrow(data));
+  verbose && str(verbose, keep);
+
+  dataT <- data[keep,,drop=FALSE];
+  verbose && str(verbose, dataT);
+
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Update 'segRows'
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  verbose && enter(verbose, "Update 'segRows'");
+
+  segRows <- updateSegRows(segRows, regions=regions);
+  d <- segRows[regions,] - segRows;
+  # Sanity check
+  stopifnot(identical(d[,1], d[,2]));
+  d <- d[,1];
+  verbose && cat(verbose, "Row deltas:");
+  verbose && str(verbose, d);
+
+  segRows <- segRows[regions,,drop=FALSE] - d;
+  verbose && str(verbose, segRows);
+  # Sanity checks
+  stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
+
+  verbose && exit(verbose);
+
+
+  # Create new object
+  res <- fit;
+  res$data <- dataT;
+  res$output <- segsT;
+  res$segRows <- segRows;
+
+  verbose && exit(verbose);
+
+  res;
+}, protected=TRUE) # extractRegions() 
+
+
+
 setMethodS3("mergeTwoSegments", "CBS", function(this, left, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -172,6 +288,8 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, verbose=FALSE, ...) 
 
 ############################################################################
 # HISTORY:
+# 2011-10-10
+# o Added extractRegions() for CBS.
 # 2011-10-08
 # o Relabelled column 'id' to 'sampleName' returned by getSegments().
 # o BUG FIX: getSegments() for CBS would not set 'id' for "splitter" rows.

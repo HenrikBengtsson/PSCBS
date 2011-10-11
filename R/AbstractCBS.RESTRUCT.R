@@ -32,6 +32,9 @@
 #             and recalculating the statistics for the merged segment
 #             before returning an @see "AbstractCBS".
 #   }
+#
+#   All of the above methods are implemented for @see "CBS" and 
+#   @see "PairedPSCBS" objects.
 # }
 # 
 # @author

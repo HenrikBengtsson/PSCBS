@@ -214,6 +214,7 @@
 \alias{writeLocusData}
 \alias{writeLocusData.CBS}
 \alias{writeSegments}
+\alias{extractRegions.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -42,6 +42,9 @@
              and recalculating the statistics for the merged segment
              before returning an \code{\link{AbstractCBS}}.
    }
+
+   All of the above methods are implemented for \code{\link{CBS}} and
+   \code{\link{PairedPSCBS}} objects.
  }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
