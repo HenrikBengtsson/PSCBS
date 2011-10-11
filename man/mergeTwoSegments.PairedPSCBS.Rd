@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PairedPSCBS.EXTS3.R
+%  PairedPSCBS.RESTRUCT.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,8 +36,7 @@
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \seealso{
-   To drop regions (a connected set of segments)
-   see \code{\link[PSCBS:dropByRegions.PairedPSCBS]{*dropByRegions}()}.
+   To drop regions (a connected set of segments) see \code{dropRegions()}.
    For more information see \code{\link{PairedPSCBS}}.
  }
 \keyword{internal}

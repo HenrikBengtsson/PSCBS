@@ -27,7 +27,7 @@
 }
 
 \value{
- Returns a \code{\link[base]{numeric}} \code{\link[base]{vector}} of length \code{\link[PSCBS:nbrOfLoci.CBS]{*nbrOfLoci}()}.
+ Returns a \code{\link[base]{numeric}} \code{\link[base]{vector}} of length \code{nbrOfLoci()}.
 }
 
 \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

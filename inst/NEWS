@@ -2,8 +2,18 @@
 Package: PSCBS
 ==============
 
-Version: 0.13.5 [2011-10-08]
-o Added updateMeans() and mergeTwoSegments() for CBS.
+Version: 0.14.0 [2011-10-10]
+o CLEANUP: Harmonization of several method names.
+o CLEANUP: Internal restructuring of the source code files.
+
+
+Version: 0.13.5 [2011-10-10]
+o Added dropChangePoint() for AbstractCBS, which is just a
+  "name wrapper" for mergeTwoSegments().
+o Added dropRegion() and dropRegions() for AbstractPSCBS, where
+  the former is a wrapper for the latter dropRegions().
+o Added updateMeans() and mergeTwoSegments() for CBS in addition
+  already available PairedCBS versions.
 o Relabelled column 'id' to 'sampleName' returned by getSegments().
 o ROBUSTNESS: Now using getSegments() everywhere possible.
 o BUG FIX: For so called "splitter" rows, not all columns returned

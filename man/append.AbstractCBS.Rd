@@ -1,10 +1,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  AbstractCBS.R
+%  AbstractCBS.RESTRUCT.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
  \name{append.AbstractCBS}
 \alias{append.AbstractCBS}
@@ -16,7 +17,8 @@
  \title{Appends one segmentation result to another}
 
  \description{
-   Appends one segmentation result to another.
+   Appends one segmentation result to another,
+   where both holds segmentation results \emph{of the same sample}.
  }
 
  \usage{\method{append}{AbstractCBS}(...)}

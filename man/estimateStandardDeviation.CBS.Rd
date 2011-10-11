@@ -29,7 +29,7 @@
  \item{estimator}{A \code{\link[base]{character}} string or a \code{\link[base]{function}} specifying the
    internal estimator.}
  \item{na.rm}{If \code{\link[base:logical]{TRUE}}, missing values are dropped, otherwise not.}
- \item{weights}{An optional \code{\link[base]{double}} \code{\link[base]{vector}} of \code{\link[PSCBS:nbrOfLoci.CBS]{*nbrOfLoci}()}
+ \item{weights}{An optional \code{\link[base]{double}} \code{\link[base]{vector}} of \code{nbrOfLoci()}
    non-negative weights.}
  \item{...}{Not used.}
 }

@@ -199,7 +199,7 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract those segments
   verbose && enter(verbose, "Extracting identified segments");
-  fitT <- extractByRegions(this, idxs);
+  fitT <- extractRegions(this, idxs);
   verbose && exit(verbose);
 
   # Get the tumor BAFs for the heterozygous SNPs
@@ -291,7 +291,7 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract those segments
   verbose && enter(verbose, "Extracting identified segments");
-  fitT <- extractByRegions(this, idxs);
+  fitT <- extractRegions(this, idxs);
   verbose && exit(verbose);
 
   # Get the tumor DHs for the heterozygous SNPs
@@ -395,7 +395,7 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
 
   # Extract those segments
   verbose && enter(verbose, "Extracting identified segments");
-  fitT <- extractByRegions(this, idxs);
+  fitT <- extractRegions(this, idxs);
   verbose && exit(verbose);
 
   verbose && exit(verbose);
@@ -556,7 +556,7 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   # Extract the locus-level estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the regions of interest
-  fitT <- extractByRegions(fit, idxs);
+  fitT <- extractRegions(fit, idxs);
 
   # Extract the data
   data <- fitT$data;

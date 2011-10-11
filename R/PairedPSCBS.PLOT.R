@@ -705,7 +705,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(chromosomes)) {
     verbose && enter(verbose, "Plotting a subset of the chromosomes");
-    fit <- extractByChromosomes(fit, chromosomes=chromosomes, verbose=verbose);
+    fit <- extractChromosomes(fit, chromosomes=chromosomes, verbose=verbose);
     verbose && exit(verbose);
   }
 

@@ -47,28 +47,14 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.CBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{as} \tab  -\cr
- \tab \code{drawCentromeres} \tab  -\cr
- \tab \code{drawLevels} \tab  -\cr
  \tab \code{\link[PSCBS:estimateStandardDeviation.CBS]{estimateStandardDeviation}} \tab Estimates the whole-genome standard deviation of the signals.\cr
- \tab \code{extractByChromosomes} \tab  -\cr
- \tab \code{getFractionOfGenomeAltered} \tab  -\cr
- \tab \code{getFractionOfGenomeGained} \tab  -\cr
- \tab \code{\link[PSCBS:getFractionOfGenomeLost.CBS]{getFractionOfGenomeLost}} \tab Calculates the fraction of the genome lost, gained, or aberrant either way.\cr
- \tab \code{highlightCalls} \tab  -\cr
- \tab \code{highlightLocusCalls} \tab  -\cr
- \tab \code{isWholeChromosomeGained} \tab  -\cr
- \tab \code{isWholeChromosomeLost} \tab  -\cr
- \tab \code{nbrOfAmplifications} \tab  -\cr
- \tab \code{nbrOfGains} \tab  -\cr
- \tab \code{nbrOfLosses} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
- \tab \code{writeLocusData} \tab  -\cr
- \tab \code{writeSegments} \tab  -\cr
+ \tab \code{\link[PSCBS:writeSegments.CBS]{writeSegments}} \tab Writes the table of segments to file.\cr
 }
 
 
  \bold{Methods inherited from AbstractCBS}:\cr
-all.equal, append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getLocusData, getSampleName, getSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
+all.equal, append, as.data.frame, dropChangePoint, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractRegions, getChromosomes, getLocusData, getSampleName, getSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within

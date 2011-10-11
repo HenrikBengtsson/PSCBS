@@ -97,7 +97,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1, ...) {
 
 
 
-setMethodS3("extractByChromosomes", "CBS", function(x, chromosomes, ...) {
+setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
   # To please R CMD check
   this <- x;
 
@@ -166,11 +166,11 @@ setMethodS3("extractByChromosomes", "CBS", function(x, chromosomes, ...) {
   }
 
   res;
-})
+}, protected=TRUE)
 
 
 setMethodS3("subset", "CBS", function(x, chromlist=NULL, ...) {
-  extractByChromosomes(x, chromosomes=chromlist, ...);
+  extractChromosomes(x, chromosomes=chromlist, ...);
 }, private=TRUE)
 
 
@@ -192,7 +192,7 @@ setMethodS3("subset", "CBS", function(x, chromlist=NULL, ...) {
 # }
 #
 # \value{
-#  Returns a @numeric @vector of length @seemethod "nbrOfLoci".
+#  Returns a @numeric @vector of length \code{nbrOfLoci()}.
 # }
 #
 # @author
@@ -254,7 +254,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
 #  \item{estimator}{A @character string or a @function specifying the
 #    internal estimator.}
 #  \item{na.rm}{If @TRUE, missing values are dropped, otherwise not.}
-#  \item{weights}{An optional @double @vector of @seemethod "nbrOfLoci" 
+#  \item{weights}{An optional @double @vector of \code{nbrOfLoci()}
 #    non-negative weights.}
 #  \item{...}{Not used.}
 # }
@@ -304,7 +304,7 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
 
   # Subset by chromosomes?
   if (!is.null(chromosomes)) {
-    fit <- extractByChromosomes(fit, chromosomes=chromosomes);
+    fit <- extractChromosomes(fit, chromosomes=chromosomes);
   }
 
   nbrOfLoci <- nbrOfLoci(fit);

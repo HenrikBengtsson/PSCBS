@@ -45,7 +45,6 @@ extends list\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.AbstractCBS]{append}} \tab Appends one segmentation result to another.\cr
- \tab \code{\link[PSCBS:as.data.frame.AbstractCBS]{as.data.frame}} \tab Gets the table of segments.\cr
  \tab \code{\link[PSCBS:getChromosomes.AbstractCBS]{getChromosomes}} \tab Gets the set of chromosomes.\cr
  \tab \code{\link[PSCBS:getLocusData.AbstractCBS]{getLocusData}} \tab Gets the locus-level data.\cr
  \tab \code{\link[PSCBS:getSegments.AbstractCBS]{getSegments}} \tab Gets the segments.\cr

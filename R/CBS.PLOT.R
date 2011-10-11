@@ -133,7 +133,7 @@ setMethodS3("drawLevels", "CBS", function(fit, col="purple", xScale=1e-6, ...) {
   dummy <- list(output=segs);
   class(dummy) <- "DNAcopy";
   drawLevels(dummy, col=col, xScale=xScale, ...);
-})
+}, protected=TRUE)
 
 
 setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red", gain="green", "amplification"="blue"), lwd=3, meanCol="purple", ..., xScale=1e-6, byIndex=FALSE, verbose=FALSE) {
@@ -208,7 +208,7 @@ setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red"
       }
     } # for (tt ...)
   } # for (ss ...)
-}) # highlightCalls()
+}, protected=TRUE) # highlightCalls()
 
 
 
@@ -266,7 +266,7 @@ setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25
     col <- callCols[type];
     points(xs, ys, pch=pch, col=col, ...);
   } # for (tt ...)
-}) # highlightLocusCalls()
+}, protected=TRUE) # highlightLocusCalls()
 
 
 
@@ -386,7 +386,7 @@ str(segsT);
   verbose && exit(verbose);
 
   fitT;
-}, private=TRUE) # tileChromosomes()
+}, protected=TRUE) # tileChromosomes()
 
 
 
@@ -522,7 +522,7 @@ setMethodS3("drawChromosomes", "CBS", function(x, lty=3, xScale=1e-6, ..., byInd
   side <- rep(c(1,3), length.out=length(chrLabels));
   mtext(text=chrLabels, side=side, at=mids, line=0.1, cex=0.7*par("cex"));
   abline(v=vs, lty=lty);
-}, private=TRUE) # drawChromosomes()
+}, protected=TRUE) # drawChromosomes()
 
 
 
@@ -564,7 +564,7 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", 
   }
 
   invisible(ats);
-}) # drawCentromeres()
+}, protected=TRUE) # drawCentromeres()
 
 
 setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.95, callCols=c("loss"="red", "gain"="green"),   xScale=1e-6, ...) {

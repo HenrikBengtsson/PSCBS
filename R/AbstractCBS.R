@@ -340,12 +340,10 @@ setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ...) {
 #   Utilizes @seemethod "getSegments".
 #   @seeclass.
 # }
-#
-# @keyword internal
 #*/###########################################################################  
 setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
   getSegments(x, ...);
-})
+}, protected=TRUE)
 
 
 
@@ -420,98 +418,13 @@ setMethodS3("nbrOfChromosomes", "AbstractCBS", function(this, ...) {
 })
 
 
-
-setMethodS3("extractByChromosome", "AbstractCBS", function(x, chromosome, ...) {
-  # To please R CMD check
-  this <- x;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Argument 'chromosome':
-  chromosome <- Arguments$getInteger(chromosome, disallow=c("NaN", "Inf"));
-
-  extractByChromosomes(this, chromosomes=chromosome, ...);
-}, protected=TRUE)
-
-
-
-setMethodS3("extractByChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
-
-
-
-
-###########################################################################/**
-# @RdocMethod append
-#
-# @title "Appends one segmentation result to another"
-#
-# \description{
-#   @get "title".
-# }
-# 
-# @synopsis
-#
-# \arguments{
-#  \item{x, other}{The two @see "AbstractCBS" objects to be combined.}
-#  \item{addSplit}{If @TRUE, a "divider" is added between chromosomes.}
-#  \item{...}{Not used.}
-# }
-#
-# \value{
-#   Returns a object of the same class as argument \code{x}.
-# }
-#
-# @author
-#
-# \seealso{
-#   @seeclass
-# }
-#*/###########################################################################  
-setMethodS3("append", "AbstractCBS", abstract=TRUE);
-
-
-
-###########################################################################/**
-# @RdocMethod plotTracks
-#
-# @title "Plots the segmentation result along the genome"
-#
-# \description{
-#   @get "title".
-# }
-# 
-# @synopsis
-#
-# \arguments{
-#  \item{...}{...}
-# }
-#
-# \value{
-#   Returns nothing.
-# }
-#
-# @author
-#
-# \seealso{
-#   @seeclass
-# }
-#*/###########################################################################  
-setMethodS3("plotTracks", "AbstractCBS", abstract=TRUE);
-
-
-setMethodS3("tileChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
-
 setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
-
-setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
 ############################################################################
 # HISTORY:
 # 2011-10-08
 # o Added abstract updateMeans() for AbstractCBS.
-# o Added abstract mergeTwoSegments() for AbstractCBS.
 # o Added all.equal() for AbstractCBS.
 # o Added nbrOfChangePoints() for AbstractCBS.
 # 2011-10-02

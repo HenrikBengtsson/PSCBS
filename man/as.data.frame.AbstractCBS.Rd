@@ -36,7 +36,5 @@
    Utilizes \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.
    For more information see \code{\link{AbstractCBS}}..
  }
-
-
 \keyword{internal}
 \keyword{methods}

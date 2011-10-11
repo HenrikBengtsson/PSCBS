@@ -46,14 +46,11 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.PSCBS]{append}} \tab Appends one segmentation result to another.\cr
- \tab \code{as.data.frame} \tab  -\cr
- \tab \code{extractByChromosomes} \tab  -\cr
- \tab \code{getLocusData} \tab  -\cr
 }
 
 
  \bold{Methods inherited from AbstractCBS}:\cr
-all.equal, append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getLocusData, getSampleName, getSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
+all.equal, append, as.data.frame, dropChangePoint, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractRegions, getChromosomes, getLocusData, getSampleName, getSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within

@@ -1,97 +1,73 @@
- append append.default arrowsC1C2 arrowsC1C2.PairedPSCBS
- arrowsDeltaC1C2 arrowsDeltaC1C2.PairedPSCBS 
- bootstrapCIs bootstrapCIs.PairedPSCBS bootstrapDHByRegion
- bootstrapDHByRegion.PairedPSCBS callABandHighAI
- callABandHighAI.PairedPSCBS 
- callExtremeAllelicImbalance
- callExtremeAllelicImbalance.PairedPSCBS 
- drawLevels drawLevels.DNAcopy
- drawLevels.PairedPSCBS extractByChromosome extractByChromosome.PSCBS
- extractC1C2 extractDeltaC1C2
- extractDeltaC1C2.PairedPSCBS extractMinorMajorCNs
- extractTCNAndDHs
- getChromosomes
- linesC1C2 linesC1C2.PairedPSCBS linesDeltaC1C2
- linesDeltaC1C2.PairedPSCBS nbrOfChromosomes
- nbrOfSegments plot.PairedPSCBS plotC1C2
- plotC1C2.PairedPSCBS plotDeltaC1C2 plotDeltaC1C2.PairedPSCBS
- pointsC1C2 pointsC1C2.PairedPSCBS pointsDeltaC1C2
- pointsDeltaC1C2.PairedPSCBS postsegmentTCN postsegmentTCN.PairedPSCBS
- print.PairedPSCBS subsetByDhSegments subsetByDhSegments.PairedPSCBS
- plotTracksManyChromosomes plotTracksManyChromosomes.PairedPSCBS
- tileChromosomes tileChromosomes.PairedPSCBS
+ all.equal.AbstractCBS all.equal.CBS append append.default
+ applyByRegion applyByRegion.PairedPSCBS arrowsC1C2
+ arrowsC1C2.PairedPSCBS arrowsDeltaC1C2 arrowsDeltaC1C2.PairedPSCBS
+ as.CBS as.DNAcopy as.character.CBS as.data.frame.PSCBS bootstrapCIs
+ bootstrapCIs.PairedPSCBS bootstrapDHByRegion
+ bootstrapDHByRegion.PairedPSCBS bootstrapTCNandDHByRegion
+ bootstrapTCNandDHByRegion.PairedPSCBS callAB callABandHighAI
+ callABandHighAI.PairedPSCBS callABandLowC1 callABandLowC1.PairedPSCBS
+ callAllelicBalance callAllelicBalance.default callAllelicBalanceByDH
+ callAmplifications callArms callArms.CBS
  callExtremeAllelicImbalanceByDH
- callExtremeAllelicImbalanceByDH.PairedPSCBS
- drawLevels.CBS getChromosomes.CBS
-  nbrOfChromosomes.CBS plot.CBS plotTracksManyChromosomes.CBS
-  tileChromosomes.CBS
-  bootstrapTCNandDHByRegion bootstrapTCNandDHByRegion.PairedPSCBS
-  joinSegments joinSegments.CBS
-drawConfidenceBands drawConfidenceBands.PairedPSCBS
- extractByChromosomes extractByChromosomes.PSCBS
- dropSegmentationOutliers dropSegmentationOutliers.default
- callABandLowC1 callABandLowC1.PairedPSCBS callLowC1ByC1
- callLowC1ByC1.PairedPSCBS
-  estimateStdDevForHeterozygousBAF
-  estimateStdDevForHeterozygousBAF.PairedPSCBS extractByRegion
-  extractByRegion.PairedPSCBS extractByRegions
-  extractByRegions.PairedPSCBS
- mergeTwoSegments 
- updateMeans updateMeans.PairedPSCBS
- dropByRegions 
- extractLocusLevelC1C2 extractLocusLevelC1C2.PairedPSCBS
- extractLocusLevelTCN extractLocusLevelTCN.PairedPSCBS
- plotTracks2 plotTracks2.PairedPSCBS
-estimateMeanForDH estimateMeanForDH.PairedPSCBS
-applyByRegion applyByRegion.PairedPSCBS
-  estimateHighDHQuantileAtAB estimateHighDHQuantileAtAB.PairedPSCBS
-  estimateKappa estimateKappaByC1Density
-  callAllelicBalance callAllelicBalanceByDH
-estimateDeltaAB
-estimateDeltaABBySmallDH
-estimateDeltaLOH estimateDeltaLOHByMinC1ForNonAB
- callAB callAllelicBalance.default
-callLOH
-  getChromosomes.DNAcopy getSampleNames getSampleNames.CBS
-  getSampleNames.DNAcopy nbrOfLoci nbrOfLoci.CBS nbrOfLoci.DNAcopy
-  nbrOfSamples nbrOfSamples.DNAcopy nbrOfSegments.DNAcopy
-  estimateStandardDeviation estimateStandardDeviation.DNAcopy
-  extractSegmentMeansByLocus extractSegmentMeansByLocus.DNAcopy
-  as.CBS as.DNAcopy as.character.CBS extractByChromosomes.CBS
-  getLocusData getLocusData.CBS getSegments getSegments.CBS
-  nbrOfSegments.CBS print.CBS subset.CBS
-callAmplifications callGainsAndLosses callOutliers
-  getSampleName getSampleName.CBS sampleName sampleName.CBS
-  sampleName<- sampleName<-.CBS
- extractCallsByLocus extractCallsByLocus.CBS
- getSignalType getSignalType.CBS signalType signalType.CBS
- signalType<- signalType<-.CBS
-  writeLocusData writeLocusData.CBS writeSegments writeSegments.CBS
- getCallStatistics getChromosomeRanges
- getChromosomeRanges.CBS
-  getFGA getFGG getFGL
-  getFractionOfGenomeAltered
-  getFractionOfGenomeGained
-  getFractionOfGenomeLost
-  isWholeChromosomeGained isWholeChromosomeGained.CBS
-  isWholeChromosomeLost isWholeChromosomeLost.CBS
-  nbrOfAmplifications nbrOfAmplifications.CBS nbrOfGains nbrOfGains.CBS
-  nbrOfLosses nbrOfLosses.CBS
-  drawCentromeres drawCentromeres.CBS getChromosomeOffsets
-  getChromosomeOffsets.CBS highlightCalls highlightCalls.CBS
- highlightLocusCalls highlightLocusCalls.CBS
- as.data.frame.PSCBS
- extractByChromosome.AbstractCBS extractByChromosomes.AbstractCBS
- print.AbstractCBS
-setSampleName
-  setLocusData setLocusData.AbstractCBS setSegments
-  setSegments.AbstractCBS
-getLocusData.PSCBS tileChromosomes.AbstractCBS
-highlightArmCalls highlightArmCalls.CBS
- callArms callArms.CBS getCallStatisticsByArms
- getCallStatisticsByArms.CBS
-drawChromosomes drawChromosomes.CBS
- all.equal.AbstractCBS all.equal.CBS mergeNonCalledSegments
- mergeNonCalledSegments.CBS mergeTwoSegments.AbstractCBS
- nbrOfChangePoints
-mergeTwoSegments.CBS updateMeans.AbstractCBS updateMeans.CBS
+ callExtremeAllelicImbalanceByDH.PairedPSCBS callGainsAndLosses
+ callLOH callLowC1ByC1 callLowC1ByC1.PairedPSCBS callOutliers
+ drawCentromeres drawCentromeres.CBS drawChromosomes
+ drawChromosomes.CBS drawConfidenceBands
+ drawConfidenceBands.PairedPSCBS drawLevels drawLevels.CBS
+ drawLevels.DNAcopy drawLevels.PairedPSCBS dropByRegion
+ dropByRegion.AbstractCBS dropByRegions dropByRegions.AbstractCBS
+ dropChangePoint dropRegion dropRegions dropSegmentationOutliers
+ dropSegmentationOutliers.default estimateDeltaAB
+ estimateDeltaABBySmallDH estimateDeltaLOH
+ estimateDeltaLOHByMinC1ForNonAB estimateHighDHQuantileAtAB
+ estimateHighDHQuantileAtAB.PairedPSCBS estimateKappa
+ estimateKappaByC1Density estimateMeanForDH
+ estimateMeanForDH.PairedPSCBS estimateStandardDeviation
+ estimateStandardDeviation.DNAcopy estimateStdDevForHeterozygousBAF
+ estimateStdDevForHeterozygousBAF.PairedPSCBS extractByChromosome
+ extractByChromosome.AbstractCBS extractByChromosomes
+ extractByChromosomes.AbstractCBS extractByRegion
+ extractByRegion.AbstractCBS extractByRegions
+ extractByRegions.AbstractCBS extractC1C2 extractCallsByLocus
+ extractCallsByLocus.CBS extractChromosome
+ extractChromosome.AbstractCBS extractChromosomes
+ extractChromosomes.AbstractCBS extractChromosomes.CBS
+ extractChromosomes.PSCBS extractDeltaC1C2
+ extractDeltaC1C2.PairedPSCBS extractLocusLevelC1C2
+ extractLocusLevelC1C2.PairedPSCBS extractLocusLevelTCN
+ extractLocusLevelTCN.PairedPSCBS extractMinorMajorCNs extractRegion
+ extractRegion.AbstractCBS extractRegions extractRegions.AbstractCBS
+ extractRegions.PairedPSCBS extractSegmentMeansByLocus
+ extractSegmentMeansByLocus.DNAcopy extractTCNAndDHs getCallStatistics
+ getCallStatisticsByArms getCallStatisticsByArms.CBS
+ getChromosomeOffsets getChromosomeOffsets.CBS getChromosomeRanges
+ getChromosomeRanges.CBS getChromosomes getChromosomes.DNAcopy getFGA
+ getFGG getFGL getFractionOfGenomeAltered getFractionOfGenomeGained
+ getFractionOfGenomeLost getLocusData getLocusData.CBS
+ getLocusData.PSCBS getSampleName getSampleNames
+ getSampleNames.DNAcopy getSegments getSegments.CBS getSignalType
+ getSignalType.CBS highlightArmCalls highlightArmCalls.CBS
+ highlightCalls highlightCalls.CBS highlightLocusCalls
+ highlightLocusCalls.CBS isWholeChromosomeGained
+ isWholeChromosomeGained.CBS isWholeChromosomeLost
+ isWholeChromosomeLost.CBS joinSegments joinSegments.CBS linesC1C2
+ linesC1C2.PairedPSCBS linesDeltaC1C2 linesDeltaC1C2.PairedPSCBS
+ mergeNonCalledSegments mergeTwoSegments mergeTwoSegments.CBS
+ nbrOfAmplifications nbrOfAmplifications.CBS nbrOfChangePoints
+ nbrOfChromosomes nbrOfGains nbrOfGains.CBS nbrOfLoci
+ nbrOfLoci.DNAcopy nbrOfLosses nbrOfLosses.CBS nbrOfSamples
+ nbrOfSamples.DNAcopy nbrOfSegments nbrOfSegments.DNAcopy plot.CBS
+ plot.PairedPSCBS plotC1C2 plotC1C2.PairedPSCBS plotDeltaC1C2
+ plotDeltaC1C2.PairedPSCBS plotTracks2 plotTracks2.PairedPSCBS
+ plotTracksManyChromosomes plotTracksManyChromosomes.CBS
+ plotTracksManyChromosomes.PairedPSCBS pointsC1C2
+ pointsC1C2.PairedPSCBS pointsDeltaC1C2 pointsDeltaC1C2.PairedPSCBS
+ postsegmentTCN postsegmentTCN.PairedPSCBS print.AbstractCBS
+ sampleName sampleName<- setLocusData setLocusData.AbstractCBS
+ setSampleName setSegments setSegments.AbstractCBS signalType
+ signalType.CBS signalType<- signalType<-.CBS subset.CBS
+ tileChromosomes tileChromosomes.AbstractCBS tileChromosomes.CBS
+ tileChromosomes.PairedPSCBS updateMeans updateMeans.AbstractCBS
+ updateMeans.CBS updateMeans.PairedPSCBS writeLocusData
+ writeLocusData.CBS
+ writeSegments

@@ -800,16 +800,16 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
 setMethodS3("getFractionOfGenomeLost", "CBS", function(fit, ...) {
   stats <- getCallStatistics(fit, ...);
   mean(stats$lossFraction, na.rm=TRUE);
-})
+}, protected=TRUE)
 
 setMethodS3("getFractionOfGenomeGained", "CBS", function(fit, ...) {
   stats <- getCallStatistics(fit, ...);
   mean(stats$gainFraction, na.rm=TRUE);
-})
+}, protected=TRUE)
 
 setMethodS3("getFractionOfGenomeAltered", "CBS", function(fit, ...) {
   getFractionOfGenomeLost(fit, ...) + getFractionOfGenomeGained(fit, ...);
-})
+}, protected=TRUE)
 
 # Shortcuts
 setMethodS3("getFGL", "CBS", function(fit, ...) {
@@ -842,7 +842,7 @@ setMethodS3("isWholeChromosomeGained", "CBS", function(fit, minFraction=0.99, ..
   attr(res, "minFraction") <- minFraction;
 
   res;
-}) # isWholeChromosomeGained()
+}, protected=TRUE) # isWholeChromosomeGained()
 
 
 setMethodS3("isWholeChromosomeLost", "CBS", function(fit, minFraction=0.99, ...) {
@@ -860,7 +860,7 @@ setMethodS3("isWholeChromosomeLost", "CBS", function(fit, minFraction=0.99, ...)
   attr(res, "minFraction") <- minFraction;
 
   res;
-}) # isWholeChromosomeLost()
+}, protected=TRUE) # isWholeChromosomeLost()
 
 
 setMethodS3("nbrOfLosses", "CBS", function(fit, ...) {
@@ -870,7 +870,7 @@ setMethodS3("nbrOfLosses", "CBS", function(fit, ...) {
     return(as.integer(NA));
   }
   sum(calls, na.rm=TRUE);
-})
+}, protected=TRUE)
 
 
 setMethodS3("nbrOfGains", "CBS", function(fit, ...) {
@@ -880,7 +880,7 @@ setMethodS3("nbrOfGains", "CBS", function(fit, ...) {
     return(as.integer(NA));
   }
   sum(calls, na.rm=TRUE);
-})
+}, protected=TRUE)
 
 
 setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
@@ -890,7 +890,7 @@ setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
     return(as.integer(NA));
   }
   sum(calls, na.rm=TRUE);
-})
+}, protected=TRUE)
 
 
 setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
@@ -1062,7 +1062,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", cc, chromosome, length(chromosomes)));
 
 
-    fitCC <- extractByChromosome(fit, chromosome=chromosome);
+    fitCC <- extractChromosome(fit, chromosome=chromosome);
     n0 <- nbrOfSegments(fitCC);
 
     # Until no more neighboring non-called segments exists

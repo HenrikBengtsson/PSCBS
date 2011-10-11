@@ -57,10 +57,10 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
  \bold{Methods inherited from PSCBS}:\cr
-append, as.data.frame, extractByChromosomes, getLocusData
+append, as.data.frame, extractChromosomes, getLocusData
 
  \bold{Methods inherited from AbstractCBS}:\cr
-all.equal, append, as.data.frame, extractByChromosome, extractByChromosomes, getChromosomes, getLocusData, getSampleName, getSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
+all.equal, append, as.data.frame, dropChangePoint, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractRegions, getChromosomes, getLocusData, getSampleName, getSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
