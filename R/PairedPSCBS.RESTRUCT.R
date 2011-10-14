@@ -1,11 +1,11 @@
-setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbose=FALSE) {
+setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=FALSE) {
   fit <- this;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  updateSegRows <- function(segRows, regions) {
-    segRows <- segRows[regions,,drop=FALSE];
+  updateSegRows <- function(segRows, idxs) {
+    segRows <- segRows[idxs,,drop=FALSE];
     ns <- segRows[,2] - segRows[,1] + 1L;
     from <- c(1L, cumsum(ns)[-length(ns)]);
     to <- from + (ns - 1L);
@@ -18,8 +18,8 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Argument 'regions':
-  regions <- Arguments$getIndices(regions, max=nbrOfSegments(fit));
+  # Argument 'idxs':
+  idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit));
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -29,10 +29,10 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   }
 
  
-  verbose && enter(verbose, "Extracting subset by regions");
+  verbose && enter(verbose, "Extracting subset of segments");
 
-  verbose && cat(verbose, "Number of regions: ", length(regions));
-  verbose && str(verbose, regions);
+  verbose && cat(verbose, "Number of segments: ", length(idxs));
+  verbose && str(verbose, idxs);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -57,7 +57,7 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   # Subset segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update table of segments");
-  segsT <- segs[regions,,drop=FALSE];
+  segsT <- segs[idxs,,drop=FALSE];
   verbose && str(verbose, segsT);
   verbose && exit(verbose);
 
@@ -68,7 +68,7 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   verbose && enter(verbose, "Update locus data");
 
   segRows <- tcnSegRows;
-  segRows <- segRows[regions,,drop=FALSE];
+  segRows <- segRows[idxs,,drop=FALSE];
   from <- segRows[[1]];
   to <- segRows[[2]];
   ok <- (!is.na(from) & !is.na(to));
@@ -93,20 +93,20 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update 'segRows'");
 
-  segRows <- updateSegRows(tcnSegRows, regions=regions);
-  d <- tcnSegRows[regions,] - segRows;
+  segRows <- updateSegRows(tcnSegRows, idxs=idxs);
+  d <- tcnSegRows[idxs,] - segRows;
   # Sanity check
   stopifnot(identical(d[,1], d[,2]));
   d <- d[,1];
   verbose && cat(verbose, "Row deltas:");
   verbose && str(verbose, d);
 
-  tcnSegRows <- tcnSegRows[regions,,drop=FALSE] - d;
+  tcnSegRows <- tcnSegRows[idxs,,drop=FALSE] - d;
   verbose && str(verbose, tcnSegRows);
   # Sanity checks
   stopifnot(max(tcnSegRows, na.rm=TRUE) <= nrow(dataT));
 
-  dhSegRows <- dhSegRows[regions,,drop=FALSE] - d;
+  dhSegRows <- dhSegRows[idxs,,drop=FALSE] - d;
   verbose && str(verbose, dhSegRows);
   # Sanity checks
   stopifnot(max(dhSegRows, na.rm=TRUE) <= nrow(dataT));
@@ -124,7 +124,8 @@ setMethodS3("extractRegions", "PairedPSCBS", function(this, regions, ..., verbos
   verbose && exit(verbose);
 
   res;
-}, protected=TRUE) # extractRegions()
+}, protected=TRUE) # extractSegments()
+
 
 
 ###########################################################################/**

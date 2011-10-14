@@ -37,7 +37,7 @@
  extractLocusLevelC1C2.PairedPSCBS extractLocusLevelTCN
  extractLocusLevelTCN.PairedPSCBS extractMinorMajorCNs extractRegion
  extractRegion.AbstractCBS extractRegions extractRegions.AbstractCBS
- extractRegions.PairedPSCBS extractSegmentMeansByLocus
+ extractSegmentMeansByLocus
  extractSegmentMeansByLocus.DNAcopy extractTCNAndDHs getCallStatistics
  getCallStatisticsByArms getCallStatisticsByArms.CBS
  getChromosomeOffsets getChromosomeOffsets.CBS getChromosomeRanges
@@ -71,4 +71,6 @@
  updateMeans.CBS updateMeans.PairedPSCBS writeLocusData
  writeLocusData.CBS
  writeSegments
-extractRegions.CBS
+extractSegments.AbstractCBS extractSegment.AbstractCBS
+ extractSegment extractSegments extractSegments.CBS
+ extractSegments.PairedPSCBS

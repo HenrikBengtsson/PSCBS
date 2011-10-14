@@ -113,8 +113,8 @@
 pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS")
 data <- R.utils::loadObject(pathname)
 
-# Order
-o <- order(data$position)
+# Order by chromosome and position
+o <- order(data$chromosome, data$position)
 data <- data[o,]
 str(data)
 R.oo::attachLocally(data)

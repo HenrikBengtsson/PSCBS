@@ -25,6 +25,10 @@
            \code{\link[PSCBS:extractChromosome.AbstractCBS]{*extractChromosome}()}
            - Extracts an \code{\link{AbstractCBS}} with the specified chromosomes.
 
+     \item \code{\link[PSCBS:extractSegments.AbstractCBS]{*extractSegments}()} /
+           \code{\link[PSCBS:extractSegment.AbstractCBS]{*extractSegment}()}
+           - Extracts an \code{\link{AbstractCBS}} with the specified segments.
+
      \item \code{\link[PSCBS:extractRegions.AbstractCBS]{*extractRegions}()} /
            \code{\link[PSCBS:extractRegion.AbstractCBS]{*extractRegion}()}
            - Extracts an \code{\link{AbstractCBS}} with the specified regions

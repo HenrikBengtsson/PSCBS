@@ -111,7 +111,6 @@
 \alias{extractRegion.AbstractCBS}
 \alias{extractRegions}
 \alias{extractRegions.AbstractCBS}
-\alias{extractRegions.PairedPSCBS}
 \alias{extractSegmentMeansByLocus}
 \alias{extractSegmentMeansByLocus.DNAcopy}
 \alias{extractTCNAndDHs}
@@ -214,7 +213,12 @@
 \alias{writeLocusData}
 \alias{writeLocusData.CBS}
 \alias{writeSegments}
-\alias{extractRegions.CBS}
+\alias{extractSegments.AbstractCBS}
+\alias{extractSegment.AbstractCBS}
+\alias{extractSegment}
+\alias{extractSegments}
+\alias{extractSegments.CBS}
+\alias{extractSegments.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

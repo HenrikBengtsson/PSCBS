@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.14.1 [2011-10-14]
+o Added implementation of extractRegions() for AbstractCBS, which
+  utilizes extractSegments().
+o Added abstract extractSegments() and extractSegment() for AbstractCBS.
+
+
 Version: 0.14.0 [2011-10-10]
 o CLEANUP: Harmonization of several method names.
 o CLEANUP: Internal restructuring of the source code files.

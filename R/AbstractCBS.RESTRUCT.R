@@ -15,6 +15,10 @@
 #           @seemethod "extractChromosome"
 #           - Extracts an @see "AbstractCBS" with the specified chromosomes.
 #
+#     \item @seemethod "extractSegments" /
+#           @seemethod "extractSegment"
+#           - Extracts an @see "AbstractCBS" with the specified segments.
+#
 #     \item @seemethod "extractRegions" /
 #           @seemethod "extractRegion"
 #           - Extracts an @see "AbstractCBS" with the specified regions
@@ -95,8 +99,64 @@ setMethodS3("extractChromosome", "AbstractCBS", function(x, chromosome, ...) {
 
 
 
+setMethodS3("extractSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
-setMethodS3("extractRegions", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("extractSegment", "AbstractCBS", function(this, idx, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'region':
+  idx <- Arguments$getIndex(idx, max=nbrOfSegments(this));
+
+  extractSegment(this, idxs=idx, ...);
+}, private=TRUE) # extractSegment()
+
+
+setMethodS3("extractRegions", "AbstractCBS", function(this, regions, H=1, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  nbrOfSegments <- nbrOfSegments(this);
+
+  # Argument 'regions':
+  regions <- Arguments$getIndices(regions, max=nbrOfSegments);
+
+  # Argument 'H':
+  H <- Arguments$getInteger(H, range=c(0,Inf));
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Extract regions of a certain length");
+
+  verbose && cat(verbose, "Left-most segments of regions to be extracted:");
+  verbose && str(verbose, regions);
+  verbose && cat(verbose, "Number of segments in each region: ", H);
+
+
+  # Identify segments to keep
+  Hs <- seq(length=H);
+  regions <- regions - 1L;
+  regions <- as.list(regions);
+  segments <- lapply(regions, FUN=function(region) region + Hs);
+  segments <- unlist(segments, use.names=FALSE);
+  segments <- sort(unique(segments));
+  verbose && cat(verbose, "Final set of segments to be extracted:");
+  verbose && str(verbose, segments);
+
+  res <- extractSegments(this, idxs=segments, ...);
+
+  verbose && exit(verbose);
+
+  res;
+}, protected=TRUE) # extractRegions()
+
+
 
 setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -292,6 +352,10 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-14
+# o Added implementation of extractRegions() for AbstractCBS, which
+#   utilizes extractSegments().
+# o Added abstract extractSegments() and extractSegment() for AbstractCBS.
 # 2011-10-10
 # o Added extractRegion()/dropRegion() and extractRegions()/dropRegions()
 #   for AbstractCBS, where former ones are wrappers for the latter ones.

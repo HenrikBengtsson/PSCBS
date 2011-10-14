@@ -82,14 +82,14 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 
 
 
-setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE) {
+setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   fit <- this;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  updateSegRows <- function(segRows, regions) {
-    segRows <- segRows[regions,,drop=FALSE];
+  updateSegRows <- function(segRows, idxs) {
+    segRows <- segRows[idxs,,drop=FALSE];
     ns <- segRows[,2] - segRows[,1] + 1L;
     from <- c(1L, cumsum(ns)[-length(ns)]);
     to <- from + (ns - 1L);
@@ -102,8 +102,8 @@ setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Argument 'regions':
-  regions <- Arguments$getIndices(regions, max=nbrOfSegments(fit));
+  # Argument 'idxs':
+  idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit));
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -113,10 +113,10 @@ setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE)
   }
 
  
-  verbose && enter(verbose, "Extracting subset by regions");
+  verbose && enter(verbose, "Extracting subset of segments");
 
-  verbose && cat(verbose, "Number of regions: ", length(regions));
-  verbose && str(verbose, regions);
+  verbose && cat(verbose, "Number of segments: ", length(idxs));
+  verbose && str(verbose, idxs);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -134,7 +134,7 @@ setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE)
   # Subset segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update table of segments");
-  segsT <- segs[regions,,drop=FALSE];
+  segsT <- segs[idxs,,drop=FALSE];
   verbose && str(verbose, segsT);
   verbose && exit(verbose);
 
@@ -144,7 +144,7 @@ setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update locus data");
 
-  segRows <- segRows[regions,,drop=FALSE];
+  segRows <- segRows[idxs,,drop=FALSE];
   from <- segRows[[1]];
   to <- segRows[[2]];
   ok <- (!is.na(from) & !is.na(to));
@@ -169,15 +169,15 @@ setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update 'segRows'");
 
-  segRows <- updateSegRows(segRows, regions=regions);
-  d <- segRows[regions,] - segRows;
+  segRows <- updateSegRows(segRows, idxs=idxs);
+  d <- segRows[idxs,] - segRows;
   # Sanity check
   stopifnot(identical(d[,1], d[,2]));
   d <- d[,1];
   verbose && cat(verbose, "Row deltas:");
   verbose && str(verbose, d);
 
-  segRows <- segRows[regions,,drop=FALSE] - d;
+  segRows <- segRows[idxs,,drop=FALSE] - d;
   verbose && str(verbose, segRows);
   # Sanity checks
   stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
@@ -194,7 +194,7 @@ setMethodS3("extractRegions", "CBS", function(this, regions, ..., verbose=FALSE)
   verbose && exit(verbose);
 
   res;
-}, protected=TRUE) # extractRegions() 
+}, protected=TRUE) # extractSegments() 
 
 
 
@@ -289,6 +289,7 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, verbose=FALSE, ...) 
 ############################################################################
 # HISTORY:
 # 2011-10-10
+# o Replaced extractRegions() with extractSegments() for CBS.
 # o Added extractRegions() for CBS.
 # 2011-10-08
 # o Relabelled column 'id' to 'sampleName' returned by getSegments().
