@@ -23,7 +23,7 @@
  \usage{\method{extractTCNAndDHs}{PairedPSCBS}(fit, ...)}
 
  \arguments{
-  \item{...}{Not used.}
+  \item{...}{Arguments passed to \code{getSegments()}.}
  }
 
  \value{

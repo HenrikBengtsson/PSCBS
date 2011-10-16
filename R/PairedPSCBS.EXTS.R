@@ -18,7 +18,7 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{...}{Not used.}
+#  \item{...}{Arguments passed to \code{getSegments()}.}
 # }
 #
 # \value{
@@ -33,7 +33,7 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 # }
 #*/###########################################################################  
 setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
-  segs <- getSegments(fit);
+  segs <- getSegments(fit, ...);
   stopifnot(!is.null(segs));
 
   data <- segs[,c("tcnMean", "dhMean", "tcnNbrOfLoci", "dhNbrOfLoci"), drop=FALSE];
@@ -90,6 +90,11 @@ setMethodS3("extractC1C2", "PairedPSCBS", function(...) {
   extractMinorMajorCNs(...);
 }, protected=TRUE)
 
+
+setMethodS3("extractCNs", "PairedPSCBS", function(fit, splitters=TRUE, ...) {
+  data <- extractC1C2(fit, splitters=splitters, ...);
+  data[,c("C1", "C2"), drop=FALSE];
+})
 
 
 setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
@@ -368,6 +373,10 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
 ############################################################################
 # HISTORY:
+# 2011-10-16
+# o Added extractCNs().
+# 2011-10-14
+# o Now extractTCNAndDHs() passes '...' to getSegments().
 # 2011-10-02
 # o CLEANUP: Dropped empty callSegments() for PairedPSCBS.
 # 2011-06-14

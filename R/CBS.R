@@ -49,14 +49,13 @@ setMethodS3("all.equal", "CBS", function(target, current, check.attributes=FALSE
   # splitters, unless append() is used.
   # TO DO: Fix segmentByCBS() /HB 2011-10-08
   segs <- getSegments(target);
-  isSplitter <- lapply(segs[-1], FUN=is.na);
-  isSplitter <- Reduce("&", isSplitter);
+
+  isSplitter <- isSegmentSplitter(target);
   segs[isSplitter, "sampleName"] <- NA;
   target$output <- segs;
 
   segs <- getSegments(current);
-  isSplitter <- lapply(segs[-1], FUN=is.na);
-  isSplitter <- Reduce("&", isSplitter);
+  isSplitter <- isSegmentSplitter(current);
   segs[isSplitter, "sampleName"] <- NA;
   current$output <- segs;
 
@@ -206,14 +205,23 @@ setMethodS3("getLocusData", "CBS", function(fit, addCalls=NULL, ...) {
 }, private=TRUE) # getLocusData()
 
 
+setMethodS3("isSegmentSplitter", "CBS", function(fit, ...) {
+  segs <- fit$output;
+
+  isSplitter <- lapply(segs[-1], FUN=is.na);
+  isSplitter <- Reduce("&", isSplitter);
+
+  isSplitter;
+}, protected=TRUE)
+
+
 setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
   # Argument 'splitters':
   splitters <- Arguments$getLogical(splitters);
 
   segs <- fit$output;
 
-  isSplitter <- lapply(segs[-1], FUN=is.na);
-  isSplitter <- Reduce("&", isSplitter);
+  isSplitter <- isSegmentSplitter(fit);
 
   # Add 'sampleName' column?
   if (nrow(segs) > 0) {
@@ -235,6 +243,17 @@ setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
 }, private=TRUE)
 
 
+setMethodS3("getSegmentSizes", "CBS", function(fit, by=c("length", "count"), ...) {
+  by <- match.arg(by);
+
+  data <- getSegments(fit, ...);
+  if (by == "length") {
+    res <- data[["end"]]-data[["start"]]+1L;
+  } else if (by == "count") {
+    res <- data[["nbrOfLoci"]];
+  }
+  res;
+})
 
 
 setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
@@ -255,9 +274,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   data <- getLocusData(fit);
 
-  segs <- getSegments(fit);
-  keep <- is.finite(segs$chromosome);
-  segs <- segs[keep,,drop=FALSE];
+  segs <- getSegments(fit, splitters=FALSE);
 
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
@@ -323,6 +340,8 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-16
+# o Added isSegmentSplitter().
 # 2011-10-08
 # o Relabelled column 'id' to 'sampleName' returned by getSegments().
 # o BUG FIX: getSegments() for CBS would not set 'id' for "splitter" rows.

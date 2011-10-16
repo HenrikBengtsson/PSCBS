@@ -106,7 +106,7 @@ setMethodS3("extractSegment", "AbstractCBS", function(this, idx, ...) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'region':
-  idx <- Arguments$getIndex(idx, max=nbrOfSegments(this));
+  idx <- Arguments$getIndex(idx, max=nbrOfSegments(this, splitters=TRUE));
 
   extractSegment(this, idxs=idx, ...);
 }, private=TRUE) # extractSegment()
@@ -116,7 +116,7 @@ setMethodS3("extractRegions", "AbstractCBS", function(this, regions, H=1, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nbrOfSegments <- nbrOfSegments(this);
+  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE);
 
   # Argument 'regions':
   regions <- Arguments$getIndices(regions, max=nbrOfSegments);
@@ -163,7 +163,7 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'region':
-  region <- Arguments$getIndex(region, max=nbrOfSegments(this));
+  region <- Arguments$getIndex(region, max=nbrOfSegments(this, splitters=TRUE));
 
   extractRegions(this, regions=region, ...);
 }, private=TRUE) # extractRegion()
@@ -186,6 +186,7 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
 # \arguments{
 #  \item{left}{An @integer specifying the segments (left, left+1)
 #    to be merged.}
+#  \item{update}{If @TRUE, segment statistics are updated.}
 #  \item{verbose}{A @logical or a @see "R.utils::Verbose" object.}
 #  \item{...}{Not used.}
 # }
@@ -207,7 +208,7 @@ setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
   # Argument 'idx':
-  idx <- Arguments$getIndex(idx, max=nbrOfChangePoints(fit));
+  idx <- Arguments$getIndex(idx, max=nbrOfChangePoints(fit, splitters=TRUE));
 
   mergeTwoSegments(fit, left=idx, ...);
 }, protected=TRUE)
@@ -255,7 +256,7 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., verb
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nbrOfSegments <- nbrOfSegments(this);
+  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE);
   # Argument 'regions':
   regions <- Arguments$getIndices(regions, max=nbrOfSegments);
 

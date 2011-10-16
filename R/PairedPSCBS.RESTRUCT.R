@@ -19,7 +19,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'idxs':
-  idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit));
+  idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit, splitters=TRUE));
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -143,6 +143,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 # \arguments{
 #  \item{left}{An @integer specifying the segments (left, left+1)
 #    to be merged.}
+#  \item{update}{If @TRUE, segment statistics are updated.}
 #  \item{verbose}{A @logical or a @see "R.utils::Verbose" object.}
 #  \item{...}{Not used.}
 # }
@@ -158,11 +159,11 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 #   @seeclass
 # }
 #*/###########################################################################  
-setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, verbose=FALSE, ...) {
+setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nbrOfSegments <- nbrOfSegments(this);
+  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE);
   # Argument 'left':
   left <- Arguments$getIndex(left, max=nbrOfSegments-1L);
 
@@ -179,7 +180,7 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, verbose=FALS
   verbose && cat(verbose, "Number of segments before merging: ", nbrOfSegments);
   verbose && cat(verbose, "Number of segments after merging: ", nbrOfSegments-1L);
 
-  segs <- this$output;
+  segs <- getSegments(this, splitters=TRUE);
   tcnSegRows <- this$tcnSegRows;
   dhSegRows <- this$dhSegRows;
 
@@ -215,8 +216,10 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, verbose=FALS
   idxsUsed <- c(idxsUsed, idxs);
 
   # "Invalidate" remaining entries
-  idxsTodo <- setdiff(seq(along=fields), idxsUsed);
-  segT[,idxsTodo] <- NA;
+  if (update) {
+    idxsTodo <- setdiff(seq(along=fields), idxsUsed);
+    segT[,idxsTodo] <- NA;
+  }
 
   # Update segment table
   segs[rows[1],] <- segT;
@@ -239,8 +242,10 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, verbose=FALS
   res$tcnSegRows <- tcnSegRows;
   res$dhSegRows <- dhSegRows;
 
-  # Update the mean estimates.
-  res <- updateMeans(res);
+  # Update the segment statistics?
+  if (update) {
+    res <- updateMeans(res);
+  }
 
   verbose && exit(verbose);
 
@@ -251,6 +256,8 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, verbose=FALS
 
 ############################################################################
 # HISTORY:
+# 2011-10-16
+# o Added argument 'update' to mergeTwoSegments().
 # 2011-10-02
 # o CLEANUP: Dropped empty callSegments() for PairedPSCBS.
 # 2011-06-14

@@ -74,3 +74,9 @@
 extractSegments.AbstractCBS extractSegment.AbstractCBS
  extractSegment extractSegments extractSegments.CBS
  extractSegments.PairedPSCBS
+isSegmentSplitter isSegmentSplitter.CBS isSegmentSplitter.PSCBS
+ extractCNs extractCNs.AbstractCBS extractCNs.CBS
+ extractCNs.PairedPSCBS extractTotalCNs extractTotalCNs.CBS
+ getSegmentSizes getSegmentSizes.AbstractCBS getSegmentSizes.CBS
+ getSegmentSizes.PairedPSCBS
+sampleCNs sampleCNs.AbstractCBS

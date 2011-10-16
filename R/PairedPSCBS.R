@@ -37,6 +37,19 @@ setConstructorS3("PairedPSCBS", function(fit=list(), ...) {
 })
 
 
+setMethodS3("getSegmentSizes", "PairedPSCBS", function(fit, by=c("length", "count"), ...) {
+  by <- match.arg(by);
+
+  data <- getSegments(fit, ...);
+  if (by == "length") {
+    res <- data[["tcnEnd"]]-data[["tcnStart"]]+1L;
+  } else if (by == "count") {
+    res <- data[["tcnNbrOfLoci"]];
+  }
+  res;
+})
+
+
 setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -56,9 +69,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   data <- getLocusData(fit);
 
-  segs <- getSegments(fit);
-  keep <- is.finite(segs$chromosome);
-  segs <- segs[keep,,drop=FALSE];
+  segs <- getSegments(fit, splitters=TRUE);
 
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
@@ -74,9 +85,11 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Update the TCN segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  for (ss in seq(length=nbrOfSegments)) {
+  isSplitter <- isSegmentSplitter(fit);
+  for (ss in seq(length=nbrOfSegments)[!isSplitter]) {
     verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
     seg <- segs[ss,];
+    verbose && print(verbose, seg);
 
     chr <- seg[["chromosome"]];
     chrTag <- sprintf("chr%02d", chr);
@@ -112,9 +125,11 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
       stopifnot(length(units) == 0 || !is.na(gamma));
 
       # Update the segment boundaries, estimates and counts
-      key <- paste(what, "mean", sep=".");
+      key <- paste(what, "Mean", sep="");
       seg[[key]] <- gamma;
     }
+
+    verbose && print(verbose, seg);
 
     segs[ss,] <- seg;
 
@@ -145,6 +160,8 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ##############################################################################
 # HISTORY
+# 2011-01-16
+# o BUG FIX: updateMeans() save to the incorrect column names.
 # 2011-01-12
 # o Added updateMeans() for PairedPSCBS.
 # 2011-10-02

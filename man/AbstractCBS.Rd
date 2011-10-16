@@ -45,14 +45,17 @@ extends list\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.AbstractCBS]{append}} \tab Appends one segmentation result to another.\cr
+ \tab \code{extractCNs} \tab  -\cr
  \tab \code{\link[PSCBS:getChromosomes.AbstractCBS]{getChromosomes}} \tab Gets the set of chromosomes.\cr
  \tab \code{\link[PSCBS:getLocusData.AbstractCBS]{getLocusData}} \tab Gets the locus-level data.\cr
  \tab \code{\link[PSCBS:getSegments.AbstractCBS]{getSegments}} \tab Gets the segments.\cr
+ \tab \code{getSegmentSizes} \tab  -\cr
  \tab \code{\link[PSCBS:nbrOfChangePoints.AbstractCBS]{nbrOfChangePoints}} \tab Gets the number of change points.\cr
  \tab \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{nbrOfChromosomes}} \tab Gets the number of chromosomes.\cr
  \tab \code{\link[PSCBS:nbrOfLoci.AbstractCBS]{nbrOfLoci}} \tab Gets the number of loci.\cr
  \tab \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{nbrOfSegments}} \tab Gets the number of segments.\cr
  \tab \code{\link[PSCBS:plotTracks.AbstractCBS]{plotTracks}} \tab Plots the segmentation result along the genome.\cr
+ \tab \code{sampleCNs} \tab  -\cr
 }
 
 

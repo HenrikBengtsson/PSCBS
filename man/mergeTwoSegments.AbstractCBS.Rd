@@ -29,6 +29,7 @@
  \arguments{
   \item{left}{An \code{\link[base]{integer}} specifying the segments (left, left+1)
     to be merged.}
+  \item{update}{If \code{\link[base:logical]{TRUE}}, segment statistics are updated.}
   \item{verbose}{A \code{\link[base]{logical}} or a \code{\link[R.utils]{Verbose}} object.}
   \item{...}{Not used.}
  }

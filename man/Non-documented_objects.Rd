@@ -219,6 +219,21 @@
 \alias{extractSegments}
 \alias{extractSegments.CBS}
 \alias{extractSegments.PairedPSCBS}
+\alias{isSegmentSplitter}
+\alias{isSegmentSplitter.CBS}
+\alias{isSegmentSplitter.PSCBS}
+\alias{extractCNs}
+\alias{extractCNs.AbstractCBS}
+\alias{extractCNs.CBS}
+\alias{extractCNs.PairedPSCBS}
+\alias{extractTotalCNs}
+\alias{extractTotalCNs.CBS}
+\alias{getSegmentSizes}
+\alias{getSegmentSizes.AbstractCBS}
+\alias{getSegmentSizes.CBS}
+\alias{getSegmentSizes.PairedPSCBS}
+\alias{sampleCNs}
+\alias{sampleCNs.AbstractCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

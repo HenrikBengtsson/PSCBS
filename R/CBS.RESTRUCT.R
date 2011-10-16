@@ -103,7 +103,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'idxs':
-  idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit));
+  idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit, splitters=TRUE));
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -198,11 +198,11 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
 
 
 
-setMethodS3("mergeTwoSegments", "CBS", function(this, left, verbose=FALSE, ...) {
+setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nbrOfSegments <- nbrOfSegments(this);
+  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE);
   # Argument 'left':
   left <- Arguments$getIndex(left, max=nbrOfSegments-1L);
 
@@ -276,8 +276,10 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, verbose=FALSE, ...) 
   res$output <- segs;
   res$segRows <- segRows;
 
-  # Update the mean estimates.
-  res <- updateMeans(res);
+  # Update the segment statistics?
+  if (update) {
+    res <- updateMeans(res);
+  }
 
   verbose && exit(verbose);
 
@@ -288,6 +290,8 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, verbose=FALSE, ...) 
 
 ############################################################################
 # HISTORY:
+# 2011-10-16
+# o Added argument 'update' to mergeTwoSegments().
 # 2011-10-10
 # o Replaced extractRegions() with extractSegments() for CBS.
 # o Added extractRegions() for CBS.

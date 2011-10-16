@@ -47,6 +47,16 @@ setMethodS3("getLocusData", "PSCBS", function(fit, ...) {
   data;
 }, protected=TRUE)
 
+
+setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
+  segs <- fit$output;
+
+  isSplitter <- lapply(segs[-1], FUN=is.na);
+  isSplitter <- Reduce("&", isSplitter);
+
+  isSplitter;
+}, protected=TRUE)
+
  
 ###########################################################################/**
 # @RdocMethod getSegments
@@ -84,8 +94,7 @@ setMethodS3("getSegments", "PSCBS", function(fit, splitters=TRUE, ...) {
 
   # Drop chromosome splitters?
   if (!splitters) {
-    isSplitter <- lapply(segs[-1], FUN=is.na);
-    isSplitter <- Reduce("&", isSplitter);
+    isSplitter <- isSegmentSplitter(fit);
     segs <- segs[!isSplitter,];
   }
 
@@ -100,6 +109,8 @@ setMethodS3("getSegments", "PSCBS", function(fit, splitters=TRUE, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-16
+# o Added isSegmentSplitter().
 # 2011-10-02
 # o Now the CBS class extends the AbstractCBS class.
 # o Added print() and as.data.frame() to PSCBS.

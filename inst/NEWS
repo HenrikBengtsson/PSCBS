@@ -2,10 +2,16 @@
 Package: PSCBS
 ==============
 
+Version: 0.14.2 [2011-10-16]
+o Implemented extractCNs() for CBS and PairedPSCBS.
+o Added extractTotalCNs() for CBS.
+
+
 Version: 0.14.1 [2011-10-14]
 o Added implementation of extractRegions() for AbstractCBS, which
   utilizes extractSegments().
 o Added abstract extractSegments() and extractSegment() for AbstractCBS.
+o Now extractTCNAndDHs() for PairedPSCBS passes '...' to getSegments().
 
 
 Version: 0.14.0 [2011-10-10]

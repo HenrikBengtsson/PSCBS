@@ -96,6 +96,18 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1, ...) {
 }) # as.CBS()
 
 
+setMethodS3("extractTotalCNs", "CBS", function(fit, ...) {
+  segs <- getSegments(fit, ...);
+  data <- data[,c("mean", "nbrOfLoci"), drop=FALSE];
+}, protected=TRUE)
+
+
+setMethodS3("extractCNs", "CBS", function(fit, ...) {
+  data <- extractTotalCNs(fit, ...);
+  data[,c("mean"), drop=FALSE];
+}, protected=TRUE)
+
+
 
 setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
   # To please R CMD check
@@ -394,6 +406,9 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-16
+# o Added extractTotalCNs() for CBS.
+# o Implemented extractCNs() for CBS.
 # 2011-10-08
 # o BUG FIX: The object returned by as.CBS() of DNAcopy did not have the
 #   correct class hierarchy.

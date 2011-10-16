@@ -418,11 +418,33 @@ setMethodS3("nbrOfChromosomes", "AbstractCBS", function(this, ...) {
 })
 
 
+setMethodS3("getSegmentSizes", "AbstractCBS", abstract=TRUE);
+
+setMethodS3("extractCNs", "AbstractCBS", abstract=TRUE);
+
+setMethodS3("sampleCNs", "AbstractCBS", function(fit, size=NULL, ...) {
+  data <- extractCNs(fit, ...);
+
+  if (!is.null(size)) {
+    sizes <- getSegmentSizes(fit, ...);
+    # Sanity check
+    stopifnot(length(sizes) == nrow(data));
+    idxs <- sample(nrow(data), size=size, replace=TRUE, prob=sizes);
+    data <- data[idxs,,drop=FALSE];
+  }
+
+  data;
+})
+
 setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
 ############################################################################
 # HISTORY:
+# 2011-10-16
+# o Added sampleCNs() for AbstractCBS.
+# o Added abstract getSegmentSizes() for AbstractCBS.
+# o Added abstract extractCNs() for AbstractCBS.
 # 2011-10-08
 # o Added abstract updateMeans() for AbstractCBS.
 # o Added all.equal() for AbstractCBS.
