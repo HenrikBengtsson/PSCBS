@@ -234,6 +234,8 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 #  \item{H}{A non-negative @integer specifying the size of each region,
 #    i.e. the number of segments per region.}
 #  \item{...}{Additional arguments passed to @seemethod "extractRegions".}
+#  \item{asMissing}{If @TRUE, dropped segments are replaced by missing values,
+#    otherwise they are truly dropped.}
 #  \item{verbose}{A @logical or a @see "R.utils::Verbose" object.}
 # }
 #
@@ -252,7 +254,7 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 #   @seeclass
 # }
 #*/###########################################################################  
-setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., verbose=FALSE) {
+setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., asMissing=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -262,6 +264,9 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., verb
 
   # Argument 'H':
   H <- Arguments$getInteger(H, range=c(0,Inf));
+
+  # Argument 'asMissing':
+  asMissing <- Arguments$getLogical(asMissing);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -284,7 +289,7 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., verb
     return(this);
   }
 
-  # Identify regions to drop
+  # Identify segments to drop
   Hs <- seq(length=H);
   regions <- regions - 1L;
   regions <- as.list(regions);
@@ -294,14 +299,41 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., verb
   verbose && cat(verbose, "Final set of segments to be dropped:");
   verbose && str(verbose, regions);
 
-  # Identify regions to keep
+  # Identify segments to keep
   allRegions <- seq(length=nbrOfSegments);
-  keepRegions <- setdiff(allRegions, regions);
+  keepSegments <- setdiff(allRegions, regions);
   verbose && cat(verbose, "Final set of segments to be kept:");
-  verbose && str(verbose, keepRegions);
+  verbose && str(verbose, keepSegments);
 
-  res <- extractRegions(this, regions=keepRegions, ...);
-  res$dropped <- extractRegions(this, regions=regions, ...);
+  dropped <- extractRegions(this, regions=regions, ...);
+  res <- this;
+  if (length(regions) > 0) {  
+    if (asMissing) {
+      segs <- getSegments(res, splitters=TRUE);
+      pattern <- "(chromosome|id|start|end)$";
+
+      # TODO/AD HOC: Should be class specific /HB 2011-10-17
+      pattern <- "(chromosome|id)$";
+      excl <- grep(pattern, colnames(segs), ignore.case=TRUE, invert=TRUE);
+      segs[regions,excl] <- NA;
+      res$output <- segs;
+
+      # TODO/AD HOC: Should be class specific /HB 2011-10-17
+      for (ff in grep("segRows", names(res), ignore.case=TRUE, value=TRUE)) {
+        res[[ff]][regions,] <- NA;
+      }
+    } else {
+      res <- extractRegions(res, regions=keepSegments, ...);
+    }
+  }
+  res$dropped <- dropped;
+
+  # Sanity check
+  if (asMissing) {
+    stopifnot(nbrOfSegments(res, splitters=TRUE) == nbrOfSegments(this, splitters=TRUE));
+  } else {
+    stopifnot(nbrOfSegments(res, splitters=TRUE) + length(regions) == nbrOfSegments(this, splitters=TRUE));
+  }
 
   verbose && exit(verbose);
 
@@ -353,6 +385,8 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-17
+# o Added argument 'asMissing' to dropRegions() for AbstractCBS.
 # 2011-10-14
 # o Added implementation of extractRegions() for AbstractCBS, which
 #   utilizes extractSegments().

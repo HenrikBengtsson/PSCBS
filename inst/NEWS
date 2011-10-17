@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.14.3 [2011-10-17]
+o Added argument 'asMissing' to dropRegions() for AbstractCBS.
+
+
 Version: 0.14.2 [2011-10-16]
 o Implemented extractCNs() for CBS and PairedPSCBS.
 o Added extractTotalCNs() for CBS.

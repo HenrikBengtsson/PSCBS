@@ -24,7 +24,7 @@
    \emph{None of the statistics are recalculated}.
  }
 
- \usage{\method{dropRegions}{AbstractCBS}(this, regions, H=1, ..., verbose=FALSE)}
+ \usage{\method{dropRegions}{AbstractCBS}(this, regions, H=1, ..., asMissing=FALSE, verbose=FALSE)}
 
  \arguments{
   \item{regions}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length R specifying the indices
@@ -32,6 +32,8 @@
   \item{H}{A non-negative \code{\link[base]{integer}} specifying the size of each region,
     i.e. the number of segments per region.}
   \item{...}{Additional arguments passed to \code{\link[PSCBS:extractRegions.AbstractCBS]{*extractRegions}()}.}
+  \item{asMissing}{If \code{\link[base:logical]{TRUE}}, dropped segments are replaced by missing values,
+    otherwise they are truly dropped.}
   \item{verbose}{A \code{\link[base]{logical}} or a \code{\link[R.utils]{Verbose}} object.}
  }
 
