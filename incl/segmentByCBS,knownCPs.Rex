@@ -18,6 +18,8 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
+subplots(5, ncol=1)
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -32,7 +34,7 @@ plotTracks(fit)
 knownSegments <- data.frame(
   chromosome=c(    0,   0),
   start     =x[c(  1, 401)],
-  end       =x[c(349,   J)]+c(0,10e6)
+  end       =x[c(349,   J)]
 )
 fit2 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
 print(fit2)
@@ -40,18 +42,8 @@ plotTracks(fit2)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
-knownSegments <- data.frame(
-  chromosome=c(    0,  0,   0),
-  start     =x[c(  1, NA, 401)],
-  end       =x[c(349, NA,   J)]+c(0,10e6)
-)
-fit2b <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
-print(fit2b)
-plotTracks(fit2b)
-abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
-
-
-# Segment just the (empty) centromere. All statistics will be NAs.
+# As a proof of concept, it is possible to segment just the centromere,
+# which contains no data.  All statistics will be NAs.
 knownSegments <- data.frame(
   chromosome=c(    0),
   start     =x[c(350)],
@@ -59,11 +51,14 @@ knownSegments <- data.frame(
 )
 fit3 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
 print(fit3)
+plotTracks(fit3, Clim=c(0,5), xlim=c(0,100))
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
 
 # If one specify the (empty) centromere as a segment, then its
-# estimated statistics will be NAs.  [TODO /HB 2011-10-19]
+# estimated statistics will be NAs, which becomes a natural
+# separator between the two "independent" arms.
 knownSegments <- data.frame(
   chromosome=c(    0,   0,   0),
   start     =x[c(  1, 350, 401)],
@@ -74,3 +69,15 @@ print(fit4)
 plotTracks(fit4)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
+
+# One can also force a separator between two segments by setting
+# 'start' and 'end' to NAs ('chromosome' has to be given)
+knownSegments <- data.frame(
+  chromosome=c(    0,  0,   0),
+  start     =x[c(  1, NA, 401)],
+  end       =x[c(349, NA,   J)]
+)
+fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+print(fit5)
+plotTracks(fit5)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)

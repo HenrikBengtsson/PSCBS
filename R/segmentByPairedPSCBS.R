@@ -555,9 +555,42 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOrLoci"];
     verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
 
-    # Extract locus data for TCN segment
     rowStart <- tcnSegRows[kk,1];
     rowEnd <- tcnSegRows[kk,2];
+
+    # Empty segment or a segment separator?
+    isSplitter <- (is.na(rowStart) && is.na(rowEnd));
+    if (isSplitter) {
+      verbose && cat(verbose, "No signals to segment. Just a \"splitter\" segment. Skipping.");
+
+      # Sanity check
+      stopifnot(kk > 1);
+
+      # Add a splitter segment
+      segT <- segs[[kk-1]];
+      segT <- segT[as.integer(NA),];
+      keys <- colnames(tcnSegments);
+      segT[,keys] <- tcnSegments[kk,keys];
+      segT[,"tcnId"] <- tcnId;
+      segT[,"dhId"] <- 1L;
+      segT[,c("tcnNbrOfSNPs", "tcnNbrOfHets", "dhNbrOfLoci")] <- 0L;
+      segT[,"dhStart"] <- xStart;
+      segT[,"dhEnd"] <- xEnd;
+      segs[[kk]] <- segT;
+      verbose && print(verbose, segT);
+
+      # Add a splitter to TCN and DH segment row matrix
+      segRowsT <- dhSegRows[as.integer(NA),];
+      dhSegRows <- rbind(dhSegRows, segRowsT);
+
+      segRowsT <- tcnSegsExpanded[as.integer(NA),];
+      tcnSegsExpanded <- rbind(tcnSegsExpanded, segRowsT);
+
+      verbose && exit(verbose);
+      next;
+    }
+
+    # Extract locus data for TCN segment
     rows <- rowStart:rowEnd;
     dataKK <- data[rows,,drop=FALSE];
     nbrOfLociKK <- nrow(dataKK);
@@ -836,6 +869,8 @@ setMethodS3("segmentByPairedPSCBS", "data.frame", function(CT, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-21
+# o Now segmentByPairedCBS() handles forced separators in 'knownSegments'.
 # 2011-10-20
 # o CLEANUP: Dropped a stray debug output message in segmentByPairedPSCBS().
 # o Replaced argument 'knownCPs' with 'knownSegments' for  segmentByCBS().

@@ -378,6 +378,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     splitter <- segmentByCBS(y=c(0,0), chromosome=c(1,2), x=c(0,0));
     suppressWarnings({
       splitter <- extractSegments(splitter, 2);
+      # Sanity check
+      stopifnot(nbrOfSegments(splitter, splitters=TRUE) == 1);
     });
     
     fitList <- list();
@@ -399,19 +401,31 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         verbose && str(verbose, dataJJ);
         fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
         rm(dataJJ); # Not needed anymore
-  
-        fit <- segmentByCBS(y=y,
-                  chromosome=chrom, x=x,
-                  index=index,
-                  undo=undo,
-                  joinSegments=joinSegments,
-                  knownSegments=seg,
-                  ..., 
-                  seed=NULL,
-                  verbose=verbose);
+
+        nbrOfLoci <- length(y);
+
+        # Empty segment? 
+        # [AD HOC. Should be done by segmentCBS(). /HB 2011-10-21]
+        if(nbrOfLoci == 0) {
+          fit <- splitter;
+          fit$output$chromosome <- chromosomeJJ;
+          fit$output$start <- xStart;
+          fit$output$end <- xEnd;
+          fit$output$nbrOfLoci <- nbrOfLoci;
+        } else {
+          fit <- segmentByCBS(y=y,
+                    chromosome=chrom, x=x,
+                    index=index,
+                    undo=undo,
+                    joinSegments=joinSegments,
+                    knownSegments=seg,
+                    ..., 
+                    seed=NULL,
+                    verbose=verbose);
+        }
   
         # Sanity checks
-        stopifnot(nrow(fit$data) == length(y));
+        stopifnot(nrow(fit$data) == nbrOfLoci);
         stopifnot(all.equal(fit$data$y, y));
 
         rm(list=fields); # Not needed anymore
@@ -423,7 +437,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
           verbose && print(verbose, tail(as.data.frame(fit)));
         }
       } # if (isSplitter)
-      
+
+      # Sanity check
+      stopifnot(TRUE && nbrOfSegments(fit, splitters=TRUE) > 0);
+
       fitList[[segTag]] <- fit;
 
       # Not needed anymore
