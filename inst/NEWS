@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.15.1 [2011-10-21]
+o By setting 'start' and 'end' to NAs in 'knownSegments' (chromosome must
+  still be specified), it is possible to insert an empty segment that
+  disconnects the two flanking segments, e.g. centromere and the two arms.
+
+
 Version: 0.15.0 [2011-10-20]
 o Added support for specifying priorly known segments, such as chromosome
   arms nad centromeres, in segmentByCBS() via argument 'knownSegments'.

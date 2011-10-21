@@ -174,7 +174,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Known segments must not share loci
   for (chr in sort(unique(knownSegments$chromosome))) {
     dd <- subset(knownSegments, chromosome == chr);
-    if (anyDuplicated(c(dd$start, dd$end))) {
+    xs <- c(dd$start, dd$end);
+    xs <- xs[!is.na(xs)];
+    if (anyDuplicated(xs) > 0) {
       print(knownSegments);
       throw("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments', i.e. which share loci.");
     }
@@ -372,6 +374,12 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     verbose && enter(verbose, "Segmenting multiple segments on current chromosome");
     verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
 
+    # Create a splitter-only CBS object
+    splitter <- segmentByCBS(y=c(0,0), chromosome=c(1,2), x=c(0,0));
+    suppressWarnings({
+      splitter <- extractSegments(splitter, 2);
+    });
+    
     fitList <- list();
     for (jj in seq(length=nbrOfSegments)) {
       seg <- knownSegments[jj,];
@@ -381,32 +389,40 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
       verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments));
 
-      # Extract subset of data and parameters for this segment
-      dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
-      verbose && str(verbose, dataJJ);
-      fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
-      rm(dataJJ); # Not needed anymore
-
-      fit <- segmentByCBS(y=y,
-                chromosome=chrom, x=x,
-                index=index,
-                undo=undo,
-                joinSegments=joinSegments,
-                knownSegments=seg,
-                ..., 
-                seed=NULL,
-                verbose=verbose);
-
-      # Sanity checks
-      if (nrow(seg) == 0) {
+      isSplitter <- (is.na(xStart) && is.na(xEnd));
+      if (isSplitter) {
+        fit <- splitter;
+        verbose && cat(verbose, "Nothing to segment. Inserting an explicit splitter.");
+      } else {
+        # Extract subset of data and parameters for this segment
+        dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
+        verbose && str(verbose, dataJJ);
+        fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
+        rm(dataJJ); # Not needed anymore
+  
+        fit <- segmentByCBS(y=y,
+                  chromosome=chrom, x=x,
+                  index=index,
+                  undo=undo,
+                  joinSegments=joinSegments,
+                  knownSegments=seg,
+                  ..., 
+                  seed=NULL,
+                  verbose=verbose);
+  
+        # Sanity checks
         stopifnot(nrow(fit$data) == length(y));
         stopifnot(all.equal(fit$data$y, y));
-      }
 
-      rm(list=fields); # Not needed anymore
+        rm(list=fields); # Not needed anymore
 
-      verbose && print(verbose, head(as.data.frame(fit)));
-      verbose && print(verbose, tail(as.data.frame(fit)));
+        if (nbrOfSegments(fit) < 6) {
+          verbose && print(verbose, as.data.frame(fit));
+        } else {
+          verbose && print(verbose, head(as.data.frame(fit)));
+          verbose && print(verbose, tail(as.data.frame(fit)));
+        }
+      } # if (isSplitter)
       
       fitList[[segTag]] <- fit;
 

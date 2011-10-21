@@ -40,6 +40,17 @@ plotTracks(fit2)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
+knownSegments <- data.frame(
+  chromosome=c(    0,  0,   0),
+  start     =x[c(  1, NA, 401)],
+  end       =x[c(349, NA,   J)]+c(0,10e6)
+)
+fit2b <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+print(fit2b)
+plotTracks(fit2b)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
 # Segment just the (empty) centromere. All statistics will be NAs.
 knownSegments <- data.frame(
   chromosome=c(    0),
