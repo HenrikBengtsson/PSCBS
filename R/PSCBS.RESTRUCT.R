@@ -72,6 +72,11 @@ setMethodS3("append", "PSCBS", function(x, other, addSplit=TRUE, ...) {
     rownames(res[[field]]) <- NULL;
   }
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Parameters
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  res$params$knownSegments <- rbind(this$params$knownSegments, other$params$knownSegments);
+
   # Sanity check
   ns <- sapply(res[fields], FUN=nrow);
   stopifnot(all(ns == ns[1]));
@@ -149,6 +154,8 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-20
+# o Now append() for PSCBS also appends '...$params$knownSegments'.
 # 2011-10-02
 # o Now the CBS class extends the AbstractCBS class.
 # o Added print() and as.data.frame() to PSCBS.

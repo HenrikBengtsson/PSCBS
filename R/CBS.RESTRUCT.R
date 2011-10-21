@@ -73,6 +73,12 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
     rownames(res[[field]]) <- NULL;
   }
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Parameters
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  res$params$knownSegments <- rbind(this$params$knownSegments, other$params$knownSegments);
+
+
   # Sanity check
   ns <- sapply(res[fields], FUN=nrow);
   stopifnot(all(ns == ns[1]));
@@ -290,6 +296,8 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
 
 ############################################################################
 # HISTORY:
+# 2011-10-20
+# o Now append() for CBS also appends '...$params$knownSegments'.
 # 2011-10-16
 # o Added argument 'update' to mergeTwoSegments().
 # 2011-10-10

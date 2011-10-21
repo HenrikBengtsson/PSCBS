@@ -9,6 +9,7 @@ J <- 1000
 
 mu <- double(J)
 mu[200:300] <- mu[200:300] + 1
+mu[350:400] <- NA # centromere
 mu[650:800] <- mu[650:800] - 1
 eps <- rnorm(J, sd=1/2)
 y <- mu + eps
@@ -18,7 +19,9 @@ w[650:800] <- 0.001
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Segment
+# Segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fit <- segmentByCBS(y, x=x)
 print(fit)
+plotTracks(fit)
+

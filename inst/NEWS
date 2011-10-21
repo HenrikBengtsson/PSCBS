@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.15.0 [2011-10-20]
+o Added support for specifying priorly known segments, such as chromosome
+  arms nad centromeres, in segmentByCBS() via argument 'knownSegments'.
+o CLEANUP: Dropped a stray debug output message in segmentByPairedPSCBS().
+
+
 Version: 0.14.3 [2011-10-17]
 o Added argument 'asMissing' to dropRegions() for AbstractCBS.
 

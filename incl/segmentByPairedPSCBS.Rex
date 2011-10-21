@@ -13,7 +13,7 @@ data <- data[o,]
 str(data)
 R.oo::attachLocally(data)
 x <- position
-
+J <- length(x)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Paired PSCBS segmentation

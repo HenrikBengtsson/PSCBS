@@ -40,8 +40,9 @@
 #     is in the middle of multiple loci with the same position.
 #     The latter is what \code{DNAcopy::segment()} returns.
 #   }
-#   \item{knownCPs}{Optional @numeric @vector of known 
-#     change point locations.}
+#   \item{knownSegments}{Optional @data.frame specifying 
+#     \emph{non-overlapping} known segments.  These segments must
+#     not share loci.}
 #   \item{seed}{An (optional) @integer specifying the random seed to be 
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
@@ -93,7 +94,7 @@
 # }
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,19 +154,29 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Argument 'cpFlavor':
   joinSegments <- Arguments$getLogical(joinSegments);
 
-  # Argument 'knownCPs':
-  if (!is.null(knownCPs)) {
-    if (is.null(x)) {
-      knownCPs <- Arguments$getIndices(knownCPs, max=nbrOfLoci);
-    } else {
-      knownCPs <- Arguments$getDoubles(knownCPs);
-    }
-    if (length(knownCPs) != 2) {
-      throw("Currently argument 'knownCPs' can be used to specify the boundaries of the region to be segmented: ", length(knownCPs));
-      throw("Support for specifying known change points (argument 'knownCPs') is not yet implemented as of 2010-10-02.");
-    }
-    if (!joinSegments) {
-      throw("Argument 'knownCPs' should only be specified if argument 'joinSegments' is TRUE.");
+  # Argument 'knownSegments':
+  if (is.null(knownSegments)) {
+    knownSegments <- data.frame(chromosome=integer(0), start=integer(0), end=integer(0));
+  } else {
+#    if (!joinSegments) {
+#      throw("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.");
+#    }
+  }
+
+  if (!is.data.frame(knownSegments)) {
+    throw("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1]);
+  }
+
+  if (!all(is.element(c("chromosome", "start", "end"), colnames(knownSegments)))) {
+    throw("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)));
+  }
+
+  # Known segments must not share loci
+  for (chr in sort(unique(knownSegments$chromosome))) {
+    dd <- subset(knownSegments, chromosome == chr);
+    if (anyDuplicated(c(dd$start, dd$end))) {
+      print(knownSegments);
+      throw("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments', i.e. which share loci.");
     }
   }
 
@@ -266,24 +277,34 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
 
-      # Extract subset
+      # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
       verbose && str(verbose, dataKK);
       fields <- attachLocally(dataKK, fields=c("y", "chrom", "x", "index"));
       rm(dataKK); # Not needed anymore
+
+      knownSegmentsKK <- NULL;
+      if (!is.null(knownSegments)) {
+        knownSegmentsKK <- subset(knownSegments, chromosome == chromosomeKK);
+        verbose && cat(verbose, "Known segments:");
+        verbose && print(verbose, knownSegmentsKK);
+      }
 
       fit <- segmentByCBS(y=y,
                 chromosome=chrom, x=x,
                 index=index,
                 undo=undo,
                 joinSegments=joinSegments,
+                knownSegments=knownSegmentsKK,
                 ..., 
                 seed=NULL,
                 verbose=verbose);
 
       # Sanity checks
-      stopifnot(nrow(fit$data) == length(y));
-      stopifnot(all.equal(fit$data$y, y));
+      if (nrow(knownSegmentsKK) == 0) {
+        stopifnot(nrow(fit$data) == length(y));
+        stopifnot(all.equal(fit$data$y, y));
+      }
 
       rm(list=fields); # Not needed anymore
 
@@ -297,7 +318,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       verbose && exit(verbose);
     } # for (kk ...)
 
-    verbose && enter(verbose, "Merging");
+    verbose && enter(verbose, "Merging (independently segmented chromosome)");
     fit <- Reduce(append, fitList);
     # Not needed anymore
     rm(fitList);
@@ -315,6 +336,136 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     return(fit);
   } # if (nbrOfChromosomes > 1) 
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Subset 'knownSegments'
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Keeping only current chromosome for 'knownSegments'");
+
+  currChromosome <- chromosome[1];
+  verbose && cat(verbose, "Chromosome: ", currChromosome);
+
+  knownSegments <- subset(knownSegments, chromosome == currChromosome);
+  nbrOfSegments <- nrow(knownSegments);
+
+  verbose && cat(verbose, "Known segments for this chromosome:");
+  verbose && print(verbose, knownSegments);
+
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sanity checks
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Here 'knownSegments' should specify at most a single chromosome
+  uChromosomes <- sort(unique(knownSegments$chromosome));
+  if (length(uChromosomes) > 1) {
+    throw("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes));
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Multiple segments?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sanity check of limitation  /HB 2011-10-19
+  if (nbrOfSegments > 1) {
+    verbose && enter(verbose, "Segmenting multiple segments on current chromosome");
+    verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
+
+    fitList <- list();
+    for (jj in seq(length=nbrOfSegments)) {
+      seg <- knownSegments[jj,];
+      chromosomeJJ <- seg$chromosome;
+      xStart <- seg$start;      
+      xEnd <- seg$end;
+      segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
+      verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments));
+
+      # Extract subset of data and parameters for this segment
+      dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
+      verbose && str(verbose, dataJJ);
+      fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
+      rm(dataJJ); # Not needed anymore
+
+      fit <- segmentByCBS(y=y,
+                chromosome=chrom, x=x,
+                index=index,
+                undo=undo,
+                joinSegments=joinSegments,
+                knownSegments=seg,
+                ..., 
+                seed=NULL,
+                verbose=verbose);
+
+      # Sanity checks
+      if (nrow(seg) == 0) {
+        stopifnot(nrow(fit$data) == length(y));
+        stopifnot(all.equal(fit$data$y, y));
+      }
+
+      rm(list=fields); # Not needed anymore
+
+      verbose && print(verbose, head(as.data.frame(fit)));
+      verbose && print(verbose, tail(as.data.frame(fit)));
+      
+      fitList[[segTag]] <- fit;
+
+      # Not needed anymore
+      rm(fit);
+      verbose && exit(verbose);
+    } # for (jj ...)
+
+    verbose && enter(verbose, "Merging (independently segmented known segments)");
+    appendT <- function(...) append(..., addSplit=FALSE);
+    fit <- Reduce(appendT, fitList);
+    # Not needed anymore
+    rm(fitList);
+
+    verbose && str(verbose, fit);
+
+    verbose && exit(verbose);
+
+    verbose && print(verbose, head(as.data.frame(fit)));
+    verbose && print(verbose, tail(as.data.frame(fit)));
+
+    # Sanity check
+#    if (nrow(fit$data) != length(y)) {
+#      print(c(nrow(fit$data), nrow(data)));
+#    }
+#    stopifnot(nrow(fit$data) == nrow(data));
+#    stopifnot(all(fit$data$chromosome == data$chromosome));
+#    stopifnot(all(fit$data$x == data$x));
+#    stopifnot(all(fit$data$index == data$index));
+#    stopifnot(all.equal(fit$data$y, data$y));
+   
+    verbose && exit(verbose);
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Return results
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    return(fit);
+  } # if (nbrOfSegments > 1)
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Specific segment?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (nbrOfSegments > 0) {
+    knownSegments <- subset(knownSegments, chromosome == chromosome);
+  }
+
+  if (nbrOfSegments == 1) {
+    seg <- knownSegments[1,];
+    chromosomeJJ <- seg$chromosome;
+    xStart <- seg$start;      
+    xEnd <- seg$end;
+    segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
+    verbose && printf(verbose, "Extracting segment '%s'", segTag);
+  
+    # Extract subset of data and parameters for this segment
+    data <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
+    verbose && str(verbose, data);
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -366,7 +517,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   names(cnData)[3] <- sampleName;
   verbose && str(verbose, cnData);
   verbose && exit(verbose);
-  rm(sampleName);  # Not needed anymore
+#  rm(sampleName);  # Not needed anymore
 
   # Sanity check
   stopifnot(nrow(cnData) == nrow(data));
@@ -443,8 +594,28 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Drop dummy data point...
     fit$data <- cnData; ## fit$data[-1,,drop=FALSE];
     # ...dummy region found
-    fit$output <- fit$output[-1,,drop=FALSE];
-    fit$segRows <- fit$segRows[-1,,drop=FALSE];
+    output <- fit$output;
+    segRows <- fit$segRows;
+
+    # Sanity check
+    stopifnot(nrow(output) == 1);
+
+    # Was a region specified?
+    if (nbrOfSegments == 1) {
+      seg <- knownSegments[1,];
+      output$ID <- sampleName;
+      output$chrom <- seg$chromosome;
+      output$loc.start <- seg$start;
+      output$loc.end <- seg$end;
+      output$num.mark <- 0L;
+      output$seg.mean <- as.double(NA);
+      segRows[1,] <- as.integer(NA);
+    } else {  
+      output <- output[-1,,drop=FALSE];
+      segRows <- segRows[-1,,drop=FALSE];
+    }
+    fit$output <- output;
+    fit$segRows <- segRows;
   }
 
   verbose && cat(verbose, "Captured output that was sent to stdout:");
@@ -479,7 +650,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   params <- list(
     joinSegments = joinSegments,
-    knownCPs = knownCPs,
+    knownSegments = knownSegments,
     seed = seed
   );
 
@@ -525,7 +696,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Join segments?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (joinSegments) {
-    fit <- joinSegments(fit, range=knownCPs, verbose=verbose);
+    if (nbrOfSegments == 1) {
+      range <- c(knownSegments$start, knownSegments$end);
+      range <- range(range, na.rm=TRUE);
+    } else {
+      range <- NULL;
+    }
+   
+    fit <- joinSegments(fit, range=range, verbose=verbose);
 
     # Sanity checks
     segRows <- fit$segRows;
@@ -557,6 +735,13 @@ setMethodS3("segmentByCBS", "data.frame", function(y, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-20
+# o Now the result of segmentByCBS() is guaranteed to include the
+#   segments given by argument 'knownSegments'.  Before empty segments
+#   would be dropped.
+# 2011-10-19
+# o Replaced argument 'knownCPs' with 'knownSegments' for  segmentByCBS().
+# o Added support for specifying known change points in segmentByCBS().
 # 2011-10-02
 # o Added segmentByCBS() for data.frame such that the locus-level data
 #   arguments can also be passed via a data.frame.

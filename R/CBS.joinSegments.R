@@ -18,6 +18,10 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
 
   verbose && enter(verbose, "Joining segments");  
   segs <- getSegments(fit);
+  verbose && cat(verbose, "Segments:");
+  verbose && print(verbose, segs);
+  verbose && cat(verbose, "Range:");
+  verbose && print(verbose, range);
 
   nbrOfSegs <- nrow(segs);
   if (nbrOfSegs > 1) {
@@ -43,17 +47,18 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
   } # if (nbrOfSegs > 1)
 
 
-  knownCPs <- range;
-  if (!is.null(knownCPs)) {
+  if (!is.null(range)) {
+    xMin <- min(range, na.rm=TRUE);
+    xMax <- max(range, na.rm=TRUE);
     if (nbrOfSegs > 0) {
       # Sanity check
-      stopifnot(knownCPs[1L] <= segs[1L,"start"]);
-      segs[1L,"start"] <- knownCPs[1L];
+      stopifnot(xMin <= segs[1L,"start"]);
+      segs[1L,"start"] <- xMin;
       # Sanity check
-      stopifnot(segs[1L,"end"] <= knownCPs[length(knownCPs)]);
-      segs[nbrOfSegs,"end"] <- knownCPs[length(knownCPs)];
+      stopifnot(segs[1L,"end"] <= xMax);
+      segs[nbrOfSegs,"end"] <- xMax;
     } # if (nbrOfSegs > 0)
-  } # if (!is.null(knownCPs))
+  } # if (!is.null(range))
 
   fit$output <- segs;
 

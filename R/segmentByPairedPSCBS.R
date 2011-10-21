@@ -50,8 +50,9 @@
 #     is in the middle of multiple loci with the same position.
 #     The latter is what \code{DNAcopy::segment()} returns.
 #   } 
-#   \item{knownCPs}{Optional @numeric @vector of known 
-#     change point locations.}
+#   \item{knownSegments}{Optional @data.frame specifying 
+#     \emph{non-overlapping} known segments.  These segments must
+#     not share loci.}
 #   \item{seed}{An (optional) @integer specifying the random seed to be 
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
@@ -115,7 +116,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownCPs=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -195,17 +196,23 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # Argument 'joinSegments':
   joinSegments <- Arguments$getLogical(joinSegments);
 
-  # Argument 'knownCPs':
-  if (!is.null(knownCPs)) {
-    knownCPs <- Arguments$getDoubles(knownCPs);
-    if (length(knownCPs) != 2) {
-      throw("Currently argument 'knownCPs' can be used to specify the boundaries of the region to be segmented: ", length(knownCPs));
-      throw("Support for specifying known change points (argument 'knownCPs') is not yet implemented as of 2010-10-02.");
-    }
+  # Argument 'knownSegments':
+  if (is.null(knownSegments)) {
+    knownSegments <- data.frame(chromosome=integer(0), start=integer(0), end=integer(0));
+  } else {
     if (!joinSegments) {
-      throw("Argument 'knownCPs' should only be specified if argument 'joinSegments' is TRUE.");
+##      warning("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.");
     }
   }
+
+  if (!is.data.frame(knownSegments)) {
+    throw("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1]);
+  }
+
+  if (!all(is.element(c("chromosome", "start", "end"), colnames(knownSegments)))) {
+    throw("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)));
+  }
+
 
   # Argument 'seed':
   if (!is.null(seed)) {
@@ -341,25 +348,35 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
 
-      # Extract subset
+      # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chromosome == chromosomeKK);
       verbose && str(verbose, dataKK);
       fields <- attachLocally(dataKK, fields=c("CT", "betaT", "betaTN", "betaN", "muN", "chromosome", "x"));
       rm(dataKK); # Not needed anymore
-     
+
+      knownSegmentsKK <- NULL;
+      if (!is.null(knownSegments)) {
+        knownSegmentsKK <- subset(knownSegments, chromosome == chromosomeKK);
+        verbose && cat(verbose, "Known segments:");
+        verbose && print(verbose, knownSegmentsKK);
+      }
+
       fit <- segmentByPairedPSCBS(CT=CT, betaT=betaTN, 
                 betaN=betaN, muN=muN, 
                 chromosome=chromosome, x=x,
                 tbn=FALSE, joinSegments=joinSegments,
+                knownSegments=knownSegmentsKK,
                 alphaTCN=alphaTCN, alphaDH=alphaDH,
                 undoTCN=undoTCN, undoDH=undoDH,
                 flavor=flavor,
                 ..., verbose=verbose);
 
       # Sanity checks
-      stopifnot(nrow(fit$data) == length(CT));
-      stopifnot(all.equal(fit$data$CT, CT));
-      stopifnot(all.equal(fit$data$muN, muN));
+      if (nrow(knownSegmentsKK) == 0) {
+        stopifnot(nrow(fit$data) == length(CT));
+        stopifnot(all.equal(fit$data$CT, CT));
+        stopifnot(all.equal(fit$data$muN, muN));
+      }
 
       # Updata betaT (which is otherwise equals betaTN)
       fit$data$betaT <- betaT;
@@ -395,6 +412,31 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   } # if (nbrOfChromosomes > 1)
 
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Subset 'knownSegments'
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Keeping only current chromosome for 'knownSegments'");
+
+  currChromosome <- chromosome[1];
+  verbose && cat(verbose, "Chromosome: ", currChromosome);
+
+  knownSegments <- subset(knownSegments, chromosome == currChromosome);
+  nbrOfSegments <- nrow(knownSegments);
+
+  verbose && cat(verbose, "Known segments for this chromosome:");
+  verbose && print(verbose, knownSegments);
+
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sanity checks
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Here 'knownSegments' should specify at most a single chromosome
+  uChromosomes <- sort(unique(knownSegments$chromosome));
+  if (length(uChromosomes) > 1) {
+    throw("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes));
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -440,7 +482,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # Physical positions of loci
   fit <- segmentByCBS(CT, 
                       chromosome=chromosome, x=x, index=index,
-                      joinSegments=joinSegments, knownCPs=knownCPs,
+                      joinSegments=joinSegments,
+                      knownSegments=knownSegments,
                       alpha=alphaTCN, undo=undoTCN, ...,
                       verbose=verbose);
   verbose && str(verbose, fit);
@@ -448,11 +491,13 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   rm(list=fields); # Not needed anymore
 
   # Sanity check
-  stopifnot(nrow(fit$data) == nrow(data));
-  stopifnot(all(fit$data$chromosome == data$chromosome));
-  stopifnot(all(fit$data$x == data$x));
-  stopifnot(all(fit$data$index == data$index));
-  stopifnot(all.equal(fit$data$y, data$CT));
+  if (nrow(knownSegments) == 0) {
+    stopifnot(nrow(fit$data) == nrow(data));
+    stopifnot(all(fit$data$chromosome == data$chromosome));
+    stopifnot(all(fit$data$x == data$x));
+    stopifnot(all(fit$data$index == data$index));
+    stopifnot(all.equal(fit$data$y, data$CT));
+  }
 
   tcnSegments <- fit$output;
   tcnSegRows <- fit$segRows;
@@ -463,7 +508,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE));
 
   verbose && exit(verbose);
-
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -522,8 +566,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK);
     gammaT <- tcnSegments[kk,"tcnMean"];
 
-    print(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
-    stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
+##    if (nrow(knownSegments) == 0) {
+##      verbose && print(verbose, all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
+##      stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
+##    }
 
     verbose && cat(verbose, "Locus data for TCN segment:");
     verbose && str(verbose, dataKK);
@@ -539,10 +585,17 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
     verbose && enter(verbose, "Segmenting DH signals");
     fields <- attachLocally(dataKK, fields=c("chromosome", "x", "rho", "index"));
-    knownCPsKK <- if (joinSegments) c(xStart, xEnd) else NULL;
+
+    # Since segments in 'knownSegments' has already been used in the TCN
+    # segmentation, they are not needed in the DH segmentation.
+    currChromosome <- chromosome[1];
+    verbose && cat(verbose, "Chromosome: ", currChromosome);
+    knownSegmentsT <- data.frame(chromosome=currChromosome, start=xStart, end=xEnd);
+
     fit <- segmentByCBS(rho, 
                         chromosome=chromosome, x=x,
-                        joinSegments=joinSegments, knownCPs=knownCPsKK,
+                        joinSegments=joinSegments,
+                        knownSegments=knownSegmentsT,
                         alpha=alphaDH, undo=undoDH, ...,
                         verbose=verbose);
     verbose && str(verbose, fit);
@@ -709,7 +762,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     flavor = flavor,
     tbn = tbn,
     joinSegments = joinSegments,
-    knownCPs = knownCPs,
+    knownSegments = knownSegments,
     seed = seed
   );
 
@@ -783,6 +836,9 @@ setMethodS3("segmentByPairedPSCBS", "data.frame", function(CT, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-20
+# o CLEANUP: Dropped a stray debug output message in segmentByPairedPSCBS().
+# o Replaced argument 'knownCPs' with 'knownSegments' for  segmentByCBS().
 # 2011-10-02
 # o Added segmentByPairedPSCBS() for data.frame such that the locus-level
 #   data arguments can also be passed via a data.frame. 
