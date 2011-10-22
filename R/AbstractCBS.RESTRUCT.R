@@ -35,6 +35,11 @@
 #           - Drops a change point by merging two neighboring segments
 #             and recalculating the statistics for the merged segment
 #             before returning an @see "AbstractCBS".
+#
+#     \item @seemethod "mergeThreeSegments"
+#           - Merges a segment with its two flanking segments
+#             and recalculating the statistics for the merged segment
+#             before returning an @see "AbstractCBS".
 #   }
 #
 #   All of the above methods are implemented for @see "CBS" and 
@@ -198,6 +203,8 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
 # @author
 #
 # \seealso{
+#   To merge a segment and its two flanking segments, see
+#   @seemethod "mergeThreeSegments".
 #   To drop regions (a connected set of segments) 
 #   see @seemethod "dropRegions".
 #   @seeclass
@@ -212,6 +219,55 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 
   mergeTwoSegments(fit, left=idx, ...);
 }, protected=TRUE)
+
+
+
+###########################################################################/**
+# @RdocMethod mergeThreeSegments
+#
+# @title "Merge a segment and its two flanking segments"
+#
+# \description{
+#   @get "title" into one segment, and recalculating the segment statistics.
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{middle}{An @integer specifying the three segments
+#    (middle-1, middle, middle+1) to be merged.}
+#  \item{...}{Additional arguments passed to @seemethod "mergeTwoSegments".}
+# }
+#
+# \value{
+#   Returns an @see "AbstractCBS" of the same class with two less segment.
+# }
+#
+# @author
+#
+# \seealso{
+#   Internally @seemethod "mergeTwoSegments" is used.
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
+  # Argument 'middle':
+  S <- nbrOfSegments(fit, splitters=TRUE);
+  middle <- Arguments$getIndex(middle, range=c(2L, S));
+
+  # Assert that the three segments are on the same chromosome
+  idxs <- middle + c(-1L, 0, +1L);
+  fitT <- extractSegments(fit, idxs);
+  chrs <- getChromosomes(fitT);
+  if (length(chrs) != 1) {
+    throw("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle);
+  }
+  rm(fitT);
+
+  fit <- mergeTwoSegments(fit, left=middle, ...);
+  fit <- mergeTwoSegments(fit, left=middle-1L, ...);
+  fit;
+}) # mergeThreeSegments()
 
 
 
@@ -385,6 +441,8 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-21
+# o Added mergeThreeSegments() to AbstractCBS.
 # 2011-10-17
 # o Added argument 'asMissing' to dropRegions() for AbstractCBS.
 # 2011-10-14

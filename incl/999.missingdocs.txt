@@ -80,3 +80,4 @@ isSegmentSplitter isSegmentSplitter.CBS isSegmentSplitter.PSCBS
  getSegmentSizes getSegmentSizes.AbstractCBS getSegmentSizes.CBS
  getSegmentSizes.PairedPSCBS
 sampleCNs sampleCNs.AbstractCBS
+mergeThreeSegments

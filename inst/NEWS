@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.15.2 [2011-10-21]
+o Added mergeThreeSegments() to AbstractCBS.
+o BUG FIX: Recent updates caused segmentByPairedPSCBS(data) not to
+  work when 'data' is a data frame.
+
+
 Version: 0.15.1 [2011-10-21]
 o By setting 'start' and 'end' to NAs in 'knownSegments' (chromosome must
   still be specified), it is possible to insert an empty segment that

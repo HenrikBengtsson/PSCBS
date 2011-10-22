@@ -41,6 +41,8 @@
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \seealso{
+   To merge a segment and its two flanking segments, see
+   \code{\link[PSCBS:mergeThreeSegments.AbstractCBS]{*mergeThreeSegments}()}.
    To drop regions (a connected set of segments)
    see \code{\link[PSCBS:dropRegions.AbstractCBS]{*dropRegions}()}.
    For more information see \code{\link{AbstractCBS}}.

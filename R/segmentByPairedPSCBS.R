@@ -393,7 +393,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
       verbose && exit(verbose);
     } # for (kk ...)
 
-    verbose && enter(verbose, "Merging");
+    verbose && enter(verbose, "Merging (independently segmented chromosome)");
     fit <- Reduce(append, fitList);
     # Not needed anymore
     rm(fitList);
@@ -417,7 +417,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Keeping only current chromosome for 'knownSegments'");
 
-  currChromosome <- chromosome[1];
+  currChromosome <- data$chromosome[1];
   verbose && cat(verbose, "Chromosome: ", currChromosome);
 
   knownSegments <- subset(knownSegments, chromosome == currChromosome);
@@ -621,7 +621,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
     # Since segments in 'knownSegments' has already been used in the TCN
     # segmentation, they are not needed in the DH segmentation.
-    currChromosome <- chromosome[1];
+    currChromosome <- data$chromosome[1];
     verbose && cat(verbose, "Chromosome: ", currChromosome);
     knownSegmentsT <- data.frame(chromosome=currChromosome, start=xStart, end=xEnd);
 

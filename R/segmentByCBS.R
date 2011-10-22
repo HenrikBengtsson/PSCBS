@@ -344,7 +344,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Keeping only current chromosome for 'knownSegments'");
 
-  currChromosome <- chromosome[1];
+  currChromosome <- data$chrom[1];
   verbose && cat(verbose, "Chromosome: ", currChromosome);
 
   knownSegments <- subset(knownSegments, chromosome == currChromosome);
