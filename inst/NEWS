@@ -5,6 +5,9 @@ Package: PSCBS
 Version: 0.15.3 [2011-10-23]
 o BUG FIX: callAmplifications() for CBS generated an error, if
   more than one chromosome were called.
+o BUG FIX: The length of a segment must be defined as 'end-start' 
+  and not 'end-start+1' so that the the total length of all segments
+  adds up correctly.
 
 
 Version: 0.15.2 [2011-10-21]

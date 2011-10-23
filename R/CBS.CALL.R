@@ -318,7 +318,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     # The lengths (in bp) of the segments
     start <- segs$start;
     end <- segs$end;
-    length <- end - start + 1L;
+    length <- end - start; ## + 1L;
     keep1 <- (length <= maxLength);
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -744,7 +744,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     segsRR$start[segsRR$start < startRR] <- startRR;
     segsRR$end[segsRR$end > endRR] <- endRR;
 
-    segsRR$fullLength <- endRR - startRR + 1L;
+    segsRR$fullLength <- endRR - startRR; ## + 1L;
 
     segsT <- rbind(segsT, segsRR);
   } # for (rr ...)
@@ -752,7 +752,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   segs <- segsT;
 
   # Sum length of calls per type and chromosome
-  segs$length <- segs[,"end"] - segs[,"start"] + 1L;
+  segs$length <- segs[,"end"] - segs[,"start"];  ## + 1L;
   segs <- segs[order(segs$chromosome),];
   callTypes <- grep("Call$", colnames(segs), value=TRUE);
   res <- lapply(callTypes, FUN=function(type) {
@@ -772,11 +772,14 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   stopifnot(nrow(regionsT) == nrow(res1));
 
   # Calculate lengths
-  regionsT$length <- regionsT[,"end"] - regionsT[,"start"] + 1L;
+  regionsT$length <- regionsT[,"end"] - regionsT[,"start"]; ## + 1L;
   stopifnot(all(regionsT$length >= 0));
 
+print(regionsT);
+print(res1);
   res2 <- res1 / regionsT[,"length"];
   names(res2) <- gsub("Call$", "Fraction", callTypes);
+print(res2);
 
   res3 <- cbind(res1, res2);
 
@@ -791,7 +794,9 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   # Sanity checks
   resT <- res[,grep("Fraction", colnames(res))];
   for (key in colnames(resT)) {
+print(key);
     rho <- resT[,key];
+print(rho);
     stopifnot(all(rho >= 0, na.rm=TRUE));
     stopifnot(all(rho <= 1, na.rm=TRUE));
   }
@@ -970,7 +975,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
       regions[rr,"end"] <- x1;
     }
   } # for (rr ...)
-  regions[,"length"] <- regions[,"end"] - regions[,"start"] + 1L;
+  regions[,"length"] <- regions[,"end"] - regions[,"start"]; ## + 1L;
   callStats <- getCallStatistics(fit, regions=regions);
   callStats$label <- sprintf("%sp", callStats$label);
   callStatsP <- callStats;
@@ -997,7 +1002,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
       regions[rr,"end"] <- x1;
     }
   } # for (rr ...)
-  regions[,"length"] <- regions[,"end"] - regions[,"start"] + 1L;
+  regions[,"length"] <- regions[,"end"] - regions[,"start"]; ## + 1L;
 
   callStats <- getCallStatistics(fit, regions=regions);
   callStats$label <- sprintf("%sq", callStats$label);
@@ -1151,6 +1156,9 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 ############################################################################
 # HISTORY:
 # 2011-10-23
+# o BUG FIX: The length of a segment must be defined as 'end-start' and
+#   not 'end-start+1' so that the the total length of all segments
+#   adds up correctly.
 # o Added verbose output to callGainsAndLosses() and callAmplifications().
 # o BUG FIX: callAmplifications() for CBS generated an error, if
 #   more than one chromosome were called.
