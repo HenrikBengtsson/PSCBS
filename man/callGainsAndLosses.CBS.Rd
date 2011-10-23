@@ -20,7 +20,7 @@
   Calls gains and losses.
  }
 
- \usage{\method{callGainsAndLosses}{CBS}(fit, adjust=1, method=c("ucsf-mad"), ...)}
+ \usage{\method{callGainsAndLosses}{CBS}(fit, adjust=1, method=c("ucsf-mad"), ..., verbose=FALSE)}
 
  \arguments{
   \item{adjust}{A positive scale factor adjusting the sensitivity of the
@@ -29,6 +29,7 @@
   \item{method}{A \code{\link[base]{character}} string specifying the calling algorithm to use.}
   \item{...}{Additional/optional arguments used to override the default
     parameters used by the caller.}
+  \item{verbose}{\code{\link[R.utils]{Verbose}}.}
  }
 
  \value{

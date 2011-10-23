@@ -17,6 +17,7 @@
 #  \item{method}{A @character string specifying the calling algorithm to use.}
 #  \item{...}{Additional/optional arguments used to override the default
 #    parameters used by the caller.}
+#  \item{verbose}{@see "R.utils::Verbose".}
 # }
 #
 # \value{
@@ -51,7 +52,7 @@
 #
 # @keyword internal 
 #*/###########################################################################  
-setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"), ...) {
+setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"), ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -61,16 +62,29 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   # Argument 'method':
   method <- match.arg(method);
 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Calling segments that are gained or lost");
+
   userArgs <- list(...);
 
   params <- list();
 
   # Allocate calls
   naValue <- as.logical(NA);
-  nbrOfSegments <- nbrOfSegments(fit);
-  segs <- getSegments(fit, splitter=TRUE);
+  nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE);
+  segs <- getSegments(fit, splitters=TRUE);
   nbrOfRows <- nrow(segs);
   gainCalls <- lossCalls <- rep(naValue, times=nbrOfRows);
+
+  verbose && cat(verbose, "Number of segments to be called: ", nbrOfSegments);
+  verbose && cat(verbose, "Call method: ", method);
 
   if (method == "ucsf-mad") {
     # Default arguments
@@ -104,6 +118,9 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 
     # Make more or less sensitive
     tau <- adjust * tau;
+
+    verbose && cat(verbose, "Call parameters:");
+    verbose && str(verbose, list(sigma=sigma, scale=scale, adjust=adjust));
 
     # Calculate segment statistics (utilizing DNAcopy methods)
     stats <- segments.summary(as.DNAcopy(fit));
@@ -139,6 +156,8 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
     params$tauGain <- tauGain;
   }
 
+  verbose && cat(verbose, "Number of called segments: ", length(lossCalls));
+
   # Sanity check
   stopifnot(length(lossCalls) == nbrOfRows);
   stopifnot(length(gainCalls) == nbrOfRows);
@@ -148,7 +167,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   # Update 'DNAcopy' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # (a) segmentation table
-  segs <- getSegments(fit, splitter=TRUE);
+  segs <- getSegments(fit, splitters=TRUE);
   segs$lossCall <- lossCalls;
   segs$gainCall <- gainCalls;
   fit$output <- segs;
@@ -160,6 +179,8 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   }
   allParams$callGainsAndLosses <- params;
   fit$params <- allParams;
+
+  verbose && exit(verbose);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -192,6 +213,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 #  \item{method}{A @character string specifying the calling algorithm to use.}
 #  \item{...}{Additional/optional arguments used to override the default
 #    parameters used by the caller.}
+#  \item{verbose}{@see "R.utils::Verbose".}
 # }
 #
 # \value{
@@ -219,7 +241,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 #
 # @keyword internal 
 #*/###########################################################################  
-setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e6, method=c("ucsf-exp"), ...) {
+setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e6, method=c("ucsf-exp"), ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -232,6 +254,15 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   # Argument 'method':
   method <- match.arg(method);
 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Calling segments that are amplified");
 
   userArgs <- list(...);
 
@@ -239,8 +270,11 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 
   # Allocate calls
   naValue <- as.logical(NA);
-  nbrOfSegments <- nbrOfSegments(fit);
+  nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE);
   calls <- rep(naValue, times=nbrOfSegments);
+
+  verbose && cat(verbose, "Number of segments to be called: ", nbrOfSegments);
+  verbose && cat(verbose, "Call method: ", method);
 
   if (method == "ucsf-exp") {
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -268,8 +302,15 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     lambda <- Arguments$getDouble(lambda, range=c(0, Inf));
     degree <- Arguments$getDouble(degree, range=c(1, Inf));
 
+    verbose && cat(verbose, "Call parameters:");
+    verbose && str(verbose, list(minLevel=minLevel, lambda=lambda,
+                                                  degree=degree));
 
-    segs <- getSegments(fit);
+    segs <- getSegments(fit, splitters=TRUE);
+
+    verbose && cat(verbose, "Segments:");
+    verbose && str(verbose, segs);
+
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
     # Rule #1: Only consider segments that are short enough
@@ -325,6 +366,8 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     params$tau <- tau;
   }
 
+  verbose && cat(verbose, "Number of called segments: ", length(calls));
+
   # Sanity check
   stopifnot(length(calls) == nbrOfSegments);
 
@@ -333,7 +376,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   # Update 'DNAcopy' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # (a) segmentation table
-  segs <- getSegments(fit);
+  segs <- getSegments(fit, splitters=TRUE);
   segs$amplificationCall <- calls;
   fit$output <- segs;
 
@@ -345,6 +388,8 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   allParams$callAmplifications <- params;
   fit$params <- allParams;
 
+
+  verbose && exit(verbose);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Return the updated 'CBS' object.
@@ -459,7 +504,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
     # CN residuals (relative to segment means)
     dy <- y - yS;
 
-    segs <- getSegments(fit);
+    segs <- getSegments(fit, splitters=TRUE);
 
     # Allocate per-segment SD estimates
     nbrOfSegments <- nbrOfSegments(fit);
@@ -548,7 +593,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   data <- getLocusData(fit);
 
   # Extract segment data
-  segs <- getSegments(fit);
+  segs <- getSegments(fit, splitters=TRUE);
 
   # Identify segment calls
   callCols <- grep("Call$", colnames(segs));
@@ -665,7 +710,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
 
   # Filter out segments within the requested regions
   segsT <- NULL;
-  segs <- getSegments(fit, splitter=FALSE);
+  segs <- getSegments(fit, splitters=FALSE);
   for (rr in seq(length=nrow(regions))) {
     regionRR <- regions[rr,];
     chrRR <- regionRR[,"chromosome"];
@@ -1048,7 +1093,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
   verbose && enter(verbose, "Merging neighboring segments that are not called");
 
   # Identify call columns
-  segs <- getSegments(fit);
+  segs <- getSegments(fit, splitters=TRUE);
   keep <- grep("Call$", colnames(segs));
   nbrOfCalls <- length(keep);
 
@@ -1067,7 +1112,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
     # Until no more neighboring non-called segments exists
     while (TRUE) {
-      segs <- getSegments(fitCC);
+      segs <- getSegments(fitCC, splitters=TRUE);
       calls <- as.matrix(segs[,keep]);
 
       # Find two neighboring segments that are not called
@@ -1105,6 +1150,10 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-10-23
+# o Added verbose output to callGainsAndLosses() and callAmplifications().
+# o BUG FIX: callAmplifications() for CBS generated an error, if
+#   more than one chromosome were called.
 # 2011-10-08
 # o Added mergeNonCalledSegments() for CBS.
 # 2011-10-07

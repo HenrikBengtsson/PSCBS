@@ -19,7 +19,7 @@
  Calls (focal) amplifications.
 }
 
-\usage{\method{callAmplifications}{CBS}(fit, adjust=1, maxLength=2e+07, method=c("ucsf-exp"), ...)}
+\usage{\method{callAmplifications}{CBS}(fit, adjust=1, maxLength=2e+07, method=c("ucsf-exp"), ..., verbose=FALSE)}
 
 \arguments{
  \item{adjust}{A positive scale factor adjusting the sensitivity of the
@@ -30,6 +30,7 @@
  \item{method}{A \code{\link[base]{character}} string specifying the calling algorithm to use.}
  \item{...}{Additional/optional arguments used to override the default
    parameters used by the caller.}
+ \item{verbose}{\code{\link[R.utils]{Verbose}}.}
 }
 
 \value{
