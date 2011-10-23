@@ -8,6 +8,10 @@ o BUG FIX: callAmplifications() for CBS generated an error, if
 o BUG FIX: The length of a segment must be defined as 'end-start' 
   and not 'end-start+1' so that the the total length of all segments
   adds up correctly.
+o BUG FIX: highlightArmCalls() for CBS did not handle empty chromosomes.
+o BUG FIX: getCallStatisticsByArms() for CBS would thrown a error if
+  argument 'genomeData' did not contain exactly the same chromosomes
+  as in the CBS object.
 
 
 Version: 0.15.2 [2011-10-21]

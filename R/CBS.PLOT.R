@@ -370,8 +370,6 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   segsT <- getSegments(fitT);
   segs <- segs[,!is.element(colnames(segs), c("start", "end"))];
   segsT <- segsT[,!is.element(colnames(segsT), c("start", "end"))];
-str(segs);
-str(segsT);
   stopifnot(all.equal(segsT, segs));
 
   data <- getLocusData(fit);
@@ -606,10 +604,12 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
     keyB <- sprintf("%sCall", type);
     for (kk in seq(length=nbrOfRegions)) {
       xs <- xx[kk,];
-      if (callStats[kk, keyA] > 0) {
+      score <- callStats[kk, keyA];
+      if (is.finite(score) && score > 0) {
         ys <- rep(yy[1]+callStats[kk, keyA]*0.05*dy, times=2);
         lines(x=xs, y=ys, col=col);
-        if (callStats[kk, keyB]) {
+        call <- callStats[kk, keyB];
+        if (call) {
           rect(xs[1], yy[1], xs[2], yy[2], col=col, border=NA);
         }
       }
@@ -623,6 +623,8 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
 
 ############################################################################
 # HISTORY:
+# 2011-10-23
+# o BUG FIX: highlightArmCalls() for CBS did not handle empty chromosomes.
 # 2011-10-08
 # o Added drawChromosomes() for CBS.
 # 2011-10-07

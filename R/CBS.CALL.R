@@ -775,11 +775,8 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   regionsT$length <- regionsT[,"end"] - regionsT[,"start"]; ## + 1L;
   stopifnot(all(regionsT$length >= 0));
 
-print(regionsT);
-print(res1);
   res2 <- res1 / regionsT[,"length"];
   names(res2) <- gsub("Call$", "Fraction", callTypes);
-print(res2);
 
   res3 <- cbind(res1, res2);
 
@@ -952,6 +949,12 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'genomeData':
   genomeData <- as.data.frame(genomeData);
+
+
+
+  # Subset 'regions' by chromosomes segmented
+  keep <- is.element(genomeData$chromosome, getChromosomes(fit));
+  genomeData <- genomeData[keep,];
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1156,6 +1159,9 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 ############################################################################
 # HISTORY:
 # 2011-10-23
+# o BUG FIX: getCallStatisticsByArms() for CBS would thrown a error if
+#   argument 'genomeData' did not contain exactly the same chromosomes
+#   as in the CBS object.
 # o BUG FIX: The length of a segment must be defined as 'end-start' and
 #   not 'end-start+1' so that the the total length of all segments
 #   adds up correctly.
