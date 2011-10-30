@@ -60,6 +60,90 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 
 
 ###########################################################################/**
+# @RdocMethod save
+#
+# @title "Saves an AbstractCBS object to file"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Additional arguments passed to @see "R.utils::saveObject".}
+# }
+#
+# \value{
+#   Returns what @see "R.utils::saveObject" returns.
+# }
+# 
+# @author
+#
+# \seealso{
+#   Internally @see "R.utils::saveObject" is used.
+#   To load an object, see @seemethod "load".
+#   @seeclass.
+# }
+#*/###########################################################################  
+setMethodS3("save", "AbstractCBS", function(this, ...) {
+  saveObject(this, ...);
+})
+
+
+###########################################################################/**
+# @RdocMethod load
+#
+# @title "Loads an AbstractCBS object from file"
+#
+# \description{
+#  @get "title" and assert that it is of the requested class.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Additional arguments passed to @see "R.utils::loadObject".}
+# }
+#
+# \value{
+#   Returns the loaded AbstractCBS object.
+# }
+# 
+# @author
+#
+# \seealso{
+#   Internally @see "R.utils::loadObject" is used.
+#   To save an object, see @seemethod "save".
+#   @seeclass.
+# }
+#*/###########################################################################  
+setMethodS3("load", "AbstractCBS", function(static, ...) {
+  object <- loadObject(...);
+
+  # Patch for changes in class structure in PSCBS v0.13.2 -> v0.13.3.
+  if (!inherits(object, "AbstractCBS")) {
+    if (inherits(object, "CBS")) {
+      class(object) <- c(class(object), "AbstractCBS");
+      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.");
+    } else if (inherits(object, "PairedPSCBS")) {
+      class(object) <- c(class(object), "AbstractCBS");
+      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.");
+    }
+  }
+  
+  # Sanity check
+  if (!inherits(object, class(static)[1])) {
+    throw("Loaded an object from file, but it does not inherit from ",
+          class(static)[1], " as expected: ", hpaste(class(object)));
+  }
+
+  object;
+}, static=TRUE)
+
+
+
+###########################################################################/**
 # @RdocMethod getSampleName
 # @aliasmethod sampleName
 #
@@ -441,6 +525,8 @@ setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2011-10-30
+# o Added save() and load() methods to AbstractCBS.
 # 2011-10-16
 # o Added sampleCNs() for AbstractCBS.
 # o Added abstract getSegmentSizes() for AbstractCBS.

@@ -17,7 +17,7 @@
 
  \description{
    Segments allele-specific DNA copy number data to detect regions
-with abnormal copy number within each parental chromosome.
+	with abnormal copy number within each parental chromosome.
 
    This package should be considered to be in an alpha or beta phase.
    You should expect the API to be changing over time.
@@ -26,7 +26,8 @@ with abnormal copy number within each parental chromosome.
  \section{Requirements}{
    This package requires external packages
    R.methodsS3 (>= 1.2.1), R.utils (>= 1.8.5), DNAcopy (>= 1.24.0),
-   and also suggests DNAcopy (>= 1.24.0), aroma.light (>= 1.21.2), matrixStats (>= 0.3.0), R.oo (>= 1.8.2), Hmisc (>= 3.8-3).
+   and also suggests DNAcopy (>= 1.24.0), aroma.light (>= 1.21.2), matrixStats (>=
+0.3.0), R.oo (>= 1.8.2), Hmisc (>= 3.8-3).
  }
 
  \section{Installation and updates}{

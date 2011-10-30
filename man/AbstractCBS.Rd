@@ -24,7 +24,7 @@
 \bold{Directly known subclasses:}\cr
 \emph{\link[PSCBS]{CBS}}, \emph{\link[PSCBS]{PairedPSCBS}}, \emph{\link[PSCBS]{PSCBS}}\cr
 
-public abstract class \bold{AbstractCBS}\cr
+public abstract static class \bold{AbstractCBS}\cr
 extends list\cr
 
 
@@ -50,6 +50,7 @@ extends list\cr
  \tab \code{\link[PSCBS:getLocusData.AbstractCBS]{getLocusData}} \tab Gets the locus-level data.\cr
  \tab \code{\link[PSCBS:getSegments.AbstractCBS]{getSegments}} \tab Gets the segments.\cr
  \tab \code{getSegmentSizes} \tab  -\cr
+ \tab \code{\link[PSCBS:load.AbstractCBS]{load}} \tab Loads an AbstractCBS object from file.\cr
  \tab \code{\link[PSCBS:mergeThreeSegments.AbstractCBS]{mergeThreeSegments}} \tab Merge a segment and its two flanking segments.\cr
  \tab \code{\link[PSCBS:nbrOfChangePoints.AbstractCBS]{nbrOfChangePoints}} \tab Gets the number of change points.\cr
  \tab \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{nbrOfChromosomes}} \tab Gets the number of chromosomes.\cr
@@ -57,6 +58,7 @@ extends list\cr
  \tab \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{nbrOfSegments}} \tab Gets the number of segments.\cr
  \tab \code{\link[PSCBS:plotTracks.AbstractCBS]{plotTracks}} \tab Plots the segmentation result along the genome.\cr
  \tab \code{sampleCNs} \tab  -\cr
+ \tab \code{\link[PSCBS:save.AbstractCBS]{save}} \tab Saves an AbstractCBS object to file.\cr
 }
 
 

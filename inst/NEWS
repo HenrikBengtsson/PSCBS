@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.15.4 [2011-10-30]
+o Added save() and load() methods to AbstractCBS, which are wrappers
+  for saveObject() and loadObject() that assert the correct class
+  structure.  Also, the load() method will automatically update the
+  class hierarchy for CBS and PairedPSCBS objects that were saved
+  before adding class AbstractCBS.
+
+
 Version: 0.15.3 [2011-10-23]
 o BUG FIX: callAmplifications() for CBS generated an error, if
   more than one chromosome were called.
@@ -28,7 +36,7 @@ o By setting 'start' and 'end' to NAs in 'knownSegments' (chromosome must
 
 Version: 0.15.0 [2011-10-20]
 o Added support for specifying priorly known segments, such as chromosome
-  arms nad centromeres, in segmentByCBS() via argument 'knownSegments'.
+  arms and centromeres, in segmentByCBS() via argument 'knownSegments'.
 o CLEANUP: Dropped a stray debug output message in segmentByPairedPSCBS().
 
 

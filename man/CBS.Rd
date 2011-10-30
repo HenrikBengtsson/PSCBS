@@ -30,7 +30,7 @@
 \bold{Directly known subclasses:}\cr
 \cr
 
-public abstract class \bold{CBS}\cr
+public abstract static class \bold{CBS}\cr
 extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 
 
@@ -55,7 +55,7 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 
 
  \bold{Methods inherited from AbstractCBS}:\cr
-all.equal, append, as.data.frame, dropChangePoint, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomes, getLocusData, getSampleName, getSegments, getSegmentSizes, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleCNs, sampleName, sampleName<-, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
+all.equal, append, as.data.frame, dropChangePoint, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomes, getLocusData, getSampleName, getSegments, getSegmentSizes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, sampleCNs, sampleName, sampleName<-, save, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
