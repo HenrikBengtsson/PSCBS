@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.15.5 [2011-11-04]
+o BUG FIX: extractSegment() for AbstractCBS would give an error,
+  because it called itself instead of extractSegments().
+
+
 Version: 0.15.4 [2011-10-30]
 o Added save() and load() methods to AbstractCBS, which are wrappers
   for saveObject() and loadObject() that assert the correct class

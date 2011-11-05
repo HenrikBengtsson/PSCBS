@@ -113,7 +113,7 @@ setMethodS3("extractSegment", "AbstractCBS", function(this, idx, ...) {
   # Argument 'region':
   idx <- Arguments$getIndex(idx, max=nbrOfSegments(this, splitters=TRUE));
 
-  extractSegment(this, idxs=idx, ...);
+  extractSegments(this, idxs=idx, ...);
 }, private=TRUE) # extractSegment()
 
 
@@ -441,6 +441,9 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-04
+# o BUG FIX: extractSegment() for AbstractCBS would give an error, because
+#   it called itself instead of extractSegments().
 # 2011-10-21
 # o Added mergeThreeSegments() to AbstractCBS.
 # 2011-10-17
