@@ -50,10 +50,21 @@ setMethodS3("getSegmentSizes", "PairedPSCBS", function(fit, by=c("length", "coun
 })
 
 
-setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
+setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'from':
+  from <- match.arg(from);
+
+  # Argument 'adjustFor':
+  if (!is.null(adjustFor)) {
+    adjustFor <- Arguments$getCharacters(adjustFor);
+    adjustFor <- tolower(adjustFor);
+    knownValues <- c("ab", "loh", "roh");
+    adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE);
+  }
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -62,80 +73,147 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   }
  
   verbose && enter(verbose, "Updating mean level estimates");
+  verbose && cat(verbose, "Adjusting for:");
+  verbose && print(verbose, adjustFor);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Extract the data and segmentation results
+  # Extract the segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  data <- getLocusData(fit);
-
   segs <- getSegments(fit, splitters=TRUE);
-
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
 
-  chromosome <- data$chromosome;
-  x <- data$x;
-  CT <- data$CT;
-  rho <- data$rho;
-  muN <- data$muN;
-  isSnp <- !is.na(muN);
-  isHet <- isSnp & (muN == 1/2);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Update the TCN segments
+  # Assert that adjustments can be made
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  isSplitter <- isSegmentSplitter(fit);
-  for (ss in seq(length=nbrOfSegments)[!isSplitter]) {
-    verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
-    seg <- segs[ss,];
-    verbose && print(verbose, seg);
+  if (is.element("ab", adjustFor)) {
+    if (!is.element("abCall", names(segs))) {
+      adjustFor <- setdiff(adjustFor, "ab");
+      throw("Cannot adjust for AB, because they haven't been called.");
+    }
+  }
 
-    chr <- seg[["chromosome"]];
-    chrTag <- sprintf("chr%02d", chr);
+  if (is.element("loh", adjustFor)) {
+    if (!is.element("lohCall", names(segs))) {
+      adjustFor <- setdiff(adjustFor, "loh");
+      throw("Cannot adjust for LOH, because they haven't been called.");
+    }
+  }
 
-    for (what in c("tcn", "dh")) {
-      keys <- paste(what, c("Start", "End"), sep="");
-      xStart <- seg[[keys[1]]];
-      xEnd <- seg[[keys[2]]];
-      verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
-      # Nothing todo?
-      if (is.na(xStart) && is.na(xEnd)) {
-        next;
+  if (is.element("roh", adjustFor)) {
+    if (!is.element("rohCall", names(segs))) {
+      adjustFor <- setdiff(adjustFor, "roh");
+      throw("Cannot adjust for ROH, because they haven't been called.");
+    }
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Update the (TCN,DH) mean levels from locus-level data?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  if (from == "loci") {
+    data <- getLocusData(fit);
+    chromosome <- data$chromosome;
+    x <- data$x;
+    CT <- data$CT;
+    rho <- data$rho;
+    muN <- data$muN;
+    isSnp <- !is.na(muN);
+    isHet <- isSnp & (muN == 1/2);
+
+    isSplitter <- isSegmentSplitter(fit);
+    for (ss in seq(length=nbrOfSegments)[!isSplitter]) {
+      verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
+      seg <- segs[ss,];
+      verbose && print(verbose, seg);
+  
+      chr <- seg[["chromosome"]];
+      chrTag <- sprintf("chr%02d", chr);
+  
+      for (what in c("tcn", "dh")) {
+        keys <- paste(what, c("Start", "End"), sep="");
+        xStart <- seg[[keys[1]]];
+        xEnd <- seg[[keys[2]]];
+        verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
+        # Nothing todo?
+        if (is.na(xStart) && is.na(xEnd)) {
+          next;
+        }
+  
+        stopifnot(xStart <= xEnd);
+  
+        # (b) Identify units
+        units <- which(chromosome == chr & xStart <= x & x <= xEnd);
+  
+        # (c) Adjust for missing values
+        if (what == "tcn") {
+          value <- CT;
+        } else if (what == "dh") {
+          value <- rho;
+        }
+        keep <- which(!is.na(value[units]));
+        units <- units[keep];
+  
+        # (d) Update mean
+        gamma <- mean(value[units]);
+  
+        # Sanity check
+        stopifnot(length(units) == 0 || !is.na(gamma));
+  
+        # Update the segment boundaries, estimates and counts
+        key <- paste(what, "Mean", sep="");
+        seg[[key]] <- gamma;
       }
+  
+      verbose && print(verbose, seg);
+  
+      segs[ss,] <- seg;
+  
+      verbose && exit(verbose);
+    } # for (ss ...)
+  } # if (from ...)
 
-      stopifnot(xStart <= xEnd);
 
-      # (b) Identify units
-      units <- which(chromosome == chr & xStart <= x & x <= xEnd);
 
-      # (c) Adjust for missing values
-      if (what == "tcn") {
-        value <- CT;
-      } else if (what == "dh") {
-        value <- rho;
-      }
-      keep <- which(!is.na(value[units]));
-      units <- units[keep];
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Adjust segment means from various types of calls
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  if (length(adjustFor) > 0) {
+    verbose && enter(verbose, "Adjusting segment means");
+    verbose && cat(verbose, "Adjusting for:");
+    verbose && print(verbose, adjustFor);
 
-      # (d) Update mean
-      gamma <- mean(value[units]);
-
-      # Sanity check
-      stopifnot(length(units) == 0 || !is.na(gamma));
-
-      # Update the segment boundaries, estimates and counts
-      key <- paste(what, "Mean", sep="");
-      seg[[key]] <- gamma;
+    if (is.element("ab", adjustFor)) {
+      verbose && enter(verbose, "Adjusting for AB");
+      calls <- segs$abCall;
+      segs$dhMean[calls] <- 1/2;
+      verbose && exit(verbose);
     }
 
-    verbose && print(verbose, seg);
+    if (is.element("loh", adjustFor)) {
+      verbose && enter(verbose, "Adjusting for LOH");
+      calls <- segs$lohCall;
+      segs$dhMean[calls] <- 0;
+      verbose && exit(verbose);
+    }
 
-    segs[ss,] <- seg;
+    if (is.element("roh", adjustFor)) {
+      verbose && enter(verbose, "Adjusting for ROH");
+      calls <- segs$rohCall;
+      segs$dhMean[calls] <- as.double(NA);
+      verbose && exit(verbose);
+    }
 
     verbose && exit(verbose);
-  } # for (ss ...)
+  } # if (length(adjustFor) > 0)
 
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Update (C1,C2) mean levels
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update (C1,C2) per segment");
   # Append (C1,C2) estimates
   tcn <- segs$tcnMean;
@@ -145,6 +223,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   segs$c1Mean <- C1;
   segs$c2Mean <- C2;
   verbose && exit(verbose);
+
 
   # Return results
   res <- fit;
@@ -160,6 +239,8 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ##############################################################################
 # HISTORY
+# 2011-11-12
+# o Added arguments 'from' and 'adjustFor' to updateMeans().
 # 2011-01-16
 # o BUG FIX: updateMeans() save to the incorrect column names.
 # 2011-01-12

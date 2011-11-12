@@ -81,3 +81,5 @@ isSegmentSplitter isSegmentSplitter.CBS isSegmentSplitter.PSCBS
  getSegmentSizes.PairedPSCBS
 sampleCNs sampleCNs.AbstractCBS
 mergeThreeSegments
+callROH callROHOneSegment callROHOneSegment.PairedPSCBS
+testROH testROH.numeric

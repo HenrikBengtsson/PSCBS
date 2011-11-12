@@ -235,6 +235,11 @@
 \alias{sampleCNs}
 \alias{sampleCNs.AbstractCBS}
 \alias{mergeThreeSegments}
+\alias{callROH}
+\alias{callROHOneSegment}
+\alias{callROHOneSegment.PairedPSCBS}
+\alias{testROH}
+\alias{testROH.numeric}
 
 \description{
   This page contains aliases for all "non-documented" objects that

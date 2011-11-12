@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.16.0 [2011-11-12]
+o Added callROH().
+o Added arguments 'from' and 'adjustFor' to updateMeans().
+
+
 Version: 0.15.5 [2011-11-04]
 o BUG FIX: extractSegment() for AbstractCBS would give an error,
   because it called itself instead of extractSegments().
