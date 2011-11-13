@@ -57,7 +57,6 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.null(csN)) {
     verbose && enter(verbose, "Calculating confidence scores");
-
     # Assuming naive genotyping a'la aroma.light::callNaiveGenotypes()
     # was used to call genotypes 'muN' from 'betaN'.
     

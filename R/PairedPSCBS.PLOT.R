@@ -645,7 +645,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
 #
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #
-setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=".*", quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,6), Blim=c(0,1), xScale=1e-6, ..., subset=0.1, add=FALSE, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=".*", quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,6), Blim=c(0,1), xScale=1e-6, ..., subset=0.1, add=FALSE, oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
   # To please R CMD check
   fit <- x;
  
@@ -794,8 +794,8 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
   chrTags <- sprintf("Chr%02d", chromosomes);
 
   if (!add) {
-    subplots(length(tracks), ncol=1);
-    par(mar=c(1,4,1,2)+1);
+    subplots(length(tracks), ncol=1);    
+    par(oma=oma, mar=mar);
   }
 
   gh <- fit;
@@ -933,6 +933,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
 
 ############################################################################
 # HISTORY:
+# 2011-11-12
+# o Added argument 'oma' and 'mar' to plotTracksManyChromosomes() for
+#   PairedPSCBS for setting graphical parameters when 'add' == FALSE.
 # 2011-09-30
 # o GENERALIZATION: Now drawLevels() for PairedPSCBS allows for drawing
 #   segmentation results in 'betaT' space.

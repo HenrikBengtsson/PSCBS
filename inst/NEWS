@@ -3,6 +3,8 @@ Package: PSCBS
 ==============
 
 Version: 0.16.0 [2011-11-12]
+o Added argument 'oma' and 'mar' to plotTracksManyChromosomes() for
+  PairedPSCBS for setting graphical parameters when 'add' == FALSE.
 o Added callROH().
 o Added arguments 'from' and 'adjustFor' to updateMeans().
 
