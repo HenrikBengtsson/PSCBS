@@ -283,7 +283,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
 #
 # @keyword internal 
 #*/###########################################################################  
-setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, method=c("diff", "res", "abs"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
+setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, method=c("diff", "res", "abs", "DNAcopy"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -310,8 +310,16 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
   if (!is.null(weights)) {
     estimator <- sprintf("weighted %s", estimator);
     estimator <- R.utils::toCamelCase(estimator);
-  }  
-  estimatorFcn <- get(estimator, mode="function");
+  }
+
+  if (method == "DNAcopy") {
+    estimatorFcn <- function(y, trim=0.025, ...) {
+      sigma2 <- DNAcopy:::trimmed.variance(y, trim=trim);
+      sqrt(sigma2);
+    }
+  } else {
+    estimatorFcn <- get(estimator, mode="function");
+  }
 
 
   # Subset by chromosomes?
@@ -357,6 +365,12 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
     } else {
       sigma <- estimatorFcn(y, na.rm=na.rm);
     }
+    df <- length(y);
+  } else if (method == "DNAcopy") {
+    if (na.rm) {
+      y <- y[!is.na(y)];
+    }
+    sigma <- estimatorFcn(y, ...);
     df <- length(y);
   } else {
     throw("Method no implemented: ", method);
@@ -406,6 +420,9 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-15
+# o Added method="DNAcopy" to estimateStandardDeviation() for CBS, which
+#   estimates the std. dev. using DNAcopy:::trimmed.variance().
 # 2011-10-16
 # o Added extractTotalCNs() for CBS.
 # o Implemented extractCNs() for CBS.

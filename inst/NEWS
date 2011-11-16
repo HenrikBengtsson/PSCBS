@@ -2,12 +2,24 @@
 Package: PSCBS
 ==============
 
+Version: 0.16.2 [2011-11-15]
+o Added pruneBySD() for CBS, which does what undo.splits="sdundo"'
+  for DNA::segment(), but on the already segmented results.
+o Now updateMeans() uses locus-specific weights, iff available.
+o Added updateBoundaries() for CBS to update (start,stop) per segment.
+o CORRECTNESS: Now updateMeans() for CBS identify loci by the internal
+  'segRows' field and no longer by locations of segment boundaries,
+  which gave slightly incorrect estimates for "tied" loci.
+
+
 Version: 0.16.1 [2011-11-15]
 o Now more segmentation parameters are stored in the CBS object.
 o SPEEDUP: Now segmentByCBS() will use memoization to retrieve 
   so called "sequential boundaries for early stopping", iff any of
   the DNAcopy::segment() arguments 'alpha', 'nperm' and 'eta' are
   specified.  See also DNAcopy::getbdry().
+o Added method="DNAcopy" to estimateStandardDeviation() for CBS, which
+  estimates the std. dev. using DNAcopy:::trimmed.variance().
 o BUG FIX: extractSegments() for CBS would throw an error, because in
   most cases it would created a corrupt internal 'segRows' field.
 

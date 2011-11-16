@@ -256,6 +256,110 @@ setMethodS3("getSegmentSizes", "CBS", function(fit, by=c("length", "count"), ...
 })
 
 
+setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+ 
+  verbose && enter(verbose, "Updating boundaries");
+  verbose && cat(verbose, "Number of segments: ", 
+                                  nbrOfSegments(fit, splitters=FALSE));
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Extract the data and segmentation results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  data <- getLocusData(fit);
+  segs <- getSegments(fit, splitters=TRUE);
+  segRows <- fit$segRows;
+
+  nbrOfSegments <- nrow(segs);
+  chromosome <- data$chromosome;
+  x <- data$x;
+  y <- data$y;
+  w <- data$w;
+  hasWeights <- !is.null(w);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Update segments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  for (ss in seq(length=nbrOfSegments)) {
+    verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
+    segRow <- segRows[ss,];
+    seg <- segs[ss,];
+
+    # A splitter - nothing todo?
+    if (is.na(segRow[[1]]) && is.na(segRow[[2]])) {
+      next;
+    }
+
+    # (a) Identify units (loci)
+    units <- segRow[[1]]:segRow[[2]];
+    verbose && cat(verbose, "Loci:");
+    verbose && str(verbose, units);
+
+    # (b) Extract signals
+    ySS <- y[units];
+    xSS <- x[units];
+    cSS <- chromosome[units];
+    if (hasWeights) {
+      wSS <- w[units];
+    }
+
+    # (c) Drop missing values
+    keep <- (!is.na(ySS) & !is.na(xSS) & !is.na(cSS));
+    if (hasWeights) {
+      keep <- keep & (!is.na(wSS) & w > 0);
+    }
+    keep <- which(keep);
+    ySS <- ySS[keep];
+    xSS <- xSS[keep];
+    cSS <- cSS[keep];
+    if (hasWeights) {
+      wSS <- wSS[keep];
+    }
+    units <- units[keep];
+    verbose && cat(verbose, "Loci (non-missing):");
+    verbose && str(verbose, units);
+
+    # (d) Identify (chromosome, start, stop)
+    stopifnot(all(cSS == cSS[1]));
+    cSS <- cSS[1];
+    xRange <- range(xSS, na.rm=TRUE);
+    verbose && cat(verbose, "Range:");
+    verbose && print(verbose, xRange);
+
+    # (e) Update segment information
+    seg$chromosome <- cSS;
+    seg$start <- xRange[1];
+    seg$end <- xRange[2];
+
+    segs[ss,] <- seg;
+
+    verbose && exit(verbose);
+  } # for (ss ...)
+
+  # Update results
+  res <- fit;
+  res$output <- segs;
+
+  # Rejoin segments?
+  if (isTRUE(res$params$joinSegments)) {
+    res <- joinSegments(res, verbose=less(verbose,10));
+  }
+
+  verbose && exit(verbose);
+
+  res;
+}) # updateBoundaries()
+
+
+
 setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -268,59 +372,72 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
   }
  
   verbose && enter(verbose, "Updating mean level estimates");
+  verbose && cat(verbose, "Number of segments: ", 
+                                  nbrOfSegments(fit, splitters=FALSE));
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the data and segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   data <- getLocusData(fit);
-
-  segs <- getSegments(fit, splitters=FALSE);
+  segs <- getSegments(fit, splitters=TRUE);
+  segRows <- fit$segRows;
 
   nbrOfSegments <- nrow(segs);
-  verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
-
   chromosome <- data$chromosome;
   x <- data$x;
   y <- data$y;
+  w <- data$w;
+  hasWeights <- !is.null(w);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Update segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   for (ss in seq(length=nbrOfSegments)) {
     verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
+    segRow <- segRows[ss,];
     seg <- segs[ss,];
 
-    chr <- seg[["chromosome"]];
-    chrTag <- sprintf("chr%02d", chr);
-
-    keys <- c("start", "end");
-    xStart <- seg[[keys[1]]];
-    xEnd <- seg[[keys[2]]];
-    verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
-    # Nothing todo?
-    if (is.na(xStart) && is.na(xEnd)) {
+    # A splitter - nothing todo?
+    if (is.na(segRow[[1]]) && is.na(segRow[[2]])) {
       next;
     }
 
-    stopifnot(xStart <= xEnd);
+    # (a) Identify units (loci)
+    units <- segRow[[1]]:segRow[[2]];
 
-    # (b) Identify units
-    units <- which(chromosome == chr & xStart <= x & x <= xEnd);
+    # (b) Extract signals
+    ySS <- y[units];
+    if (hasWeights) {
+      wSS <- w[units];
+    }
 
-    # (c) Adjust for missing values
-    value <- y;
-    keep <- which(!is.na(value[units]));
+    # (c) Drop missing values
+    keep <- (!is.na(ySS));
+    if (hasWeights) {
+      keep <- keep & (!is.na(wSS) & w > 0);
+    }
+    keep <- which(keep);
+    ySS <- ySS[keep];
+    if (hasWeights) {
+      wSS <- wSS[keep];
+    }
     units <- units[keep];
+    nbrOfLoci <- length(units);
 
     # (d) Update mean
-    gamma <- mean(value[units]);
+    if (hasWeights) {
+      wSS <- wSS / sum(wSS);
+      gamma <- sum(wSS*ySS);
+    } else {
+      gamma <- mean(ySS);
+    }
 
     # Sanity check
-    stopifnot(length(units) == 0 || !is.na(gamma));
+    stopifnot(nbrOfLoci == 0 || !is.na(gamma));
 
-    # Update the segment boundaries, estimates and counts
-    key <- "mean";
-    seg[[key]] <- gamma;
+    # (d) Update the segment statistics
+    seg$mean <- gamma;
+    seg$nbrOfLoci <- nbrOfLoci;
 
     segs[ss,] <- seg;
 
@@ -340,6 +457,12 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-15
+# o Now updateMeans() uses locus-specific weights, iff available.
+# o Added updateBoundaries() for CBS to update (start,stop) per segment.
+# o CORRECTNESS: Now updateMeans() for CBS identify loci by the internal
+#   'segRows' field and no longer by locations of segment boundaries,
+#   which gave slightly incorrect estimates for "tied" loci.
 # 2011-10-16
 # o Added isSegmentSplitter().
 # 2011-10-08

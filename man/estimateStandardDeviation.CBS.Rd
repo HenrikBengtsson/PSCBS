@@ -20,7 +20,7 @@
  Estimates the whole-genome standard deviation of the signals.
 }
 
-\usage{\method{estimateStandardDeviation}{CBS}(fit, chromosomes=NULL, method=c("diff", "res", "abs"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...)}
+\usage{\method{estimateStandardDeviation}{CBS}(fit, chromosomes=NULL, method=c("diff", "res", "abs", "DNAcopy"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...)}
 
 \arguments{
  \item{chromosomes}{An optional \code{\link[base]{vector}} specifying the subset of
