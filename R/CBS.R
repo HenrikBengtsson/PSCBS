@@ -314,7 +314,7 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
     # (c) Drop missing values
     keep <- (!is.na(ySS) & !is.na(xSS) & !is.na(cSS));
     if (hasWeights) {
-      keep <- keep & (!is.na(wSS) & w > 0);
+      keep <- keep & (!is.na(wSS) & wSS > 0);
     }
     keep <- which(keep);
     ySS <- ySS[keep];
@@ -414,7 +414,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
     # (c) Drop missing values
     keep <- (!is.na(ySS));
     if (hasWeights) {
-      keep <- keep & (!is.na(wSS) & w > 0);
+      keep <- keep & (!is.na(wSS) & wSS > 0);
     }
     keep <- which(keep);
     ySS <- ySS[keep];

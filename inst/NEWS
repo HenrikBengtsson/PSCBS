@@ -2,7 +2,10 @@
 Package: PSCBS
 ==============
 
+
 Version: 0.16.2 [2011-11-15]
+o Now segmentByCBS(..., w) stores weights 'w', if given, in the 
+  locus-level data table of the returned CBS object.
 o Added pruneBySD() for CBS, which does what undo.splits="sdundo"'
   for DNA::segment(), but on the already segmented results.
 o Now updateMeans() uses locus-specific weights, iff available.

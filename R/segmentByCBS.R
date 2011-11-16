@@ -257,8 +257,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Drop data points without known genomic positions, because that
-  # is what DNAcopy::CNA() will do otherwise.  At the end, we will 
-  # undo this such that the returned 'data' object is complete.
+  # is what DNAcopy::CNA() will do otherwise.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ok <- (!is.na(data$chrom) & !is.na(data$x));
   if (any(!ok)) {
@@ -697,7 +696,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     }
     fit$output <- output;
     fit$segRows <- segRows;
-  }
+  } # if (nbrOfNonMissingLoci == 0)
 
   verbose && cat(verbose, "Captured output that was sent to stdout:");
   stdout <- paste(stdout, collapse="\n");
@@ -723,6 +722,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Store genomewide index
   fit$data$index <- data$index;
+
+  # Store weights
+  fit$data$w <- data$w;
+
   rm(data);
 
   verbose && exit(verbose);
