@@ -468,7 +468,7 @@ setMethodS3("plotC1C2", "PairedPSCBS", function(fit, ..., xlab=expression(C[1]),
 }, private=TRUE)
 
 
-setMethodS3("pointsC1C2", "PairedPSCBS", function(fit, cex=NULL, ...) {
+setMethodS3("pointsC1C2", "PairedPSCBS", function(fit, cex=NULL, col="#00000033", ...) {
   data <- extractC1C2(fit);
   X <- data[,1:2,drop=FALSE];
   n <- data[,4,drop=TRUE];
@@ -481,14 +481,14 @@ setMethodS3("pointsC1C2", "PairedPSCBS", function(fit, cex=NULL, ...) {
     cex <- cex + 1/2;
   }
 
-  points(X, cex=cex, ...);
+  points(X, cex=cex, col=col, ...);
 }, private=TRUE)
 
 
-setMethodS3("linesC1C2", "PairedPSCBS", function(fit, ...) {
+setMethodS3("linesC1C2", "PairedPSCBS", function(fit, col="#00000033", ...) {
   xy <- extractMinorMajorCNs(fit);
   xy <- xy[,1:2,drop=FALSE];
-  lines(xy, ...);
+  lines(xy, col=col, ...);
 }, private=TRUE)
 
 
@@ -934,6 +934,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
 ############################################################################
 # HISTORY:
 # 2011-11-12
+# o Added argument col="#00000033" to plotC1C2() and linesC1C2().
 # o Added argument 'oma' and 'mar' to plotTracksManyChromosomes() for
 #   PairedPSCBS for setting graphical parameters when 'add' == FALSE.
 # 2011-09-30

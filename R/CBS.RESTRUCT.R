@@ -94,14 +94,21 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  updateSegRows <- function(segRows, idxs) {
-    segRows <- segRows[idxs,,drop=FALSE];
+  updateSegRows <- function(segRows, idxs=NULL) {
+    if (!is.null(idxs)) {
+      segRows <- segRows[idxs,,drop=FALSE];
+    }
     ns <- segRows[,2] - segRows[,1] + 1L;
-    from <- c(1L, cumsum(ns)[-length(ns)]);
+    from <- c(1L, cumsum(ns)[-length(ns)]+1L);
     to <- from + (ns - 1L);
     segRows[,1] <- from;
-    segRows[,2] <- to;
+    segRows[,2] <- to;   
     verbose && str(verbose, segRows);
+
+    # Sanity check
+    ns2 <- segRows[,2] - segRows[,1] + 1L;
+    stopifnot(all(ns2 == ns));
+
     segRows;
   } # updateSegRows()
 
@@ -150,9 +157,9 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update locus data");
 
-  segRows <- segRows[idxs,,drop=FALSE];
-  from <- segRows[[1]];
-  to <- segRows[[2]];
+  segRowsT <- segRows[idxs,,drop=FALSE];
+  from <- segRowsT[[1]];
+  to <- segRowsT[[2]];
   ok <- (!is.na(from) & !is.na(to));
   from <- from[ok];
   to <- to[ok];
@@ -174,9 +181,9 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   # Update 'segRows'
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   verbose && enter(verbose, "Update 'segRows'");
+  segRowsT <- updateSegRows(segRowsT);
+  d <- segRows[idxs,] - segRowsT;
 
-  segRows <- updateSegRows(segRows, idxs=idxs);
-  d <- segRows[idxs,] - segRows;
   # Sanity check
   stopifnot(identical(d[,1], d[,2]));
   d <- d[,1];
@@ -296,6 +303,9 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
 
 ############################################################################
 # HISTORY:
+# 2011-11-15
+# o BUG FIX: extractSegments() for CBS would throw an error, because in
+#   most cases it would created a corrupt internal 'segRows' field.
 # 2011-10-20
 # o Now append() for CBS also appends '...$params$knownSegments'.
 # 2011-10-16

@@ -2,6 +2,16 @@
 Package: PSCBS
 ==============
 
+Version: 0.16.1 [2011-11-15]
+o Now more segmentation parameters are stored in the CBS object.
+o SPEEDUP: Now segmentByCBS() will use memoization to retrieve 
+  so called "sequential boundaries for early stopping", iff any of
+  the DNAcopy::segment() arguments 'alpha', 'nperm' and 'eta' are
+  specified.  See also DNAcopy::getbdry().
+o BUG FIX: extractSegments() for CBS would throw an error, because in
+  most cases it would created a corrupt internal 'segRows' field.
+
+
 Version: 0.16.0 [2011-11-12]
 o Added argument 'oma' and 'mar' to plotTracksManyChromosomes() for
   PairedPSCBS for setting graphical parameters when 'add' == FALSE.

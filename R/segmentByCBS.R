@@ -96,6 +96,30 @@
 #*/########################################################################### 
 setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # DNAcopy::getbdry() is slow for now default settings.  Below we 
+  # implement a memoized version of this function.
+  getbdry2 <- function(eta, nperm, alpha, tol=0.01, verbose=FALSE) {
+    require("R.cache") || throw("Package not loaded: R.cache");
+
+    key <- list(method="segmentByCBS",
+                eta=eta, nperm=as.integer(nperm), alpha=alpha, tol=tol,
+                version="0.16.1");
+    dirs <- c("PSCBS", "segmentByCBS", "sbdry");
+    bdry <- loadCache(key=key, dirs=dirs);
+    if (!is.null(bdry)) return(bdry);
+
+    max.ones <- floor(nperm * alpha) + 1L;
+    bdry <- DNAcopy::getbdry(eta=eta, nperm=nperm, max.ones=max.ones, tol=tol);
+
+    saveCache(bdry, key=key, dirs=dirs);
+
+    bdry;
+  } # getbdry2()
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'y':
@@ -555,7 +579,34 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Sanity check
   stopifnot(nrow(cnData) == nrow(data));
 
+
+  userArgs <- list(...);
+  if (length(userArgs) > 0) {
+    verbose && cat(verbose, "User arguments:");
+    verbose && str(verbose, userArgs);
+  }
+
+  # Check if 'sbdry' can/should be precalculated.  This uses memoization
+  # so that next time you segment with same 'nperm', 'alpha' and 'eta'
+  # parameters, there will be much less startup overhead.
+  if (length(userArgs) > 0 && !is.element("sbdry", names(userArgs))) {
+    keys <- c("nperm", "alpha", "eta");
+    keep <- is.element(keys, names(userArgs));
+    if (any(keep)) {
+      verbose && enter(verbose, "Precalculating argument 'sbdry' (with memoization)");
+      # Precalculate boundaries
+      argsT <- formals[keys];
+      keys <- keys[keep];
+      argsT[keys] <- userArgs[keys];
+      argsT$verbose <- less(verbose, 5);
+      sbdry <- do.call(getbdry2, args=argsT);
+      userArgs$sbdry <- sbdry;
+      verbose && exit(verbose);
+    }
+  }
+
   params <- list();
+
   if (hasWeights) {
     params$weights <- data$w;
   }
@@ -568,11 +619,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && cat(verbose, "Segmentation parameters:");
   verbose && str(verbose, params);
 
-  userArgs <- list(...);
+  # Assign/overwrite by user arguments
   if (length(userArgs) > 0) {
-    verbose && cat(verbose, "User arguments:");
-    verbose && str(verbose, userArgs);
-    # Assign/overwrite by user arguments
     for (ff in names(userArgs)) {
       params[[ff]] <- userArgs[[ff]];
     }
@@ -680,13 +728,16 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && exit(verbose);
 
 
-
-  params <- list(
-    joinSegments = joinSegments,
-    knownSegments = knownSegments,
-    seed = seed
-  );
-
+  # Store also interesting parameters to DNAcopy::segment()
+  keys <- setdiff(names(formals), c("x", "weights", "sbdry", "verbose"));
+  keys <- c(keys, "undo", "seed");
+  keep <- is.element(names(params), keys);
+  keep <- names(params)[keep];
+  params <- params[keep];
+  params$undo <- undo;
+  params$joinSegments <- joinSegments;
+  params$knownSegments <- knownSegments;
+  params$seed <- seed;
   fit$params <- params;
 
 #  class(fit) <- c("CBS", class(fit));
@@ -768,6 +819,12 @@ setMethodS3("segmentByCBS", "data.frame", function(y, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-15
+# o Now more segmentation parameters are stored in the CBS object.
+# o SPEEDUP: Now segmentByCBS() will use memoization to retrieve 
+#   so called "sequential boundaries for early stopping", iff any of
+#   the DNAcopy::segment() arguments 'alpha', 'nperm' and 'eta' are
+#   specified.  See also DNAcopy::getbdry().
 # 2011-10-20
 # o Now the result of segmentByCBS() is guaranteed to include the
 #   segments given by argument 'knownSegments'.  Before empty segments

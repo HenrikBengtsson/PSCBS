@@ -9,7 +9,7 @@
 #  Returns @TRUE if segment is ROH, otherwise @FALSE.
 #  If it was not possible to make a call, then @NA is returned.
 # }
-setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1, tauROH=1/12, ..., verbose=FALSE) {
+setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1, delta=1/12, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -95,7 +95,7 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
   propHets <- wnHets/wnSnps;
   verbose && print(verbose, propHets);
 
-  call <- (propHets < tauROH);
+  call <- (propHets < delta);
   verbose && print(verbose, call);
 
   verbose && exit(verbose);
@@ -107,6 +107,7 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
 ##############################################################################
 # HISTORY
 # 2011-11-12 [HB]
+# o Renamed argument 'tauROH' to 'delta', cf. how we do for AB and LOH.
 # o Added argument 'minNbrOfSnps' to testROH().
 # o Added verbose output.
 # 2011-11-12 [PN]
