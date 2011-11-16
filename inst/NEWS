@@ -7,7 +7,7 @@ o Added pruneBySD() for CBS, which does what undo.splits="sdundo"'
   for DNA::segment(), but on the already segmented results.
 o Now updateMeans() uses locus-specific weights, iff available.
 o Added updateBoundaries() for CBS to update (start,stop) per segment.
-o CORRECTNESS: Now updateMeans() for CBS identify loci by the internal
+o CORRECTNESS: Now updateMeans() for CBS identifies loci via internal
   'segRows' field and no longer by locations of segment boundaries,
   which gave slightly incorrect estimates for "tied" loci.
 
