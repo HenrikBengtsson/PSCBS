@@ -685,8 +685,12 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       seg <- knownSegments[1,];
       output$ID <- sampleName;
       output$chrom <- seg$chromosome;
-      output$loc.start <- seg$start;
-      output$loc.end <- seg$end;
+      if (is.finite(seg$start)) {
+        output$loc.start <- seg$start;
+      }
+      if (is.finite(seg$end)) {
+        output$loc.end <- seg$end;
+      }
       output$num.mark <- 0L;
       output$seg.mean <- as.double(NA);
       segRows[1,] <- as.integer(NA);
@@ -784,7 +788,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (joinSegments) {
     if (nbrOfSegments == 1) {
-      range <- c(knownSegments$start, knownSegments$end);
+      starts <- knownSegments$start;
+      if (is.infinite(starts)) starts <- segs$start;
+      ends <- knownSegments$end;
+      if (is.infinite(ends)) ends <- segs$end;
+      range <- c(starts, ends);
       range <- range(range, na.rm=TRUE);
     } else {
       range <- NULL;
@@ -822,6 +830,9 @@ setMethodS3("segmentByCBS", "data.frame", function(y, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-17
+# o Adjusted segmentByCBS() such that it can handle 'knownSegments' with
+#   chromosome boundaries given as -Inf and +Inf.
 # 2011-11-15
 # o Now more segmentation parameters are stored in the CBS object.
 # o SPEEDUP: Now segmentByCBS() will use memoization to retrieve 

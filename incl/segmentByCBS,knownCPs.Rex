@@ -18,7 +18,8 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-subplots(5, ncol=1)
+subplots(6, ncol=1)
+par(mar=c(2,1,1,1)+0.1);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation
@@ -39,6 +40,18 @@ knownSegments <- data.frame(
 fit2 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
 print(fit2)
 plotTracks(fit2)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
+# Chromosome boundaries can be specified as -Inf and +Inf
+knownSegments <- data.frame(
+  chromosome=c(     0,      0),
+  start     =c(  -Inf, x[401]),
+  end       =c(x[349],   +Inf)
+)
+fit2b <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+print(fit2b)
+plotTracks(fit2b)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
