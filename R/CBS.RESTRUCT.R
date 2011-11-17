@@ -95,18 +95,30 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   updateSegRows <- function(segRows, idxs=NULL) {
+    verbose && str(verbose, segRows);
     if (!is.null(idxs)) {
       segRows <- segRows[idxs,,drop=FALSE];
     }
+#    verbose && cat(verbose, "Number of segments: ", nrow(segRows));
+#    verbose && str(verbose, segRows);
+
+    # Treat splitters separately
+    isSplitter <- (is.na(segRows[,1]) & is.na(segRows[,2]));
+
     ns <- segRows[,2] - segRows[,1] + 1L;
+#    verbose && cat(verbose, "Number of loci per segment:");
+#    verbose && str(verbose, ns);
+
+    ns <- ns[!isSplitter];
     from <- c(1L, cumsum(ns)[-length(ns)]+1L);
     to <- from + (ns - 1L);
-    segRows[,1] <- from;
-    segRows[,2] <- to;   
+    segRows[!isSplitter,1] <- from;
+    segRows[!isSplitter,2] <- to;   
     verbose && str(verbose, segRows);
 
     # Sanity check
     ns2 <- segRows[,2] - segRows[,1] + 1L;
+    ns2 <- ns2[!isSplitter];
     stopifnot(all(ns2 == ns));
 
     segRows;
@@ -303,6 +315,9 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
 
 ############################################################################
 # HISTORY:
+# 2011-11-17
+# o BUG FIX: extractSegments() for CBS would throw an error when
+#   there were multiple chromosomes.
 # 2011-11-15
 # o BUG FIX: extractSegments() for CBS would throw an error, because in
 #   most cases it would created a corrupt internal 'segRows' field.
