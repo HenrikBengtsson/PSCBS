@@ -1,4 +1,47 @@
-setMethodS3("pruneBySD", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE) {
+###########################################################################/**
+# @set "class=CBS"
+# @RdocMethod pruneBySdUndo
+#
+# @title "Prune the CBS profile by dropping change points that \"too small\""
+#
+# \description{
+#  @get "title", where \"too small\" means that the amplitude of the 
+#  change points is less than a multiple of the overall standard deviation
+#  of the copy-number signals.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{fit}{A @see "CBS" object.}
+#   \item{rho}{A positive @double scalar specifying the number of standard
+#     deviations (\code{rho*sigma}) required in order to keep a change point.}
+#   \item{sigma}{The whole-genome standard deviation of the locus-level
+#     copy number signals.  The default is to calculate it from the data
+#     and as done in the \pkg{DNAcopy} package.}
+#   \item{...}{(Optional) Additional arguments passed to the standard
+#     deviation estimator function.}
+#   \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a @see "CBS" object (of the same class as \code{fit}).
+# }
+#
+# \details{
+#  This method corresponds to using the \code{undo} argument when calling
+#  @see "segmentByCBS", which in turn corresponds to using the 
+#  \code{undo.splits="sdundo"} and \code{undo.SD} of the underlying
+#  @see "DNAcopy::segment" method.
+# }
+#
+# @examples "../incl/segmentByCBS,pruneBySdUndo.Rex"
+#
+# @author
+#
+# @keyword internal
+#*/###########################################################################  
+setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -151,12 +194,14 @@ setMethodS3("pruneBySD", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbo
   verbose && exit(verbose);
 
   fitP;
-}, protected=TRUE) # pruneBySD()
+}, protected=TRUE) # pruneBySdUndo()
 
 
 ############################################################################
 # HISTORY:
+# 2011-11-16
+# o Added Rdoc comments.
 # 2011-11-15
-# o Added pruneBySD() for CBS.
+# o Added pruneBySdUndo() for CBS.
 # o Created.
 ############################################################################

@@ -83,4 +83,4 @@ sampleCNs sampleCNs.AbstractCBS
 mergeThreeSegments
 callROH callROHOneSegment callROHOneSegment.PairedPSCBS
 testROH testROH.numeric
-pruneBySD pruneBySD.CBS updateBoundaries updateBoundaries.CBS
+pruneBySdUndo updateBoundaries updateBoundaries.CBS

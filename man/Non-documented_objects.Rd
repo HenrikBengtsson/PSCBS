@@ -240,8 +240,7 @@
 \alias{callROHOneSegment.PairedPSCBS}
 \alias{testROH}
 \alias{testROH.numeric}
-\alias{pruneBySD}
-\alias{pruneBySD.CBS}
+\alias{pruneBySdUndo}
 \alias{updateBoundaries}
 \alias{updateBoundaries.CBS}
 
