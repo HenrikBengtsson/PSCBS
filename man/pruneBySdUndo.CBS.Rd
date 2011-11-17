@@ -14,10 +14,10 @@
 \alias{pruneBySdUndo,CBS-method}
 
 
-\title{Prune the CBS profile by dropping change points that \"too small\"}
+\title{Prune the CBS profile by dropping change points that are too small}
 
 \description{
- Prune the CBS profile by dropping change points that \"too small\", where \"too small\" means that the amplitude of the
+ Prune the CBS profile by dropping change points that are too small, where "too small" means that the amplitude of the
  change points is less than a multiple of the overall standard deviation
  of the copy-number signals.
 }

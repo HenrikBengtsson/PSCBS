@@ -2,10 +2,10 @@
 # @set "class=CBS"
 # @RdocMethod pruneBySdUndo
 #
-# @title "Prune the CBS profile by dropping change points that \"too small\""
+# @title "Prune the CBS profile by dropping change points that are too small"
 #
 # \description{
-#  @get "title", where \"too small\" means that the amplitude of the 
+#  @get "title", where "too small" means that the amplitude of the 
 #  change points is less than a multiple of the overall standard deviation
 #  of the copy-number signals.
 # }
@@ -194,7 +194,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
   verbose && exit(verbose);
 
   fitP;
-}, protected=TRUE) # pruneBySdUndo()
+}) # pruneBySdUndo()
 
 
 ############################################################################

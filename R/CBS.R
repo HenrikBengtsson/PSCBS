@@ -356,7 +356,7 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
   verbose && exit(verbose);
 
   res;
-}) # updateBoundaries()
+}, protected=TRUE) # updateBoundaries()
 
 
 
