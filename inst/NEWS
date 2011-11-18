@@ -14,7 +14,7 @@ o BUG FIX: Now argument/parameter 'seed' is correctly preserved by
   segmentByCBS().  So is 'tbn' for segmentByPairedPSCBS().
 o BUG FIX: segmentByPairedPSCBS() would give an error when trying to
   segment DH if the TCN segment contains no data points, which could
-  happen if 'knownSegments' specifies an empty segment, centromere.
+  happen if 'knownSegments' specifies an empty segment, e.g. centromere.
 o BUG FIX: extractSegments() for CBS would throw an error when
   there were multiple chromosomes.
 
