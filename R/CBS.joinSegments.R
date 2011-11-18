@@ -33,21 +33,39 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
       currSeg <- segs[ss,];
       currStart <- currSeg[,"start"];
       prevEnd <- prevSeg[,"end"];
+
+      # Sanity check
+      stopifnot(all(currStart >= prevEnd, na.rm=TRUE));
   
       # Center CP
       xMid <- (prevEnd + currStart) / 2;
-  
+
       # Move previous end and current start to this centered CP
       segs[ss,"start"] <- xMid;
       segs[ss-1L,"end"] <- xMid;
-  
+
       prevSeg <- currSeg;
     } # for (ss ...)
     verbose && exit(verbose);
+
+    # Sanity checks
+    stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
+    stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
+    stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+
+    if (nbrOfSegs > 6) {
+      verbose && print(verbose, head(segs));
+      verbose && print(verbose, tail(segs));
+    } else {
+      verbose && print(verbose, segs);
+    }
   } # if (nbrOfSegs > 1)
 
 
   if (!is.null(range)) {
+    verbose && enter(verbose, "Adjust for 'range'");
+    verbose && cat(verbose, "Range:");
+    verbose && print(verbose, range);
     xMin <- min(range, na.rm=TRUE);
     xMax <- max(range, na.rm=TRUE);
     if (nbrOfSegs > 0) {
@@ -57,13 +75,32 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
       # Sanity check
       stopifnot(segs[1L,"end"] <= xMax);
       segs[nbrOfSegs,"end"] <- xMax;
+
+      # Sanity checks
+      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
+      stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
+      stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+
+
+      if (nbrOfSegs > 6) {
+        verbose && print(verbose, head(segs));
+        verbose && print(verbose, tail(segs));
+      } else {
+        verbose && print(verbose, segs);
+      }
     } # if (nbrOfSegs > 0)
+    verbose && exit(verbose);
   } # if (!is.null(range))
 
   fit$output <- segs;
 
-  verbose && print(verbose, head(as.data.frame(fit)));
-  verbose && print(verbose, tail(as.data.frame(fit)));
+  segs <- as.data.frame(fit);
+  if (nbrOfSegs > 6) {
+    verbose && print(verbose, head(segs));
+    verbose && print(verbose, tail(segs));
+  } else {
+    verbose && print(verbose, segs);
+  }
   verbose && exit(verbose);
 
   fit;
@@ -72,6 +109,8 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
 
 ############################################################################
 # HISTORY:
+# 2011-11-17
+# o Added more sanity checks to joinSegments().
 # 2011-09-04
 # o Updated joinSegments() to be aware of new column names in CBS.
 # 2011-06-14

@@ -553,19 +553,20 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     regionTag <- sprintf("[%g,%g]", xStart, xEnd);
     verbose && enter(verbose, sprintf("Total CN segment #%d (%s) of %d", kk, regionTag, nbrOfSegs));
 
-    nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOrLoci"];
-    verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
-
+    # Empty segment?
     rowStart <- tcnSegRows[kk,1];
     rowEnd <- tcnSegRows[kk,2];
-
+  
     # Empty segment or a segment separator?
-    isSplitter <- (is.na(rowStart) && is.na(rowEnd));
+    isEmptySegment <- (is.na(rowStart) && is.na(rowEnd));
+    isSplitter <- (isEmptySegment && is.na(xStart) && is.na(xEnd));
+    isEmptySegment <- (isEmptySegment & !isSplitter);
+
     if (isSplitter) {
       verbose && cat(verbose, "No signals to segment. Just a \"splitter\" segment. Skipping.");
 
       # Sanity check
-      stopifnot(kk > 1);
+      stopifnot(kk >= 1);
 
       # Add a splitter segment
       segT <- segs[[kk-1]];
@@ -589,25 +590,36 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
 
       verbose && exit(verbose);
       next;
-    }
+    } # if (isSplitter)
 
-    # Extract locus data for TCN segment
-    rows <- rowStart:rowEnd;
-    dataKK <- data[rows,,drop=FALSE];
-    nbrOfLociKK <- nrow(dataKK);
+
+    nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOfLoci"];
+    verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
 
     # Sanity check
+    stopifnot(!isEmptySegment || (isEmptySegment && (nbrOfTCNLociKK == 0)));
+
+    if (nbrOfTCNLociKK > 0) {
+      # Extract locus data for TCN segment
+      rows <- rowStart:rowEnd;
+  ##    if (nrow(knownSegments) == 0) {
+  ##      gammaT <- tcnSegments[kk,"tcnMean"];
+  ##      verbose && print(verbose, all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
+  ##      stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
+  ##    }
+    } else {
+      rows <- integer(0);
+    } # if (nbrOfTCNLociKK > 0)
+
+    dataKK <- data[rows,,drop=FALSE];
+    nbrOfLociKK <- nrow(dataKK);
+  
+    # Sanity check
     stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK);
-    gammaT <- tcnSegments[kk,"tcnMean"];
-
-##    if (nrow(knownSegments) == 0) {
-##      verbose && print(verbose, all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
-##      stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
-##    }
-
+  
     verbose && cat(verbose, "Locus data for TCN segment:");
     verbose && str(verbose, dataKK);
-
+  
     verbose && cat(verbose, "Number of loci: ", nbrOfLociKK);
     nbrOfSnpsKK <- sum(!is.na(dataKK$muN));
     verbose && printf(verbose, "Number of SNPs: %d (%.2f%%)\n", 
@@ -616,15 +628,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
                                   nbrOfHetsKK, 100*nbrOfHetsKK/nbrOfSnpsKK);
 
-
-    verbose && enter(verbose, "Segmenting DH signals");
-    fields <- attachLocally(dataKK, fields=c("chromosome", "x", "rho", "index"));
-
     # Since segments in 'knownSegments' has already been used in the TCN
     # segmentation, they are not needed in the DH segmentation.
     currChromosome <- data$chromosome[1];
     verbose && cat(verbose, "Chromosome: ", currChromosome);
     knownSegmentsT <- data.frame(chromosome=currChromosome, start=xStart, end=xEnd);
+
+    verbose && enter(verbose, "Segmenting DH signals");
+    fields <- attachLocally(dataKK, fields=c("chromosome", "x", "rho", "index"));  
 
     fit <- segmentByCBS(rho, 
                         chromosome=chromosome, x=x,
@@ -878,6 +889,9 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 ############################################################################
 # HISTORY:
 # 2011-11-17
+# o BUG FIX: segmentByPairedPSCBS() would give an error when trying to
+#   segment DH if the TCN segment contains no data points, which could
+#   happen if 'knownSegments' specifies an empty segment, centromere.
 # o Added segmentByPairedPSCBS() for PairedPSCBS, which is just a
 #   wrapper for resegment().
 # 2011-10-21

@@ -195,9 +195,17 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     throw("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)));
   }
 
-  # Known segments must not share loci
+  # Detailed validation of 'knownSegments'.
   for (chr in sort(unique(knownSegments$chromosome))) {
     dd <- subset(knownSegments, chromosome == chr);
+
+    # Known segments must not overlap
+    if (!all(dd$start[-1] >= dd$end[-nrow(dd)], na.rm=TRUE)) {
+      print(knownSegments);
+      throw("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments'.");
+    }
+
+    # Known segments must not share loci
     xs <- c(dd$start, dd$end);
     xs <- xs[!is.na(xs)];
     if (anyDuplicated(xs) > 0) {
@@ -404,7 +412,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       # Sanity check
       stopifnot(nbrOfSegments(splitter, splitters=TRUE) == 1);
     });
-    
+
     fitList <- list();
     for (jj in seq(length=nbrOfSegments)) {
       seg <- knownSegments[jj,];
@@ -481,8 +489,19 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
     verbose && exit(verbose);
 
-    verbose && print(verbose, head(as.data.frame(fit)));
-    verbose && print(verbose, tail(as.data.frame(fit)));
+    segs <- getSegments(fit);
+    if (nrow(segs) > 6) {
+      verbose && print(verbose, head(segs));
+      verbose && print(verbose, tail(segs));
+    } else {
+      verbose && print(verbose, segs);
+    }
+
+    # Sanity checks
+    segs <- getSegments(fit);
+    stopifnot(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE));
+    stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
+    stopifnot(all(diff(segs$end) > 0, na.rm=TRUE)); 
 
     # Sanity check
 #    if (nrow(fit$data) != length(y)) {
@@ -502,12 +521,18 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     return(fit);
   } # if (nbrOfSegments > 1)
 
+  # Sanity check
+  nbrOfSegments <- nrow(knownSegments);
+  stopifnot(nbrOfSegments <= 1);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Specific segment?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (nbrOfSegments > 0) {
     knownSegments <- subset(knownSegments, chromosome == chromosome);
+    nbrOfSegments <- nrow(knownSegments);
+    # Sanity check
+    stopifnot(nbrOfSegments <= 1);
   }
 
   if (nbrOfSegments == 1) {
@@ -789,11 +814,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   if (joinSegments) {
     if (nbrOfSegments == 1) {
       starts <- knownSegments$start;
-      if (is.infinite(starts)) starts <- segs$start;
       ends <- knownSegments$end;
+      if (is.infinite(starts)) starts <- segs$start;
       if (is.infinite(ends)) ends <- segs$end;
-      range <- c(starts, ends);
-      range <- range(range, na.rm=TRUE);
+      range <- range(c(starts, ends), na.rm=TRUE);
     } else {
       range <- NULL;
     }
@@ -831,6 +855,10 @@ setMethodS3("segmentByCBS", "data.frame", function(y, ...) {
 ############################################################################
 # HISTORY:
 # 2011-11-17
+# o ROBUSTNESS: Now segmentByCBS() does more validation of 'knownSegments'.
+# o ROBUSTNESS: Added more sanity checks for (start,end) of segments
+#   after merging segments that have been segmented separately due
+#   to 'knownSegments'.
 # o Adjusted segmentByCBS() such that it can handle 'knownSegments' with
 #   chromosome boundaries given as -Inf and +Inf.
 # 2011-11-15
