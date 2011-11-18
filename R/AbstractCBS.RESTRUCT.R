@@ -117,7 +117,7 @@ setMethodS3("extractSegment", "AbstractCBS", function(this, idx, ...) {
 }, private=TRUE) # extractSegment()
 
 
-setMethodS3("extractRegions", "AbstractCBS", function(this, regions, H=1, ...) {
+setMethodS3("extractRegions", "AbstractCBS", function(this, regions, H=1, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -441,6 +441,8 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-17
+# o FIX: extractRegions() for AbstractCBS would also show verbose output.
 # 2011-11-04
 # o BUG FIX: extractSegment() for AbstractCBS would give an error, because
 #   it called itself instead of extractSegments().

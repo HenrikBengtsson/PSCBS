@@ -10,6 +10,7 @@ o Now argument 'mar' for plotTracks() defaults to NULL.
 o ROBUSTNESS: Added redundancy tests for segmentByCBS() and
   segmentByPairedPSCBS() with argument 'knownSegments'.
 o ROBUSTNESS: Now segmentByCBS() does more validation of 'knownSegments'.
+o FIX: extractRegions() for AbstractCBS would also show verbose output.
 o BUG FIX: Now argument/parameter 'seed' is correctly preserved by
   segmentByCBS().  So is 'tbn' for segmentByPairedPSCBS().
 o BUG FIX: segmentByPairedPSCBS() would give an error when trying to
