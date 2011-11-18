@@ -10,6 +10,7 @@
 \alias{segmentByPairedPSCBS.default}
 \alias{segmentByPairedPSCBS}
  \alias{segmentByPairedPSCBS.data.frame}
+ \alias{segmentByPairedPSCBS.PairedPSCBS}
  \alias{segmentByPairedPSCBS}
 
  \title{Segment total copy numbers and allele B fractions using the Paired PSCBS method}

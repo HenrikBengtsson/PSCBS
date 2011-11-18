@@ -523,8 +523,13 @@ setMethodS3("sampleCNs", "AbstractCBS", function(fit, size=NULL, ...) {
 setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
+setMethodS3("resegment", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+
 ############################################################################
 # HISTORY:
+# 2011-11-17
+# o Added resegment() for AbstractCBS.
 # 2011-10-30
 # o Added save() and load() methods to AbstractCBS.
 # 2011-10-16

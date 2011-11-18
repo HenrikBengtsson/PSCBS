@@ -84,3 +84,4 @@ mergeThreeSegments
 callROH callROHOneSegment callROHOneSegment.PairedPSCBS
 testROH testROH.numeric
 pruneBySdUndo updateBoundaries updateBoundaries.CBS
+resegment resegment.AbstractCBS resegment.PairedPSCBS

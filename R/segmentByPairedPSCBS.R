@@ -1,6 +1,7 @@
 ###########################################################################/**
 # @RdocDefault segmentByPairedPSCBS
 # @alias segmentByPairedPSCBS.data.frame
+# @alias segmentByPairedPSCBS.PairedPSCBS
 # @alias segmentByPairedPSCBS
 #
 # @title "Segment total copy numbers and allele B fractions using the Paired PSCBS method"
@@ -867,8 +868,18 @@ setMethodS3("segmentByPairedPSCBS", "data.frame", function(CT, ...) {
 })
 
 
+
+setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
+  resegment(...);
+}) # segmentByPairedPSCBS()
+
+
+
 ############################################################################
 # HISTORY:
+# 2011-11-17
+# o Added segmentByPairedPSCBS() for PairedPSCBS, which is just a
+#   wrapper for resegment().
 # 2011-10-21
 # o Now segmentByPairedCBS() handles forced separators in 'knownSegments'.
 # 2011-10-20

@@ -237,8 +237,91 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
 
 
 
+setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Resegmenting a PairedPSCBS object");
+
+  # Use the locus-level data of the PairedPSCBS object
+  data <- getLocusData(fit);
+  class(data) <- "data.frame";
+  drop <- c("rho", "betaTN");
+  keep <- !is.element(colnames(data), drop);
+  data <- data[,keep];
+  verbose && str(verbose, data);
+
+  verbose && cat(verbose, "Number of loci: ", nrow(data));
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup arguments to be passed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Overriding default arguments");
+
+  # (a) The default arguments
+  formals <- formals(segmentByPairedPSCBS.default);
+
+  formals <- formals[!sapply(formals, FUN=is.language)];
+  formals <- formals[!sapply(formals, FUN=is.name)];
+  drop <- c("CT", "betaT", "betaN", "muN", "chromosome", "x", "...");
+  keep <- !is.element(names(formals), drop);
+  formals <- formals[keep];
+
+  # (b) The arguments used in previous fit
+  params <- fit$params;
+  keep <- is.element(names(params), names(formals));
+  params <- params[keep];
+  # Don't trust 'tbn'!  TODO. /HB 20111117
+  params$tbn <- NULL;
+
+  # (c) The arguments in '...'
+  userArgs <- list(..., verbose=verbose);
+
+  # (d) Merge
+  args <- formals;  
+  args2 <- append(params, userArgs);
+  for (kk in seq(along=args2)) {
+    value <- args2[[kk]];
+    if (!is.null(value)) {
+      key <- names(args2)[kk];
+      if (!is.null(key)) {
+        args[[key]] <- value;
+      } else {
+        args <- append(args, list(value));
+      }
+    }
+  } # for (key ...)
+  verbose && str(verbose, args[names(args) != "verbose"]);
+
+  args <- append(list(data), args);
+  verbose && cat(verbose, "Arguments with data:");
+  verbose && str(verbose, args[names(args) != "verbose"]);
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "Calling segmentByPairedPSCBS()");
+  fit <- do.call("segmentByPairedPSCBS", args);
+  verbose && exit(verbose);
+
+  verbose && exit(verbose);
+
+  fit;
+}, protected=TRUE) # resegment()
+
+
+
 ##############################################################################
 # HISTORY
+# 2011-11-17
+# o Added resegment() for PairedPSCBS for easy resegmentation.
 # 2011-11-12
 # o Added arguments 'from' and 'adjustFor' to updateMeans().
 # 2011-01-16

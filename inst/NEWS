@@ -3,6 +3,7 @@ Package: PSCBS
 ==============
 
 Version: 0.16.3 [2011-11-17]
+o Added resegment() for PairedPSCBS for easy resegmentation.
 o Adjusted segmentByCBS() such that it can handle 'knownSegments'
   with chromosome boundaries given as -Inf and +Inf.
 o Now argument 'mar' for plotTracks() defaults to NULL.
