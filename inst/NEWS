@@ -7,6 +7,8 @@ o Added resegment() for CBS and PairedPSCBS for easy resegmentation.
 o Adjusted segmentByCBS() such that it can handle 'knownSegments'
   with chromosome boundaries given as -Inf and +Inf.
 o Now argument 'mar' for plotTracks() defaults to NULL.
+o ROBUSTNESS: Added redundancy tests for segmentByCBS() and
+  segmentByPairedPSCBS() with argument 'knownSegments'.
 o ROBUSTNESS: Now segmentByCBS() does more validation of 'knownSegments'.
 o BUG FIX: Now argument/parameter 'seed' is correctly preserved by
   segmentByCBS().  So is 'tbn' for segmentByPairedPSCBS().
