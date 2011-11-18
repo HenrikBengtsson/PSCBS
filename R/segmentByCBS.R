@@ -1,6 +1,7 @@
 ###########################################################################/**
 # @RdocDefault segmentByCBS
 # @alias segmentByCBS.data.frame
+# @alias segmentByCBS.CBS
 # @alias segmentByCBS.CNA
 # @alias segmentByCBS
 #
@@ -355,11 +356,20 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     fit <- Reduce(append, fitList);
     # Not needed anymore
     rm(fitList);
+
+    # Update parameters that otherwise may be incorrect
+    fit$params$seed <- seed;
+
     verbose && str(verbose, fit);
     verbose && exit(verbose);
 
-    verbose && print(verbose, head(as.data.frame(fit)));
-    verbose && print(verbose, tail(as.data.frame(fit)));
+    segs <- as.data.frame(fit);
+    if (nrow(segs) < 6) {
+      verbose && print(verbose, segs);
+    } else {
+      verbose && print(verbose, head(segs));
+      verbose && print(verbose, tail(segs));
+    }
    
     verbose && exit(verbose);
 
@@ -461,11 +471,12 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
         rm(list=fields); # Not needed anymore
 
-        if (nbrOfSegments(fit) < 6) {
-          verbose && print(verbose, as.data.frame(fit));
+        segs <- as.data.frame(fit);
+        if (nrow(segs) < 6) {
+          verbose && print(verbose, segs);
         } else {
-          verbose && print(verbose, head(as.data.frame(fit)));
-          verbose && print(verbose, tail(as.data.frame(fit)));
+          verbose && print(verbose, head(segs));
+          verbose && print(verbose, tail(segs));
         }
       } # if (isSplitter)
 
@@ -485,8 +496,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Not needed anymore
     rm(fitList);
 
-    verbose && str(verbose, fit);
+    # Update parameters that otherwise may be incorrect
+    fit$params$seed <- seed;
 
+    verbose && str(verbose, fit);
     verbose && exit(verbose);
 
     segs <- getSegments(fit);
@@ -851,10 +864,17 @@ setMethodS3("segmentByCBS", "data.frame", function(y, ...) {
 })
 
 
+setMethodS3("segmentByCBS", "CBS", function(...) {
+  resegment(...);
+}) # segmentByCBS()
+
+
 
 ############################################################################
 # HISTORY:
 # 2011-11-17
+# o BUG FIX: Now parameter 'seed' is preserved by segmentByCBS().
+# o Added segmentByCBS() for CBS, which is just a wrapper for resegment().
 # o ROBUSTNESS: Now segmentByCBS() does more validation of 'knownSegments'.
 # o ROBUSTNESS: Added more sanity checks for (start,end) of segments
 #   after merging segments that have been segmented separately due

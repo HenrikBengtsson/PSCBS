@@ -245,6 +245,7 @@
 \alias{updateBoundaries.CBS}
 \alias{resegment}
 \alias{resegment.AbstractCBS}
+\alias{resegment.CBS}
 \alias{resegment.PairedPSCBS}
 
 \description{

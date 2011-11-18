@@ -51,6 +51,7 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
  \tab \code{getSegmentSizes} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.CBS]{plotTracks}} \tab Plots copy numbers along the genome.\cr
  \tab \code{\link[PSCBS:pruneBySdUndo.CBS]{pruneBySdUndo}} \tab Prune the CBS profile by dropping change points that are too small.\cr
+ \tab \code{segmentByCBS} \tab  -\cr
  \tab \code{\link[PSCBS:writeSegments.CBS]{writeSegments}} \tab Writes the table of segments to file.\cr
 }
 

@@ -10,6 +10,7 @@
 \alias{segmentByCBS.default}
 \alias{segmentByCBS}
  \alias{segmentByCBS.data.frame}
+ \alias{segmentByCBS.CBS}
  \alias{segmentByCBS.CNA}
  \alias{segmentByCBS}
 

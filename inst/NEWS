@@ -3,11 +3,13 @@ Package: PSCBS
 ==============
 
 Version: 0.16.3 [2011-11-17]
-o Added resegment() for PairedPSCBS for easy resegmentation.
+o Added resegment() for CBS and PairedPSCBS for easy resegmentation.
 o Adjusted segmentByCBS() such that it can handle 'knownSegments'
   with chromosome boundaries given as -Inf and +Inf.
 o Now argument 'mar' for plotTracks() defaults to NULL.
 o ROBUSTNESS: Now segmentByCBS() does more validation of 'knownSegments'.
+o BUG FIX: Now argument/parameter 'seed' is correctly preserved by
+  segmentByCBS().  So is 'tbn' for segmentByPairedPSCBS().
 o BUG FIX: segmentByPairedPSCBS() would give an error when trying to
   segment DH if the TCN segment contains no data points, which could
   happen if 'knownSegments' specifies an empty segment, centromere.

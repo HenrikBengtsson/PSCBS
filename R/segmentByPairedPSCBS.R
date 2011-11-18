@@ -369,8 +369,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
                 knownSegments=knownSegmentsKK,
                 alphaTCN=alphaTCN, alphaDH=alphaDH,
                 undoTCN=undoTCN, undoDH=undoDH,
-                flavor=flavor,
-                ..., verbose=verbose);
+                flavor=flavor, ...,
+                seed=NULL,
+                verbose=verbose);
 
       # Sanity checks
       if (nrow(knownSegmentsKK) == 0) {
@@ -379,7 +380,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
         stopifnot(all.equal(fit$data$muN, muN));
       }
 
-      # Updata betaT (which is otherwise equals betaTN)
+      # Update betaT (which is otherwise equals betaTN)
       fit$data$betaT <- betaT;
 
       rm(list=fields); # Not needed anymore
@@ -401,8 +402,17 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
     verbose && str(verbose, fit);
     verbose && exit(verbose);
 
-    verbose && print(verbose, head(as.data.frame(fit)));
-    verbose && print(verbose, tail(as.data.frame(fit)));
+    # Update parameters that otherwise may be incorrect
+    fit$params$tbn <- tbn;
+    fit$params$seed <- seed;
+
+    segs <- as.data.frame(fit);
+    if (nrow(segs) < 6) {
+      verbose && print(verbose, segs);
+    } else {
+      verbose && print(verbose, head(segs));
+      verbose && print(verbose, tail(segs));
+    }
    
     verbose && exit(verbose);
 
@@ -486,6 +496,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
                       joinSegments=joinSegments,
                       knownSegments=knownSegments,
                       alpha=alphaTCN, undo=undoTCN, ...,
+                      seed=NULL,
                       verbose=verbose);
   verbose && str(verbose, fit);
 
@@ -642,6 +653,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
                         joinSegments=joinSegments,
                         knownSegments=knownSegmentsT,
                         alpha=alphaDH, undo=undoDH, ...,
+                        seed=NULL,
                         verbose=verbose);
     verbose && str(verbose, fit);
     dhSegments <- fit$output;
@@ -889,6 +901,10 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 ############################################################################
 # HISTORY:
 # 2011-11-17
+# o ROBUSTNESS: Now all internal iterative calls to segmentByPairedPSCBS()
+#   and segmentByCBS() have an explicit seed=NULL.
+# o BUG FIX: Now 'tbn' argument is correctly preserved in the stored 
+#   parameter settings of segmentByPairedPSCBS().
 # o BUG FIX: segmentByPairedPSCBS() would give an error when trying to
 #   segment DH if the TCN segment contains no data points, which could
 #   happen if 'knownSegments' specifies an empty segment, centromere.

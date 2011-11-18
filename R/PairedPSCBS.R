@@ -249,12 +249,12 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   }
 
 
-  verbose && enter(verbose, "Resegmenting a PairedPSCBS object");
+  verbose && enter(verbose, "Resegmenting a ", class(fit)[1], " object");
 
   # Use the locus-level data of the PairedPSCBS object
   data <- getLocusData(fit);
   class(data) <- "data.frame";
-  drop <- c("rho", "betaTN");
+  drop <- c("rho", "betaTN", "index");
   keep <- !is.element(colnames(data), drop);
   data <- data[,keep];
   verbose && str(verbose, data);
@@ -266,13 +266,15 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # Setup arguments to be passed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Overriding default arguments");
+  segFcnName <- "segmentByCBS";
+  segFcn <- getMethodS3(segFcnName, "default");
 
   # (a) The default arguments
-  formals <- formals(segmentByPairedPSCBS.default);
+  formals <- formals(segFcn);
 
   formals <- formals[!sapply(formals, FUN=is.language)];
   formals <- formals[!sapply(formals, FUN=is.name)];
-  drop <- c("CT", "betaT", "betaN", "muN", "chromosome", "x", "...");
+  drop <- c("chromosome", "x", "w", "CT", "betaT", "betaN", "muN", "...");
   keep <- !is.element(names(formals), drop);
   formals <- formals[keep];
 
@@ -307,8 +309,8 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   verbose && str(verbose, args[names(args) != "verbose"]);
   verbose && exit(verbose);
 
-  verbose && enter(verbose, "Calling segmentByPairedPSCBS()");
-  fit <- do.call("segmentByPairedPSCBS", args);
+  verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
+  fit <- do.call(segFcnName, args);
   verbose && exit(verbose);
 
   verbose && exit(verbose);

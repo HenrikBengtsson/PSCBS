@@ -454,9 +454,90 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
 }, protected=TRUE) # updateMeans()
 
 
+setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Resegmenting a ", class(fit)[1], " object");
+  segFcnName <- "segmentByCBS";
+  segFcn <- getMethodS3(segFcnName, "default");
+
+  # Use the locus-level data of the segmentation object
+  data <- getLocusData(fit);
+  class(data) <- "data.frame";
+  drop <- c("index");
+  keep <- !is.element(colnames(data), drop);
+  data <- data[,keep];
+  verbose && str(verbose, data);
+
+  verbose && cat(verbose, "Number of loci: ", nrow(data));
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Setup arguments to be passed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Overriding default arguments");
+
+  # (a) The default arguments
+  formals <- formals(segFcn);
+
+  formals <- formals[!sapply(formals, FUN=is.language)];
+  formals <- formals[!sapply(formals, FUN=is.name)];
+  drop <- c("chromosome", "x", "y", "w", "...");
+  keep <- !is.element(names(formals), drop);
+  formals <- formals[keep];
+
+  # (b) The arguments used in previous fit
+  params <- fit$params;
+  keep <- is.element(names(params), names(formals));
+  params <- params[keep];
+
+  # (c) The arguments in '...'
+  userArgs <- list(..., verbose=verbose);
+
+  # (d) Merge
+  args <- formals;  
+  args2 <- append(params, userArgs);
+  for (kk in seq(along=args2)) {
+    value <- args2[[kk]];
+    if (!is.null(value)) {
+      key <- names(args2)[kk];
+      if (!is.null(key)) {
+        args[[key]] <- value;
+      } else {
+        args <- append(args, list(value));
+      }
+    }
+  } # for (key ...)
+  verbose && str(verbose, args[names(args) != "verbose"]);
+
+  args <- append(list(data), args);
+  verbose && cat(verbose, "Arguments with data:");
+  verbose && str(verbose, args[names(args) != "verbose"]);
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
+  fit <- do.call(segFcnName, args);
+  verbose && exit(verbose);
+
+  verbose && exit(verbose);
+
+  fit;
+}, protected=TRUE) # resegment() 
+
 
 ############################################################################
 # HISTORY:
+# 2011-11-17
+# o Added resegment() for CBS for easy resegmentation.
 # 2011-11-15
 # o Now updateMeans() uses locus-specific weights, iff available.
 # o Added updateBoundaries() for CBS to update (start,stop) per segment.
