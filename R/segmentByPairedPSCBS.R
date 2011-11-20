@@ -16,9 +16,16 @@
 # @synopsis
 #
 # \arguments{
-#   \item{CT}{A @numeric @vector of J tumor total tumor copy number (TCN) ratios in [0,+@Inf) (due to noise, small negative values are also allowed).  The TCN ratios are typically scaled such that copy-neutral diploid loci have a mean of two.}
-#   \item{betaT}{A @numeric @vector of J tumor allele B fractions (BAFs) in [0,1] (due to noise, values may be slightly outside as well) or @NA for non-polymorphic loci.}
-#   \item{betaN}{A @numeric @vector of J matched normal BAFs in [0,1] (due to noise, values may be slightly outside as well) or @NA for non-polymorphic loci.}
+#   \item{CT}{A @numeric @vector of J tumor total tumor copy number (TCN)
+#        ratios in [0,+@Inf) (due to noise, small negative values are
+#        also allowed).  The TCN ratios are typically scaled such that
+#        copy-neutral diploid loci have a mean of two.}
+#   \item{betaT}{A @numeric @vector of J tumor allele B fractions (BAFs)
+#        in [0,1] (due to noise, values may be slightly outside as well)
+#        or @NA for non-polymorphic loci.}
+#   \item{betaN}{A @numeric @vector of J matched normal BAFs in [0,1]
+#        (due to noise, values may be slightly outside as well) or @NA
+#        for non-polymorphic loci.}
 #   \item{muN}{An optional @numeric @vector of J genotype calls in 
 #        \{0,1/2,1\} for AA, AB, and BB, respectively, 
 #        and @NA for non-polymorphic loci.
@@ -96,6 +103,14 @@
 #   If so, an informative error is thrown.
 # }
 #
+# \section{Paired PSCBS with only genotypes}{
+#   If allele B fractions for the matched normal (\code{betaN}) are
+#   not available, but genotypes (\code{muN}) are, then it is possible
+#   to run a version of Paired PSCBS where TumorBoost normalization
+#   of the tumor allele B fractions is skipped.  In order for this
+#   to work, argument \code{tbn} must be set to @FALSE.
+# }
+#
 # @examples "../incl/segmentByPairedPSCBS.Rex"
 #
 # @author
@@ -117,7 +132,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -144,16 +159,25 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # Argument 'betaT':
   betaT <- Arguments$getDoubles(betaT, length=length2, disallow="Inf");
 
+  # Argument 'betaN':
+  if (!is.null(betaN)) {
+    betaN <- Arguments$getDoubles(betaN, length=length2, disallow="Inf");
+  }
+
   # Argument 'muN':
   if (!is.null(muN)) {
     muN <- Arguments$getDoubles(muN, length=length2, range=c(0,1), disallow="Inf");
   }
 
+  if (is.null(betaN) && is.null(muN)) {
+    throw("If argument 'betaN' is not given, then 'muN' must be.");
+  }
+
   # Argument 'tbn':
   tbn <- Arguments$getLogical(tbn);
-
-  # Argument 'betaN':
-  betaN <- Arguments$getDoubles(betaN, length=length2, disallow="Inf");
+  if (tbn && is.null(betaN)) {
+    throw("When argument 'betaN' is not available, then argument 'tbn' must FALSE.");
+  }
 
   # Argument 'chromosome':
   if (is.null(chromosome)) {
@@ -292,7 +316,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN, muN=NU
   # Setup data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Setup up data");
-  data <- data.frame(chromosome=chromosome, x=x, CT=CT, betaT=betaT, betaTN=betaTN, betaN=betaN, muN=muN);
+  data <- data.frame(chromosome=chromosome, x=x, CT=CT, betaT=betaT, betaTN=betaTN, muN=muN);
+  if (!is.null(betaN)) {
+    data$betaN <- betaN;
+  }
   verbose && str(verbose, data);
   rm(chromosome, x, CT, betaT, betaTN, betaN, muN); # Not needed anymore
   verbose && exit(verbose);
@@ -900,6 +927,10 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2011-11-19
+# o GENERALIZATION: Now it is possible to run Paired PSCBS (without
+#   TumorBoost) when only genotypes but not BAFs are available for the
+#   matched normal.
 # 2011-11-17
 # o ROBUSTNESS: Now all internal iterative calls to segmentByPairedPSCBS()
 #   and segmentByCBS() have an explicit seed=NULL.
