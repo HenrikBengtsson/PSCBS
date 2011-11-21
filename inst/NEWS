@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.17.1 [2011-11-19]
+o BUG FIX: The internal sanity check of testROH() on weights was
+  slightly too conservative (required to high precision) when it
+  came to asserting that the sum of the weights equals one.
+
+
 Version: 0.17.0 [2011-11-19]
 o GENERALIZATION: Now it is possible to run Paired PSCBS (without
   TumorBoost) when only genotypes but not BAFs are available for the

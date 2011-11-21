@@ -90,7 +90,7 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
   wnSnps <- sum(w, na.rm=TRUE);  # == 1 /HB
 
   # Sanity check
-  stopifnot(isZero(wnSnps - 1.0));
+  stopifnot(isZero(wnSnps - 1.0, neps=10));
 
   propHets <- wnHets/wnSnps;
   verbose && print(verbose, propHets);
@@ -106,6 +106,9 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
 
 ##############################################################################
 # HISTORY
+# 2011-11-21 [HB]
+# o BUG FIX: The internal sanity check on weights was slightly too
+#   conservative.
 # 2011-11-12 [HB]
 # o Renamed argument 'tauROH' to 'delta', cf. how we do for AB and LOH.
 # o Added argument 'minNbrOfSnps' to testROH().
