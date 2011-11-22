@@ -6,6 +6,8 @@ Version: 0.17.1 [2011-11-19]
 o BUG FIX: The internal sanity check of testROH() on weights was
   slightly too conservative (required to high precision) when it
   came to asserting that the sum of the weights equals one.
+o BUG FIX: resegment() for PairedPSCBS called segmentByCBS()
+  instead of segmentByPairedPSCBS().
 
 
 Version: 0.17.0 [2011-11-19]

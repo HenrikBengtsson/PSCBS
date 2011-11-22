@@ -266,7 +266,7 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # Setup arguments to be passed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Overriding default arguments");
-  segFcnName <- "segmentByCBS";
+  segFcnName <- "segmentByPairedPSCBS";
   segFcn <- getMethodS3(segFcnName, "default");
 
   # (a) The default arguments
@@ -304,12 +304,12 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   } # for (key ...)
   verbose && str(verbose, args[names(args) != "verbose"]);
 
+  verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
   args <- append(list(data), args);
-  verbose && cat(verbose, "Arguments with data:");
+  verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, args[names(args) != "verbose"]);
   verbose && exit(verbose);
 
-  verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
   fit <- do.call(segFcnName, args);
   verbose && exit(verbose);
 
@@ -322,6 +322,9 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ##############################################################################
 # HISTORY
+# 2011-11-21
+# o BUG FIX: resegment() was trying to call segmentByCBS() instead
+#   of segmentByPairedPSCBS().
 # 2011-11-17
 # o Added resegment() for PairedPSCBS for easy resegmentation.
 # 2011-11-12
