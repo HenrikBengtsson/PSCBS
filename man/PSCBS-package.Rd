@@ -25,7 +25,7 @@
 
  \section{Requirements}{
    This package requires external packages
-   R.methodsS3 (>= 1.2.1), R.utils (>= 1.9.3), DNAcopy (>= 1.24.0),
+   R.methodsS3 (>= 1.2.1), R.utils (>= 1.9.4), DNAcopy (>= 1.24.0),
    and also suggests DNAcopy (>= 1.24.0), aroma.light (>= 1.22.0), matrixStats (>=
 0.4.0), R.oo (>= 1.8.3), R.cache (>= 0.5.2), Hmisc (>= 3.8-3).
  }

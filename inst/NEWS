@@ -2,7 +2,11 @@
 Package: PSCBS
 ==============
 
-Version: 0.17.1 [2011-11-19]
+Version: 0.17.2 [2011-11-22]
+o Added findLargeGaps() and gapsToSegments().
+
+
+Version: 0.17.1 [2011-11-21]
 o BUG FIX: The internal sanity check of testROH() on weights was
   slightly too conservative (required to high precision) when it
   came to asserting that the sum of the weights equals one.

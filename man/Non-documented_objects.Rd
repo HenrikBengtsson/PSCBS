@@ -247,6 +247,7 @@
 \alias{resegment.AbstractCBS}
 \alias{resegment.CBS}
 \alias{resegment.PairedPSCBS}
+\alias{gapsToSegments}
 
 \description{
   This page contains aliases for all "non-documented" objects that
