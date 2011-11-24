@@ -220,7 +220,17 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 ##    stopifnot(is.na(tcnSegRowJJ[2]) || is.na(dhSegRowJJ[2]) || (dhSegRowJJ[2] <= tcnSegRowJJ[2]));
 
     # Indices of all loci
-    idxsAll <- tcnSegRowJJ[1]:tcnSegRowJJ[2];
+    if (all(!is.na(tcnSegRowJJ))) {
+      idxsAll <- tcnSegRowJJ[1]:tcnSegRowJJ[2];
+    } else {
+      idxsAll <- integer(0);
+    }
+
+    # Keep only loci with finite TCNs
+    idxsAll <- intersect(idxsAll, idxsCT);
+
+    # Sanity check
+    stopifnot(length(idxsAll) == nbrOfTCNs);
 
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -539,6 +549,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
 ##############################################################################
 # HISTORY
+# 2011-11-24
+# o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS would give
+#   an error, if a segment did not have any TCN signals, which can
+#   occur when known segments are specified for Paired PSCBS.
 # 2011-08-08
 # o Moved the sanity checks that tests the TCN and DH "segRows" from the
 #   bootstrapTCNandDHByRegion() to segmentByPairedPSCBS().  This is the

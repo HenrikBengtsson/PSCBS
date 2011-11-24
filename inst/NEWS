@@ -2,11 +2,14 @@
 Package: PSCBS
 ==============
 
-Version: 0.17.3 [2011-11-23]
+Version: 0.17.3 [2011-11-24]
 o Added callSegmentationOutliers() and dropSegmentationOutliers()
   for data frames.
 o CLEANUP: Renamed field 'position' of the example data to 'x'.
   This helps us clean up some of the examples.
+o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS would give
+  an error, if a segment did not have any TCN signals, which can
+  occur when known segments are specified for Paired PSCBS.
 
 
 Version: 0.17.2 [2011-11-22]
