@@ -56,7 +56,6 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
     gaps <- NULL;
     for (cc in seq(along=allChromosomes)) {
       chr <- allChromosomes[cc];
-str(chr);
       idxs <- which(chromosome == chr);
       chromosomeCC <- chromosome[idxs];
       xCC <- x[idxs];
