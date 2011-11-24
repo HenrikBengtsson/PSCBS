@@ -2,9 +2,9 @@
 # conflicts() in [R] base.
 .conflicts.OK <- TRUE
 
-## .First.lib <- function(libname, pkgname) {
+
 .onAttach <- function(libname, pkgname) {
-  pd <- utils::packageDescription(pkgname);
+  pkg <- Package(pkgname);
 
   # Inform user if DNAcopy is missing
   if (isPackageInstalled("DNAcopy")) {
@@ -17,8 +17,9 @@
     packageStartupMessage(sprintf("%s\nNOTE: %s\n%s", hrule, msg, hrule));
   }
 
-  packageStartupMessage(pkgname, " v", pd$Version, " (", 
-    pd$Date, ") successfully loaded. See ?", pkgname, " for help."); 
+  packageStartupMessage(getName(pkg), " v", getVersion(pkg), 
+      " (", getDate(pkg), ")", " successfully loaded. See ?", 
+      pkgname, " for help.\n", sep="");
 }
 
 

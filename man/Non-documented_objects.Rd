@@ -248,6 +248,8 @@
 \alias{resegment.CBS}
 \alias{resegment.PairedPSCBS}
 \alias{gapsToSegments}
+\alias{callSegmentationOutliers.data.frame}
+\alias{dropSegmentationOutliers.data.frame}
 
 \description{
   This page contains aliases for all "non-documented" objects that

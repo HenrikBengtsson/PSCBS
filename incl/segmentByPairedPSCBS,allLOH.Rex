@@ -27,20 +27,16 @@ data <- R.utils::loadObject(pathname)
 data <- subset(data, position <= 125e6)
 
 str(data)
-R.oo::attachLocally(data)
-x <- position
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Paired PSCBS segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Drop single-locus outliers
-CTs <- dropSegmentationOutliers(CT, chromosome=1, x=x, verbose=-10)
+dataS <- dropSegmentationOutliers(data)
 
 # Paired PSCBS segmentation
-fit <- segmentByPairedPSCBS(CTs, betaT=betaT, betaN=betaN,
-                            chromosome=1, x=x, 
-                            seed=0xBEEF, verbose=-10)
+fit <- segmentByPairedPSCBS(dataS, seed=0xBEEF, verbose=-10)
 
 fit <- callAB(fit, verbose=-10)
 fit <- callLOH(fit, verbose=-10)

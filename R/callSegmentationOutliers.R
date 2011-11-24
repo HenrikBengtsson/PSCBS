@@ -159,6 +159,19 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
 }) # callSegmentationOutliers()
 
 
+setMethodS3("callSegmentationOutliers", "data.frame", function(y, ...) {
+  data <- y;
+
+  # Get either CBS or PSCBS total CN signals.
+  y <- data$y;
+  if (is.null(y)) {
+    y <- data$CT;
+  }
+
+  callSegmentationOutliers(y=y, chromosome=data$chromosome, x=data$x, ...);
+}) # callSegmentationOutliers()
+
+
 setMethodS3("dropSegmentationOutliers", "default", function(y, ...) {
   isOutlier <- callSegmentationOutliers(y, ...);
   y[isOutlier] <- as.double(NA);
@@ -166,8 +179,28 @@ setMethodS3("dropSegmentationOutliers", "default", function(y, ...) {
 })
 
 
+setMethodS3("dropSegmentationOutliers", "data.frame", function(y, ...) {
+  data <- y;
+
+  isOutlier <- callSegmentationOutliers(data, ...);
+
+  # Update either CBS or PSCBS total CN signals.
+  key <- "CT";
+  if (!is.element(key, colnames(data))) {
+    key <- "y";
+  }
+
+  data[[key]][isOutlier] <- as.double(NA);
+
+  data;
+})
+
+
 ############################################################################
 # HISTORY:
+# 2011-11-23
+# o Added callSegmentationOutliers() and dropSegmentationOutliers()
+#   for data frames.
 # 2011-05-31
 # o Now explicitly using DNAcopy::nnn() to call DNAcopy functions.
 # 2010-11-27

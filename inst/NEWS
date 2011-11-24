@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.17.3 [2011-11-23]
+o Added callSegmentationOutliers() and dropSegmentationOutliers()
+  for data frames.
+o CLEANUP: Renamed field 'position' of the example data to 'x'.
+  This helps us clean up some of the examples.
+
+
 Version: 0.17.2 [2011-11-22]
 o Added findLargeGaps() and gapsToSegments().
 
