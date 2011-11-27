@@ -3,6 +3,11 @@ Package: PSCBS
 ==============
 
 Version: 0.17.4 [2011-11-26]
+o Added argument 'updateMeans=TRUE' to callROH() for PairedPSCBS.
+o Now bootstrapTCNandDHByRegion() for PairedPSCBS preserves NAs 
+  for DH and (C1,C2) quantiles, if the DH mean level is NA, which
+  can happen when a segment is called ROH.  This also makes sure
+  that a segment called ROH will not be called AB.
 o An internal sanity check of bootstrapTCNandDHByRegion() for
   PairedPSCBS would give an error if DH mean levels had been set
   to NA for segments called ROH.

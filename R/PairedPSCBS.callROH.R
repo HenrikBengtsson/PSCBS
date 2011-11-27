@@ -13,6 +13,8 @@
 #
 # \arguments{
 #   \item{...}{Additional arguments passed to @see "testROH".}
+#   \item{updateMeans}{If @TRUE, DH and (C1,C2) mean levels are set
+#    to @NA for segments called ROH, otherwise not.}
 #   \item{force}{If @FALSE, and ROH calls already exits,
 #    then nothing is done, otherwise the calls are done.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
@@ -30,7 +32,7 @@
 #   To call loss of heterozygosity (LOH) see @seemethod "callLOH".
 # }
 #*/########################################################################### 
-setMethodS3("callROH", "PairedPSCBS", function(fit, ..., force=FALSE, verbose=FALSE) {
+setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -89,7 +91,13 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., force=FALSE, verbose=FA
   params <- fit$params;
   # To add...
   fit$params <- params;
- 
+
+  # Set DH and (C1,C2) mean levels to NA?
+  if (updateMeans) {
+    fit <- updateMeans(fit, from="segments", adjustFor="roh",
+                                             verbose=less(verbose, 20));
+  }
+
   verbose && exit(verbose);
 
   invisible(fit);
@@ -147,6 +155,8 @@ setMethodS3("callROHOneSegment", "PairedPSCBS", function(fit, ..., verbose=FALSE
 
 ##############################################################################
 # HISTORY
+# 2011-11-26 [HB]
+# o Added argument 'updateMeans=TRUE' to callROH() for PairedPSCBS.
 # 2011-11-12 [HB]
 # o BUG FIX: ROH calls should be stored in column 'rohCall' (not 'rohCalls').
 # 2011-11-04 [HB]

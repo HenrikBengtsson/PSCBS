@@ -286,7 +286,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     verbose && str(verbose, idxsHet);
     verbose && cat(verbose, "Homozygous SNPs to resample for TCN:");
     verbose && str(verbose, idxsHom);
-    verbose && cat(verbose, "Non-polymorphic loci to resample for TCN:");
+        verbose && cat(verbose, "Non-polymorphic loci to resample for TCN:");
     verbose && str(verbose, idxsNonSNP);
     verbose && cat(verbose, "Heterozygous SNPs with non-DH to resample for TCN:");
     verbose && str(verbose, idxsHetNonDH);
@@ -323,7 +323,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
       }
     }
 
-    if (nbrOfDHs > 0 && !is.na(segJJ$dhMean)) {
+    shouldHaveDHs <- (nbrOfDHs > 0 && !is.na(segJJ$dhMean));
+    if (shouldHaveDHs) {
       ys <- rho[idxsDH];
       mu <- mean(ys, na.rm=TRUE);
       dMu <- (mu - segJJ$dhMean);
@@ -346,7 +347,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     # Bootstrap B times
     for (bb in seq(length=B)) {
       # (1) Bootstrap DHs
-      if (nbrOfDHs > 0) {
+      if (shouldHaveDHs) {
         # (a) Resample heterozygous SNPs (=> resampled DH units)
         idxsDHBB <- resample(idxsDH, size=nbrOfDHs, replace=TRUE);
 
@@ -550,6 +551,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 ##############################################################################
 # HISTORY
 # 2011-11-26
+# o Now bootstrapTCNandDHByRegion() for PairedPSCBS preserves NAs for DH
+#   and (C1,C2) quantiles, if the DH mean level is NA, which can happen
+#   when a segment is called ROH.
 # o An internal sanity check of bootstrapTCNandDHByRegion() for PairedPSCBS
 #   would give an error if DH mean levels had been set to NA for segments
 #   called ROH.
