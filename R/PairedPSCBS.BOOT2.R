@@ -323,7 +323,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
       }
     }
 
-    if (nbrOfDHs > 0) {
+    if (nbrOfDHs > 0 && !is.na(segJJ$dhMean)) {
       ys <- rho[idxsDH];
       mu <- mean(ys, na.rm=TRUE);
       dMu <- (mu - segJJ$dhMean);
@@ -549,6 +549,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
 ##############################################################################
 # HISTORY
+# 2011-11-26
+# o An internal sanity check of bootstrapTCNandDHByRegion() for PairedPSCBS
+#   would give an error if DH mean levels had been set to NA for segments
+#   called ROH.
 # 2011-11-24
 # o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS would give
 #   an error, if a segment did not have any TCN signals, which can

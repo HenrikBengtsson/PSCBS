@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.17.4 [2011-11-26]
+o An internal sanity check of bootstrapTCNandDHByRegion() for
+  PairedPSCBS would give an error if DH mean levels had been set
+  to NA for segments called ROH.
+
+
 Version: 0.17.3 [2011-11-24]
 o Added callSegmentationOutliers() and dropSegmentationOutliers()
   for data frames.
