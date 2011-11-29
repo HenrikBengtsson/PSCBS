@@ -250,6 +250,9 @@
 \alias{gapsToSegments}
 \alias{callSegmentationOutliers.data.frame}
 \alias{dropSegmentationOutliers.data.frame}
+\alias{hclustCNs}
+\alias{pruneByHClust}
+\alias{updateMeansTogether}
 
 \description{
   This page contains aliases for all "non-documented" objects that

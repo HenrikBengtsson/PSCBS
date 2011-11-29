@@ -21,10 +21,12 @@
  Run of homozygosity (ROH) is a property of the normal (germline) sample.
 }
 
-\usage{\method{callROH}{PairedPSCBS}(fit, ..., force=FALSE, verbose=FALSE)}
+\usage{\method{callROH}{PairedPSCBS}(fit, ..., updateMeans=TRUE, force=FALSE, verbose=FALSE)}
 
 \arguments{
   \item{...}{Additional arguments passed to \code{\link{testROH}}().}
+  \item{updateMeans}{If \code{\link[base:logical]{TRUE}}, DH and (C1,C2) mean levels are set
+   to \code{\link[base]{NA}} for segments called ROH, otherwise not.}
   \item{force}{If \code{\link[base:logical]{FALSE}}, and ROH calls already exits,
    then nothing is done, otherwise the calls are done.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}

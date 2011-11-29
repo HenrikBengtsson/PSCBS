@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.18.0 [2011-11-28]
+o Added pruneByHClust() for AbstractCBS, with implementation
+  for CBS and PairedPSCBS.
+o extractCNs() for CBS would not return a matrix but a data.frame.
+o BUG FIX: extractTotalCNs() for CBS would give an error.
+
+
 Version: 0.17.4 [2011-11-26]
 o Added argument 'updateMeans=TRUE' to callROH() for PairedPSCBS.
 o Now bootstrapTCNandDHByRegion() for PairedPSCBS preserves NAs 

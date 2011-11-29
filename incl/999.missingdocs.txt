@@ -88,3 +88,4 @@ resegment resegment.AbstractCBS resegment.CBS resegment.PairedPSCBS
 gapsToSegments
 callSegmentationOutliers.data.frame
 dropSegmentationOutliers.data.frame
+ hclustCNs pruneByHClust updateMeansTogether
