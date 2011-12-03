@@ -216,6 +216,11 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
     verbose && exit(verbose);
   } # if (merge)
 
+  verbose && enter(verbose, "Updating segment means");
+##  fit <- updateBoundaries(fit, verbose=less(verbose, 50));
+  fit <- updateMeans(fit, verbose=less(verbose, 50));
+  verbose && exit(verbose);
+
   verbose && exit(verbose);
 
   fit;
@@ -224,6 +229,8 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
 ############################################################################
 # HISTORY:
+# 2011-12-03
+# o Now pruneByHClust() for AbstractCBS updates the segment means.
 # 2011-11-28
 # o Added abstract updateMeansTogether() for AbstractCBS.
 # o Dropped kmeansCNs() stub.

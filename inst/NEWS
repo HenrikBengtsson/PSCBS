@@ -3,6 +3,7 @@ Package: PSCBS
 ==============
 
 Version: 0.18.1 [2011-12-03]
+o Now pruneByHClust() for AbstractCBS updates the segment means.
 o Added writeSegments() for PSCBS object.
 o Now print() for AbstractCBS returns getSegments(..., simplify=TRUE).
 o Added argument 'simplify' to getSegments().
