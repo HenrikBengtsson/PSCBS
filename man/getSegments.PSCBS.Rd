@@ -19,10 +19,10 @@
    Gets the segments.
  }
 
- \usage{\method{getSegments}{PSCBS}(fit, splitters=TRUE, ...)}
+ \usage{\method{getSegments}{PSCBS}(fit, simplify=FALSE, splitters=TRUE, ...)}
 
  \arguments{
-  \item{splitters}{If \code{\link[base:logical]{TRUE}}, "splitters" between chromosomes are
+  \item{simplify}{If \code{\link[base:logical]{TRUE}}, redundant and intermediate information is dropped.}#  \item{splitters}{If \code{\link[base:logical]{TRUE}}, "splitters" between chromosomes are
      preserved, otherwise dropped.}
   \item{...}{Not used.}
  }

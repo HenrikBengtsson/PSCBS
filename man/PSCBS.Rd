@@ -46,6 +46,7 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.PSCBS]{append}} \tab Appends one segmentation result to another.\cr
+ \tab \code{writeSegments} \tab  -\cr
 }
 
 

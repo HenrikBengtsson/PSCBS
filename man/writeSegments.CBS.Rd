@@ -20,17 +20,18 @@
   Writes the table of segments to file.
  }
 
- \usage{\method{writeSegments}{CBS}(fit, filename=sprintf("\%s.tsv", getSampleName(fit)), path=NULL, addHeader=TRUE, createdBy=NULL, sep="	", nbrOfDecimals=4, splitters=FALSE, overwrite=FALSE, skip=FALSE, ...)}
+ \usage{\method{writeSegments}{CBS}(fit, name=getSampleName(fit), tags=NULL, ext="tsv", path=NULL, addHeader=TRUE, createdBy=NULL, sep="	", nbrOfDecimals=4, splitters=FALSE, overwrite=FALSE, skip=FALSE, ...)}
 
  \arguments{
-   \item{filename, path}{The filename and the path of the file to be written.}
+   \item{name, tags}{Name and optional tags part of the filename}.
+   \item{path}{The directory where the file will be written.}
    \item{addHeader}{If \code{\link[base:logical]{TRUE}}, header comments are written.}
    \item{createdBy}{A header comment of whom created the file.}
    \item{splitters}{If \code{\link[base:logical]{TRUE}}, each chromosome is separated by a row
      of missing values.}
    \item{overwrite, skip}{If an output file already exists, these
      arguments specifies what should happen.}
-   \item{...}{Not used.}
+   \item{...}{Additional arguments pass to \code{getSegments()}.}
  }
 
  \value{

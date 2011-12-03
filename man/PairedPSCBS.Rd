@@ -61,7 +61,7 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
  \bold{Methods inherited from PSCBS}:\cr
-append, as.data.frame, extractChromosomes, getLocusData, isSegmentSplitter
+append, as.data.frame, extractChromosomes, getLocusData, isSegmentSplitter, writeSegments
 
  \bold{Methods inherited from AbstractCBS}:\cr
 all.equal, append, as.data.frame, dropChangePoint, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomes, getLocusData, getSampleName, getSegments, getSegmentSizes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByHClust, resegment, sampleCNs, sampleName, sampleName<-, save, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans

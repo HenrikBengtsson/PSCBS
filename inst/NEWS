@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.18.1 [2011-12-03]
+o Added writeSegments() for PSCBS object.
+o Now print() for AbstractCBS returns getSegments(..., simplify=TRUE).
+o Added argument 'simplify' to getSegments().
+o Added arguments 'name', 'tags' and 'exts' to writeSegments() and
+  writeLocusData() and dropped 'filename'.
+
+
 Version: 0.18.0 [2011-11-28]
 o Added pruneByHClust() for AbstractCBS, with implementation
   for CBS and PairedPSCBS.

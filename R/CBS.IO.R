@@ -1,13 +1,25 @@
-setMethodS3("writeLocusData", "CBS", function(fit, filename=sprintf("%s,byLocus.tsv", getSampleName(fit)), path=NULL, sep="\t", nbrOfDecimals=4L, addHeader=TRUE, createdBy=NULL, overwrite=FALSE, skip=FALSE, ...) {
+setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags=NULL, ext="tsv", path=NULL, sep="\t", nbrOfDecimals=4L, addHeader=TRUE, createdBy=NULL, overwrite=FALSE, skip=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Arguments 'filename' & 'path':
-  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
+  # Argument 'name' and 'tags':
+  name <- Arguments$getCharacter(name);
+  tags <- Arguments$getCharacters(tags);
+
+  # Argument 'ext':
+  ext <- Arguments$getCharacter(ext);
+
+  # Arguments 'path':
+  path <- Arguments$getWritablePath(path);
 
   # Argument 'nbrOfDecimals':
   nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
 
+
+
+  fullname <- paste(c(name, tags), collapse=",");
+  filename <- sprintf("%s.%s", fullname, ext);
+  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
 
   # File already exists?
   if (isFile(pathname)) {
@@ -51,7 +63,9 @@ setMethodS3("writeLocusData", "CBS", function(fit, filename=sprintf("%s,byLocus.
 
     createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z");
     hdr <- c(
-      sampleName=getSampleName(fit),
+      name=name,
+      tags=tags,
+      fullname=fullname,
       segmentationMethod=sprintf("segment() of %s", attr(fit, "pkgDetails")),
       nbrOfLoci=nbrOfLoci(fit),
       nbrOfSegments=nbrOfSegments(fit),
@@ -94,14 +108,15 @@ setMethodS3("writeLocusData", "CBS", function(fit, filename=sprintf("%s,byLocus.
 # @synopsis
 #
 # \arguments{
-#   \item{filename, path}{The filename and the path of the file to be written.}
+#   \item{name, tags}{Name and optional tags part of the filename}.
+#   \item{path}{The directory where the file will be written.}
 #   \item{addHeader}{If @TRUE, header comments are written.}
 #   \item{createdBy}{A header comment of whom created the file.}
 #   \item{splitters}{If @TRUE, each chromosome is separated by a row
 #     of missing values.}
 #   \item{overwrite, skip}{If an output file already exists, these
 #     arguments specifies what should happen.}
-#   \item{...}{Not used.}
+#   \item{...}{Additional arguments pass to \code{getSegments()}.}
 # }
 #
 # \value{
@@ -117,16 +132,28 @@ setMethodS3("writeLocusData", "CBS", function(fit, filename=sprintf("%s,byLocus.
 #
 # @keyword internal
 #*/###########################################################################  
-setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", getSampleName(fit)), path=NULL, addHeader=TRUE, createdBy=NULL, sep="\t", nbrOfDecimals=4L, splitters=FALSE, overwrite=FALSE, skip=FALSE, ...) {
+setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=NULL, ext="tsv", path=NULL, addHeader=TRUE, createdBy=NULL, sep="\t", nbrOfDecimals=4L, splitters=FALSE, overwrite=FALSE, skip=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Arguments 'filename' & 'path':
-  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
+  # Argument 'name' and 'tags':
+  name <- Arguments$getCharacter(name);
+  tags <- Arguments$getCharacters(tags);
+
+  # Argument 'ext':
+  ext <- Arguments$getCharacter(ext);
+
+  # Arguments 'path':
+  path <- Arguments$getWritablePath(path);
 
   # Argument 'nbrOfDecimals':
   nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
 
+
+
+  fullname <- paste(c(name, tags), collapse=",");
+  filename <- sprintf("%s.%s", fullname, ext);
+  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
 
   # File already exists?
   if (isFile(pathname)) {
@@ -148,29 +175,34 @@ setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", get
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- getSegments(fit, splitters=splitters);
+  data <- getSegments(fit, ..., splitters=splitters);
 
   # Round of floating points
   if (!is.null(nbrOfDecimals)) {
-    cols <- c("start", "end");
-    for (key in cols) {
-      values <- data[[key]];
+    cols <- tolower(colnames(data));
+    isInt <- (regexpr("chromosome|start|end|nbrofloci", cols) != -1);
+    cols <- which(isInt);
+    for (cc in cols) {
+      values <- data[[cc]];
       if (is.double(values)) {
         values <- round(values, digits=0);
-        data[[key]] <- values;
+        data[[cc]] <- values;
       }
     } # for (key ...)
 
-    cols <- colnames(data);
-    cols <- setdiff(cols, c("chromosome", "start", "end", "nbrOfLoci"));
-    for (key in cols) {
-      values <- data[[key]];
+    cols <- tolower(colnames(data));
+    isInt <- (regexpr("chromosome|start|end|nbrofloci", cols) != -1);
+    isLog <- (regexpr("call", cols) != -1);
+    isDbl <- (!isInt & !isLog);
+    cols <- which(isDbl);
+    for (kk in cols) {
+      values <- data[[kk]];
       if (is.double(values)) {
         values <- round(values, digits=nbrOfDecimals);
-        data[[key]] <- values;
+        data[[kk]] <- values;
       }
     } # for (key ...) 
- }
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -182,7 +214,9 @@ setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", get
 
     createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z");
     hdr <- c(
-      sampleName=sampleName,
+      name=name,
+      tags=tags,
+      fullname=fullname,
       segmentationMethod=sprintf("segment() of %s", attr(fit, "pkgDetails")),
       nbrOfLoci=nbrOfLoci(fit),
       nbrOfSegments=nbrOfSegments(fit),
@@ -216,6 +250,9 @@ setMethodS3("writeSegments", "CBS", function(fit, filename=sprintf("%s.tsv", get
 
 ############################################################################
 # HISTORY:
+# 2011-12-03
+# o Added arguments 'name', 'tags' and 'exts' to writeSegments() and
+#   writeLocusData() and dropped 'filename'.
 # 2011-09-04
 # o Added writeSegments() for CBS.
 # o Added writeLocusData() for CBS.

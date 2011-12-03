@@ -39,7 +39,7 @@ setMethodS3("print", "AbstractCBS", function(x, ...) {
   # To please R CMD check
   fit <- x;
 
-  segs <- as.data.frame(fit, ...);
+  segs <- getSegments(fit, simplify=TRUE, ...);
   print(segs);
 }, protected=TRUE)
 
@@ -309,6 +309,7 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 # @synopsis
 #
 # \arguments{
+#  \item{simplify}{If @TRUE, redundant and intermediate information is dropped.}
 #  \item{splitters}{If @TRUE, "splitters" between chromosomes are 
 #     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
@@ -528,6 +529,8 @@ setMethodS3("resegment", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2011-12-03
+# o Now print() for AbstractCBS returns getSegments(..., simplify=TRUE).
 # 2011-11-17
 # o Added resegment() for AbstractCBS.
 # 2011-10-30

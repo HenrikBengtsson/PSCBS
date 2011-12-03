@@ -215,7 +215,7 @@ setMethodS3("isSegmentSplitter", "CBS", function(fit, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getSegments", "CBS", function(fit, splitters=TRUE, ...) {
+setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, ...) {
   # Argument 'splitters':
   splitters <- Arguments$getLogical(splitters);
 

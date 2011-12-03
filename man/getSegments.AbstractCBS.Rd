@@ -22,6 +22,7 @@
  \usage{\method{getSegments}{AbstractCBS}(...)}
 
  \arguments{
+  \item{simplify}{If \code{\link[base:logical]{TRUE}}, redundant and intermediate information is dropped.}
   \item{splitters}{If \code{\link[base:logical]{TRUE}}, "splitters" between chromosomes are
      preserved, otherwise dropped.}
   \item{...}{Not used.}
