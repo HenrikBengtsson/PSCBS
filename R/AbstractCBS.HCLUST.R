@@ -90,7 +90,6 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
   ok <- !is.na(C);
   ok <- matrixStats::rowAlls(ok);
   C <- C[ok,,drop=FALSE];
-
   verbose && str(verbose, C);
   verbose && exit(verbose);
 
@@ -181,10 +180,6 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
   verbose && exit(verbose);
 
 
-  verbose && enter(verbose, "Merging mean levels of clustered segments");
-  fit <- updateMeansTogether(fit, idxList=idxList, verbose=less(verbose, 10));
-  verbose && exit(verbose);
-
   if (merge) {
     verbose && enter(verbose, "Merging neighboring segments within each cluster");
     lefts <- c();
@@ -214,12 +209,16 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
       fit <- mergeTwoSegments(fit, left=lefts[ii], update=FALSE);
     } # for (ii ...)
     verbose && exit(verbose);
-  } # if (merge)
 
-  verbose && enter(verbose, "Updating segment means");
+    verbose && enter(verbose, "Updating segment means");
 ##  fit <- updateBoundaries(fit, verbose=less(verbose, 50));
-  fit <- updateMeans(fit, verbose=less(verbose, 50));
-  verbose && exit(verbose);
+    fit <- updateMeans(fit, verbose=less(verbose, 50));
+    verbose && exit(verbose);
+  } else {
+    verbose && enter(verbose, "Merging mean levels of clustered segments");
+    fit <- updateMeansTogether(fit, idxList=idxList, verbose=less(verbose, 10));
+    verbose && exit(verbose);
+  } # if (merge)
 
   verbose && exit(verbose);
 
@@ -230,7 +229,8 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 ############################################################################
 # HISTORY:
 # 2011-12-03
-# o Now pruneByHClust() for AbstractCBS updates the segment means.
+# o Now pruneByHClust(..., merge=TRUE) for AbstractCBS updates the 
+#   mean levels of the merged segments at the end.
 # 2011-11-28
 # o Added abstract updateMeansTogether() for AbstractCBS.
 # o Dropped kmeansCNs() stub.

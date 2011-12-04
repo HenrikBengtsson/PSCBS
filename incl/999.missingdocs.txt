@@ -89,3 +89,6 @@ gapsToSegments
 callSegmentationOutliers.data.frame
 dropSegmentationOutliers.data.frame
  hclustCNs pruneByHClust updateMeansTogether
+drawChangePoints drawChangePoints.AbstractCBS
+drawChangePoints.CBS drawChangePoints.PSCBS
+ drawChangePointsC1C2 drawChangePointsC1C2.PairedPSCBS

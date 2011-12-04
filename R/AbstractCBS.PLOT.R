@@ -30,8 +30,13 @@ setMethodS3("plotTracks", "AbstractCBS", abstract=TRUE);
 setMethodS3("tileChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
+setMethodS3("drawChangePoints", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+
 ############################################################################
 # HISTORY:
+# 2011-12-03
+# o Added drawChangePoints().
 # 2011-10-02
 # o Created.
 ############################################################################

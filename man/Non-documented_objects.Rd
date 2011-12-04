@@ -253,6 +253,12 @@
 \alias{hclustCNs}
 \alias{pruneByHClust}
 \alias{updateMeansTogether}
+\alias{drawChangePoints}
+\alias{drawChangePoints.AbstractCBS}
+\alias{drawChangePoints.CBS}
+\alias{drawChangePoints.PSCBS}
+\alias{drawChangePointsC1C2}
+\alias{drawChangePointsC1C2.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -294,12 +294,9 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
     # Draw change points?
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (changepoints) {
-      segs <- as.data.frame(fit);
-      xStarts <- segs[,"tcnStart"];
-      xEnds <- segs[,"tcnEnd"];
-      xs <- sort(unique(c(xStarts, xEnds)));
-      abline(v=xScale*xs, lty=1, col="gray");
+      drawChangePoints(fit, col="#666666", xScale=xScale);
     }
+
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # For each panel of tracks, annotate with calls?
@@ -485,10 +482,26 @@ setMethodS3("pointsC1C2", "PairedPSCBS", function(fit, cex=NULL, col="#00000033"
 }, private=TRUE)
 
 
-setMethodS3("linesC1C2", "PairedPSCBS", function(fit, col="#00000033", ...) {
+setMethodS3("linesC1C2", "PairedPSCBS", function(fit, ...) {
+  drawChangePointsC1C2(fit, ...);
+}, private=TRUE)
+
+
+setMethodS3("drawChangePointsC1C2", "PairedPSCBS", function(fit, col="#00000033", labels=FALSE, lcol="#333333", cex=0.7, adj=c(+1.5,+0.5), ...) {
   xy <- extractMinorMajorCNs(fit);
   xy <- xy[,1:2,drop=FALSE];
-  lines(xy, col=col, ...);
+  res <- lines(xy, col=col, ...);
+
+  if (labels) {
+    n <- nrow(xy);
+    dxy <- (xy[-1,] - xy[-n,]) / 2;
+    xyMids <- xy[-n,] + dxy;
+    labels <- rownames(xy);
+    labels <- sprintf("%s-%s", labels[-n], labels[-1]);
+    text(xyMids, labels, cex=cex, col=lcol, adj=adj, ...);
+  }
+
+  invisible(res);
 }, private=TRUE)
 
 
@@ -930,9 +943,29 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
 
 
 
+setMethodS3("drawChangePoints", "PSCBS", function(fit, labels=FALSE, col="#666666", cex=0.5, xScale=1e-6, side=3, line=-1, xpd=TRUE, ..., verbose=FALSE) {
+  segs <- getSegments(fit, splitters=FALSE);
+  xStarts <- segs[,"tcnStart"];
+  xEnds <- segs[,"tcnEnd"];
+
+  xs <- sort(unique(c(xStarts, xEnds)));
+  abline(v=xScale*xs, lty=1, col=col);
+
+  if (labels) {
+    xMids <- xScale * (xEnds + xStarts) / 2;
+    labels <- rownames(segs);
+    mtext(side=side, at=xMids, labels, line=line, cex=cex, col=col, xpd=xpd, ...);
+  }
+}, protected=TRUE)
+
+
+
 
 ############################################################################
 # HISTORY:
+# 2011-12-03
+# o Added drawChangePointsC1C2() for PairedPSCBS.
+# o Added drawChangePoints() for PairedPSCBS.
 # 2011-11-12
 # o Added argument col="#00000033" to plotC1C2() and linesC1C2().
 # o Added argument 'oma' and 'mar' to plotTracksManyChromosomes() for
