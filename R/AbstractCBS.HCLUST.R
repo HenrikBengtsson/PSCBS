@@ -51,8 +51,6 @@ setMethodS3("updateMeansTogether", "AbstractCBS", abstract=TRUE, private=TRUE);
 #  \item{size}{Argument passed to @seemethod "sampleCNs".}
 #  \item{distMethod, hclustMethod}{Argument \code{method} for
 #    @see "stats::dist" and "stats::hclust", respectively.}
-#  \item{merge}{If @TRUE, consecutive segments that belong to the
-#    same PSCN cluster will be merged into one large segment.}
 #  \item{...}{Not used.}
 #  \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -129,6 +127,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 #    some of \code{...}) passed to @seemethod "hclustCNs".}
 #  \item{merge}{If @TRUE, consecutive segments that belong to the
 #    same PSCN cluster will be merged into one large segment.}
+#  \item{update}{If @TRUE, segment means are updated afterwards, otherwise not.}
 #  \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -144,7 +143,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, verbose=FALSE) {
+setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, update=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -158,14 +157,17 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
   verbose && enter(verbose, "Prune segments by hierarchical clustering");
   verbose && cat(verbose, "Clustering arguments:");
-  verbose && str(verbose, list(...));
+  verbose && str(verbose, c(list(size=size, distMethod=distMethod, hclustMethod=hclustMethod), list(...)));
 
   verbose && enter(verbose, "Clustering");
-  h <- hclustCNs(fit, size=size, distMethod=distMethod, hclustMethod=hclustMethod, ..., verbose=less(verbose,5));
+  h <- hclustCNs(fit, size=size, distMethod=distMethod, 
+                 hclustMethod=hclustMethod, ..., verbose=less(verbose,5));
   verbose && print(verbose, h);
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Cutting tree");
+  verbose && cat(verbose, "Cutting arguments:");
+  verbose && str(verbose, c(list(h=h), list(...)));
   p <- cutree(h, ...);
   verbose && str(verbose, p);
 
@@ -179,6 +181,10 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
   verbose && exit(verbose);
 
+
+  verbose && enter(verbose, "Merging mean levels of clustered segments");
+  fit <- updateMeansTogether(fit, idxList=idxList, verbose=less(verbose, 10));
+  verbose && exit(verbose);
 
   if (merge) {
     verbose && enter(verbose, "Merging neighboring segments within each cluster");
@@ -209,16 +215,14 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
       fit <- mergeTwoSegments(fit, left=lefts[ii], update=FALSE);
     } # for (ii ...)
     verbose && exit(verbose);
+  } # if (merge)
 
+  if (update) {
     verbose && enter(verbose, "Updating segment means");
 ##  fit <- updateBoundaries(fit, verbose=less(verbose, 50));
     fit <- updateMeans(fit, verbose=less(verbose, 50));
     verbose && exit(verbose);
-  } else {
-    verbose && enter(verbose, "Merging mean levels of clustered segments");
-    fit <- updateMeansTogether(fit, idxList=idxList, verbose=less(verbose, 10));
-    verbose && exit(verbose);
-  } # if (merge)
+  }
 
   verbose && exit(verbose);
 
@@ -228,8 +232,8 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
 ############################################################################
 # HISTORY:
-# 2011-12-03
-# o Now pruneByHClust(..., merge=TRUE) for AbstractCBS updates the 
+# 2011-12-06
+# o Now pruneByHClust(..., update=TRUE) for AbstractCBS updates the 
 #   mean levels of the merged segments at the end.
 # 2011-11-28
 # o Added abstract updateMeansTogether() for AbstractCBS.

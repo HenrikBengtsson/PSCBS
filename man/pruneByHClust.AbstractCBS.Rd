@@ -19,7 +19,7 @@
  Prunes the CN profile by pruning and merging through hierarchical clustering.
 }
 
-\usage{\method{pruneByHClust}{AbstractCBS}(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, verbose=FALSE)}
+\usage{\method{pruneByHClust}{AbstractCBS}(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, update=TRUE, verbose=FALSE)}
 
 \arguments{
  \item{...}{Arguments passed to \code{\link[stats]{cutree}},
@@ -28,6 +28,7 @@
    some of \code{...}) passed to \code{\link[PSCBS:hclustCNs.AbstractCBS]{*hclustCNs}()}.}
  \item{merge}{If \code{\link[base:logical]{TRUE}}, consecutive segments that belong to the
    same PSCN cluster will be merged into one large segment.}
+ \item{update}{If \code{\link[base:logical]{TRUE}}, segment means are updated afterwards, otherwise not.}
  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 

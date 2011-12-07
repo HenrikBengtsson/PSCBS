@@ -26,8 +26,6 @@
  \item{size}{Argument passed to \code{\link[PSCBS:sampleCNs.AbstractCBS]{*sampleCNs}()}.}
  \item{distMethod, hclustMethod}{Argument \code{method} for
    \code{\link[stats]{dist}} and "stats::hclust", respectively.}
- \item{merge}{If \code{\link[base:logical]{TRUE}}, consecutive segments that belong to the
-   same PSCN cluster will be merged into one large segment.}
  \item{...}{Not used.}
  \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }

@@ -15,7 +15,8 @@
 # \arguments{
 #   \item{fit}{A @see "CBS" object.}
 #   \item{rho}{A positive @double scalar specifying the number of standard
-#     deviations (\code{rho*sigma}) required in order to keep a change point.}
+#     deviations (\code{rho*sigma}) required in order to keep a change point.
+#     More change points are dropped the greater this value is.}
 #   \item{sigma}{The whole-genome standard deviation of the locus-level
 #     copy number signals.  The default is to calculate it from the data
 #     and as done in the \pkg{DNAcopy} package.}
@@ -88,7 +89,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     data <- getLocusData(fitT);
     segs <- getSegments(fitT);
-    segRows <- fit$segRows;
+    segRows <- fitT$segRows;
     nbrOfSegs <- nrow(segRows);
     verbose && cat(verbose, "Number of segments (before): ", nbrOfSegs);
 
@@ -139,7 +140,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     nbrOfSegsP <- length(segLengthsP);
     verbose && cat(verbose, "Number of segments (after): ", nbrOfSegsP);
 
-    nbrOfPrunedSegs <- nbrOfSegsP - nbrOfSegs;
+    nbrOfPrunedSegs <- nbrOfSegs-nbrOfSegsP;
     verbose && cat(verbose, "Number of segments dropped: ", nbrOfPrunedSegs);
 
     # No segments pruned?
@@ -171,9 +172,9 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
 
     # Sanity checks
     if (nbrOfPrunedSegs == 0) {
-      segRows <- fit$segRows;
-      stopifnot(identical(segRowsP, segRows));
-      stopifnot(identical(segsP, segs));
+      segRows <- fitT$segRows;
+      stopifnot(all.equal(segRowsP, segRows, check.attributes=FALSE));
+      stopifnot(all.equal(segsP, segs, check.attributes=FALSE));
     }
 
     fitT$output <- segsP;
@@ -191,6 +192,13 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
   fitP <- updateMeans(fitP, verbose=less(verbose, 50));
   verbose && exit(verbose);
 
+  nbrOfSegs <- nbrOfSegments(fit);
+  nbrOfSegsP <- nbrOfSegments(fitP);
+  nbrOfPrunedSegs <- nbrOfSegs-nbrOfSegsP;
+  verbose && cat(verbose, "Number of segments (before): ", nbrOfSegs);
+  verbose && cat(verbose, "Number of segments (after): ", nbrOfSegsP);
+  verbose && cat(verbose, "Number of segments dropped: ", nbrOfPrunedSegs);
+
   verbose && exit(verbose);
 
   fitP;
@@ -199,6 +207,8 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
 
 ############################################################################
 # HISTORY:
+# 2011-12-06
+# o BUG FIX: pruneBySdUndo() for CBS did not work with more than one array.
 # 2011-11-16
 # o Added Rdoc comments.
 # 2011-11-15

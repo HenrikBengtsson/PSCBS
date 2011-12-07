@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.18.2 [2011-12-06]
+o Now plotTracks() for CBS always returns an invisible object.
+o BUG FIX: pruneBySdUndo() for CBS did not work with more than
+  one array.
+
+
 Version: 0.18.1 [2011-12-03]
 o Added drawChangePoints() for AbstractCBS.
 o Now pruneByHClust() for AbstractCBS updates the segment means.

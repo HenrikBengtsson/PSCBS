@@ -27,7 +27,8 @@
 \arguments{
   \item{fit}{A \code{\link{CBS}} object.}
   \item{rho}{A positive \code{\link[base]{double}} scalar specifying the number of standard
-    deviations (\code{rho*sigma}) required in order to keep a change point.}
+    deviations (\code{rho*sigma}) required in order to keep a change point.
+    More change points are dropped the greater this value is.}
   \item{sigma}{The whole-genome standard deviation of the locus-level
     copy number signals.  The default is to calculate it from the data
     and as done in the \pkg{DNAcopy} package.}

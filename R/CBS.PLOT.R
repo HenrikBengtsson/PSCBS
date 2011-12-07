@@ -60,7 +60,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
   # Argument 'fit':
   if (nbrOfChromosomes(fit) > 1) {
     res <- plotTracksManyChromosomes(fit, scatter=scatter, pch=pch, Clim=Clim, xScale=xScale, Clab=Clab, ..., byIndex=byIndex, mar=mar, add=add);
-    return(res);
+    return(invisible(res));
   }
 
   # Argument 'xScale':
@@ -640,6 +640,8 @@ setMethodS3("drawChangePoints", "CBS", function(fit, labels=FALSE, cex=0.5, col=
 
 ############################################################################
 # HISTORY:
+# 2011-12-06
+# o Now plotTracks() for CBS always returns an invisible object.
 # 2011-12-03
 # o Added drawChangePoints() for CBS.
 # 2011-10-23
