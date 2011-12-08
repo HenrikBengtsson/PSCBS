@@ -1,0 +1,287 @@
+<% t0 <- Sys.time() %>
+
+<%
+library("PSCBS");
+fixLocations <- function(fit, ...) {
+  for (key in c("tcnStart", "tcnEnd", "dhStart", "dhEnd")) {
+    fit$output[[key]] <- as.integer(fit$output[[key]]);
+  }
+  fit;
+} # fixLocations()
+
+devOptions("png", width=840);
+options(width=80);
+options(digits=3);
+options(str=strOptions(strict.width="cut"));
+%>
+
+\documentclass[letter,12pt]{article}
+\usepackage{xspace}
+\usepackage{alltt}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{natbib} % \citep{}, \citet{}
+\graphicspath{{figures/}}
+
+% Page margins
+\addtolength{\oddsidemargin}{-0.5in}	
+\addtolength{\evensidemargin}{-0.5in}	
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-0.5in}	
+\addtolength{\textheight}{1in}
+
+% Placement of floats
+\setcounter{bottomnumber}{2}
+\renewcommand{\topfraction}{1.0}
+\renewcommand{\bottomfraction}{1.0}
+\renewcommand{\textfraction}{0.0}
+\renewcommand{\floatpagefraction}{1.0}
+
+% Macros
+\newcommand{\keywords}[1]{\footnotesize{\textbf{Keywords: }#1}\xspace}
+\newcommand{\pkg}[1]{\textsl{#1}\xspace}
+\newcommand{\file}[1]{\textsl{#1}\xspace}
+\newcommand{\code}[1]{\texttt{#1}\xspace}
+\newcommand{\bs}{$\backslash$}
+
+\newenvironment{rspVerbatim}{\vspace{-\parskip}\begin{alltt}\color{blue}}{\end{alltt}}
+\newenvironment{escapeRspVerbatim}{\vspace{-\parskip}\begin{alltt}}{\end{alltt}}
+
+
+\title{Paired PSCBS}
+<% pkg <- Package("PSCBS"); %>
+\author{<%=getAuthor(pkg)%>}
+\date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+...
+\end{abstract}
+
+\keywords{copy numbers, allele specific, parent specific, genomic aberrations}
+
+\begin{center}
+\emph{This vignette is distributed as part of the \pkg{PSCBS} package, which is available on CRAN.}
+\end{center}
+
+\clearpage
+\tableofcontents
+
+\clearpage
+
+<%-------------------------------------------------------------------
+  BACKGROUND
+  -------------------------------------------------------------------%>
+\section{Background}
+\label{secBackground}
+...
+
+<%-------------------------------------------------------------------
+  EXAMPLE
+  -------------------------------------------------------------------%>
+\section{Preparing data to be segmented}
+The Paired PSCBS~\citep{OlshenA_etal_2011} method requires tumor-normal paired parent-specific copy-number (PSCN) signals.  More precisely, it requires total copy-number (TCN) estimates for the tumor relative to the matched normal ($C_T$), allele B fractions (BAFs) for the tumor ($\beta_T$) and BAFs for the matched normal ($\beta_N$).  The genomic location of the loci in form of chromosome and physical position are also required.
+
+
+\subsection{Locus-level SNP copy-number signals}
+\label{secData}
+In this example we will use a small example data set part of the \pkg{PSCBS} package.  It can be loaded as:
+<%
+fullname <- "PairedPSCBS,exData,chr01";
+%>
+\begin{verbatim}
+<%=evalCapture({
+pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS")
+data <- R.utils::loadObject(pathname)
+str(data)
+})%>
+\end{verbatim}
+In additional to the mandatory fields (\code{chromosome}, \code{x}, \code{CT}, \code{betaT}, and \code{betaN}), this data set also contains TCNs for normal (\code{CN}) relative to a large pool of normal samples.  The latter will not be used here.
+
+\subsection{Dropping TCN outliers}
+\label{secTCNOutliers}
+There may be some outliers among the tumor TCNs.  In CBS~\citep{OlshenA_etal_2004,VenkatramanOlshen_2007}, the authors propose to drop those before segmentation, which can be done by:
+\begin{verbatim}
+<%=evalCapture({
+data <- dropSegmentationOutliers(data)
+})%>
+\end{verbatim}
+Dropping TCN outliers is optional.
+
+
+
+\section{Paired PSCBS segmentation}
+
+\subsection{Skipping centromeres and other large gaps}
+\label{secGaps}
+Like the CBS method, Paired PSCBS does not take the physical locations (in units of nucleotides) of the loci in to account when segmenting the data, only their relative ordering along the genome.  This means that after having ordered the loci along genome, it will treat two "neighboring" loci that are on both sides of the centromere equally as two neighboring loci that are only few hundred bases apart.  This may introduce erroneous change points that appears to be inside the centromere and biological impossible interpretation of the identified PSCN states.  The same issues occur for other large gaps of the genome where there are no observed signals.
+
+To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observered loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
+\begin{verbatim}
+<%=evalCapture({
+gaps <- findLargeGaps(data, minLength=1e6)
+gaps
+})%>
+\end{verbatim}
+which shows that there is a 20.5Mb long gap between 121.0Mb and 141.5Mb on Chromosome~1.  This is the centromere of Chromosome~1.
+Gaps cannot be specified directly.  Instead they need to be give as part of a set of "known" segments, which is done as:
+\begin{verbatim}
+<%=evalCapture({
+knownSegments <- gapsToSegments(gaps)
+knownSegments
+})%>
+\end{verbatim}
+Below, we will use this to tell Paired PSCBS to segment Chromosome~1 in three independent segments, where the first segments is from the beginning of the chromosomes (hence '-Inf') to 120.1Mb, the second from 120.1-141.5Mb (the above gap), and the third is from 141.5Mb to the end of the chromosome (hence '+Inf').
+Just as Paired PSCBS segments chromosomes independently of each other, it also segments priorly known segments independently of each other.
+
+Specifying known segments is optional.
+
+
+\subsection{Identifying PSCN segments}
+We are now ready to segment the locus-level PSCN signals.  This is done by\footnote{We fix the random seed in order for the results of this vignette to be exactly reproducible.}:
+\begin{verbatim}
+<%=evalCapture({
+fit <- segmentByPairedPSCBS(data, knownSegments=knownSegments, seed=0xBEEF, verbose=-10)
+})%>
+\end{verbatim}
+Note that this may take several minutes when applied to whole-genome data.
+The above call will also normalize the tumor BAFs using the TumorBoost normalization method~\citep{BengtssonH_etal_2010}.  If this has already been done or the tumor signals have been normalized by other means, the TumorBoost step can be skipped by setting argument \code{tbn=FALSE}.
+
+The result of Paired PSCBS segmentation is a set of segments identified to have the same underlying PSCN levels.  In this particular case, <%=nbrOfSegments(fit)%> PSCN segments were found:
+<% fit <- fixLocations(fit); %>
+\begin{verbatim}
+<%=evalCapture({
+getSegments(fit, simplify=TRUE)
+})%>
+\end{verbatim}
+<% segs <- getSegments(fit, simplify=TRUE) %>
+Note how Segment~\#<%=which(segs$tcnNbrOfLoci == 0)%> has no mean-level estimates.  It is because it corresponds to the centromere (the gap) that was identified above.  Paired PSCBS did indeed try to segment it, but since there are no data points, all estimates are missing values.
+Similarly, for Segment~\#<%=which(segs$dhNbrOfLoci == 0)%> the DH and minor and major CNs mean estimates are all missing values.  This is because, Paired PSCBS identified that segment by first segmenting the TCN signals by themselves, and thereafter it tried segmenting the DH signals within that segment.  Since there are no heterozygous SNPs in the segment, there exists no DH signals, and hence no DH mean estimate.
+
+
+\subsection{Displaying genomic PSCN profiles}
+To plot the PSCN segmentation results, do:
+\begin{verbatim}
+plotTracks(fit)
+\end{verbatim}
+which by default displays three panels containing TCN, decrease of heterozygosity (DH), and minor and major CNs as in Figure~\ref{figTracks}.
+To only plot one panel with TCN and minor and major CNs and zoom in on a partical region, do:
+\begin{verbatim}
+plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
+\end{verbatim}
+\begin{figure}[htp]
+ \begin{center}
+  \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c("tracks"), aspectRatio=0.6, {
+    plotTracks(fit);
+  })%>}}
+ \end{center}
+ \caption{PSCN segments identified by Paired PSCBS.
+  \textbf{Top}: The TCN signals (black dots) with the TCN mean levels (purple).
+  \textbf{Middle}: The DH signals (black dots) with the DH mean levels (orange).
+  \textbf{Bottom}: The TCN signals (black dots) with the minor CN ($C_1$; blue), the major CN ($C_2$; red) and the TCN ($C=C_1+C_2$; purple) mean levels.
+ }
+ \label{figTracks}
+\end{figure}
+
+
+
+
+
+
+\section{Calling segments}
+The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained from using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
+After the Paired PSCBS method was published, we have also added an method for calling run of homozygosity (ROH).
+
+
+
+\subsection{Calling segments with run of homozygosity (ROH)}
+A region with run of homozygosity (ROH) is a region where all SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease of heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
+ However, if there are genotyping errors within an ROH region, we will obtain a non-missing DH mean level and hence also finite minor and major CNs.  In order to adjust for these faulty estimates, we test if the identified segments are in ROH or not by:
+\begin{verbatim}
+<%=evalCapture({
+fit <- callROH(fit, verbose=-10)
+})%>
+\end{verbatim}
+This will also set the corresponding DH and minor and major CN mean levels to NA.  The total CN mean levels are not affected by the ROH call.
+
+
+\subsection{Calling segments in allelic balance (AB)}
+\begin{verbatim}
+<%=evalCapture({
+fit <- callAB(fit, verbose=-10)
+})%>
+\end{verbatim}
+Because this utilizes bootstrapping techniques, calling AB may take some time if there is a large number of segments.
+
+
+\subsection{Calling segments with loss of heterozygosity (LOH)}
+\begin{verbatim}
+<%=evalCapture({
+fit <- callLOH(fit, verbose=-10)
+})%>
+\end{verbatim}
+Note that in order to call LOH, one has to call allelic balance first.  Since the bootstrapping was already done in the AB caller, it is not repeated here, which is why calling LOH is faster than calling AB.
+
+
+\subsection{Results from calling ROH, AB and LOH}
+All calls are appended to the segmentation results as logical columns:
+\begin{verbatim}
+<%=evalCapture({
+getSegments(fit, simplify=TRUE)
+})%>
+\end{verbatim}
+<% segs <- getSegments(fit, simplify=TRUE) %>
+
+
+
+\subsection{Writing segments to a tab-delimited text file}
+To write the PSCN segmentation results to file, do:
+\begin{verbatim}
+writeSegments(fit, name="MySample", simplify=TRUE)
+\end{verbatim}
+
+
+
+\section{Ongoing/Future work}
+In this section we illustrate some of the ongoing and future work of the PSCBS package.  Please be aware that these methods are very much under construction, possibly incomplete and in worst case even incorrect.
+
+\subsection{Pruning segmentation profile}
+By using hierarchical cluster of the segment means it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer.
+\begin{verbatim}
+<%=evalCapture({
+fitP <- pruneByHClust(fit, h=0.25, verbose=-10)
+})%>
+\end{verbatim}
+\begin{figure}[htp]
+ \begin{center}
+  \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c("pruned", "tracks"), aspectRatio=0.6, {
+    plotTracks(fitP);
+  })%>}}
+ \end{center}
+ \caption{Pruned PSCN segments plotted as in Figure~\ref{figTracks}.}
+ \label{figTracksPruned}
+\end{figure}
+
+
+
+
+<%-------------------------------------------------------------------
+  REFERENCES
+  -------------------------------------------------------------------%>
+\bibliographystyle{natbib}
+\bibliography{PSCBS}
+
+
+<%-------------------------------------------------------------------
+  APPENDIX
+  -------------------------------------------------------------------%>
+\clearpage
+\section*{Appendix}
+\subsection*{Session information}
+<%=toLatex(sessionInfo())%>
+This report was automatically generated using \code{rsp()} of the R.rsp package.
+Total processing time after RSP-to-R translation was <%=dt <- round(Sys.time()-t0, digits=2)%> <%=attr(dt, "units")%>.
+
+\end{document}

@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.18.2 [2011-12-06]
+Version: 0.18.2 [2011-12-07]
 o Now plotTracks() for CBS always returns an invisible object.
 o BUG FIX: pruneBySdUndo() for CBS did not work with more than
   one array.
