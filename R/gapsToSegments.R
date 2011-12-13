@@ -69,8 +69,6 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, ...) {
       throw("INTERNAL ERROR: Detected overlapping gaps on chromosome ", chr, " in argument 'gaps'.");
     }
 
-print(gapsCC);
-
     # All boundaries in order
     # (this is possible because gaps are non-overlapping)
     naValue <- as.double(NA);
@@ -106,7 +104,6 @@ print(gapsCC);
 
     # Known segments must not overlap
     if (!all(dd$start[-1] >= dd$end[-nrow(dd)], na.rm=TRUE)) {
-      print(knownSegments);
       throw("INTERNAL ERROR: Detected overlapping segments on chromosome ", chr, " in generated 'knownSegments'.");
     }
   }
