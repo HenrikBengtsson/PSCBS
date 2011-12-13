@@ -23,7 +23,7 @@
 \usage{\method{extractSegmentMeansByLocus}{CBS}(fit, ...)}
 
 \arguments{
- \item{...}{Not used.}
+ \item{...}{Arguments passed to \code{\link[PSCBS:getLocusData.CBS]{*getLocusData}()}.}
 }
 
 \value{

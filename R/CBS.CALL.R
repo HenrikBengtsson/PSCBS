@@ -587,10 +587,10 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
 
 setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
-  nbrOfLoci <- nbrOfLoci(fit);
-
   # Extract locus data
-  data <- getLocusData(fit);
+  data <- getLocusData(fit, ...);
+
+  nbrOfLoci <- nrow(data);
 
   # Extract segment data
   segs <- getSegments(fit, splitters=TRUE);
@@ -1158,6 +1158,9 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-12-12
+# o Now extractCallsByLocus() for CBS passes arguments
+#   '...' to getLocusData(). 
 # 2011-10-23
 # o BUG FIX: getCallStatisticsByArms() for CBS would thrown a error if
 #   argument 'genomeData' did not contain exactly the same chromosomes
