@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.19.0 [2011-12-12]
+o Added optional argument 'indices' to getLocusData() to be able
+  to retrieve the locus-level data as indexed by input data.
+o DOCUMENTATION: Clarified in help("segmentByCBS") how missing
+  values are dealt with.
+
+
 Version: 0.18.2 [2011-12-07]
 o Now plotTracks() for CBS always returns an invisible object.
 o BUG FIX: pruneBySdUndo() for CBS did not work with more than

@@ -77,11 +77,18 @@
  }
 
  \section{Missing and non-finite values}{
-   Signals as well as genomic positions may contain missing
-   values, i.e. \code{\link[base]{NA}}s or \code{\link[base:is.finite]{NaN}}s.  If so, they are silently excluded
-   before performing the segmentation.
+   Signals may contain missing values (\code{\link[base]{NA}} or \code{\link[base:is.finite]{NaN}}), but not
+   infinite values (+/-\code{\link[base:is.finite]{Inf}}).  Loci with missing-value signals
+   are preserved and keep in the result.
 
-   None of the input signals may have infinite values,
+   Likewise, genomic positions may contain missing values.
+   However, if they do, such loci are silently excluded before
+   performing the segmentation, and are not kept in the results.
+   The mapping between the input locus-level data and ditto of
+   the result can be inferred from the \code{index} column of
+   the locus-level data of the result.
+
+   None of the input data may have infinite values,
    i.e. -\code{\link[base:is.finite]{Inf}} or +\code{\link[base:is.finite]{Inf}}. If so, an informative error is thrown.
  }
 
@@ -138,11 +145,13 @@ print(fit)
 # Test #1: Reverse the ordering and segment
 fitR <- segmentByCBS(rev(y), x=rev(x), seed=0xBEEF)
 # Sanity check
-stopifnot(all.equal(fitR$output, fit$output))
+stopifnot(all.equal(getSegments(fitR), getSegments(fit)))
+# Sanity check
+stopifnot(all.equal(rev(getLocusData(fitR)$index), getLocusData(fit)$index))
 
 # Test #2: Reverse, but preserve ordering of 'data' object
 fitRP <- segmentByCBS(rev(y), x=rev(x), preserveOrder=TRUE)
-stopifnot(all.equal(fitRP$output, fit$output))
+stopifnot(all.equal(getSegments(fitRP), getSegments(fit)))
 
 
 # (Test #3: Change points inbetween data points at the same locus)
@@ -194,9 +203,9 @@ print(fitWG)
 plotTracks(fitWG, subset=NULL, lwd=2, Clim=c(-3,3))
 
 # Assert same results
-fit$data[,"index"] <- fitWG$data[,"index"] # Ignore 'index'
-stopifnot(all.equal(fitWG$data, fit$data))
-stopifnot(all.equal(fitWG$output, fit$output))
+fit$data[,"index"] <- getLocusData(fitWG)[,"index"] # Ignore 'index'
+stopifnot(all.equal(getLocusData(fitWG), getLocusData(fit)))
+stopifnot(all.equal(getSegments(fitWG), getSegments(fit)))
 
  }
 

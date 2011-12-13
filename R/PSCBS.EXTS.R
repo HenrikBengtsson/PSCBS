@@ -42,8 +42,26 @@ setMethodS3("as.data.frame", "PSCBS", function(x, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getLocusData", "PSCBS", function(fit, ...) {
+setMethodS3("getLocusData", "PSCBS", function(fit, indices=NULL, ...) {
+  # Argument 'indices':
+  if (!is.null(indices)) {
+    indices <- Arguments$getIndices(indices);
+  }
+
   data <- fit$data;
+
+  # Return requested indices
+  if (!is.null(indices)) {
+    # Map of final indices to current indices
+    map <- match(indices, data$index);
+
+    # Extract/expand...
+    data <- data[map,];
+
+    # Sanity check
+    stopifnot(nrow(data) == length(indices));
+  }
+
   data;
 }, protected=TRUE)
 
@@ -130,6 +148,9 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
 
 ############################################################################
 # HISTORY:
+# 2011-12-12
+# o Added optional argument 'indices' to getLocusData() to be able
+#   to retrieve the locus-level data as indexed by input data.
 # 2011-12-03
 # o Added argument 'simplify' to getSegments().
 # 2011-10-16

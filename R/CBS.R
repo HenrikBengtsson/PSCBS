@@ -175,7 +175,15 @@ setMethodS3("signalType<-", "CBS", function(x, value) {
 
 
 
-setMethodS3("getLocusData", "CBS", function(fit, addCalls=NULL, ...) {
+setMethodS3("getLocusData", "CBS", function(fit, indices=NULL, addCalls=NULL, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'indices':
+  if (!is.null(indices)) {
+    indices <- Arguments$getIndices(indices);
+  }
+
   # Argument 'addCalls':
   if (is.logical(addCalls)) {
     addCalls <- Arguments$getLogical(addCalls);
@@ -199,6 +207,19 @@ setMethodS3("getLocusData", "CBS", function(fit, addCalls=NULL, ...) {
     stopifnot(nrow(callsL) == nrow(data));
 
     data <- cbind(data, callsL);
+  }
+
+  # Return requested indices
+  if (!is.null(indices)) {
+    # Map of final indices to current indices
+    map <- match(indices, data$index);
+
+    # Extract/expand...
+    data <- data[map,];
+    rownames(data) <- NULL;
+
+    # Sanity check
+    stopifnot(nrow(data) == length(indices));
   }
 
   data;
@@ -536,6 +557,9 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2011-12-12
+# o Added optional argument 'indices' to getLocusData() to be able
+#   to retrieve the locus-level data as indexed by input data.
 # 2011-11-17
 # o Added resegment() for CBS for easy resegmentation.
 # 2011-11-15

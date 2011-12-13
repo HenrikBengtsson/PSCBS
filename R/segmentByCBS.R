@@ -68,11 +68,18 @@
 # }
 #
 # \section{Missing and non-finite values}{
-#   Signals as well as genomic positions may contain missing
-#   values, i.e. @NAs or @NaNs.  If so, they are silently excluded
-#   before performing the segmentation.
+#   Signals may contain missing values (@NA or @NaN), but not
+#   infinite values (+/-@Inf).  Loci with missing-value signals
+#   are preserved and keep in the result.
 #
-#   None of the input signals may have infinite values,
+#   Likewise, genomic positions may contain missing values.
+#   However, if they do, such loci are silently excluded before 
+#   performing the segmentation, and are not kept in the results.
+#   The mapping between the input locus-level data and ditto of
+#   the result can be inferred from the \code{index} column of
+#   the locus-level data of the result.
+#
+#   None of the input data may have infinite values,
 #   i.e. -@Inf or +@Inf. If so, an informative error is thrown.
 # }
 #
@@ -336,7 +343,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
       # Sanity checks
       if (nrow(knownSegmentsKK) == 0) {
+        # Since all missing data have been dropped...
         stopifnot(nrow(fit$data) == length(y));
+        # ...and ordered along the genome already.
         stopifnot(all.equal(fit$data$y, y));
       }
 
@@ -385,6 +394,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Keeping only current chromosome for 'knownSegments'");
 
+  # Assume no missing values
   currChromosome <- data$chrom[1];
   verbose && cat(verbose, "Chromosome: ", currChromosome);
 
@@ -614,6 +624,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 #  rm(sampleName);  # Not needed anymore
 
   # Sanity check
+  # (because all loci with unknown locations have already been dropped)
   stopifnot(nrow(cnData) == nrow(data));
 
 

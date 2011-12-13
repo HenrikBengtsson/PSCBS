@@ -15,11 +15,13 @@ print(fit)
 # Test #1: Reverse the ordering and segment 
 fitR <- segmentByCBS(rev(y), x=rev(x), seed=0xBEEF)
 # Sanity check
-stopifnot(all.equal(fitR$output, fit$output))
+stopifnot(all.equal(getSegments(fitR), getSegments(fit)))
+# Sanity check
+stopifnot(all.equal(rev(getLocusData(fitR)$index), getLocusData(fit)$index))
 
 # Test #2: Reverse, but preserve ordering of 'data' object
 fitRP <- segmentByCBS(rev(y), x=rev(x), preserveOrder=TRUE)
-stopifnot(all.equal(fitRP$output, fit$output))
+stopifnot(all.equal(getSegments(fitRP), getSegments(fit)))
 
 
 # (Test #3: Change points inbetween data points at the same locus)
@@ -71,6 +73,6 @@ print(fitWG)
 plotTracks(fitWG, subset=NULL, lwd=2, Clim=c(-3,3))
 
 # Assert same results
-fit$data[,"index"] <- fitWG$data[,"index"] # Ignore 'index'
-stopifnot(all.equal(fitWG$data, fit$data))
-stopifnot(all.equal(fitWG$output, fit$output))
+fit$data[,"index"] <- getLocusData(fitWG)[,"index"] # Ignore 'index'
+stopifnot(all.equal(getLocusData(fitWG), getLocusData(fit)))
+stopifnot(all.equal(getSegments(fitWG), getSegments(fit)))
