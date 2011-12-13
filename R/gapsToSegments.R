@@ -13,7 +13,7 @@
 #
 # \arguments{
 #   \item{gaps}{A @data.frame with columns \code{chromosome}, \code{start},
-#     and \code{stop}.}
+#     and \code{stop}. Any overlapping gaps will throw an error.}
 #   \item{resolution}{A non-negative @numeric specifying the minimum
 #     length unit, which by default equals one nucleotide/base pair.}
 #   \item{...}{Not used.}
@@ -22,6 +22,8 @@
 # \value{
 #   Returns @data.frame with columns \code{chromosome} (if that argument
 #   is given), \code{start}, \code{stop} and \code{length}.
+#   The segments are ordered along the genome.
+#   Zero length segments are automatically dropped.
 # }
 # 
 # @author
@@ -34,27 +36,80 @@
 # @keyword internal
 #*/###########################################################################  
 setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, ...) {
+  # To please R CMD check
+  chromosome <- NULL; rm(chromosome);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'gaps':
   keys <- colnames(gaps);
   stopifnot(all(is.element(c("chromosome", "start", "end"), keys)));
+  stopifnot(all(gaps$start <= gaps$end, na.rm=TRUE));
 
 
-  keepL <- is.finite(gaps$start);
-  gapsL <- gaps[keepL,];
-  gapsL$end <- gapsL$start - resolution;
-  gapsL$start <- -Inf;
+  # Order gaps by the genome
+  o <- order(gaps$chromosome, gaps$start, gaps$end);
+  gaps <- gaps[o,];
 
-  keepR <- is.finite(gaps$end);
-  gapsR <- gaps[keepR,];
-  gapsR$start <- gapsR$end + resolution;
-  gapsR$end <- +Inf;
 
-  knownSegments <- rbind(gapsL, gaps, gapsR);
-  o <- with(knownSegments, order(chromosome, start, end));
-  knownSegments <- knownSegments[o,];
-  rownames(knownSegments) <- NULL;
+  # For each chromosome...
+  knownSegments <- NULL;
+  chromosomes <- sort(unique(gaps$chromosome));
+  for (chr in chromosomes) {
+    gapsCC <- subset(gaps, chromosome == chr);
+    nCC <- nrow(gapsCC);
 
+    starts <- gapsCC$start;
+    ends <- gapsCC$end;
+
+    # Assert that no overlapping gaps where specified
+    if (!all(starts[-1] >= ends[-nCC], na.rm=TRUE)) {
+      print(knownSegments);
+      throw("INTERNAL ERROR: Detected overlapping gaps on chromosome ", chr, " in argument 'gaps'.");
+    }
+
+print(gapsCC);
+
+    # All boundaries in order
+    # (this is possible because gaps are non-overlapping)
+    naValue <- as.double(NA);
+    bps <- rep(naValue, times=4*nCC);
+    bps[seq(from=1, to=4*nCC, by=4)] <- starts - resolution;
+    bps[seq(from=2, to=4*nCC, by=4)] <- starts;
+    bps[seq(from=3, to=4*nCC, by=4)] <- ends;
+    bps[seq(from=4, to=4*nCC, by=4)] <- ends + resolution;
+    bps <- c(-Inf, bps, +Inf);
+    dim(bps) <- c(2L, 2*nCC+1L);
+    knownSegmentsCC <- data.frame(chromosome=chr, start=bps[1L,], end=bps[2L,]);
+
+    knownSegments <- rbind(knownSegments, knownSegmentsCC);
+  } # for (chr ...)
+
+#  o <- with(knownSegments, order(chromosome, start, end));
+#  knownSegments <- knownSegments[o,];
+#  rownames(knownSegments) <- NULL;
+
+  # Append segment lengths
   knownSegments$length <- knownSegments$end - knownSegments$start;
+
+  # Drop zero-length segments
+  keep <- (knownSegments$length > 0);
+  knownSegments <- knownSegments[keep,];
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate generated 'knownSegments'
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  for (chr in sort(unique(knownSegments$chromosome))) {
+    dd <- subset(knownSegments, chromosome == chr);
+
+    # Known segments must not overlap
+    if (!all(dd$start[-1] >= dd$end[-nrow(dd)], na.rm=TRUE)) {
+      print(knownSegments);
+      throw("INTERNAL ERROR: Detected overlapping segments on chromosome ", chr, " in generated 'knownSegments'.");
+    }
+  }
 
   knownSegments;
 }) # gapsToSegments()
@@ -62,6 +117,11 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, ...) {
 
 ###############################################################################
 # HISTORY:
+# 2011-12-12
+# o BUG FIX: Now gapsToSegments() gave invalid segments for chromosomes
+#   with more than one gap.
+# o ROBUSTNESS: Now gapsToSegments() validates argument 'gaps' and
+#   asserts that it returns non-overlapping segments.
 # 2011-11-22
 # o Made gapsToSegments() a method for 'data.frame' class.
 # o Renamed gapsToKnownSegments() to gapsToSegments().
