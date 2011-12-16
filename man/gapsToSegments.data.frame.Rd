@@ -23,7 +23,7 @@
 
  \arguments{
    \item{gaps}{A \code{\link[base]{data.frame}} with columns \code{chromosome}, \code{start},
-     and \code{stop}.}
+     and \code{stop}. Any overlapping gaps will throw an error.}
    \item{resolution}{A non-negative \code{\link[base]{numeric}} specifying the minimum
      length unit, which by default equals one nucleotide/base pair.}
    \item{...}{Not used.}
@@ -32,6 +32,8 @@
  \value{
    Returns \code{\link[base]{data.frame}} with columns \code{chromosome} (if that argument
    is given), \code{start}, \code{stop} and \code{length}.
+   The segments are ordered along the genome.
+   Zero length segments are automatically dropped.
  }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

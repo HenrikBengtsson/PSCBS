@@ -20,7 +20,7 @@
   Calls gains and losses.
  }
 
- \usage{\method{callGainsAndLosses}{CBS}(fit, adjust=1, method=c("ucsf-mad"), ..., verbose=FALSE)}
+ \usage{\method{callGainsAndLosses}{CBS}(fit, adjust=1, method=c("ucsf-mad", "ucsf-dmad"), ..., verbose=FALSE)}
 
  \arguments{
   \item{adjust}{A positive scale factor adjusting the sensitivity of the

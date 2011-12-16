@@ -1,7 +1,7 @@
 Package: PSCBS
 Title: Analysis of Parent-Specific DNA Copy Numbers
-Version: 0.19.0
-Date: 2011-12-12
+Version: 0.19.1
+Date: 2011-12-13
 Author: A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan
 Description: Segments allele-specific DNA copy number data to detect regions 
 	with abnormal copy number within each parental chromosome
