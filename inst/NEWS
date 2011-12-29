@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.19.2 [2011-12-29]
+o ROBUSTNESS: Explicitly added 'digest' to the list of suggested packages.
+
+
 Version: 0.19.1 [2011-12-13]
 o Added support for callGainsAndLosses(..., method="ucsf-dmad")
   of CBS objects.
