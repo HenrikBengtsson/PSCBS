@@ -2,6 +2,16 @@
 Package: PSCBS
 ==============
 
+Version: 0.19.3 [2012-01-09]
+o ROBUSTNESS: Now extractSegments() for PairedPSCBS gives an informative
+  error message that it is not supported if CNs were segmented using 
+  flavor "tcn,dh".
+o BUG FIX: postsegmentTCN() for PairedPSCBS could generate an invalid
+  'tcnSegRows' matrix, where the indices for two consecutive segments
+  would overlap, which is invalid.  Thanks to Minya Pu for reporting
+  on failed sanity check related to this.
+
+
 Version: 0.19.2 [2011-12-29]
 o ROBUSTNESS: Explicitly added 'digest' to the list of suggested packages.
 

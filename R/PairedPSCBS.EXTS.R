@@ -172,7 +172,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   for (cc in seq(length=nbrOfChromosomes)) {
     chr <- chromosomes[cc];
     chrTag <- sprintf("chr%02d", chr);
-    verbose && enter(verbose, sprintf("Chromosome %d ('%s') of %d", chr, chrTag, nbrOfChromosomes));
+    verbose && enter(verbose, sprintf("Chromosome %d ('%s') of %d", cc, chrTag, nbrOfChromosomes));
     rows <- which(is.element(segs[["chromosome"]], chr));
     verbose && cat(verbose, "Rows:");
     verbose && print(verbose, rows);
@@ -209,6 +209,10 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       verbose && print(verbose, tcnSegRowsII);
       verbose && print(verbose, dhSegRowsII);
 
+      segRowsRange <- range(c(tcnSegRowsII, dhSegRowsII), na.rm=TRUE);
+      verbose && printf(verbose, "Range [%d,%d]\n", 
+                                    segRowsRange[1], segRowsRange[2]);
+
       tcnSegRowsIIBefore <- tcnSegRowsII;
       nbrOfTCNsBefore <- segsII[1,"tcnNbrOfLoci"];
 
@@ -235,6 +239,11 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
           # (b) Identify units
           units <- which(chromosome == chr & xStart <= x & x <= xEnd);
+
+          # (c) Drop units that are outside both the TCN and DH segments
+          keep <- (segRowsRange[1] <= units & units <= segRowsRange[2]);
+          units <- units[keep];
+
           tcnSegRow <- range(units);
           verbose && printf(verbose, "[idxStart,idxEnd] = [%d,%d]\n", tcnSegRow[1], tcnSegRow[2]);
           verbose && cat(verbose, "Number of TCN loci: ", length(units));
@@ -251,6 +260,11 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
           if (jj < J) {
             maxIdx <- dhSegRowsII[jj+1L,1L, drop=TRUE];
             units <- units[units < maxIdx];
+          }
+
+          if (jj == J) {
+#           maxIdx <- dhSegRowsII[jj+1L,1L, drop=TRUE];
+#           units <- units[units < maxIdx];
           }
 
           tcnSegRow <- range(units);
@@ -306,6 +320,26 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       segsCC[rowsII,] <- segsII;
       tcnSegRowsCC[rowsII,] <- tcnSegRowsII;
 
+####################
+if (!all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE)) {
+  
+  aa <- tcnSegRowsCC[-nrow(tcnSegRowsCC),2];
+  bb <- tcnSegRowsCC[-1,1];
+  delta <- bb - aa;
+  dd <- cbind(aa, bb, delta=delta);
+  print(dd);
+  dd <- subset(dd, delta == 0);
+  print(dd);
+  row <- dd[,1L,drop=TRUE];
+  print(row);
+  rr <- row + -10:10;
+  dd <- data[rr,];
+  rownames(dd) <- rr;
+  print(dd);
+print(tcnSegRowsII);
+}
+####################
+
       rm(rowsII, segsII);
       verbose && exit(verbose);
     } # for (ii ...)
@@ -316,6 +350,26 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
     # Sanity check
     stopifnot(nrow(dhSegRowsCC) == nrow(tcnSegRowsCC));
     stopifnot(all(tcnSegRowsCC[,1] <= tcnSegRowsCC[,2], na.rm=TRUE));
+####################
+if (!all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE)) {
+  
+  aa <- tcnSegRowsCC[-nrow(tcnSegRowsCC),2];
+  bb <- tcnSegRowsCC[-1,1];
+  delta <- bb - aa;
+  dd <- cbind(aa, bb, delta=delta);
+  print(dd);
+  dd <- subset(dd, delta == 0);
+  print(dd);
+  row <- dd[,1L,drop=TRUE];
+  print(row);
+  rr <- row + -10:10;
+  dd <- data[rr,];
+  rownames(dd) <- rr;
+  print(dd);
+print(tcnSegRowsII);
+}
+####################
+
     stopifnot(all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE));
     stopifnot(all(dhSegRowsCC[,1] <= dhSegRowsCC[,2], na.rm=TRUE));
     stopifnot(all(dhSegRowsCC[-nrow(dhSegRowsCC),2] < dhSegRowsCC[-1,1], na.rm=TRUE));
@@ -373,6 +427,8 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
 ############################################################################
 # HISTORY:
+# 2012-01-09
+# o Minor correction of a verbose message in postsegmentTCN().
 # 2011-10-16
 # o Added extractCNs().
 # 2011-10-14

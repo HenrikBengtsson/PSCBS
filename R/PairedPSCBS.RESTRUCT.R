@@ -50,8 +50,13 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 
   # Sanity checks
   if (!params$joinSegments) {
-    throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.");
+    throw("Cannot extract subset of segments unless CNs are segmented using joinSegments=TRUE.");
   } 
+
+  if (params$flavor == "tcn,dh") {
+    throw("NOT IMPLEMENTED: Extracting a subset of segments is not supported for flavor '", params$flavor, "'.");
+  }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Subset segments
@@ -256,6 +261,10 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
 
 ############################################################################
 # HISTORY:
+# 2012-01-09
+# o ROBUSTNESS: Now extractSegments() for PairedPSCBS gives an informative
+#   error message that it is not supported if CNs were segmented using 
+#   flavor "tcn,dh".
 # 2011-10-16
 # o Added argument 'update' to mergeTwoSegments().
 # 2011-10-02
