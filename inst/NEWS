@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.19.4 [2012-01-10]
+o Now example(segmentByPairedPSCBS) and the system tests that are run
+  by R CMD check are tuned to (by default) run much faster by segmenting
+  using fewer data points and bootstrapping using fewer samples.  This
+  update was done to meet the new CRAN policy.  By setting environment
+  variable _R_CHECK_FULL_ to '1' the full data set is used instead.
+
+
 Version: 0.19.3 [2012-01-09]
 o ROBUSTNESS: Now extractSegments() for PairedPSCBS gives an informative
   error message that it is not supported if CNs were segmented using 

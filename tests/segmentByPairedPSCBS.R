@@ -9,6 +9,10 @@ pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS"
 data <- R.utils::loadObject(pathname)
 str(data)
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Paired PSCBS segmentation
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Drop single-locus outliers
 dataS <- dropSegmentationOutliers(data)
 
@@ -22,7 +26,7 @@ if (Sys.getenv("_R_CHECK_FULL_") == "") {
   B <- 100L
 } else {
   # Full tests
-  nSegs <- 10L
+  nSegs <- 12L
   B <- 1000L
 }
 
@@ -30,17 +34,8 @@ str(dataS)
 
 R.oo::attachLocally(dataS)
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Simulate that genotypes are known by other means
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-library("aroma.light")
-muN <- aroma.light::callNaiveGenotypes(betaN, censorAt=c(0,1))
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Paired PSCBS segmentation
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- segmentByPairedPSCBS(CT, betaT=betaT, muN=muN, tbn=FALSE,
+fit <- segmentByPairedPSCBS(CT, betaT=betaT, betaN=betaN,
                             chromosome=chromosome, x=x, 
                             seed=0xBEEF, verbose=-10)
 print(fit)
@@ -63,11 +58,38 @@ plotTracks(fit)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Calling segments in allelic balance (AB) and
-# in loss-of-heterozygosity (LOH)
+# Calling segments in allelic balance (AB)
 # NOTE: Ideally, this should be done on whole-genome data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- callAB(fit, verbose=-10)
-fit <- callLOH(fit, verbose=-10)
+# Explicitly estimate the threshold in DH for calling AB
+# (which be done by default by the caller, if skipped here)
+deltaAB <- estimateDeltaAB(fit, flavor="qq(DH)", verbose=-10)
+print(deltaAB)
+## [1] 0.1657131
+
+fit <- callAB(fit, delta=deltaAB, verbose=-10)
 print(fit)
 plotTracks(fit)
+
+# Even if not explicitly specified, the estimated 
+# threshold parameter is returned by the caller
+stopifnot(fit$params$deltaAB == deltaAB)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Calling segments in loss-of-heterozygosity (LOH)
+# NOTE: Ideally, this should be done on whole-genome data
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Explicitly estimate the threshold in C1 for calling LOH
+# (which be done by default by the caller, if skipped here)
+deltaLOH <- estimateDeltaLOH(fit, flavor="minC1|nonAB", verbose=-10)
+print(deltaLOH)
+## [1] 0.625175
+
+fit <- callLOH(fit, delta=deltaLOH, verbose=-10)
+print(fit)
+plotTracks(fit)
+
+# Even if not explicitly specified, the estimated 
+# threshold parameter is returned by the caller
+stopifnot(fit$params$deltaLOH == deltaLOH)

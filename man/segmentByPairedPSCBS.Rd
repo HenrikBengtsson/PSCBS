@@ -137,9 +137,13 @@ str(data)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Drop single-locus outliers
 dataS <- dropSegmentationOutliers(data)
+
+# Speed up example by segmenting fewer loci
+dataS <- dataS[seq(from=1, to=nrow(data), by=5),]
+
 str(dataS)
 
-R.oo::attachLocally(dataS);
+R.oo::attachLocally(dataS)
 
 # Paired PSCBS segmentation
 fit <- segmentByPairedPSCBS(CT, betaT=betaT, betaN=betaN,
@@ -149,9 +153,6 @@ print(fit)
 
 # Plot results
 plotTracks(fit)
-
-# Sanity check
-stopifnot(nbrOfSegments(fit) == 12)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

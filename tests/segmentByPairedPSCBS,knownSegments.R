@@ -13,6 +13,18 @@ data <- R.utils::loadObject(pathname)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Drop single-locus outliers
 dataS <- dropSegmentationOutliers(data)
+
+# Run light-weight tests by default
+if (Sys.getenv("_R_CHECK_FULL_") == "") {
+  # Use only every 5th data point
+  dataS <- dataS[seq(from=1, to=nrow(data), by=5),]
+  # Number of segments (for assertion)
+  nSegs <- 4L
+} else {
+  # Full tests
+  nSegs <- 12L
+}
+
 str(dataS)
 
 fig <- 1;
@@ -38,7 +50,7 @@ devSet(list(fit, "tracks"));
 plotTracks(fit)
 
 # Sanity check
-stopifnot(nbrOfSegments(fit) == 12)
+stopifnot(nbrOfSegments(fit) == nSegs)
 
 fit1 <- fit
 
@@ -63,7 +75,7 @@ devSet(list(fit, "tracks"));
 plotTracks(fit)
 
 # Sanity check [TO FIX: See above]
-stopifnot(nbrOfSegments(fit) == 12)
+stopifnot(nbrOfSegments(fit) == nSegs)
 
 fit2 <- fit
 
@@ -87,6 +99,6 @@ devSet(list(fit, "tracks"));
 plotTracks(fit)
 
 # Sanity check
-stopifnot(nbrOfSegments(fit) == 11)
+stopifnot(nbrOfSegments(fit) == nSegs-1L)
 
 fit3 <- fit
