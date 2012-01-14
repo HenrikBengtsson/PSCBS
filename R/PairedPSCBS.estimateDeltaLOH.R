@@ -150,13 +150,13 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
 
   verbose && enter(verbose, "Estimating DH threshold for calling LOH as the midpoint between guessed C1=0 and C1=1");
-  segs <- as.data.frame(this);
+  segs <- getSegments(this, splitters=FALSE);
+  nbrOfSegments <- nrow(segs);
+
   verbose && printf(verbose, "Argument 'midpoint': %.3g\n", midpoint);
-  verbose && cat(verbose, "Number of segments: ", nrow(segs));
+  verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
 
   # Getting AB calls
-  segs <- as.data.frame(this);
-  nbrOfSegments <- nrow(segs);
   isAB <- segs$abCall;
   if (is.null(isAB)) {
     throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.");
@@ -171,7 +171,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   }
 
   nbrOfNonAB <- sum(!isAB, na.rm=TRUE);
-  verbose && printf(verbose, "Number of segments not in allelic balance: %d (%.1f%%) of %d", nbrOfNonAB, 100*nbrOfNonAB/nbrOfSegments, nbrOfSegments);
+  verbose && printf(verbose, "Number of segments not in allelic balance: %d (%.1f%%) of %d\n", nbrOfNonAB, 100*nbrOfNonAB/nbrOfSegments, nbrOfSegments);
   segsNonAB <- segs[which(!isAB),,drop=FALSE];
 
   # Sanity check
@@ -229,6 +229,9 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
 ############################################################################
 # HISTORY:
+# 2012-01-13
+# o Corrected some of verbose messages of estimateDeltaLOHByMinC1ForNonAB()
+#   for PairedPSCBS objects.
 # 2011-07-07
 # o GENERALIZATION: Now estimateDeltaLOHByMinC1ForNonAB() returns -Inf
 #   if all segments are called AB.
