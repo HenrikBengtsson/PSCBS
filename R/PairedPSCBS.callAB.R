@@ -19,13 +19,29 @@
 #    of data points in order to call a segments.  If fewer data points,
 #    then the call is set to @NA regardless.}
 #   \item{xorCalls}{If @TRUE, a region already called LOH, will
-#    not be called AB.}
+#    for consistency never be called AB, resulting in either an AB
+#    call set to @FALSE or @NA (as explained below).}
 #   \item{force}{If @FALSE, and allelic-balance calls already exits,
 #    then nothing is done, otherwise the calls are done.}
 # }
 #
 # \value{
 #   Returns a @see "PairedPSCBS" object with allelic-balance calls.
+# }
+#
+# \section{AB and LOH consistency}{
+#   Biologically, a segment can not be both in allelic balance (AB) and
+#   in loss-of-heterozygosity (LOH) at the same time.
+#   To avoid reporting such inconsistencies, the LOH caller will,
+#   if argument \code{xorCalls=TRUE}, never report a segment to be in
+#   LOH if it is already called to be in AB.
+#   However, regardless of of the AB call, a segment is still always
+#   tested for LOH, to check weather the LOH caller is consistent with the
+#   AB caller or not.  Thus, in order to distinguish the case where 
+#   the AB caller and LOH caller agree from when they disagree, 
+#   we report either (AB,LOH)=(TRUE,FALSE) or (TRUE,NA).  The former is
+#   reported when they are consistent, and the latter when they are not,
+#   or when the AB caller could not call it.
 # }
 #
 # @author
@@ -77,7 +93,8 @@ setMethodS3("callAB", "PairedPSCBS", function(fit, flavor=c("DeltaAB*"), ..., mi
     if (is.element("lohCall", names(segs))) {
       calls <- segs$abCall;
       otherCalls <- segs$lohCall;
-      # If called and already called by other caller, call it as NA.
+      # If called (TRUE) and already called (TRUE)
+      # by the other caller, call it as NA.
       calls[calls & otherCalls] <- NA;
       segs$abCall <- calls;
       fit$output <- segs;
@@ -199,6 +216,9 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimat
 
 ##############################################################################
 # HISTORY
+# 2012-01-15
+# o DOCUMENTATION: Added details to the help of callLOH() and callAB() on
+#   the difference between (AB,LOH)=(TRUE,FALSE) and (AB,LOH)=(TRUE,NA).
 # 2011-07-07
 # o BUG FIX: Consecutive calls to callAB(..., force=TRUE) would append
 #   additional 'abCall' columns to the segmentation table instead of

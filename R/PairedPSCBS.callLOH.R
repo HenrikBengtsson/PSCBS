@@ -18,13 +18,29 @@
 #    of data points in order to call a segments.  If fewer data points,
 #    then the call is set to @NA regardless.}
 #   \item{xorCalls}{If @TRUE, a region already called AB, will
-#    not be called LOH.}
+#    for consistency never be called LOH, resulting in either an LOH
+#    call set to @FALSE or @NA (as explained below).}
 #   \item{force}{If @FALSE, and allelic-balance calls already exits,
 #    then nothing is done, otherwise the calls are done.}
 # }
 #
 # \value{
 #   Returns a @see "PairedPSCBS" object with LOH calls.
+# }
+#
+# \section{AB and LOH consistency}{
+#   Biologically, a segment can not be both in allelic balance (AB) and
+#   in loss-of-heterozygosity (LOH) at the same time.
+#   To avoid reporting such inconsistencies, the LOH caller will,
+#   if argument \code{xorCalls=TRUE}, never report a segment to be in
+#   LOH if it is already called to be in AB.
+#   However, regardless of of the AB call, a segment is still always
+#   tested for LOH, to check weather the LOH caller is consistent with the
+#   AB caller or not.  Thus, in order to distinguish the case where 
+#   the AB caller and LOH caller agree from when they disagree, 
+#   we report either (AB,LOH)=(TRUE,FALSE) or (TRUE,NA).  The former is
+#   reported when they are consistent, and the latter when they are not,
+#   or when the LOH caller could not call it.
 # }
 #
 # @author
@@ -80,7 +96,8 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
     if (is.element("abCall", names(segs))) {
       calls <- segs$lohCall;
       otherCalls <- segs$abCall;
-      # If called and already called by other caller, call it as NA.
+      # If called (TRUE) and already called (TRUE)
+      # by the other caller, call it as NA.
       calls[calls & otherCalls] <- NA;
       segs$lohCall <- calls;
       fit$output <- segs;
@@ -221,6 +238,9 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
 
 ##############################################################################
 # HISTORY
+# 2012-01-15
+# o DOCUMENTATION: Added details to the help of callLOH() and callAB() on
+#   the difference between (AB,LOH)=(TRUE,FALSE) and (AB,LOH)=(TRUE,NA).
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-05-29
