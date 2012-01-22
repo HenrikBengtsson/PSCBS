@@ -10,7 +10,7 @@ fixLocations <- function(fit, ...) {
 } # fixLocations()
 
 devOptions("png", width=840);
-options(width=80);
+options(width=85);
 options(digits=3);
 options(str=strOptions(strict.width="cut"));
 %>
