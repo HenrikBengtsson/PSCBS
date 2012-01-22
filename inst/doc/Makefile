@@ -14,6 +14,6 @@ index.html:
 
 clean:
 	$(RM) index.html.rsp
-	$(RM) *.aux *.bbl *.blg *.log *.toc *.tex *.rsp.R
+	$(RM) *.aux *.bbl *.blg *.bst *.log *.sty *.toc *.tex *.rsp.R
 	$(RM) -r figures/
-#	$(RM) Makefile
+	$(RM) Makefile

@@ -206,8 +206,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       dhSegRowsII <- dhSegRowsCC[rowsII,,drop=FALSE];
 
       verbose && cat(verbose, "TCN & DH segRows before:");
-      verbose && print(verbose, tcnSegRowsII);
-      verbose && print(verbose, dhSegRowsII);
+      verbose && print(verbose, cbind(tcn=tcnSegRowsII, dh=dhSegRowsII));
 
       segRowsRange <- range(c(tcnSegRowsII, dhSegRowsII), na.rm=TRUE);
       verbose && printf(verbose, "Range [%d,%d]\n", 
@@ -299,8 +298,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       stopifnot(nrow(segsII) == length(rowsII));
 
       verbose && cat(verbose, "TCN & DH segRows afterward:");
-      verbose && print(verbose, tcnSegRowsII);
-      verbose && print(verbose, dhSegRowsII);
+      verbose && print(verbose, cbind(tcn=tcnSegRowsII, dh=dhSegRowsII));
 
 ##print(segsII);
 
@@ -319,26 +317,6 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
       segsCC[rowsII,] <- segsII;
       tcnSegRowsCC[rowsII,] <- tcnSegRowsII;
-
-####################
-if (!all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE)) {
-  
-  aa <- tcnSegRowsCC[-nrow(tcnSegRowsCC),2];
-  bb <- tcnSegRowsCC[-1,1];
-  delta <- bb - aa;
-  dd <- cbind(aa, bb, delta=delta);
-  print(dd);
-  dd <- subset(dd, delta == 0);
-  print(dd);
-  row <- dd[,1L,drop=TRUE];
-  print(row);
-  rr <- row + -10:10;
-  dd <- data[rr,];
-  rownames(dd) <- rr;
-  print(dd);
-print(tcnSegRowsII);
-}
-####################
 
       rm(rowsII, segsII);
       verbose && exit(verbose);
@@ -427,6 +405,8 @@ print(tcnSegRowsII);
 
 ############################################################################
 # HISTORY:
+# 2012-01-21
+# o CLEANUP: Removed left-over debug output in postsegmentTCN().
 # 2012-01-09
 # o Minor correction of a verbose message in postsegmentTCN().
 # 2011-10-16
