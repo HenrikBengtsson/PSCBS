@@ -29,7 +29,6 @@
   \item{method}{A \code{\link[base]{character}} string specifying the calling algorithm to use.}
   \item{...}{Additional/optional arguments used to override the default
     parameters used by the caller.}
-  \item{verbose}{\code{\link[R.utils]{Verbose}}.}
  }
 
  \value{

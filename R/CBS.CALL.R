@@ -17,7 +17,6 @@
 #  \item{method}{A @character string specifying the calling algorithm to use.}
 #  \item{...}{Additional/optional arguments used to override the default
 #    parameters used by the caller.}
-#  \item{verbose}{@see "R.utils::Verbose".}
 # }
 #
 # \value{
@@ -666,6 +665,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #  \item{shrinkRegions}{If @TRUE, regions are shrunk to the support of 
 #     the data.}
 #  \item{...}{Not used.}
+#  \item{verbose}{@see "R.utils::Verbose".}
 # }
 #
 # \value{
@@ -704,10 +704,13 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #
 # @keyword internal 
 #*/###########################################################################  
-setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegions=TRUE, ...) {
+setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegions=TRUE, ..., verbose=FALSE) {
   # To please R CMD check, cf. subset()
   chromosome <- NULL; rm(chromosome);
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'regions':
   if (is.null(regions)) {
     # Get chromosome lengths
@@ -717,9 +720,32 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   stopifnot(all(is.element(c("chromosome", "start", "end"), colnames(regions))));
   stopifnot(!any(duplicated(regions$chromosome)));
 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Calculating call statistics");
+  segs <- getSegments(fit, splitters=FALSE);
+  callTypes <- grep("Call$", colnames(segs), value=TRUE);
+  verbose && cat(verbose, "Call types: ", hpaste(callTypes));
+  if (length(callTypes) == 0) {
+    throw("Cannot calculate call statistics. No calls have been made.");
+  }
+
+  verbose && cat(verbose, "Regions of interest:");
+  verbose && str(verbose, regions);
+
+
+  verbose && enter(verbose, "Filtering out segments within the requested regions");
+
   # Filter out segments within the requested regions
   segsT <- NULL;
-  segs <- getSegments(fit, splitters=FALSE);
+  verbose && cat(verbose, "Number of segments (before): ", nrow(segs));
+
   for (rr in seq(length=nrow(regions))) {
     regionRR <- regions[rr,];
     chrRR <- regionRR[,"chromosome"];
@@ -728,9 +754,13 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     if (is.na(chrRR) || is.na(startRR) || is.na(endRR)) {
       next;
     }
+
+    verbose && enter(verbose, sprintf("Region #%d of %d", rr, nrow(regions)));
     
     # Select regions that (at least) overlapping with the region
     segsRR <- subset(segs, chromosome == chrRR & start <= endRR & end >= startRR);
+
+    verbose && cat(verbose, "Number of segments within region: ", nrow(segsRR));
 
     # Special case
     if (nrow(segsRR) == 0) {
@@ -756,14 +786,25 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     segsRR$fullLength <- endRR - startRR; ## + 1L;
 
     segsT <- rbind(segsT, segsRR);
+
+    verbose && exit(verbose);
   } # for (rr ...)
 
   segs <- segsT;
 
+  # Order by chromosome
+  o <- order(segs$chromosome);
+  segs <- segs[o,];
+
+  verbose && cat(verbose, "Number of segments (after): ", nrow(segs));
+  verbose && str(verbose, segs);
+
+  verbose && exit(verbose);
+
+
+  verbose && enter(verbose, "Calculating total length per call and chromosome");
   # Sum length of calls per type and chromosome
   segs$length <- segs[,"end"] - segs[,"start"];  ## + 1L;
-  segs <- segs[order(segs$chromosome),];
-  callTypes <- grep("Call$", colnames(segs), value=TRUE);
   res <- lapply(callTypes, FUN=function(type) {
     coeffs <- as.integer(segs[,type]);
     lens <- coeffs * segs$length;
@@ -772,6 +813,8 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   });
   names(res) <- gsub("Call$", "Length", callTypes);
   res1 <- as.data.frame(res);
+  verbose && str(verbose, res);
+  verbose && exit(verbose);
 
   # Extract selected regions
   idxs <- match(unique(segs$chromosome), regions$chromosome);
@@ -780,12 +823,15 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   # Sanity check
   stopifnot(nrow(regionsT) == nrow(res1));
 
+
+  verbose && enter(verbose, "Calculating fractions per region");
   # Calculate lengths
   regionsT$length <- regionsT[,"end"] - regionsT[,"start"]; ## + 1L;
   stopifnot(all(regionsT$length >= 0));
 
   res2 <- res1 / regionsT[,"length"];
   names(res2) <- gsub("Call$", "Fraction", callTypes);
+  verbose && exit(verbose);
 
   res3 <- cbind(res1, res2);
 
@@ -800,14 +846,15 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   # Sanity checks
   resT <- res[,grep("Fraction", colnames(res))];
   for (key in colnames(resT)) {
-print(key);
     rho <- resT[,key];
-print(rho);
     stopifnot(all(rho >= 0, na.rm=TRUE));
     stopifnot(all(rho <= 1, na.rm=TRUE));
   }
 
   stopifnot(nrow(res) == nrow(regions));
+
+  verbose && str(verbose, res);
+  verbose && exit(verbose);
 
   res;
 }, protected=TRUE) # getCallStatistics()
@@ -1167,6 +1214,9 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2012-01-24
+# o ROBUSTNESS: Now getCallStatistics() for CBS asserts that calls have
+#   been made.  If not, an exception is thrown.
 # 2011-12-13
 # o Added "ucsf-dmad" to argument 'method' for callGainsAndLosses() of CBS.
 # 2011-12-12

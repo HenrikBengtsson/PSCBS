@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.19.6 [2012-01-24]
+o ROBUSTNESS: Now getCallStatistics() for CBS asserts that calls have
+  been made.  If not, an exception is thrown.
+
+
 Version: 0.19.5 [2012-01-21]
 o DOCUMENTATION: Added details to the help of callLOH() and callAB() on
   the difference between (AB,LOH)=(TRUE,FALSE) and (AB,LOH)=(TRUE,NA).
