@@ -60,7 +60,7 @@
 #   } 
 #   \item{knownSegments}{Optional @data.frame specifying 
 #     \emph{non-overlapping} known segments.  These segments must
-#     not share loci.}
+#     not share loci.  See @see "findLargeGaps" and @see "gapsToSegments".}
 #   \item{seed}{An (optional) @integer specifying the random seed to be 
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}

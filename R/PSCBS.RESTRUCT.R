@@ -93,7 +93,8 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'chromosomes':
-  chromosomes <- Arguments$getIntegers(chromosomes, disallow=c("NaN", "Inf"));
+  disallow <- c("NaN", "Inf");
+  chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow);
   stopifnot(all(is.element(chromosomes, getChromosomes(this))));
 
   # Always extract in order

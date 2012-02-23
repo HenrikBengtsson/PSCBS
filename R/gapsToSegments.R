@@ -1,6 +1,7 @@
 ###########################################################################/**
 # @set "class=data.frame"
 # @RdocMethod gapsToSegments
+# @alias gapsToSegments
 #
 # @title "Gets the genomic segments that are complementary to the gaps"
 #

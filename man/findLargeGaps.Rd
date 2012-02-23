@@ -38,7 +38,10 @@
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
 
  \seealso{
-   \code{\link{gapsToSegments.data.frame}}().
+   Use \code{\link{gapsToSegments}}() to turn the set of identified gaps into
+   the complementary set of segments such that they can be passed
+   to \code{\link{segmentByCBS}}() and \code{\link{segmentByPairedPSCBS}}() via
+   argument \code{knownSegments}.
  }
 
 

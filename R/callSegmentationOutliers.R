@@ -55,7 +55,7 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
   length2 <- rep(nbrOfLoci, times=2);
 
   # Argument 'chromosome':
-  disallow <- c("Inf");
+  disallow <- c("NaN", "Inf");
   chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow);
   if (length(chromosome) == 1) {
     chromosome <- rep(chromosome, times=nbrOfLoci);

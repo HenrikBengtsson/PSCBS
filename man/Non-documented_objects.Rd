@@ -247,7 +247,6 @@
 \alias{resegment.AbstractCBS}
 \alias{resegment.CBS}
 \alias{resegment.PairedPSCBS}
-\alias{gapsToSegments}
 \alias{callSegmentationOutliers.data.frame}
 \alias{dropSegmentationOutliers.data.frame}
 \alias{hclustCNs}

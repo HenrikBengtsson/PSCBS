@@ -29,7 +29,10 @@
 # @author
 #
 # \seealso{
-#   @see "gapsToSegments.data.frame".
+#   Use @see "gapsToSegments" to turn the set of identified gaps into 
+#   the complementary set of segments such that they can be passed
+#   to @see "segmentByCBS" and @see "segmentByPairedPSCBS" via
+#   argument \code{knownSegments}.
 # }
 #
 # @keyword IO
@@ -42,7 +45,8 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
   
   # Argument 'chromosome':
   if (!is.null(chromosome)) {
-    chromosome <- Arguments$getIndices(chromosome, length=c(nbrOfLoci, nbrOfLoci));
+    disallow <- c("Inf");
+    chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow, length=c(nbrOfLoci, nbrOfLoci));
   }
 
   # Argument 'minLength':
@@ -93,6 +97,9 @@ setMethodS3("findLargeGaps", "data.frame", function(chromosome, ...) {
 
 ###############################################################################
 # HISTORY:
+# 2012-02-22
+# o BUG FIX: findLargeGaps() did not handle missing values for
+#   argument 'chromosome'.
 # 2011-11-22
 # o Added findLargeGaps().
 # o Created.

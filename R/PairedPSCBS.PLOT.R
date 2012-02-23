@@ -669,7 +669,8 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
 
   # Argument 'chromosomes':
   if (!is.null(chromosomes)) {
-    chromosomes <- Arguments$getIntegers(chromosomes);
+    disallow <- c("NaN", "Inf");
+    chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow);
     stopifnot(is.element(chromosomes, getChromosomes(fit)));
   }
 

@@ -69,7 +69,7 @@
    }
    \item{knownSegments}{Optional \code{\link[base]{data.frame}} specifying
      \emph{non-overlapping} known segments.  These segments must
-     not share loci.}
+     not share loci.  See \code{\link{findLargeGaps}}() and \code{\link{gapsToSegments}}().}
    \item{seed}{An (optional) \code{\link[base]{integer}} specifying the random seed to be
      set before calling the segmentation method.  The random seed is
      set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}

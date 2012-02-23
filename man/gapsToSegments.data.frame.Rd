@@ -11,6 +11,7 @@
 \alias{gapsToSegments.data.frame}
 \alias{gapsToSegments.data.frame}
 
+ \alias{gapsToSegments}
 
  \title{Gets the genomic segments that are complementary to the gaps}
 

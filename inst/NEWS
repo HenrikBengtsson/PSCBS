@@ -3,6 +3,8 @@ Package: PSCBS
 ==============
 
 Version: 0.19.7 [2012-02-22]
+o BUG FIX: findLargeGaps() did not handle missing values for
+  argument 'chromosome'.
 o BUG FIX: segmentByCBS(..., knownSegments=knownSegments) would
   incorrectly throw a sanity-check exception if 'knownSegments'
   contains a segment with 'start' and 'stop' positions being equal.

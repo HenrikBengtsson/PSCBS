@@ -85,7 +85,6 @@ callROH callROHOneSegment callROHOneSegment.PairedPSCBS
 testROH testROH.numeric
 pruneBySdUndo updateBoundaries updateBoundaries.CBS
 resegment resegment.AbstractCBS resegment.CBS resegment.PairedPSCBS
-gapsToSegments
 callSegmentationOutliers.data.frame
 dropSegmentationOutliers.data.frame
  hclustCNs pruneByHClust updateMeansTogether
