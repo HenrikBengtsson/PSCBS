@@ -59,7 +59,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'fit':
   if (nbrOfChromosomes(fit) > 1) {
-    return(plotTracksManyChromosomes(fit, tracks=tracks, scatter=scatter, pch=pch, Clim=Clim, Blim=Blim, xScale=xScale, ..., add=add, verbose=verbose));
+    return(plotTracksManyChromosomes(fit, tracks=tracks, scatter=scatter, calls=calls, pch=pch, Clim=Clim, Blim=Blim, xScale=xScale, ..., add=add, verbose=verbose));
   }
 
   # Argument 'tracks':
@@ -963,6 +963,9 @@ setMethodS3("drawChangePoints", "PSCBS", function(fit, labels=FALSE, col="#66666
 
 ############################################################################
 # HISTORY:
+# 2012-02-22
+# o BUG FIX: Argument 'calls' of plotTracks() for PairedPSCBS was ignored
+#   if more than one chromosome was plotted.
 # 2011-12-03
 # o Added drawChangePointsC1C2() for PairedPSCBS.
 # o Added drawChangePoints() for PairedPSCBS.

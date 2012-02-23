@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.19.7 [2012-02-22]
+o BUG FIX: segmentByCBS(..., knownSegments=knownSegments) would
+  incorrectly throw a sanity-check exception if 'knownSegments'
+  contains a segment with 'start' and 'stop' positions being equal.
+o BUG FIX: Argument 'calls' of plotTracks() for PairedPSCBS was ignored
+  if more than one chromosome was plotted.
+
+
 Version: 0.19.6 [2012-01-24]
 o ROBUSTNESS: Now getCallStatistics() for CBS asserts that calls have
   been made.  If not, an exception is thrown.

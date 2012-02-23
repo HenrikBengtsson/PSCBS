@@ -207,18 +207,24 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   for (chr in sort(unique(knownSegments$chromosome))) {
     dd <- subset(knownSegments, chromosome == chr);
 
+    # Order segments by 'start'.
+    o <- order(dd$start);
+    dd <- dd[o,];
+
+    # Known segments must not share 'start' or 'end' loci
+    for (field in c("start", "end")) {
+      xs <- dd[[field]];
+      xs <- xs[!is.na(xs)];
+      if (anyDuplicated(xs) > 0) {
+        print(knownSegments);
+        throw(sprintf("Detected segments on chromosome %s with non-unique '%s' positions in argument 'knownSegments'", chr, field));
+      }
+    } # for (field ...)
+
     # Known segments must not overlap
     if (!all(dd$start[-1] >= dd$end[-nrow(dd)], na.rm=TRUE)) {
       print(knownSegments);
       throw("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments'.");
-    }
-
-    # Known segments must not share loci
-    xs <- c(dd$start, dd$end);
-    xs <- xs[!is.na(xs)];
-    if (anyDuplicated(xs) > 0) {
-      print(knownSegments);
-      throw("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments', i.e. which share loci.");
     }
   }
 
@@ -883,6 +889,10 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-02-22
+# o BUG FIX: segmentByCBS(..., knownSegments=knownSegments) would
+#   incorrectly throw a sanity-check exception if 'knownSegments'
+#   contains a segment with 'start' and 'stop' positions being equal.
 # 2011-11-17
 # o BUG FIX: Now parameter 'seed' is preserved by segmentByCBS().
 # o Added segmentByCBS() for CBS, which is just a wrapper for resegment().
