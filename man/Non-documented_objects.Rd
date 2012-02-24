@@ -258,6 +258,11 @@
 \alias{drawChangePoints.PSCBS}
 \alias{drawChangePointsC1C2}
 \alias{drawChangePointsC1C2.PairedPSCBS}
+\alias{extractDhSegment}
+\alias{extractDhSegment.PairedPSCBS}
+\alias{callCN}
+\alias{callCopyNeutral}
+\alias{callCopyNeutralByTCNofAB}
 
 \description{
   This page contains aliases for all "non-documented" objects that

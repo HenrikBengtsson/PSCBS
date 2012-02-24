@@ -93,3 +93,21 @@ plotTracks(fit)
 # Even if not explicitly specified, the estimated 
 # threshold parameter is returned by the caller
 stopifnot(fit$params$deltaLOH == deltaLOH)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Calling segments with run of homozygosity (ROH)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+fit <- callROH(fit, verbose=-10)
+print(fit)
+plotTracks(fit)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Calling segments that re total copy neutral (CN)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+fit <- callCN(fit, verbose=-10)
+print(fit)
+plotTracks(fit)
+
+

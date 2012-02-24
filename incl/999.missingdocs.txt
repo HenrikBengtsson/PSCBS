@@ -91,3 +91,6 @@ dropSegmentationOutliers.data.frame
 drawChangePoints drawChangePoints.AbstractCBS
 drawChangePoints.CBS drawChangePoints.PSCBS
  drawChangePointsC1C2 drawChangePointsC1C2.PairedPSCBS
+extractDhSegment extractDhSegment.PairedPSCBS
+callCN callCopyNeutral callCopyNeutralByTCNofAB
+

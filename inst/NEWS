@@ -2,9 +2,17 @@
 Package: PSCBS
 ==============
 
+Version: 0.20.0 [2012-02-24]
+o Added alpha version of callCopyNeutral() for PairedPSCBS, which
+  certainly will be updated in the future.  This caller is
+  tested by the system tests.
+o Added some internal utility functions for PairedPSCBS taken
+  from the aroma.cn package.  Some of these may become public
+  later, but for they should be considered internal.
+
+
 Version: 0.19.8 [2012-02-23]
-o Now package explicitly imports 'utils' and no longer relies on
-  'R.oo' and/or 'R.utils' for loading it.
+o ROBUSTNESS: Package now explicitly depends on 'utils'.
 
 
 Version: 0.19.7 [2012-02-22]

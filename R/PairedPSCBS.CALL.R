@@ -60,6 +60,8 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDelta
 }, private=TRUE) # callABandLowC1()
 
 
+
+
 ##############################################################################
 # HISTORY
 # 2011-06-14
