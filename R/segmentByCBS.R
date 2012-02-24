@@ -585,7 +585,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   pkgName <- "DNAcopy";
   # Assert that package is installed
   isPackageInstalled(pkgName) || throw("Package is not installed: ", pkgName);
-  pkg <- packageDescription(pkgName);
+  pkg <- utils::packageDescription(pkgName);
   pkgVer <- pkg$Version;
   pkgDetails <- sprintf("%s v%s", pkgName, pkgVer);
 

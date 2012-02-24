@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.19.8 [2012-02-23]
+o Now package explicitly imports 'utils' and no longer relies on
+  'R.oo' and/or 'R.utils' for loading it.
+
+
 Version: 0.19.7 [2012-02-22]
 o BUG FIX: findLargeGaps() did not handle missing values for
   argument 'chromosome'.

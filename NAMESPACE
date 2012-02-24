@@ -2,7 +2,7 @@
 # IMPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # importFrom(R.utils, cat)
-import(R.utils)
+import("R.utils")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
