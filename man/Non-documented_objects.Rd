@@ -263,6 +263,9 @@
 \alias{callCN}
 \alias{callCopyNeutral}
 \alias{callCopyNeutralByTCNofAB}
+\alias{dropChangePoints}
+\alias{getStatsForCopyNeutralABs}
+\alias{getStatsForCopyNeutralABs.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

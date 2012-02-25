@@ -21,13 +21,17 @@
  in allelic balance (AB).
 }
 
-\usage{\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, ..., force=FALSE, verbose=FALSE)}
+\usage{\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, delta=0.5, alpha=0.05, ..., force=FALSE, verbose=FALSE)}
 
 \arguments{
   \item{fit}{A PairedPSCBS fit object as returned by
     \code{\link[PSCBS]{segmentByPairedPSCBS}}.}
+  \item{delta}{A non-negative \code{\link[base]{double}} specifying the width of the
+    "acceptance" region.}
+  \item{alpha}{A \code{\link[base]{double}} in [0,0.5] specifying the significance level
+    of the confidence intervals used.}
   \item{...}{Additional arguments passed to
-    \code{\link{findNeutralCopyNumberState}}().}
+             \code{\link[PSCBS:getStatsForCopyNeutralABs.PairedPSCBS]{*getStatsForCopyNeutralABs}()}.}
   \item{force}{If \code{\link[base:logical]{TRUE}}, an already called object is skipped, otherwise not.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }

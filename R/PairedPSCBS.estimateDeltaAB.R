@@ -520,7 +520,7 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
 
   verbose && enter(verbose, "Estimating DH threshold for AB caller");
   verbose && cat(verbose, "quantile #1: ", q1);
-  verbose && cat(verbose, "Symmetrix quantile #2: ", q2);
+  verbose && cat(verbose, "Symmetric quantile #2: ", q2);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the region-level estimates

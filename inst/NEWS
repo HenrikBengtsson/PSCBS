@@ -2,10 +2,11 @@
 Package: PSCBS
 ==============
 
-Version: 0.20.0 [2012-02-24]
+Version: 0.20.0 [2012-02-25]
 o Added alpha version of callCopyNeutral() for PairedPSCBS, which
   certainly will be updated in the future.  This caller is
   tested by the system tests.
+o Added dropChangePoints() for AbstractCBS.
 o Added some internal utility functions for PairedPSCBS taken
   from the aroma.cn package.  Some of these may become public
   later, but for they should be considered internal.

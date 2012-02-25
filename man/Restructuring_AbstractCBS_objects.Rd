@@ -43,12 +43,17 @@
      \item \code{\link[PSCBS:dropChangePoint.AbstractCBS]{*dropChangePoint}()} /
            \code{\link[PSCBS:mergeTwoSegments.AbstractCBS]{*mergeTwoSegments}()}
            - Drops a change point by merging two neighboring segments
-             and recalculating the statistics for the merged segment
+             and recalculates the statistics for the merged segment
+             before returning an \code{\link{AbstractCBS}}.
+
+     \item \code{\link[PSCBS:dropChangePoints.AbstractCBS]{*dropChangePoints}()}
+           - Drops zero or more change points
+             and recalculates the segment statistics
              before returning an \code{\link{AbstractCBS}}.
 
      \item \code{\link[PSCBS:mergeThreeSegments.AbstractCBS]{*mergeThreeSegments}()}
            - Merges a segment with its two flanking segments
-             and recalculating the statistics for the merged segment
+             and recalculates the statistics for the merged segment
              before returning an \code{\link{AbstractCBS}}.
    }
 

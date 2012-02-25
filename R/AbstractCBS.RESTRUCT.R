@@ -33,12 +33,17 @@
 #     \item @seemethod "dropChangePoint" /
 #           @seemethod "mergeTwoSegments"
 #           - Drops a change point by merging two neighboring segments
-#             and recalculating the statistics for the merged segment
+#             and recalculates the statistics for the merged segment
+#             before returning an @see "AbstractCBS".
+#
+#     \item @seemethod "dropChangePoints"
+#           - Drops zero or more change points
+#             and recalculates the segment statistics
 #             before returning an @see "AbstractCBS".
 #
 #     \item @seemethod "mergeThreeSegments"
 #           - Merges a segment with its two flanking segments
-#             and recalculating the statistics for the merged segment
+#             and recalculates the statistics for the merged segment
 #             before returning an @see "AbstractCBS".
 #   }
 #
@@ -215,9 +220,72 @@ setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
   # Argument 'idx':
-  idx <- Arguments$getIndex(idx, max=nbrOfChangePoints(fit, splitters=TRUE));
+  max <- nbrOfChangePoints(fit, splitters=TRUE);
+  idx <- Arguments$getIndex(idx, max=max);
 
   mergeTwoSegments(fit, left=idx, ...);
+}, protected=TRUE)
+
+
+
+
+###########################################################################/**
+# @RdocMethod dropChangePoints
+#
+# @title "Drops zero or more change points"
+#
+# \description{
+#   @get "title", which is done by dropping one change point at the
+#   time using @seemethod "dropChangePoint"
+#   and recalculating the segment statistics at the end.
+#
+#   \emph{NOTE: This method only works if there is only one chromosome.}
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{idxs}{An @integer @vector specifying the change points to be dropped.}
+#  \item{update}{If @TRUE, segment statistics are updated.}
+#  \item{...}{Other arguments passed to @seemethod "dropChangePoint"
+#             and @seemethod "updateMeans".}
+# }
+#
+# \value{
+#   Returns an @see "AbstractCBS" of the same class with
+#   \code{length(idxs)} segments.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, ...) {
+  # Argument 'idxs':
+  max <- nbrOfChangePoints(fit, splitters=TRUE);
+  idxs <- Arguments$getIndices(idxs, max=max);
+
+  # Assert that there is only one chromosome
+  chrs <- getChromosomes(fit);
+  if (length(chrs) > 1) {
+    throw("dropChangePoints() only support single-chromosome data: ", hpaste(chrs));
+  }
+
+  # Drop change points one by one
+  idxs <- unique(idxs);
+  idxs <- sort(idxs, decreasing=TRUE);
+  for (idx in idxs) {
+    fit <- dropChangePoint(fit, idx=idx, update=update, ...);
+  }
+
+  # Update segment statistics?
+  if (update) {
+    fit <- updateMeans(fit, ...);
+  }
+
+  fit;
 }, protected=TRUE)
 
 
@@ -441,6 +509,8 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2012-02-25
+# o Added dropChangePoints() for AbstractCBS.
 # 2011-11-17
 # o FIX: extractRegions() for AbstractCBS would also show verbose output.
 # 2011-11-04
