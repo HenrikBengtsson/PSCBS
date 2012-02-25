@@ -156,9 +156,9 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
   # Identify copy neutral AB segments
   isNeutralAB <- findNeutralCopyNumberState(C=C, isAI=!isAB, weights=weights,
                                                        ..., verbose=verbose);
-  n <- sum(isNeutralAB, na.rm=TRUE);
-  verbose && cat(verbose, "Number of copy-neutral AB segments: ", n);
-  if (n == 0) {
+  nAB <- sum(isNeutralAB, na.rm=TRUE);
+  verbose && cat(verbose, "Number of copy-neutral AB segments: ", nAB);
+  if (nAB == 0) {
     throw("Cannot call copy-neutral states, because none of the segments in allelic-balance are copy neutral.");
   }
 
@@ -207,8 +207,11 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
   tcnMean <- segs$tcnMean;
   isNeutral <- (range[1] <= tcnMean & tcnMean <= range[2]);
 
-  n <- sum(isNeutral, na.rm=TRUE);
-  verbose && cat(verbose, "Number of segments called copy-neutral: ", n);
+  n <- sum(!is.na(isNeutral), na.rm=TRUE);
+  nCN <- sum(isNeutral, na.rm=TRUE);
+  verbose && cat(verbose, "Total number of segments: ", n);
+  verbose && cat(verbose, "Number of segments called copy neutral: ", nCN);
+  verbose && cat(verbose, "Number of non-AB segments called copy neutral: ", nCN-nAB);
   
   # Sanity check
   # All previously called AB regions should remain called here as well
