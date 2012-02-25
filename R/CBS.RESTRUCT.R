@@ -206,6 +206,12 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   verbose && str(verbose, segRows);
   # Sanity checks
   stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
+  drow <- segRows[-1,1] - segRows[-nrow(segRows),2];
+  stopifnot(all(is.na(drow) | (drow > 0)));
+  if (!all(is.na(drow) | (drow > 0))) {
+    print(segRows);
+    throw("INTERNAL ERROR: Generated 'segRows' is invalid, because it contains overlapping data chunks.");
+  }
 
   verbose && exit(verbose);
 
@@ -315,6 +321,9 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
 
 ############################################################################
 # HISTORY:
+# 2012-02-24
+# o ROBUSTNESS: Added more sanity checks validating the correctness of
+#   what is returned by extractSegments() for CBS.
 # 2011-11-17
 # o BUG FIX: extractSegments() for CBS would throw an error when
 #   there were multiple chromosomes.

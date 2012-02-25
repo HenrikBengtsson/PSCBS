@@ -135,8 +135,23 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
   # Give more weight to longer regions
   weights <- n;
 
+  # Identify copy neutral AB segments
   isNeutral <- findNeutralCopyNumberState(C=C, isAI=!isAB, weights=weights,
                                                        ..., verbose=verbose);
+
+  # Estimate the those segments
+  fitCN <- extractSegments(fit, isNeutral);
+
+#  # Turn into one big segment by dropping all change points
+#  nCPs <- nbrOfChangePoints(fitCN, splitters=TRUE);
+#  for (kk in seq(from=nCPs, to=1L, by=-1L)) {
+#    fitCN <- dropChangePoint(fitCN, kk, update=FALSE);
+#  } # for (kk ...)
+#  fitCN <- updateMeans(fitCN);
+
+#  fitCN <- bootstrapTCNandDHByRegion(fitCN, force=TRUE, ..., verbose=verbose);
+
+#  segsT <- segs[isNeutral,];
 
   segs$cnCall <- isNeutral;
 

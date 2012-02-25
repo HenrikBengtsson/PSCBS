@@ -1,4 +1,4 @@
-setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975)), by=c("betaTN", "betaT"), ..., verbose=FALSE) {
+setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975)), by=c("betaTN", "betaT"), ..., force=FALSE, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -13,6 +13,9 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
 
   # Argument 'by':
   by <- match.arg(by);
+
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -34,8 +37,8 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
   isDone <- is.element(statsNames, names(segs));
 
   # Already done?
-  if (all(isDone)) {
-    verbose && cat(verbose, "Already done.");
+  if (!force && all(isDone)) {
+    verbose && cat(verbose, "Already done. Skipping.");
     verbose && exit(verbose);
     return(fit);
   }
@@ -217,6 +220,8 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
 
 ##############################################################################
 # HISTORY
+# 2012-02-24
+# o Added argument 'force' to bootstrapDHByRegion().
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2010-11-22

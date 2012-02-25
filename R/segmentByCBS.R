@@ -434,7 +434,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Create a splitter-only CBS object
     splitter <- segmentByCBS(y=c(0,0), chromosome=c(1,2), x=c(0,0));
     suppressWarnings({
-      splitter <- extractSegments(splitter, 2);
+      splitter <- extractSegment(splitter, 2);
       # Sanity check
       stopifnot(nbrOfSegments(splitter, splitters=TRUE) == 1);
     });

@@ -9,6 +9,10 @@ o Added alpha version of callCopyNeutral() for PairedPSCBS, which
 o Added some internal utility functions for PairedPSCBS taken
   from the aroma.cn package.  Some of these may become public
   later, but for they should be considered internal.
+o ROBUSTNESS: Added more sanity checks validating the correctness 
+  of what is returned by extractSegments() for CBS and PairedPSCBS.
+o BUG FIX: extractSegments() for PairedPSCBS would return incorrect
+  row indices, more precisely, overlapping data chunks.
 
 
 Version: 0.19.8 [2012-02-23]

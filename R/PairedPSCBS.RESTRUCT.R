@@ -4,16 +4,36 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  updateSegRows <- function(segRows, idxs) {
-    segRows <- segRows[idxs,,drop=FALSE];
-    ns <- segRows[,2] - segRows[,1] + 1L;
-    from <- c(1L, cumsum(ns)[-length(ns)]);
-    to <- from + (ns - 1L);
-    segRows[,1] <- from;
-    segRows[,2] <- to;
+  updateSegRows <- function(segRows, idxs=NULL) {
     verbose && str(verbose, segRows);
+    if (!is.null(idxs)) {
+      segRows <- segRows[idxs,,drop=FALSE];
+    }
+#    verbose && cat(verbose, "Number of segments: ", nrow(segRows));
+#    verbose && str(verbose, segRows);
+
+    # Treat splitters separately
+    isSplitter <- (is.na(segRows[,1]) & is.na(segRows[,2]));
+
+    ns <- segRows[,2] - segRows[,1] + 1L;
+#    verbose && cat(verbose, "Number of loci per segment:");
+#    verbose && str(verbose, ns);
+
+    ns <- ns[!isSplitter];
+    from <- c(1L, cumsum(ns)[-length(ns)]+1L);
+    to <- from + (ns - 1L);
+    segRows[!isSplitter,1] <- from;
+    segRows[!isSplitter,2] <- to;   
+    verbose && str(verbose, segRows);
+
+    # Sanity check
+    ns2 <- segRows[,2] - segRows[,1] + 1L;
+    ns2 <- ns2[!isSplitter];
+    stopifnot(all(ns2 == ns));
+
     segRows;
   } # updateSegRows()
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -109,16 +129,29 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   tcnSegRows <- tcnSegRows[idxs,,drop=FALSE] - d;
   verbose && str(verbose, tcnSegRows);
   # Sanity checks
-  stopifnot(max(tcnSegRows, na.rm=TRUE) <= nrow(dataT));
+  segRows <- tcnSegRows;
+  stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
+  drow <- segRows[-1,1] - segRows[-nrow(segRows),2];
+  if (!all(is.na(drow) | (drow > 0))) {
+    print(segRows);
+    throw("INTERNAL ERROR: Generated 'tcnSegRows' is invalid, because it contains overlapping data chunks.");
+  }
 
   dhSegRows <- dhSegRows[idxs,,drop=FALSE] - d;
   verbose && str(verbose, dhSegRows);
   # Sanity checks
-  stopifnot(max(dhSegRows, na.rm=TRUE) <= nrow(dataT));
+  segRows <- dhSegRows;
+  stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
+  drow <- segRows[-1,1] - segRows[-nrow(segRows),2];
+  stopifnot(all(is.na(drow) | (drow > 0)));
+  if (!all(is.na(drow) | (drow > 0))) {
+    print(segRows);
+    throw("INTERNAL ERROR: Generated 'dhSegRows' is invalid, because it contains overlapping data chunks.");
+  }
 
   verbose && exit(verbose);
 
-
+  
   # Create new object
   res <- fit;
   res$data <- dataT;
@@ -261,6 +294,12 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
 
 ############################################################################
 # HISTORY:
+# 2012-02-24
+# o BUG FIX: The local updateSegRows() function inside extractSegments()
+#   for PairedPSCBS would return incorrect and invalid row indices.
+#   Copied ditto for CBS, which seems to work.
+# o ROBUSTNESS: Added more sanity checks validating the correctness of
+#   what is returned by extractSegments() for PairedPSCBS.
 # 2012-01-09
 # o ROBUSTNESS: Now extractSegments() for PairedPSCBS gives an informative
 #   error message that it is not supported if CNs were segmented using 

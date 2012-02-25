@@ -1,4 +1,4 @@
-setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975), na.rm=TRUE), by=c("betaTN", "betaT"), ..., seed=NULL, verbose=FALSE) {
+setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975), na.rm=TRUE), by=c("betaTN", "betaT"), ..., seed=NULL, force=FALSE, verbose=FALSE) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
 
@@ -15,6 +15,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   if (!is.null(seed)) {
     seed <- Arguments$getInteger(seed);
   }
+
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -92,8 +95,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   verbose && cat(verbose, "Already done?");
   verbose && print(verbose, isDone);
 
-  if (all(isDone)) {
-    verbose && cat(verbose, "Already done.");
+  if (!force && all(isDone)) {
+    verbose && cat(verbose, "Already done. Skipping.");
     verbose && exit(verbose);
     return(fit);
   }
@@ -169,7 +172,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   data$rho <- rho;
 
   rm(betaT); # Not needed anymore
-  
+
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -226,11 +229,21 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
       idxsAll <- integer(0);
     }
 
+    verbose && str(verbose, idxsAll);
+    verbose && print(verbose, hpaste(idxsAll));
+    verbose && str(verbose, idxsCT);
+    verbose && print(verbose, hpaste(idxsCT));
+
     # Keep only loci with finite TCNs
     idxsAll <- intersect(idxsAll, idxsCT);
+    verbose && str(verbose, idxsAll);
+    verbose && print(verbose, hpaste(idxsAll));
 
     # Sanity check
-    stopifnot(length(idxsAll) == nbrOfTCNs);
+    if (length(idxsAll) != nbrOfTCNs) {
+      verbose && str(verbose, setdiff(idxsCT, idxsAll));
+      throw("INTERNAL ERROR: length(idxsAll) != nbrOfTCNs: ", length(idxsAll), " != ", nbrOfTCNs);
+    }
 
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -550,6 +563,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
 ##############################################################################
 # HISTORY
+# 2012-02-24
+# o Added argument 'force' to bootstrapTCNandDHByRegion().
 # 2011-11-26
 # o Now bootstrapTCNandDHByRegion() for PairedPSCBS preserves NAs for DH
 #   and (C1,C2) quantiles, if the DH mean level is NA, which can happen
