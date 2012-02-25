@@ -483,7 +483,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   # Drop previously estimated values
   dups <- duplicated(colnames(segs), fromLast=TRUE);
   if (any(dups)) {
-    stats <- stats[,!dups, drop=FALSE];
+    segs <- segs[,!dups, drop=FALSE];
   }
 
 
@@ -564,6 +564,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 ##############################################################################
 # HISTORY
 # 2012-02-24
+# o BUG FIX: bootstrapTCNandDHByRegion(..., force=TRUE) for PairedPSCBS
+#   would give an error iff previous bootstrap estimates already existed.
 # o Added argument 'force' to bootstrapTCNandDHByRegion().
 # 2011-11-26
 # o Now bootstrapTCNandDHByRegion() for PairedPSCBS preserves NAs for DH

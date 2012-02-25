@@ -136,22 +136,42 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
   weights <- n;
 
   # Identify copy neutral AB segments
-  isNeutral <- findNeutralCopyNumberState(C=C, isAI=!isAB, weights=weights,
+  isNeutralAB <- findNeutralCopyNumberState(C=C, isAI=!isAB, weights=weights,
                                                        ..., verbose=verbose);
 
-  # Estimate the those segments
-  fitCN <- extractSegments(fit, isNeutral);
+  # Estimate common quantiles for those segments
+  fitCN <- extractSegments(fit, isNeutralAB);
 
-#  # Turn into one big segment by dropping all change points
-#  nCPs <- nbrOfChangePoints(fitCN, splitters=TRUE);
-#  for (kk in seq(from=nCPs, to=1L, by=-1L)) {
-#    fitCN <- dropChangePoint(fitCN, kk, update=FALSE);
-#  } # for (kk ...)
-#  fitCN <- updateMeans(fitCN);
+  if (nbrOfSegments(fitCN) == 0) {
+    throw("Cannot call copy-neutral segments.");
+  }
 
-#  fitCN <- bootstrapTCNandDHByRegion(fitCN, force=TRUE, ..., verbose=verbose);
+  # Turn into one big segment by dropping all change points
+  nCPs <- nbrOfChangePoints(fitCN, splitters=TRUE);
+  if (nCPs > 0) {
+    for (kk in nCPs:1) {
+      fitCN <- dropChangePoint(fitCN, kk, update=FALSE);
+    } # for (kk ...)
+    fitCN <- updateMeans(fitCN);
+  }
+  # Sanity check
+  stopifnot(nbrOfSegments(fitCN) == 1);
 
-#  segsT <- segs[isNeutral,];
+  # Estimate bootstrap quantiles for the TCN mean level.
+  fitCN <- bootstrapTCNandDHByRegion(fitCN, force=TRUE, ..., verbose=verbose);
+  segsCN <- getSegments(fitCN, simplified=FALSE);
+
+  # Call all segments
+  alpha <- 0.05/2;
+  keys <- sprintf("tcn_%g%%", 100*c(alpha, 1-alpha));
+  range <- unlist(segsCN[1,keys]);
+
+  tcnMean <- segs$tcnMean;
+  isNeutral <- (range[1] <= tcnMean & tcnMean <= range[2]);
+  
+  # Sanity check
+  # All previously called AB regions should remain called here as well
+  stopifnot(all(isNeutral[isNeutralAB]));
 
   segs$cnCall <- isNeutral;
 
@@ -167,6 +187,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
 ##############################################################################
 # HISTORY
 # 2012-02-24 [HB]
+# o Now callCopyNeutralByTCNofAB() calls all segements, not just those in AB.
 # o Now the copy-neutral calls are named 'cnCall' (not 'neutralCall').
 # o Added callCN()/callCopyNeutral().
 # o Added callCopyNeutralByTCNofAB() for PairedPSCBS.  The method was 
