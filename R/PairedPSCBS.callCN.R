@@ -113,6 +113,15 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "callCopyNeutralByTCNofAB");
 
   segs <- getSegments(fit, splitters=TRUE);
 
@@ -122,10 +131,19 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
     return(fit);
   }
 
+
+  verbose && enter(verbose, "Identifying copy neutral AB segments");
+
   # Getting AB calls
   isAB <- segs$abCall;
   if (is.null(isAB)) {
     throw("Cannot call copy-neutral states, because allelic-balance calls have not been made yet.");
+  }
+
+  nABs <- sum(isAB, na.rm=TRUE);
+  verbose && cat(verbose, "Number of AB segments: ", nABs);
+  if (nABs == 0) {
+    throw("Cannot call copy-neutral states, because none of the segments are in allelic balance.");
   }
 
   C <- segs[,"tcnMean", drop=TRUE];
@@ -138,13 +156,21 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
   # Identify copy neutral AB segments
   isNeutralAB <- findNeutralCopyNumberState(C=C, isAI=!isAB, weights=weights,
                                                        ..., verbose=verbose);
+  n <- sum(isNeutralAB, na.rm=TRUE);
+  verbose && cat(verbose, "Number of copy-neutral AB segments: ", n);
+  if (n == 0) {
+    throw("Cannot call copy-neutral states, because none of the segments in allelic-balance are copy neutral.");
+  }
+
+  verbose && enter(verbose, "Extracting all copy neutral AB segments across all chromosomes into one big segments");
 
   # Estimate common quantiles for those segments
   fitCN <- extractSegments(fit, isNeutralAB);
-
-  if (nbrOfSegments(fitCN) == 0) {
-    throw("Cannot call copy-neutral segments.");
-  }
+  # Fake one chromosome
+  fitCN$data$chromosome <- 0L;
+  fitCN$output$chromosome <- 0L;
+  verbose && print(verbose, fitCN);
+  verbose && exit(verbose);
 
   # Turn into one big segment by dropping all change points
   nCPs <- nbrOfChangePoints(fitCN, splitters=TRUE);
@@ -156,27 +182,44 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, ..., force=
   }
   # Sanity check
   stopifnot(nbrOfSegments(fitCN) == 1);
+  verbose && exit(verbose);
 
-  # Estimate bootstrap quantiles for the TCN mean level.
-  fitCN <- bootstrapTCNandDHByRegion(fitCN, force=TRUE, ..., verbose=verbose);
+  verbose && enter(verbose, "Estimating bootstrap TCN quantiles for the copy-neutral state");
+  fitCN <- bootstrapTCNandDHByRegion(fitCN, force=TRUE, ..., 
+                                     verbose=less(verbose, 10));
   segsCN <- getSegments(fitCN, simplified=FALSE);
+  keep <- grep("^tcn_.*%$", colnames(segsCN));
+  segsCN <- segsCN[,keep,drop=FALSE];
+  verbose && print(verbose, segsCN);
+  # Sanity check
+  stopifnot(ncol(segsCN) > 0);
+  verbose && exit(verbose);
 
   # Call all segments
   alpha <- 0.05/2;
   keys <- sprintf("tcn_%g%%", 100*c(alpha, 1-alpha));
-  range <- unlist(segsCN[1,keys]);
+  segsCN <- segsCN[,keys];
+  # Sanity check
+  stopifnot(ncol(segsCN) > 0);
+  range <- unlist(segsCN[1,]);
+  verbose && print(verbose, range);
 
   tcnMean <- segs$tcnMean;
   isNeutral <- (range[1] <= tcnMean & tcnMean <= range[2]);
+
+  n <- sum(isNeutral, na.rm=TRUE);
+  verbose && cat(verbose, "Number of segments called copy-neutral: ", n);
   
   # Sanity check
   # All previously called AB regions should remain called here as well
-  stopifnot(all(isNeutral[isNeutralAB]));
+  stopifnot(all(isNeutral[isNeutralAB], na.rm=TRUE));
 
   segs$cnCall <- isNeutral;
 
   fitC <- fit;
   fitC$output <- segs;
+
+  verbose && exit(verbose);
   
   fitC;
 }, protected=TRUE) # callCopyNeutralByTCNofAB()
