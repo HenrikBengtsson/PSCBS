@@ -266,6 +266,11 @@
 \alias{dropChangePoints}
 \alias{getStatsForCopyNeutralABs}
 \alias{getStatsForCopyNeutralABs.PairedPSCBS}
+\alias{callGNLcallGNLByTCNofAB}
+\alias{callGNLByTCNofAB.PairedPSCBS}
+\alias{callGainNeutralLoss}
+\alias{callGNL}
+\alias{callGNLByTCNofAB}
 
 \description{
   This page contains aliases for all "non-documented" objects that

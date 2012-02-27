@@ -104,9 +104,9 @@ plotTracks(fit)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Calling segments that re total copy neutral (CN)
+# Calling segments that are gained, copy neutral, and lost
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- callCN(fit, verbose=-10)
+fit <- callGNL(fit, verbose=-10)
 print(fit)
 plotTracks(fit)
 
