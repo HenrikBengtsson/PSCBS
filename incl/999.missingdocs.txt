@@ -94,7 +94,7 @@ drawChangePoints.CBS drawChangePoints.PSCBS
 extractDhSegment extractDhSegment.PairedPSCBS
 callCN callCopyNeutral callCopyNeutralByTCNofAB
 dropChangePoints
-getStatsForCopyNeutralABs getStatsForCopyNeutralABs.PairedPSCBS
+calcStatsForCopyNeutralABs calcStatsForCopyNeutralABs.PairedPSCBS
 callGNLcallGNLByTCNofAB callGNLByTCNofAB.PairedPSCBS
 callGainNeutralLoss
 callGNL callGNLByTCNofAB

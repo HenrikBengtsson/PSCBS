@@ -264,8 +264,8 @@
 \alias{callCopyNeutral}
 \alias{callCopyNeutralByTCNofAB}
 \alias{dropChangePoints}
-\alias{getStatsForCopyNeutralABs}
-\alias{getStatsForCopyNeutralABs.PairedPSCBS}
+\alias{calcStatsForCopyNeutralABs}
+\alias{calcStatsForCopyNeutralABs.PairedPSCBS}
 \alias{callGNLcallGNLByTCNofAB}
 \alias{callGNLByTCNofAB.PairedPSCBS}
 \alias{callGainNeutralLoss}

@@ -114,10 +114,13 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fit <- findPeaksAndValleys(y, weights=weights, ...);
   verbose && cat(verbose, "Fit:");
-  verbose && print(verbose, fit);
+
+  verbose && cat(verbose, "Fit filtered by 'minDensity':");
+  ok <- (fit[,"density"] > minDensity);
+  verbose && print(verbose, fit[ok,]);
 
   # Look for peaks with enough density
-  isPeak <- (fit[,"type"] == "peak") & (fit[,"density"] > minDensity);
+  isPeak <- (fit[,"type"] == "peak") & ok;
   idxs <- whichVector(isPeak);
 
   # Sanity check

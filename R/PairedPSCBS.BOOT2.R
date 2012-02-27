@@ -315,6 +315,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     idxsTCN <- sort(unique(c(idxsHet, idxsHom, idxsNonSNP)));
     stopifnot(length(idxsTCN) == nbrOfTCNs);
 
+    verbose && cat(verbose, "Loci to resample for TCN:");
+    verbose && str(verbose, idxsTCN);
+
     verbose && exit(verbose);
 
 
@@ -369,10 +372,14 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
         # Calculate bootstrap mean
         M[jj,bb,"dh"] <- mean(rhoBB, na.rm=TRUE);
-      } # if (nbrOfHets > 0)
+      } else {
+        idxsHetNonDH <- idxsDH;
+      } # if (shouldHaveDHs > 0)
   
       # (2) Bootstrap TCNs
       if (nbrOfTCNs > 0) {
+### str(list(idxsHetNonDH=idxsHetNonDH, idxsHom=idxsHom, idxsNonSNP=idxsNonSNP));
+
         # (a) Resample non-DH hets SNPs
         idxsHetNonDHBB <- resample(idxsHetNonDH, size=length(idxsHetNonDH), replace=TRUE);
         idxsHetBB <- c(idxsDHBB, idxsHetNonDHBB);
@@ -514,12 +521,14 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
           stopifnot(is.matrix(Skk));
   
           range <- Skk[,c(1,ncol(Skk)),drop=FALSE];
-          verbose && str(verbose, range);
     
           # Segmentation means
           key <- sprintf("%sMean", field);
           segMean <- segs[[key]];
-          verbose && str(verbose, segMean);
+
+          # Segmentation mean statistics
+          verbose && printf(verbose, "mean: %g [%g,%g]\n", segMean, range[1], range[2]);
+          verbose && printf(verbose, "mean: %g, range: [%g,%g]\n", segMean, range[1], range[2]);
   
           # Segmentation counts
           cfield <- sprintf("%sNbrOfLoci", ifelse(field == "tcn", "tcn", "dh"));
@@ -539,6 +548,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
         } # for (kk ...)
       }, error = function(ex) {
         # If an error, display the data, then throw the exception
+        verbose && cat(verbose, "Tolerance (option 'PSCBS/sanityChecks/tolerance'): ", tol);
         verbose && print(verbose, segs);
         throw(ex);
       })
@@ -563,6 +573,12 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
 ##############################################################################
 # HISTORY
+# 2012-02-26
+# o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS would resample
+#   from a subset of the intended TCNs, iff the DH mean was non-finite
+#   while there were still heterozygous SNPs.  This introduced a bias in
+#   the estimates, which was neglectable for large segments, but for very
+#   small segments (a few loci) it could be relatively large.
 # 2012-02-24
 # o BUG FIX: bootstrapTCNandDHByRegion(..., force=TRUE) for PairedPSCBS
 #   would give an error iff previous bootstrap estimates already existed.

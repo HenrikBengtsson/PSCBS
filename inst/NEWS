@@ -14,6 +14,11 @@ o ROBUSTNESS: Added more sanity checks validating the correctness
   of what is returned by extractSegments() for CBS and PairedPSCBS.
 o BUG FIX: extractSegments() for PairedPSCBS would return incorrect
   row indices, more precisely, overlapping data chunks.
+o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS would resample
+  from a subset of the intended TCNs, iff the DH mean was non-finite
+  while there were still heterozygous SNPs.  This introduced a bias in
+  the estimates, which was neglectable for large segments, but for very
+  small segments (a few loci) it could be relatively large.
 
 
 Version: 0.19.8 [2012-02-23]

@@ -77,10 +77,13 @@ setMethodS3("callCopyNeutral", "PairedPSCBS", function(...) {
 
 
 
-setMethodS3("getStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
+setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -89,7 +92,13 @@ setMethodS3("getStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., verbo
   }
 
 
-  verbose && enter(verbose, "getStatsForCopyNeutralABs");
+  verbose && enter(verbose, "calcStatsForCopyNeutralABs");
+
+  segsCN <- fit$params$copyNeutralStats;
+  if (!force && !is.null(segsCN)) {
+    verbose && exit(verbose);
+    return(fit);
+  }
 
   verbose && enter(verbose, "Identifying copy neutral AB segments");
 
@@ -131,14 +140,17 @@ setMethodS3("getStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., verbo
 
   # (b) Turn into a single-chromosome data set
   fitCN <- extractSegments(fitCN, !isSegmentSplitter(fitCN));
+
   fitCN$output$chromosome <- 0L;
   fitCN$data$chromosome <- 0L;
 
   # (c) Turn into one big segment by dropping all change points
   nCPs <- nbrOfChangePoints(fitCN);
-  if (length(nCPs) > 1) {
+  if (nCPs > 1) {
+    verbose && enter(verbose, "Dropping all change points");
     fitCN <- dropChangePoints(fitCN, idxs=nCPs:1, update=TRUE, 
                               verbose=less(verbose, 5));
+    verbose && exit(verbose);
   }
   # Sanity check
   stopifnot(nbrOfSegments(fitCN) == 1);
@@ -158,8 +170,10 @@ setMethodS3("getStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., verbo
   verbose && print(verbose, segsCN);
   verbose && exit(verbose);
 
-  segsCN;
-}, protected=TRUE) # getStatsForCopyNeutralABs()
+  fit$params$copyNeutralStats <- segsCN;
+
+  invisible(fit);
+}, protected=TRUE) # calcStatsForCopyNeutralABs()
 
 
 
@@ -184,7 +198,7 @@ setMethodS3("getStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., verbo
 #   \item{alpha}{A @double in [0,0.5] specifying the significance level
 #     of the confidence intervals used.}
 #   \item{...}{Additional arguments passed to 
-#              @seemethod "getStatsForCopyNeutralABs".}
+#              @seemethod "calcStatsForCopyNeutralABs".}
 #   \item{force}{If @TRUE, an already called object is skipped, otherwise not.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -248,7 +262,8 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, 
 
   verbose && enter(verbose, "Estimating TCN confidence interval of copy-neutral AB segments");
 
-  stats <- getStatsForCopyNeutralABs(fit, ..., verbose=less(verbose, 5));
+  fit <- calcStatsForCopyNeutralABs(fit, ..., verbose=less(verbose, 5));
+  stats <- fit$params$copyNeutralStats;
   verbose && cat(verbose, "Bootstrap statistics for copy-neutral AB segments:");
   verbose && print(verbose, stats);
 
@@ -312,7 +327,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, 
 ##############################################################################
 # HISTORY
 # 2012-02-25 [HB]
-# o Added internal getStatsForCopyNeutralABs() for PairedPSCBS.
+# o Added internal calcStatsForCopyNeutralABs() for PairedPSCBS.
 # 2012-02-24 [HB]
 # o Now callCopyNeutralByTCNofAB() calls all segements, not just those in AB.
 # o Now the copy-neutral calls are named 'cnCall' (not 'neutralCall').
