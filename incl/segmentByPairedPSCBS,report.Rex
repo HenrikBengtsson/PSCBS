@@ -20,11 +20,16 @@ dataS <- dataS[seq(from=1, to=nrow(data), by=5),]
 
 str(dataS)
 
-R.oo::attachLocally(dataS)
+gaps <- findLargeGaps(dataS, minLength=2e6)
+knownSegments <- gapsToSegments(gaps)
 
 # Paired PSCBS segmentation
-fit <- segmentByPairedPSCBS(CT, betaT=betaT, betaN=betaN,
-                            chromosome=chromosome, x=x, 
+fit <- segmentByPairedPSCBS(dataS, knownSegments=knownSegments,
                             seed=0xBEEF, verbose=-10)
+
+# Fake a multi-chromosome segmentation
+fit1 <- fit
+fit2 <- renameChromosomes(fit, from=1, to=2)
+fit <- append(fit1, fit2)
 
 report(fit, sampleName="PairedPSCBS", studyName="PSCBS-Ex", verbose=-10)

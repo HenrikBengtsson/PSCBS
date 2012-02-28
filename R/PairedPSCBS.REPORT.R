@@ -22,10 +22,12 @@
 # }
 #
 # \value{
-#   Returns (invisibly) the pathname of the generated PDF.
+#   Returns the pathname of the generated PDF.
 # }
 #
-# @examples "../incl/segmentByPairedPSCBS,report.Rex"
+# \examples{\dontrun{
+# @include "../incl/segmentByPairedPSCBS,report.Rex"
+# }}
 #
 # @author
 #
@@ -153,7 +155,7 @@ setMethodS3("report", "PairedPSCBS", function(fit, sampleName=getSampleName(fit)
 
   verbose && exit(verbose);
 
-  invisible(pdfPathname);
+  pdfPathname;
 }, protected=TRUE)
 
 
