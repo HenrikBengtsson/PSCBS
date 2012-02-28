@@ -271,6 +271,8 @@
 \alias{callGainNeutralLoss}
 \alias{callGNL}
 \alias{callGNLByTCNofAB}
+\alias{renameChromosomes}
+\alias{renameChromosomes.AbstractCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

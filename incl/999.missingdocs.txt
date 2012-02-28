@@ -98,3 +98,4 @@ calcStatsForCopyNeutralABs calcStatsForCopyNeutralABs.PairedPSCBS
 callGNLcallGNLByTCNofAB callGNLByTCNofAB.PairedPSCBS
 callGainNeutralLoss
 callGNL callGNLByTCNofAB
+renameChromosomes renameChromosomes.AbstractCBS

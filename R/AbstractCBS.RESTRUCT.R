@@ -94,6 +94,38 @@ setMethodS3("append", "AbstractCBS", abstract=TRUE);
 
 
 
+setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'from' & 'to':
+  from <- Arguments$getIntegers(from, disallow=c("NaN", "Inf"));
+  n <- length(from);
+  to <- Arguments$getIntegers(to, disallow=c("NaN", "Inf"), length=c(n,n));
+
+
+  # Nothing to do?
+  if (n == 0) {
+    return(fit);
+  }
+
+  data <- getLocusData(fit);
+  segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
+  
+  for (cc in seq(length=n)) {
+    chr <- from[cc];
+    chrN <- to[cc];
+    data$chromosome[data$chromosome == chr] <- chrN;
+    segs$chromosome[segs$chromosome == chr] <- chrN;
+  } # for (cc ...)
+  
+  fit$data <- data;
+  fit$output <- segs;
+
+  fit;
+}, protected=TRUE)
+
+
 setMethodS3("extractChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
@@ -509,6 +541,8 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2012-02-27
+# o Added renameChromosomes() to AbstractCBS.
 # 2012-02-25
 # o Added dropChangePoints() for AbstractCBS.
 # 2011-11-17

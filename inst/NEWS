@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.21.0 [2012-02-27]
+o Added renameChromosomes() to AbstractCBS.
+
+
 Version: 0.20.0 [2012-02-26]
 o Added alpha version of callGainNeutralLoss() for PairedPSCBS,
   which certainly will be updated in the future.  This caller
