@@ -42,11 +42,15 @@ setMethodS3("as.data.frame", "PSCBS", function(x, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("getLocusData", "PSCBS", function(fit, indices=NULL, ...) {
+setMethodS3("getLocusData", "PSCBS", function(fit, indices=NULL, fields=c("asis", "full"), ...) {
   # Argument 'indices':
   if (!is.null(indices)) {
     indices <- Arguments$getIndices(indices);
   }
+
+  # Argument 'fields':
+  fields <- match.arg(fields);
+
 
   data <- fit$data;
 
@@ -62,8 +66,37 @@ setMethodS3("getLocusData", "PSCBS", function(fit, indices=NULL, ...) {
     stopifnot(nrow(data) == length(indices));
   }
 
+  if (fields == "full") {
+    names <- colnames(data);
+
+    # Genotype calls
+    if (!is.element("muN", names)) {
+      data$muN <- callNaiveGenotypes(data$betaN);
+    }
+    data$isHet <- (data$muN == 1/2);
+
+    data$rho <- 2*abs(data$betaT-1/2);
+    data$c1 <- 1/2*(1-data$rho)*data$CT;
+    data$c2 <- data$CT - data$c1;
+
+    # TumorBoost BAFs
+    if (!is.element("betaTN", names)) {
+      data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
+    }
+    data$rhoN <- 2*abs(data$betaTN-1/2);
+    data$c1N <- 1/2*(1-data$rhoN)*data$CT;
+    data$c2N <- data$CT - data$c1N;
+
+    data$isSNP <- (!is.na(data$betaT) | !is.na(data$betaN));
+    data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus");
+
+    # Labels
+    data$muNx <- c("AA", "AB", "BB")[2*data$muN + 1L];
+    data$isHetx <- c("AA|BB", "AB")[data$isHet + 1L];
+  }
+
   data;
-}, protected=TRUE)
+}, protected=TRUE) # getLocusData()
 
 
 setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
@@ -148,6 +181,8 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
 
 ############################################################################
 # HISTORY:
+# 2012-02-27
+# o Added argument 'fields' to getLocusData() for PairedPSCBS.
 # 2011-12-12
 # o Added optional argument 'indices' to getLocusData() to be able
 #   to retrieve the locus-level data as indexed by input data.
