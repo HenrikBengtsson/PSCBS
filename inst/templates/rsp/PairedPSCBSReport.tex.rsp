@@ -8,7 +8,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 <%
-library("R.rsp.addons"); # toLatex(), ...
 library("PSCBS");
 library("R.cache");
 stopifnot(exists("rspArgs", mode="list"));
@@ -407,7 +406,11 @@ dataT <- subset(data, type == "SNP");
                         legend.title=theme_text(size=0),
                         legend.text=theme_text(size=16));
 
-        gg <- gg + geom_point(alpha=min(10e3/nrow(dataT), 0.5));
+        if (getOption("PSCBS::report/useAlphaChannel", TRUE)) {
+          gg <- gg + geom_point(alpha=min(10e3/nrow(dataT), 0.5));
+        } else {
+          gg <- gg + geom_point();
+        }
         gg <- gg + xlab(labList[["betaN"]]) + ylab(labList[[ff]]);
         gg <- gg + xlim(BlimX) + ylim(BlimX);
         gg <- gg + opts(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
@@ -625,6 +628,10 @@ assign("renamePDF", function() {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+# 2012-02-28
+# o Now it is possible to turn off usage of the alpha channel in
+#   plots, e.g. setOption("PSCBS::report/useAlphaChannel", FALSE).
+#   This is useful for if the alpha channel is not supported.
 % 2012-02-27
 % o First successful run with real data.
 % o Now all of the report uses a PairedPSCBS object.
