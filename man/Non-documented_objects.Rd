@@ -273,6 +273,7 @@
 \alias{callGNLByTCNofAB}
 \alias{renameChromosomes}
 \alias{renameChromosomes.AbstractCBS}
+\alias{report}
 
 \description{
   This page contains aliases for all "non-documented" objects that

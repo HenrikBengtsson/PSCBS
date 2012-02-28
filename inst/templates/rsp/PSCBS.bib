@@ -1,0 +1,117 @@
+@ARTICLE{BengtssonH_etal_2010,
+  author = {Henrik Bengtsson and Pierre Neuvial and Terence P Speed},
+  title = {{TumorBoost}: Normalization of allele-specific tumor copy numbers
+	from a single pair of tumor-normal genotyping microarrays},
+  journal = {BMC Bioinformatics},
+  year = {2010},
+  volume = {11},
+  pages = {245},
+  number = {1},
+  month = {May},
+  abstract = {ABSTRACT: BACKGROUND: High-throughput genotyping microarrays assess
+	both total DNA copy number and allelic composition, which makes them
+	a tool of choice for copy number studies in cancer, including total
+	copy number and loss of heterozygosity (LOH) analyses. Even after
+	state of the art preprocessing methods, allelic signal estimates
+	from genotyping arrays still suffer from systematic effects that
+	make them difficult to use effectively for such downstream analyses.
+	RESULTS: We propose a method, TumorBoost, for normalizing allelic
+	estimates of one tumor sample based on estimates from a single matched
+	normal. The method applies to any paired tumor-normal estimates from
+	any microarray-based technology, combined with any preprocessing
+	method. We demonstrate that it increases the signal-to-noise ratio
+	of allelic signals, making it significantly easier to detect allelic
+	imbalances. CONCLUSIONS: TumorBoost increases the power to detect
+	somatic copy-number events (including copy-neutral LOH) in the tumor
+	from allelic signals of Affymetrix or Illumina origin. We also conclude
+	that high-precision allelic estimates can be obtained from a single
+	pair of tumor-normal hybridizations, if TumorBoost is combined with
+	single-array preprocessing methods such as (allele-specific) CRMA
+	v2 for Affymetrix or BeadStudio's (proprietary) XY-normalization
+	method for Illumina. A bounded-memory implementation is available
+	in the open-source and cross-platform R package aroma.cn, which is
+	part of the Aroma Project (http://www.aroma-project.org/).},
+  doi = {10.1186/1471-2105-11-245},
+  file = {:BengtssonH_etal_2010-TumorBoost.pdf:PDF},
+  language = {eng},
+  medline-pst = {aheadofprint},
+  owner = {hb},
+  pii = {1471-2105-11-245},
+  pmid = {20462408},
+  timestamp = {2010.05.15},
+  url = {http://dx.doi.org/10.1186/1471-2105-11-245}
+}
+
+@ARTICLE{OlshenA_etal_2011,
+  author = {Adam B. Olshen and Henrik Bengtsson and Pierre Neuvial and Paul Spellman
+	and Richard A. Olshen and Venkatraman E. Seshan},
+  title = {Parent-specific copy number in paired tumor-normal studies using
+	circular binary segmentation},
+  journal = {Bioinformatics},
+  year = {2011},
+  month = {May},
+  note = {(in press)},
+  abstract = {Motivation:
+	
+	High-throughput techniques facilitate the simultaneous measurement
+	of
+	
+	DNA copy number at hundreds of thousands of sites on a genome. Older
+	
+	techniques allow measurement only of total copy number, the sum of
+	the
+	
+	copy number contributions from the two parental chromosomes. Newer
+	
+	single nucleotide polymorphism (SNP) techniques can in addition enable
+	
+	quantifying parent-specific copy number (PSCN). The raw data from
+	
+	such experiments are two-dimensional, but are unphased. Consequently,
+	
+	inference based on them necessitates development of new analytic
+	
+	methods.
+	
+	
+	Methods:
+	
+	We have adapted and enhanced the circular binary segmentation (CBS)
+	
+	algorithm for this purpose with focus on paired test and reference
+	
+	samples. The essence of paired parent-specific CBS (paired PSCBS)
+	is
+	
+	to utilize the original CBS algorithm to identify regions of equal
+	
+	total copy number and then to further segment these regions where
+	
+	there have been changes in PSCN. For the final set of regions, calls
+	
+	are made of equal parental copy number and loss of heterozygosity
+	
+	(LOH). PSCN estimates are computed both before and after calling.
+	
+	
+	Results:
+	
+	The methodology is evaluated by simulation and on glioblastoma data.
+	
+	In the simulation PSCBS compares favorably to established methods.
+	
+	On the glioblastoma data PSCBS identifies interesting genomic regions,
+	such
+	
+	as those implying copy-neutral LOH.
+	
+	
+	Availability:
+	
+	The paired PSCBS method is implemented in \pkg{psCBS},
+	
+	which is an open-access and open-source \pkg{R} package.},
+  file = {:OlshenA_etal_2011-PSCBS.pdf:PDF;:OlshenA_etal_2011-PSCBS,SupplMaterials.pdf:PDF},
+  owner = {hb},
+  timestamp = {2011.04.29}
+}

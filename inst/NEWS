@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.22.0 [2012-02-27]
+o Added report() for PairedPSCBS.
+
+
 Version: 0.21.0 [2012-02-27]
 o Added argument 'fields' to getLocusData() for PairedPSCBS.
 o Added renameChromosomes() to AbstractCBS.
