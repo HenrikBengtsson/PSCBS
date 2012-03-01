@@ -68,6 +68,9 @@ extends data.frame\cr
  \tab \code{as} \tab  -\cr
  \tab \code{as.PairedPSCNData} \tab  -\cr
  \tab \code{callNaiveGenotypes} \tab  -\cr
+ \tab \code{callSegmentationOutliers} \tab  -\cr
+ \tab \code{dropSegmentationOutliers} \tab  -\cr
+ \tab \code{findLargeGaps} \tab  -\cr
  \tab \code{\link[PSCBS:getChromosomes.PairedPSCNData]{getChromosomes}} \tab Gets the set of chromosomes.\cr
  \tab \code{\link[PSCBS:nbrOfChromosomes.PairedPSCNData]{nbrOfChromosomes}} \tab Gets the number of chromosomes.\cr
  \tab \code{\link[PSCBS:nbrOfLoci.PairedPSCNData]{nbrOfLoci}} \tab Gets the number of loci.\cr

@@ -289,6 +289,7 @@
 \alias{orderAlongGenome.PairedPSCNData}
 \alias{callSegmentationOutliers.PairedPSCNData}
 \alias{dropSegmentationOutliers.PairedPSCNData}
+\alias{findLargeGaps.PairedPSCNData}
 
 \description{
   This page contains aliases for all "non-documented" objects that

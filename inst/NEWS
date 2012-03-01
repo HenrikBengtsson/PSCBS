@@ -4,6 +4,8 @@ Package: PSCBS
 
 Version: 0.23.0 [2012-02-29]
 o Added the PairedPSCNData class and system tests for it.
+o BUG FIX: plotTracks(..., add=TRUE) for PairedPSCBS would add TCNs
+  when BAFs and DHs where intended.
 
 
 Version: 0.22.1 [2012-02-28]

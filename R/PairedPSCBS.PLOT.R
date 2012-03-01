@@ -246,7 +246,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
     if (track == "betaN") {
       colT <- ifelse(is.null(colT), colMu, colT);
       if (add) {
-        points(x, CT, pch=pchT, cex=cex, col="black");
+        points(x, betaN, pch=pchT, cex=cex, col="black");
       } else {
         plot(x, betaN, pch=pchT, cex=cex, col=colT, xlim=xlim, ylim=Blim, ylab=expression(BAF[N]));
         stext(side=3, pos=1, chrTag);
@@ -256,7 +256,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
     if (track == "betaT") {
       colT <- ifelse(is.null(colT), colMu, colT);
       if (add) {
-        points(x, CT, pch=pchT, cex=cex, col="black");
+        points(x, betaT, pch=pchT, cex=cex, col="black");
       } else {
         plot(x, betaT, pch=pchT, cex=cex, col=colT, xlim=xlim, ylim=Blim, ylab=expression(BAF[T]));
         stext(side=3, pos=1, chrTag);
@@ -266,7 +266,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
     if (track == "betaTN") {
       colT <- ifelse(is.null(colT), colMu, colT);
       if (add) {
-        points(x, CT, pch=pchT, cex=cex, col="black");
+        points(x, betaTN, pch=pchT, cex=cex, col="black");
       } else {
         plot(x, betaTN, pch=pchT, cex=cex, col=colT, xlim=xlim, ylim=Blim, ylab=expression(BAF[T]^"*"));
         stext(side=3, pos=1, chrTag);
@@ -281,7 +281,7 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
       rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
       colT <- ifelse(is.null(colT), colMu[isHet], colT);
       if (add) {
-        points(x, CT, pch=pchT, cex=cex, col="black");
+        points(x, rho, pch=pchT, cex=cex, col="black");
       } else {
         plot(x, rho, pch=pchT, cex=cex, col=colT, xlim=xlim, ylim=Blim, ylab="DH");
         stext(side=3, pos=1, chrTag);
@@ -964,6 +964,9 @@ setMethodS3("drawChangePoints", "PSCBS", function(fit, labels=FALSE, col="#66666
 
 ############################################################################
 # HISTORY:
+# 2012-02-29
+# o BUG FIX: plotTracks(..., add=TRUE) for PairedPSCBS would add TCNs
+#   when BAFs and DHs where intended.
 # 2012-02-22
 # o BUG FIX: Argument 'calls' of plotTracks() for PairedPSCBS was ignored
 #   if more than one chromosome was plotted.
