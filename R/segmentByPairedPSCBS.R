@@ -17,7 +17,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{CT}{A @numeric @vector of J tumor total tumor copy number (TCN)
+#   \item{CT}{A @numeric @vector of J tumor total copy number (TCN)
 #        ratios in [0,+@Inf) (due to noise, small negative values are
 #        also allowed).  The TCN ratios are typically scaled such that
 #        copy-neutral diploid loci have a mean of two.}
