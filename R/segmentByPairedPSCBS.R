@@ -1,5 +1,6 @@
 ###########################################################################/**
 # @RdocDefault segmentByPairedPSCBS
+# @alias segmentByPairedPSCBS.PairedPSCNData
 # @alias segmentByPairedPSCBS.data.frame
 # @alias segmentByPairedPSCBS.PairedPSCBS
 # @alias segmentByPairedPSCBS
@@ -422,7 +423,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
       verbose && exit(verbose);
     } # for (kk ...)
 
-    verbose && enter(verbose, "Merging (independently segmented chromosome)");
+    verbose && enter(verbose, "Merging (independently) segmented chromosome");
     fit <- Reduce(append, fitList);
     # Not needed anymore
     rm(fitList);

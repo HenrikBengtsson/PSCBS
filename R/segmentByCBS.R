@@ -367,7 +367,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       verbose && exit(verbose);
     } # for (kk ...)
 
-    verbose && enter(verbose, "Merging (independently segmented chromosome)");
+    verbose && enter(verbose, "Merging (independently) segmented chromosome");
     fit <- Reduce(append, fitList);
     # Not needed anymore
     rm(fitList);
@@ -506,7 +506,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       verbose && exit(verbose);
     } # for (jj ...)
 
-    verbose && enter(verbose, "Merging (independently segmented known segments)");
+    verbose && enter(verbose, "Merging (independently) segmented known segments");
     appendT <- function(...) append(..., addSplit=FALSE);
     fit <- Reduce(appendT, fitList);
     # Not needed anymore

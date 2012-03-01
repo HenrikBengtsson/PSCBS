@@ -165,7 +165,7 @@ symbolList <- list(
 
 \maketitle
 \begin{abstract}
-This is a quality control (QC) report on the paired tumor-normal sample '<%=sampleName%>' in data set '<%=dataSet%>'.
+This is a quality control (QC) report on the paired tumor-normal sample '<%=sampleName%>'.
 \end{abstract}
 
 \tableofcontents
@@ -195,8 +195,10 @@ This is a quality control (QC) report on the paired tumor-normal sample '<%=samp
 
 \section{Segmentation}
 \label{sec:Segmentation}
-We use the Paired PSCBS segmentation method~\citep{OlshenA_etal_2011} with TumorBoost normalization~\citep{BengtssonH_etal_2010} to partion the genome into segments such that all signals in a particular segment are likely to originate from the same underlying parent-specific copy-number state.
+We use the Paired PSCBS segmentation method~\citep{OlshenA_etal_2011} to partion the genome into segments such that all signals in a particular segment are likely to originate from the same underlying parent-specific copy-number state.
 Germline genotypes are called based on the normal allele B fractions (BAFs), cf.~\citet{BengtssonH_etal_2010}.
+For the results presented here, TumorBoost normalization~\citep{BengtssonH_etal_2010} was <%if (!fit$params$tbn){%>\emph{not}<%}%> used.
+
 
 
 \section{Post-segmentation pruning}

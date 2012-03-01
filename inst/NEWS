@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.23.0 [2012-02-29]
+o Added the PairedPSCNData class and system tests for it.
+
+
 Version: 0.22.1 [2012-02-28]
 o Updated package dependencies to R.rsp (>= 0.7.3) so that
   report() for PairedPSCBS no longer require non-public packages.
