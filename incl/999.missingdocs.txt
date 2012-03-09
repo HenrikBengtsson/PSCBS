@@ -100,12 +100,3 @@ callGainNeutralLoss
 callGNL callGNLByTCNofAB
 renameChromosomes renameChromosomes.AbstractCBS
 report
-as.PairedPSCNData as.PairedPSCNData.PairedPSCNData
-as.PairedPSCNData.data.frame callNaiveGenotypes
-callNaiveGenotypes.PairedPSCNData hasKnownPositions
-hasKnownPositions.PairedPSCNData isSNP isSNP.PairedPSCNData
-normalizeTumorBoost normalizeTumorBoost.PairedPSCNData
-orderAlongGenome orderAlongGenome.PairedPSCNData
-callSegmentationOutliers.PairedPSCNData
-dropSegmentationOutliers.PairedPSCNData
-findLargeGaps.PairedPSCNData

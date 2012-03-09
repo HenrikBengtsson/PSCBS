@@ -9,7 +9,6 @@
  \name{segmentByPairedPSCBS}
 \alias{segmentByPairedPSCBS.default}
 \alias{segmentByPairedPSCBS}
- \alias{segmentByPairedPSCBS.PairedPSCNData}
  \alias{segmentByPairedPSCBS.data.frame}
  \alias{segmentByPairedPSCBS.PairedPSCBS}
  \alias{segmentByPairedPSCBS}

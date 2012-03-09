@@ -1,6 +1,5 @@
 ###########################################################################/**
 # @RdocDefault segmentByPairedPSCBS
-# @alias segmentByPairedPSCBS.PairedPSCNData
 # @alias segmentByPairedPSCBS.data.frame
 # @alias segmentByPairedPSCBS.PairedPSCBS
 # @alias segmentByPairedPSCBS

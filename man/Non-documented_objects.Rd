@@ -274,22 +274,6 @@
 \alias{renameChromosomes}
 \alias{renameChromosomes.AbstractCBS}
 \alias{report}
-\alias{as.PairedPSCNData}
-\alias{as.PairedPSCNData.PairedPSCNData}
-\alias{as.PairedPSCNData.data.frame}
-\alias{callNaiveGenotypes}
-\alias{callNaiveGenotypes.PairedPSCNData}
-\alias{hasKnownPositions}
-\alias{hasKnownPositions.PairedPSCNData}
-\alias{isSNP}
-\alias{isSNP.PairedPSCNData}
-\alias{normalizeTumorBoost}
-\alias{normalizeTumorBoost.PairedPSCNData}
-\alias{orderAlongGenome}
-\alias{orderAlongGenome.PairedPSCNData}
-\alias{callSegmentationOutliers.PairedPSCNData}
-\alias{dropSegmentationOutliers.PairedPSCNData}
-\alias{findLargeGaps.PairedPSCNData}
 
 \description{
   This page contains aliases for all "non-documented" objects that
