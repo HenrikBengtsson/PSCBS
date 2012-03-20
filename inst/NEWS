@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.23.0 [2012-03-20]
+o Added a package vignette.
+
+
 Version: 0.22.2 [2012-02-29]
 o BUG FIX: plotTracks(..., add=TRUE) for PairedPSCBS would add TCNs
   when BAFs and DHs where intended.

@@ -1,3 +1,7 @@
+# This test script calls a report generator which requires
+# the 'ggplot2' package, which in turn will require packages
+# 'colorspace', 'dichromat', 'munsell', 'reshape2' and 'scales'.
+
 # Only run this test in full testing mode
 if (Sys.getenv("_R_CHECK_FULL_") != "") {
 library("PSCBS")
