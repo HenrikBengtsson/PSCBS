@@ -1,7 +1,5 @@
 # MACRO DEFINITIONS
 RM=rm -f
-MV=mv -f
-CP=cp -p
 
 # TARGET DEFINITIONS
 all: rnw index.html
@@ -14,6 +12,6 @@ index.html:
 
 clean:
 	$(RM) index.html.rsp
-	$(RM) *.aux *.bbl *.blg *.bst *.log *.sty *.toc *.tex *.rsp.R
+	$(RM) *.aux *.bbl *.blg *.bst *.log *.out *.sty *.toc *.tex *.rsp.R
 	$(RM) -r figures/
 	$(RM) Makefile
