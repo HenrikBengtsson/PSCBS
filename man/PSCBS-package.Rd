@@ -25,9 +25,9 @@
 
  \section{Requirements}{
    This package requires external packages
-   R.methodsS3 (>= 1.2.1), R.oo (>= 1.8.3), R.utils (>= 1.11.0), DNAcopy (>= 1.24.0), utils, R.rsp (>= 0.7.3),
+   R.methodsS3 (>= 1.2.2), R.oo (>= 1.9.3), R.utils (>= 1.12.1), DNAcopy (>= 1.24.0), utils, R.rsp (>= 0.7.5),
    and also suggests DNAcopy (>= 1.24.0), aroma.light (>= 1.22.0), matrixStats (>=
-0.4.3), R.oo (>= 1.8.3), R.cache (>= 0.6.1), digest (>= 0.5.1),
+0.4.4), R.oo (>= 1.9.3), R.cache (>= 0.6.2), digest (>= 0.5.2),
 Hmisc (>= 3.8-3), ggplot2 (>= 0.8.9).
  }
 

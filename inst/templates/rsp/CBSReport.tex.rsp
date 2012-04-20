@@ -4,7 +4,7 @@
 % Last updated: 2012-02-27
 %
 % Usage: (compiles *.tex.rsp => tex.rsp.R => *.tex => *.dvi)
-%  R.rsp::rsp("PairedPSCBS.tex.rsp", path="reports,rsp/");
+%  R.rsp::rsp("CBS.tex.rsp", path="reports,rsp/");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 <%
@@ -56,13 +56,13 @@ stopifnot(exists("rspArgs", mode="list"));
 \newcommand{\BAFTN}{BAF$^*_{T}$\xspace}
 
 
-<% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName="PairedPSCBS", Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
+<% cbsReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName="CBS", Clim=c(0,4), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
 <%
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validate arguments
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Argument 'fit':
-fit <- Arguments$getInstanceOf(fit, "PairedPSCBS");
+fit <- Arguments$getInstanceOf(fit, "CBS");
 
 # Argument 'sampleName':
 if (is.null(sampleName)) {
@@ -109,7 +109,7 @@ if (!is.null(dataSet)) {
 }
 %>
 
-\title{Paired PSCBS Report:\\<%=studyLbl%><%=dataSetLbl%>Sample: <%=toLatex(sampleName)%>}
+\title{CBS Report:\\<%=studyLbl%><%=dataSetLbl%>Sample: <%=toLatex(sampleName)%>}
 \author{Report template by Henrik Bengtsson}
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -124,7 +124,6 @@ setOption("devEval/args/force", figForce);
 <%
 # GGPLOT2 SETTINGS
 ClimX <- Clim + c(-1,1)*diff(Clim)*0.08;
-BlimX <- Blim + c(-1,1)*diff(Blim)*0.08;
 
 muNCols <- c("#999999", "#000000", "#999999");
 
@@ -165,7 +164,7 @@ symbolList <- list(
 
 \maketitle
 \begin{abstract}
-This is a quality control (QC) report on the paired tumor-normal sample '<%=sampleName%>' in data set '<%=dataSet%>'.
+This is a quality control (QC) report on the sample '<%=sampleName%>' in data set '<%=dataSet%>'.
 \end{abstract}
 
 \tableofcontents
@@ -195,8 +194,7 @@ This is a quality control (QC) report on the paired tumor-normal sample '<%=samp
 
 \section{Segmentation}
 \label{sec:Segmentation}
-We use the Paired PSCBS segmentation method~\citep{OlshenA_etal_2011} with TumorBoost normalization~\citep{BengtssonH_etal_2010} to partion the genome into segments such that all signals in a particular segment are likely to originate from the same underlying parent-specific copy-number state.
-Germline genotypes are called based on the normal allele B fractions (BAFs), cf.~\citet{BengtssonH_etal_2010}.
+We use the CBS segmentation method~\citep{OlshenA_etal_2007} to partion the genome into segments such that all signals in a particular segment are likely to originate from the same underlying total copy-number state.
 
 
 <%--
@@ -207,6 +205,7 @@ fitP <- pruneByHClust(fit, h=0.25);
 #print(fitP);
 %>
 --%>
+
 
 
 
@@ -221,15 +220,13 @@ fitP <- pruneByHClust(fit, h=0.25);
 
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-% SUMMARY ANNOTATION AND GENOTYPE CALLS
+% SUMMARY ANNOTATION
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-<% summaryOfAnnotationAndGenotypeCalls <- function(fit, ...) { %>
-\section{Summary of annotation and genotype calls}
+<% summaryOfAnnotation <- function(fit, ...) { %>
+\section{Summary of annotation}
 <%
 data <- getLocusData(fit, fields="full");
 nbrOfLoci <- nrow(data);
-nbrOfSNPs <- sum(data$isSNP, na.rm=TRUE);
-nbrOfHets <- sum(data$isHet, na.rm=TRUE);
 
 chromosomes <- getChromosomes(fit);
 nbrOfChromosomes <- length(chromosomes);
@@ -252,24 +249,19 @@ chrsTags <- if (nbrOfChromosomes == 1) {
    Description & Count & Fraction \\
    \hline
    Number of loci & <%=nbrOfLoci%> & 100.00\% \\
-   Number of SNPs & <%=nbrOfSNPs%> & <%=sprintf("%.2f", 100*nbrOfSNPs/nbrOfLoci)%>\% \\
-   Number of heterozygous SNPs* & <%=nbrOfHets%> & <%=sprintf("%.2f", 100*nbrOfHets/nbrOfSNPs)%>\% \\
-   Number of non-polymorphic loci & <%=nbrOfLoci-nbrOfSNPs%> & <%=sprintf("%.2f", 100*(1-nbrOfSNPs/nbrOfLoci))%>\% \\
    Number of chromosomes & <%=nbrOfChromosomes%> & - \\
   \end{tabular}
   \caption{
   Summary of the locus-level data on <%=chromosomesH%>.
-  A locus is considered to be a SNP if it has either a non-missing BAF for either the tumor or the normal.
-  (*) Genotype calls are based on (whole-genome) naive genotyping of the germline BAFs.
   }
   \label{tbl:LocusStats}
  \end{center}
 \end{table}
 
-<% } # summaryOfAnnotationAndGenotypeCalls() %>
+<% } # summaryOfAnnotation() %>
 
 
-<%=summaryOfAnnotationAndGenotypeCalls(fit)%>
+<%=summaryOfAnnotation(fit)%>
 
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -299,16 +291,16 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 \begin{figure}[htbp]
  \begin{center}
 <%
- fields <- c("CT", "betaN", "betaT", "rho", "c1", "c2", "betaTN", "rhoN", "c1N", "c2N");
+ fields <- c("y");
 %>
 <% for (ff in fields) { %>
 <%
   symbol <- symbolList[[ff]];
-  panelTitle <- switch(ff, CT="\\TCN", betaN="\\BAFN", betaT="\\BAFT", betaTN="\\BAFTN", "NNN");
-  lim <- switch(ff, CT=ClimX, c1=ClimX, c2=ClimX, c1N=ClimX, c2N=ClimX, BlimX);
+  panelTitle <- switch(ff, y="\\TCN", CT="\\TCN", betaN="\\BAFN", betaT="\\BAFT", betaTN="\\BAFTN", "NNN");
+  lim <- switch(ff, y=ClimX, CT=ClimX, c1=ClimX, c2=ClimX, c1N=ClimX, c2N=ClimX);
 %>
 \raisebox{4ex}{<%=symbol%>}
-<% for (by in c("all", "muN")) { %>
+<% for (by in c("all")) { %>
 <%
   tags <- c(chrsTags, by, ff);
 %>
@@ -320,9 +312,6 @@ chrsTags <- if (nbrOfChromosomes == 1) {
             if (ff == "CT" && any(!data$isSNP, na.rm=TRUE)) {
               gg <- gg + aes(group=type, colour=type);
             }
-          } else if (by == "muN") {
-            gg <- gg + aes_string(group="muNx", colour="muNx");
-            gg <- gg + scale_color_manual(values=muNCols);
           }
  
           # See https://github.com/hadley/ggplot2/wiki/Legend-Attributes
@@ -347,12 +336,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 <% } # for (ff ...) %>
  \end{center}
  \caption{
-   Density estimates of locus-level signals on <%=chromosomesH%> with and without TumorBoost normalization.  The signals in the left and right panels are without and with stratification on genotype calls (AA and BB in gray and AB in black).
-   We expect to see three genotype groups for the normal BAFs ($\beta_{N}$).
-   The tumor BAFs ($\beta_{T}$) should be more distinct after normalization
-    ($\tilde{\beta}_{T}$), particularly for homozygous SNPs.
-   If there are no allelic imbalances in the tumor, then the density of 
-   the tumor should be similar to that of the normal.
+   Density estimates of locus-level signals on <%=chromosomesH%>.
  }
  \label{fig:SignalDensity}
 \end{figure}
@@ -363,88 +347,12 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-% BEFORE AND AFTER TUMORBOOST
+% TOTAL COPY-NUMBER SEGMENTATION TRACKS
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-<% beforeAndAfterTumorBoost <- function(fit, ...) { %>
+<% tcnSegmentationTracks <- function(fit, ...) { %>
 \clearpage
-\section{Before and after TumorBoost}
-\label{sec:BeforeAndAfterTumorBoost}
-\begin{figure}[htbp]
- \begin{center}
-<%
-require("ggplot2") || throw("Package not loaded: ggplot2");
-data <- getLocusData(fit, fields="full");
-chromosomes <- getChromosomes(fit);
-nbrOfChromosomes <- length(chromosomes);
-chromosomesH <- seqToHumanReadable(chromosomes);
-chromosomesH <- if (nbrOfChromosomes == 1) {
-  sprintf("Chr %s", chromosomesH);
-} else {
-  sprintf("Chrs %s", chromosomesH);
-}
-chrsTags <- if (nbrOfChromosomes == 1) {
-  sprintf("chr%02d", chromosomes[1]);
-} else {
-  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
-}
-%>
-<%
-dataT <- subset(data, type == "SNP");
-%>
-<% for (ff in c("betaT", "betaTN")) { %>
-  \resizebox{0.40\textwidth}{!}{%
-    \includegraphics{<%={
-      tags <- c(chrsTags, sprintf("%s-vs-betaN", ff));
-      toPNG(name=sampleName, tags=tags, width=640, aspectRatio=0.85, {
-        gg <- ggplot(dataT, aes_string(x="betaN", y=ff));
-        gg <- gg + aes_string(group="muNx", colour="muNx");
-        gg <- gg + scale_color_manual(values=muNCols);
-
-        # See https://github.com/hadley/ggplot2/wiki/Legend-Attributes
-        gg <- gg + opts(#legend.position=c(0.97, 0.85),
-                        #legend.justification = 1,
-                        legend.direction="vertical",
-                        legend.title=theme_text(size=0),
-                        legend.text=theme_text(size=16));
-
-        if (getOption("PSCBS::report/useAlphaChannel", TRUE)) {
-          gg <- gg + geom_point(alpha=min(10e3/nrow(dataT), 0.5));
-        } else {
-          gg <- gg + geom_point();
-        }
-        gg <- gg + xlab(labList[["betaN"]]) + ylab(labList[[ff]]);
-        gg <- gg + xlim(BlimX) + ylim(BlimX);
-        gg <- gg + opts(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
-        gg <- gg + opts(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
-        print(gg);
-      });
-    }%>}%
-  }%
-<% } # for (ff ...) %>
- \end{center}
- \caption{
-   Tumor-normal BAFs before (left) and after (right) TumorBoost normalization
-   on <%=chromosomesH%>.
-   We expect to see only two homozygote groups.  If there are more, then the
-   tumor and the normal BAFs are not from the same individual.
-   If there are no allelic imbalances in the tumor, then there is
-   also only one heterozygous group.
- }
- \label{fig:BAFBAF}
-\end{figure}
-<% } # beforeAndAfterTumorBoost() %>
-
-<%=beforeAndAfterTumorBoost(fit)%>
-
-
-
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-% PARENT-SPECIFIC COPY-NUMBER SEGMENTATION TRACKS
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-<% pscnSegmentationTracks <- function(fit, ...) { %>
-\clearpage
-\section{Parent-specific copy-number segmentation tracks}
-\label{sec:PSCNSegmentationTracks}
+\section{Total copy-number segmentation tracks}
+\label{sec:TCNSegmentationTracks}
 <%
 chromosomes <- getChromosomes(fit);
 nbrOfChromosomes <- length(chromosomes);
@@ -462,14 +370,12 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 %>
 \begin{figure}[htbp]
  \begin{center}
-  <% for (track in c("tcn", "dh", "tcn,c1,c2")) { %>
-<%-- <% for (track in c("tcn*", "betaT", "betaTN*", "dh*", "tcn*,c1*,c2-*")) { %> --%>
+  <% for (track in c("tcn")) { %>
   \resizebox{\textwidth}{!}{%
     \includegraphics{<%={
-      tags <- c(chrsTags, "PairedPSCBS", gsub("[*-]", "", track), getChecksum(fit));
+      tags <- c(chrsTags, "CBS", gsub("[*-]", "", track), getChecksum(fit));
       toPNG(name=sampleName, tags=tags, width=1024, aspectRatio=0.25, par=list(mar=c(2.8,4,1,1)+0.1, cex=1.5), {
         plotTracks(fit, tracks=track, lwd=5, Clim=Clim);
-#        plotTrack2(fit, panels=track, lwd=5, Clim=Clim);
       }, force=FALSE);
     }%>}%
   }%
@@ -477,77 +383,16 @@ chrsTags <- if (nbrOfChromosomes == 1) {
   <% } # for (track ...) %>
  \end{center}
  \caption{
-   Results of Paired PSCBS segmentation on <%=chromosomesH%> projected onto
-   TCN (top), \BAFT (row 2), \BAFTN (row 3), DH (row 4), as well as TCN, $C_1$ and $C_2$ (bottom).
-   Paired PSCBS segmentation is always done on TCN and DH data.
+   Results of CBS segmentation on <%=chromosomesH%> projected onto TCN.
    There are in total $S=<%=nbrOfSegments(fit, splitters=FALSE)%>$ segments. 
  }
- \label{fig:PairedPSCBS}
+ \label{fig:CBS}
 \end{figure}
-<% } # pscnSegmentationTracks() %>
+<% } # tcnSegmentationTracks() %>
 
-<%=pscnSegmentationTracks(fit)%>
+<%=tcnSegmentationTracks(fit)%>
 
 
-
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-% PARENT-SPECIFIC COPY-NUMBER TRANSITIONS
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-<% pscnSegmentationTransitions <- function(fit, ...) { %>
-<%
-if (!getOption("PSCBS::reports/pscnSegmentationTransitions", FALSE)) {
-  return();
-}
-%>
-\clearpage
-\section{Parent-specific copy-number transitions}
-\label{sec:PSCNSegmentationTransitions}
-<%
-# plotC1C2Grid()
-require("aroma.cn") || throw("Package not loaded: aroma.cn");
-
-chromosomes <- getChromosomes(fit);
-nbrOfChromosomes <- length(chromosomes);
-chromosomesH <- seqToHumanReadable(chromosomes);
-chromosomesH <- if (nbrOfChromosomes == 1) {
-  sprintf("Chr %s", chromosomesH);
-} else {
-  sprintf("Chrs %s", chromosomesH);
-}
-chrsTags <- if (nbrOfChromosomes == 1) {
-  sprintf("chr%02d", chromosomes[1]);
-} else {
-  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
-}
-%>
-\begin{figure}[htbp]
- \begin{center}
-  \resizebox{0.6\textwidth}{!}{%
-    \includegraphics{<%={
-      tags <- c(chrsTags, "PairedPSCBS", "C1C2", getChecksum(fit));
-      toPNG(name=sampleName, tags=tags, width=640, aspectRatio=1, par=list(mar=c(4,4,1,1)+0.1, cex=2), {
-        plotC1C2Grid(fit, Clim=ClimX);
-        linesC1C2(fit, lwd=2);
-      }, force=FALSE);
-    }%>}%
-  }%
- \end{center}
- \caption{
-   A graph representation of the minor ($C_1$) and major ($C_2$) 
-   copy-number segmentation on <%=chromosomesH%>,
-   where the nodes represent ($S=<%=nbrOfSegments(fit, splitters=FALSE)%>$)
-   segments and the lines change points.
-   The size of a node reflects the length of the corresponding segment.
-   The marginal distributions (gray curves) of the minor and the major CNs 
-   are projected onto the horizontal and vertical axis, respectively.
-   To easy a visual comparison, the latter is also projected onto the
-   horizontal axis (light blue curve).
- }
- \label{fig:C1C2}
-\end{figure}
-<% } # pscnSegmentationTransitions() %>
-
-<%=pscnSegmentationTransitions(fit)%>
 
 
 
@@ -561,15 +406,9 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 <%
 fitT <- extractChromosome(fit, chromosome=chr);
 %>
-<%=summaryOfAnnotationAndGenotypeCalls(fitT)%>
-
+<%=summaryOfAnnotation(fitT)%>
 <%=signalDensities(fitT)%>
-
-<%=beforeAndAfterTumorBoost(fitT)%>
-
-<%=pscnSegmentationTracks(fitT)%>
-
-<%=pscnSegmentationTransitions(fitT)%>
+<%=tcnSegmentationTracks(fitT)%>
 <% } # for (chr ...) %>
 <% } # if (nbrOfChromosomes(fit) > 1) %>
 
@@ -610,9 +449,9 @@ This report was automatically generated using \code{rsp()} of the R.rsp package.
 The template for this report was created by Henrik Bengtsson on April 20, 2012.
 \end{document}
 
-<% } # pairedPSCBSReport() %>
+<% } # cbsReport() %>
 
-<%=do.call("pairedPSCBSReport", args=rspArgs)%>
+<%=do.call("cbsReport", args=rspArgs)%>
 
 
 

@@ -1,20 +1,21 @@
 ###########################################################################/**
-# @set class=PairedPSCBS
+# @set class=AbstractCBS
 # @RdocMethod report
 #
-# @title "Generates a report of the Paired PSCBS results"
+# @title "Generates a report of the segmentation results"
 #
 # \description{
 #  @get "title".
+#  Currently reports can be generated for segmentation results of class
+#  @see "CBS" and @see "PairedPSCBS".
 # }
 #
 # @synopsis
 #
 # \arguments{
-#   \item{fit}{A @see "PairedPSCBS" object as returned by 
-#      @see "segmentByPairedPSCBS".}
+#   \item{fit}{An @see "AbstractCBS" object.}
 #   \item{sampleName}{A @character string specifying the name of the 
-#      tumor-normal pair segmented.}
+#      sample segmented.}
 #   \item{studyName}{A @character string specifying the name of study/project.}
 #   \item{...}{Optional arguments passed to the RSP template.}
 #   \item{rootPath}{The root directory where to write the report.}
@@ -25,10 +26,6 @@
 #   Returns the pathname of the generated PDF.
 # }
 #
-# \examples{\dontrun{
-# @include "../incl/segmentByPairedPSCBS,report.Rex"
-# }}
-#
 # @author
 #
 # \seealso{
@@ -37,7 +34,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("report", "PairedPSCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rootPath="reports/", verbose=FALSE) {
+setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rootPath="reports/", .filenames=c(rsp="*", "PSCBS.bib", "bioinformatics-journals-abbr.bib", "natbib.bst"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -51,6 +48,11 @@ setMethodS3("report", "PairedPSCBS", function(fit, sampleName=getSampleName(fit)
   # Argument 'rootPath':
   rootPath <- Arguments$getWritablePath(rootPath);
 
+  # Argument '.filenames':
+  if (!is.null(.filenames)) {
+    .filenames <- Arguments$getCharacters(.filenames, useNames=TRUE);
+  }
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -59,7 +61,7 @@ setMethodS3("report", "PairedPSCBS", function(fit, sampleName=getSampleName(fit)
   }
 
 
-  verbose && enter(verbose, "Generating Paired PSCBS report");
+  verbose && enter(verbose, "Generating CBS report");
 
   verbose && cat(verbose, "Sample name: ", sampleName);
   verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes(fit));
@@ -102,13 +104,18 @@ setMethodS3("report", "PairedPSCBS", function(fit, sampleName=getSampleName(fit)
   srcPath <- Arguments$getReadablePath(srcPath);
   verbose && cat(verbose, "Source path: ", srcPath);
 
-  filenames <- c(
-    rsp="PairedPSCBSReport.tex.rsp",
-    "PSCBS.bib", "bioinformatics-journals-abbr.bib",
-    "natbib.bst"
-  );
+  filenames <- .filenames;
+  idx <- which(filenames == "*");
+  if (length(idx) > 0) {
+    className <- class(fit)[1];
+    rsp <- sprintf("%sReport.tex.rsp", className);
+    filenames[idx] <- rsp;
+  }
   verbose && cat(verbose, "Template files:");
   verbose && print(verbose, filenames);
+
+  # Sanity check
+  stopifnot(is.element("rsp", names(filenames)));
 
   destFilenames <- filenames;
   destFilenames["rsp"] <- sprintf("%s,%s", sampleName, filenames["rsp"]);
@@ -162,6 +169,9 @@ setMethodS3("report", "PairedPSCBS", function(fit, sampleName=getSampleName(fit)
 
 ############################################################################
 # HISTORY:
+# 2012-04-20
+# o Added argument '.filenames'.
+# o Created from former PairedPSCBS.REPORT.R, which history as below.
 # 2012-02-27
 # o Added Rdoc help.
 # o Added report() for PairedPSCBS.

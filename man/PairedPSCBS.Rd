@@ -68,7 +68,7 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 append, as.data.frame, drawChangePoints, extractChromosomes, getLocusData, isSegmentSplitter, writeSegments
 
  \bold{Methods inherited from AbstractCBS}:\cr
-all.equal, append, as.data.frame, drawChangePoints, dropChangePoint, dropChangePoints, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomes, getLocusData, getSampleName, getSegments, getSegmentSizes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByHClust, renameChromosomes, resegment, sampleCNs, sampleName, sampleName<-, save, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
+all.equal, append, as.data.frame, drawChangePoints, dropChangePoint, dropChangePoints, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomes, getLocusData, getSampleName, getSegments, getSegmentSizes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByHClust, renameChromosomes, report, resegment, sampleCNs, sampleName, sampleName<-, save, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
