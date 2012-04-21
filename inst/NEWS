@@ -2,6 +2,20 @@
 Package: PSCBS
 ==============
 
+Version: 0.25.0 [2012-04-20]
+o Added a trial (very much true) version of segmentByNonPairedPSCBS.
+
+
+Version: 0.24.0 [2012-04-20]
+o Now it is possible to skip the DH segmentation in Paired PSCBS, i.e.
+  segmentByPairedPSCBS(..., flavor="tcn").
+
+
+Version: 0.23.2 [2012-04-20]
+o BUG FIX: segmentByPairedPSCBS() would throw "error in `$<-.data.frame
+  `(`*tmp*`, "rho" ..." if some loci points has unknown genomic positions.
+
+
 Version: 0.23.1 [2012-04-20]
 o Added RSP report for CBS objects (adopted from ditto for PairedPSCBS).
 o Updated the 'Paired PSCBS' vignette.

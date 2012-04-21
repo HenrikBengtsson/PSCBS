@@ -132,7 +132,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -213,7 +213,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
   # Argument 'flavor':
   flavor <- match.arg(flavor);
-  knownFlavors <- c("tcn,dh", "tcn&dh", "sqrt(tcn),dh", "sqrt(tcn)&dh");
+  knownFlavors <- eval(formals(segmentByPairedPSCBS.default)$flavor);
   if (!is.element(flavor, knownFlavors)) {
     throw("Segmentation flavor is not among the supported ones (", paste(sprintf("\"%s\"", knownFlavors), collapse=", "), "): ", flavor);
   }
@@ -322,6 +322,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   }
   verbose && str(verbose, data);
   rm(chromosome, x, CT, betaT, betaTN, betaN, muN); # Not needed anymore
+
+  # Sanity check
+  stopifnot(nrow(data) == nbrOfLoci);
   verbose && exit(verbose);
 
 
@@ -335,9 +338,13 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     verbose && enter(verbose, "Dropping loci with unknown locations");
     verbose && cat(verbose, "Number of loci dropped: ", sum(!ok));
     data <- data[ok,,drop=FALSE];
+    nbrOfLoci <- nrow(data);
     verbose && exit(verbose);
   }
   rm(ok); # Not needed anymore
+
+  # Sanity check
+  stopifnot(nrow(data) == nbrOfLoci);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -359,6 +366,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # Attach 'index' (guaranteed to be ordered)
   data$index <- seq(length=nrow(data));
 
+  # Sanity check
+  stopifnot(nrow(data) == nbrOfLoci);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Multiple chromosomes?
@@ -578,233 +587,319 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # For each segment independently, segment decrease of heterozygousity (DH)
   # using CBS. By definition, only heterozygous SNPs are used.
 
-  dhSegRows <- NULL;
-  tcnSegsExpanded <- NULL;
+  if (flavor == "tcn") {
+    verbose && enter(verbose, "TCN-only segmentation");
 
-  # For each TCN segment...
-  segs <- vector("list", length=nbrOfSegs);
-  for (kk in seq(length=nbrOfSegs)) {
-    tcnId <- kk;
+    tcnSegsExpanded <- tcnSegRows;
+    dhSegRows <- tcnSegRows;
 
-    xStart <- tcnSegments[kk,"tcnStart"];
-    xEnd <- tcnSegments[kk,"tcnEnd"];
-    regionTag <- sprintf("[%g,%g]", xStart, xEnd);
-    verbose && enter(verbose, sprintf("Total CN segment #%d (%s) of %d", kk, regionTag, nbrOfSegs));
+    # Segments
+    segs <- tcnSegments;
+    segs[,"tcnId"] <- seq(length=nbrOfSegs);
+    segs[,"dhId"] <- rep(1L, times=nbrOfSegs);
+    segs[,c("tcnNbrOfSNPs", "tcnNbrOfHets", "dhNbrOfLoci")] <- 0L;
+    segs[,"dhStart"] <- segs[,"tcnStart"];
+    segs[,"dhEnd"] <- segs[,"tcnEnd"];
 
-    # Empty segment?
-    rowStart <- tcnSegRows[kk,1];
-    rowEnd <- tcnSegRows[kk,2];
-  
-    # Empty segment or a segment separator?
-    isEmptySegment <- (is.na(rowStart) && is.na(rowEnd));
-    isSplitter <- (isEmptySegment && is.na(xStart) && is.na(xEnd));
-    isEmptySegment <- (isEmptySegment & !isSplitter);
+    # For each TCN segment...
+    for (kk in seq(length=nbrOfSegs)) {
+      tcnId <- kk;
+    
+      xStart <- tcnSegments[kk,"tcnStart"];
+      xEnd <- tcnSegments[kk,"tcnEnd"];
+      regionTag <- sprintf("[%g,%g]", xStart, xEnd);
+      verbose && enter(verbose, sprintf("Total CN segment #%d (%s) of %d", kk, regionTag, nbrOfSegs));
 
-    if (isSplitter) {
-      verbose && cat(verbose, "No signals to segment. Just a \"splitter\" segment. Skipping.");
+      # Empty segment?
+      rowStart <- tcnSegRows[kk,1];
+      rowEnd <- tcnSegRows[kk,2];
+      
+      # Empty segment or a segment separator?
+      isEmptySegment <- (is.na(rowStart) && is.na(rowEnd));
+
+      # Nothing to do?
+      if (isEmptySegment) {
+        verbose && exit(verbose);
+        next;
+      }
+
+      nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOfLoci"];
+      verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
+      rows <- seq(from=rowStart, length=nbrOfTCNLociKK);
+      dataKK <- data[rows,,drop=FALSE];
+      nbrOfLociKK <- nrow(dataKK);
+
+      verbose && cat(verbose, "Locus data for TCN segment:");
+      verbose && str(verbose, dataKK);
+    
+      verbose && cat(verbose, "Number of loci: ", nbrOfLociKK);
+      isSnpKK <- !is.na(dataKK$muN);
+      nbrOfSnpsKK <- sum(isSnpKK);
+      verbose && printf(verbose, "Number of SNPs: %d (%.2f%%)\n", 
+                                    nbrOfSnpsKK, 100*nbrOfSnpsKK/nbrOfLociKK);
+
+      isHetsKK <- (isSnpKK & (dataKK$muN == 1/2));
+      nbrOfHetsKK <- sum(isHetsKK);
+      verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
+                                    nbrOfHetsKK, 100*nbrOfHetsKK/nbrOfSnpsKK);
+
+      segs[kk,"tcnNbrOfSNPs"] <- nbrOfSnpsKK;
+      segs[kk,"tcnNbrOfHets"] <- nbrOfHetsKK;
+      segs[kk,"dhNbrOfLoci"] <- nbrOfHetsKK;
+
+      # Adjust 'dhRows[kk,]'
+      rows <- rows[isHetsKK];
+      rows <- range(rows, na.rm=TRUE);
+      dhSegRows[kk,] <- rows;
 
       # Sanity check
-      stopifnot(kk >= 1);
+      if (nbrOfHetsKK > 0) {
+        stopifnot(all(dhSegRows[kk,1] <= dhSegRows[kk,2], na.rm=TRUE));
+      }
 
-      # Add a splitter segment
-      segT <- segs[[kk-1]];
-      segT <- segT[as.integer(NA),];
-      keys <- colnames(tcnSegments);
-      segT[,keys] <- tcnSegments[kk,keys];
-      segT[,"tcnId"] <- tcnId;
-      segT[,"dhId"] <- 1L;
-      segT[,c("tcnNbrOfSNPs", "tcnNbrOfHets", "dhNbrOfLoci")] <- 0L;
-      segT[,"dhStart"] <- xStart;
-      segT[,"dhEnd"] <- xEnd;
-      segs[[kk]] <- segT;
-      verbose && print(verbose, segT);
-
-      # Add a splitter to TCN and DH segment row matrix
-      segRowsT <- dhSegRows[as.integer(NA),];
-      dhSegRows <- rbind(dhSegRows, segRowsT);
-
-      segRowsT <- tcnSegsExpanded[as.integer(NA),];
-      tcnSegsExpanded <- rbind(tcnSegsExpanded, segRowsT);
+      # Calculate dhMean
+      rhoKK <- dataKK[["rho"]][isHetsKK];
+      segs[kk,"dhMean"] <- mean(rhoKK, na.rm=TRUE);
 
       verbose && exit(verbose);
-      next;
-    } # if (isSplitter)
+    } # for (kk ...)
 
+    # Reorder segmentation columns
+    keys <- c("tcnId", "dhId", colnames(tcnSegments));
+    keys <- c(keys, setdiff(colnames(segs), keys));
+    segs <- segs[,keys];
+    rm(keys);
 
-    nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOfLoci"];
-    verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
-
-    # Sanity check
-    stopifnot(!isEmptySegment || (isEmptySegment && (nbrOfTCNLociKK == 0)));
-
-    if (nbrOfTCNLociKK > 0) {
-      # Extract locus data for TCN segment
-      rows <- rowStart:rowEnd;
-  ##    if (nrow(knownSegments) == 0) {
-  ##      gammaT <- tcnSegments[kk,"tcnMean"];
-  ##      verbose && print(verbose, all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
-  ##      stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
-  ##    }
-    } else {
-      rows <- integer(0);
-    } # if (nbrOfTCNLociKK > 0)
-
-    dataKK <- data[rows,,drop=FALSE];
-    nbrOfLociKK <- nrow(dataKK);
-  
-    # Sanity check
-    stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK);
-  
-    verbose && cat(verbose, "Locus data for TCN segment:");
-    verbose && str(verbose, dataKK);
-  
-    verbose && cat(verbose, "Number of loci: ", nbrOfLociKK);
-    nbrOfSnpsKK <- sum(!is.na(dataKK$muN));
-    verbose && printf(verbose, "Number of SNPs: %d (%.2f%%)\n", 
-                                  nbrOfSnpsKK, 100*nbrOfSnpsKK/nbrOfLociKK);
-    nbrOfHetsKK <- sum(!is.na(dataKK$muN) & dataKK$muN == 1/2);
-    verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
-                                  nbrOfHetsKK, 100*nbrOfHetsKK/nbrOfSnpsKK);
-
-    # Since segments in 'knownSegments' has already been used in the TCN
-    # segmentation, they are not needed in the DH segmentation.
-    currChromosome <- data$chromosome[1];
-    verbose && cat(verbose, "Chromosome: ", currChromosome);
-    knownSegmentsT <- data.frame(chromosome=currChromosome, start=xStart, end=xEnd);
-
-    verbose && enter(verbose, "Segmenting DH signals");
-    fields <- attachLocally(dataKK, fields=c("chromosome", "x", "rho", "index"));  
-
-    fit <- segmentByCBS(rho, 
-                        chromosome=chromosome, x=x,
-                        joinSegments=joinSegments,
-                        knownSegments=knownSegmentsT,
-                        alpha=alphaDH, undo=undoDH, ...,
-                        seed=NULL,
-                        verbose=verbose);
-    verbose && str(verbose, fit);
-    dhSegments <- fit$output;
-    dhSegRowsKK <- fit$segRows;
-
-    verbose && cat(verbose, "DH segmentation (locally-indexed) rows:");
-    verbose && print(verbose, dhSegRowsKK);
-    verbose && str(verbose, index);
-
-    # Remap to genome-wide indices
-    for (cc in 1:2) {
-      dhSegRowsKK[,cc] <- index[dhSegRowsKK[,cc]];
-    }
-
-    verbose && cat(verbose, "DH segmentation rows:");
-    verbose && print(verbose, dhSegRowsKK);
-
-    # Not needed anymore
-    rm(list=fields);
-    rm(fit);
     verbose && exit(verbose);
+  } else {
+    dhSegRows <- NULL;
+    tcnSegsExpanded <- NULL;
 
-    # Drop dummy columns
-    keep <- setdiff(colnames(dhSegments), c("sampleName", "chromosome"));
-    dhSegments <- dhSegments[,keep,drop=FALSE];
-
-    # Tag fields by DH
-    names <- names(dhSegments);
-    # Adding 'dh' prefix to column names
-    names <- sprintf("dh%s", capitalize(names));
-    names(dhSegments) <- names;
-    rm(names);
-
-    # Special case: If there where not enough data to segment DH...
-    if (nrow(dhSegments) == 0) {
-      dhSegments <- dhSegments[as.integer(NA),,drop=FALSE];
-      dhSegRowsKK <- dhSegRowsKK[as.integer(NA),,drop=FALSE];
-    }
-
-    verbose && cat(verbose, "DH segmentation table:");
-    verbose && print(verbose, dhSegments);
-    verbose && print(verbose, dhSegRowsKK);
-
-    # Expand the TCN segmentation result data frame
-    rows <- rep(kk, times=nrow(dhSegments));
-    verbose && cat(verbose, "Rows:");
-    verbose && print(verbose, rows);
-    tcnSegmentsKK <- tcnSegments[rows,,drop=FALSE];
-    tcnSegRowsKK <- tcnSegRows[rows,,drop=FALSE];
-    # Sanity check
-    stopifnot(nrow(tcnSegmentsKK) == nrow(dhSegments));
-    stopifnot(nrow(tcnSegRowsKK) == nrow(dhSegments));
-    stopifnot(is.na(tcnSegRowsKK[,1]) || is.na(dhSegRowsKK[,1]) || (tcnSegRowsKK[,1] <= dhSegRowsKK[,1]));
-    stopifnot(is.na(tcnSegRowsKK[,2]) || is.na(dhSegRowsKK[,2]) || (dhSegRowsKK[,2] <= tcnSegRowsKK[,2]));
-    verbose && cat(verbose, "TCN segmentation rows:");
-    verbose && print(verbose, tcnSegRowsKK);
-    stopifnot(all(tcnSegRowsKK[,1] == tcnSegRowsKK[1,1], na.rm=TRUE));
-    stopifnot(all(tcnSegRowsKK[,2] == tcnSegRowsKK[1,2], na.rm=TRUE));
-
-    verbose && cat(verbose, "TCN and DH segmentation rows:");
-    verbose && print(verbose, tcnSegRowsKK);
-    verbose && print(verbose, dhSegRowsKK);
-    verbose && print(verbose, tcnSegsExpanded);
-
-    # Append
-    tcnSegsExpanded <- rbind(tcnSegsExpanded, tcnSegRowsKK);
-    verbose && cat(verbose, "TCN segmentation (expanded) rows:");
-    verbose && print(verbose, tcnSegsExpanded);
-    rownames(tcnSegsExpanded) <- NULL;
-
-    dhSegRows <- rbind(dhSegRows, dhSegRowsKK);
-    rownames(dhSegRows) <- NULL;
-
-    verbose && cat(verbose, "TCN and DH segmentation rows:");
-    verbose && print(verbose, tcnSegRows);
-    verbose && print(verbose, dhSegRows);
-    verbose && print(verbose, tcnSegsExpanded);
-
-    # Sanity checks
-    stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE));
-    stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE));
-    stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE));
-    stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE));
-    stopifnot(all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE));
-    stopifnot(all(tcnSegsExpanded[,1] <= dhSegRows[,1], na.rm=TRUE));
-    stopifnot(all(tcnSegsExpanded[,2] >= dhSegRows[,2], na.rm=TRUE));
-##    if (!all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE)) {
-##      stopifnot(all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE));
-##    }
-
-
-    # Sanity check
-    stopifnot(nrow(dhSegRows) == nrow(tcnSegsExpanded));
-
-    # Append information on number of SNPs and hets in CN region
-    tcnSegmentsKK <- cbind(
-      tcnSegmentsKK, 
-      tcnNbrOfSNPs=nbrOfSnpsKK,
-      tcnNbrOfHets=nbrOfHetsKK
-    );
-    verbose && cat(verbose, "Total CN segmentation table (expanded):");
-    verbose && print(verbose, tcnSegmentsKK);
-
-    # Sanity check
-    stopifnot(nrow(tcnSegmentsKK) == nrow(dhSegments));
-
-    # Combine TCN and DH segmentation results
-    tcndhSegments <- cbind(
-      tcnId=rep(kk, times=nrow(dhSegments)),
-      dhId=seq(length=nrow(dhSegments)),
-      tcnSegmentsKK,
-      dhSegments
-    );
-
-    segs[[kk]] <- tcndhSegments;
-
-    verbose && cat(verbose, "(TCN,DH) segmentation for one total CN segment:");
-    verbose && print(verbose, segs[[kk]]);
-
-    verbose && exit(verbose);    
-  } # for (kk ...)
-
-  segs <- Reduce(rbind, segs);
-  rownames(segs) <- NULL;
+    # For each TCN segment...
+    segs <- vector("list", length=nbrOfSegs);
+    for (kk in seq(length=nbrOfSegs)) {
+      tcnId <- kk;
+    
+      xStart <- tcnSegments[kk,"tcnStart"];
+      xEnd <- tcnSegments[kk,"tcnEnd"];
+      regionTag <- sprintf("[%g,%g]", xStart, xEnd);
+      verbose && enter(verbose, sprintf("Total CN segment #%d (%s) of %d", kk, regionTag, nbrOfSegs));
+    
+      # Empty segment?
+      rowStart <- tcnSegRows[kk,1];
+      rowEnd <- tcnSegRows[kk,2];
+      
+      # Empty segment or a segment separator?
+      isEmptySegment <- (is.na(rowStart) && is.na(rowEnd));
+      isSplitter <- (isEmptySegment && is.na(xStart) && is.na(xEnd));
+      isEmptySegment <- (isEmptySegment & !isSplitter);
+    
+      if (isSplitter) {
+        verbose && cat(verbose, "No signals to segment. Just a \"splitter\" segment. Skipping.");
+    
+        # Sanity check
+        stopifnot(kk >= 1);
+  
+        # Add a splitter segment
+        segT <- segs[[kk-1]];
+        segT <- segT[as.integer(NA),];
+        keys <- colnames(tcnSegments);
+        segT[,keys] <- tcnSegments[kk,keys];
+        segT[,"tcnId"] <- tcnId;
+        segT[,"dhId"] <- 1L;
+        segT[,c("tcnNbrOfSNPs", "tcnNbrOfHets", "dhNbrOfLoci")] <- 0L;
+        segT[,"dhStart"] <- xStart;
+        segT[,"dhEnd"] <- xEnd;
+        segs[[kk]] <- segT;
+        verbose && print(verbose, segT);
+  
+        # Add a splitter to TCN and DH segment row matrix
+        segRowsT <- dhSegRows[as.integer(NA),];
+        dhSegRows <- rbind(dhSegRows, segRowsT);
+  
+        segRowsT <- tcnSegsExpanded[as.integer(NA),];
+        tcnSegsExpanded <- rbind(tcnSegsExpanded, segRowsT);
+  
+        verbose && exit(verbose);
+        next;
+      } # if (isSplitter)
+  
+  
+      nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOfLoci"];
+      verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
+  
+      # Sanity check
+      stopifnot(!isEmptySegment || (isEmptySegment && (nbrOfTCNLociKK == 0)));
+  
+      if (nbrOfTCNLociKK > 0) {
+        # Extract locus data for TCN segment
+        rows <- rowStart:rowEnd;
+    ##    if (nrow(knownSegments) == 0) {
+    ##      gammaT <- tcnSegments[kk,"tcnMean"];
+    ##      verbose && print(verbose, all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
+    ##      stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol));
+    ##    }
+      } else {
+        rows <- integer(0);
+      } # if (nbrOfTCNLociKK > 0)
+  
+      dataKK <- data[rows,,drop=FALSE];
+      nbrOfLociKK <- nrow(dataKK);
+    
+      # Sanity check
+      stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK);
+    
+      verbose && cat(verbose, "Locus data for TCN segment:");
+      verbose && str(verbose, dataKK);
+    
+      verbose && cat(verbose, "Number of loci: ", nbrOfLociKK);
+      nbrOfSnpsKK <- sum(!is.na(dataKK$muN));
+      verbose && printf(verbose, "Number of SNPs: %d (%.2f%%)\n", 
+                                    nbrOfSnpsKK, 100*nbrOfSnpsKK/nbrOfLociKK);
+      nbrOfHetsKK <- sum(!is.na(dataKK$muN) & dataKK$muN == 1/2);
+      verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
+                                    nbrOfHetsKK, 100*nbrOfHetsKK/nbrOfSnpsKK);
+  
+      # Since segments in 'knownSegments' has already been used in the TCN
+      # segmentation, they are not needed in the DH segmentation.
+      currChromosome <- data$chromosome[1];
+      verbose && cat(verbose, "Chromosome: ", currChromosome);
+      knownSegmentsT <- data.frame(chromosome=currChromosome, start=xStart, end=xEnd);
+  
+      verbose && enter(verbose, "Segmenting DH signals");
+      fields <- attachLocally(dataKK, fields=c("chromosome", "x", "rho", "index"));  
+  
+      fit <- segmentByCBS(rho, 
+                          chromosome=chromosome, x=x,
+                          joinSegments=joinSegments,
+                          knownSegments=knownSegmentsT,
+                          alpha=alphaDH, undo=undoDH, ...,
+                          seed=NULL,
+                          verbose=verbose);
+      verbose && str(verbose, fit);
+      dhSegments <- fit$output;
+      dhSegRowsKK <- fit$segRows;
+  
+      verbose && cat(verbose, "DH segmentation (locally-indexed) rows:");
+      verbose && print(verbose, dhSegRowsKK);
+      verbose && str(verbose, index);
+  
+      # Remap to genome-wide indices
+      for (cc in 1:2) {
+        dhSegRowsKK[,cc] <- index[dhSegRowsKK[,cc]];
+      }
+  
+      verbose && cat(verbose, "DH segmentation rows:");
+      verbose && print(verbose, dhSegRowsKK);
+  
+      # Not needed anymore
+      rm(list=fields);
+      rm(fit);
+      verbose && exit(verbose);
+  
+      # Drop dummy columns
+      keep <- setdiff(colnames(dhSegments), c("sampleName", "chromosome"));
+      dhSegments <- dhSegments[,keep,drop=FALSE];
+  
+      # Tag fields by DH
+      names <- names(dhSegments);
+      # Adding 'dh' prefix to column names
+      names <- sprintf("dh%s", capitalize(names));
+      names(dhSegments) <- names;
+      rm(names);
+  
+      # Special case: If there where not enough data to segment DH...
+      if (nrow(dhSegments) == 0) {
+        dhSegments <- dhSegments[as.integer(NA),,drop=FALSE];
+        dhSegRowsKK <- dhSegRowsKK[as.integer(NA),,drop=FALSE];
+      }
+  
+      verbose && cat(verbose, "DH segmentation table:");
+      verbose && print(verbose, dhSegments);
+      verbose && print(verbose, dhSegRowsKK);
+  
+      # Expand the TCN segmentation result data frame
+      rows <- rep(kk, times=nrow(dhSegments));
+      verbose && cat(verbose, "Rows:");
+      verbose && print(verbose, rows);
+      tcnSegmentsKK <- tcnSegments[rows,,drop=FALSE];
+      tcnSegRowsKK <- tcnSegRows[rows,,drop=FALSE];
+      # Sanity check
+      stopifnot(nrow(tcnSegmentsKK) == nrow(dhSegments));
+      stopifnot(nrow(tcnSegRowsKK) == nrow(dhSegments));
+      stopifnot(is.na(tcnSegRowsKK[,1]) || is.na(dhSegRowsKK[,1]) || (tcnSegRowsKK[,1] <= dhSegRowsKK[,1]));
+      stopifnot(is.na(tcnSegRowsKK[,2]) || is.na(dhSegRowsKK[,2]) || (dhSegRowsKK[,2] <= tcnSegRowsKK[,2]));
+      verbose && cat(verbose, "TCN segmentation rows:");
+      verbose && print(verbose, tcnSegRowsKK);
+      stopifnot(all(tcnSegRowsKK[,1] == tcnSegRowsKK[1,1], na.rm=TRUE));
+      stopifnot(all(tcnSegRowsKK[,2] == tcnSegRowsKK[1,2], na.rm=TRUE));
+  
+      verbose && cat(verbose, "TCN and DH segmentation rows:");
+      verbose && print(verbose, tcnSegRowsKK);
+      verbose && print(verbose, dhSegRowsKK);
+      verbose && print(verbose, tcnSegsExpanded);
+  
+      # Append
+      tcnSegsExpanded <- rbind(tcnSegsExpanded, tcnSegRowsKK);
+      verbose && cat(verbose, "TCN segmentation (expanded) rows:");
+      verbose && print(verbose, tcnSegsExpanded);
+      rownames(tcnSegsExpanded) <- NULL;
+  
+      dhSegRows <- rbind(dhSegRows, dhSegRowsKK);
+      rownames(dhSegRows) <- NULL;
+  
+      verbose && cat(verbose, "TCN and DH segmentation rows:");
+      verbose && print(verbose, tcnSegRows);
+      verbose && print(verbose, dhSegRows);
+      verbose && print(verbose, tcnSegsExpanded);
+  
+      # Sanity checks
+      stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE));
+      stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE));
+      stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE));
+      stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE));
+      stopifnot(all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE));
+      stopifnot(all(tcnSegsExpanded[,1] <= dhSegRows[,1], na.rm=TRUE));
+      stopifnot(all(tcnSegsExpanded[,2] >= dhSegRows[,2], na.rm=TRUE));
+  ##    if (!all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE)) {
+  ##      stopifnot(all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE));
+  ##    }
+  
+  
+      # Sanity check
+      stopifnot(nrow(dhSegRows) == nrow(tcnSegsExpanded));
+  
+      # Append information on number of SNPs and hets in CN region
+      tcnSegmentsKK <- cbind(
+        tcnSegmentsKK, 
+        tcnNbrOfSNPs=nbrOfSnpsKK,
+        tcnNbrOfHets=nbrOfHetsKK
+      );
+      verbose && cat(verbose, "Total CN segmentation table (expanded):");
+      verbose && print(verbose, tcnSegmentsKK);
+  
+      # Sanity check
+      stopifnot(nrow(tcnSegmentsKK) == nrow(dhSegments));
+  
+      # Combine TCN and DH segmentation results
+      tcndhSegments <- cbind(
+        tcnId=rep(kk, times=nrow(dhSegments)),
+        dhId=seq(length=nrow(dhSegments)),
+        tcnSegmentsKK,
+        dhSegments
+      );
+  
+      segs[[kk]] <- tcndhSegments;
+  
+      verbose && cat(verbose, "(TCN,DH) segmentation for one total CN segment:");
+      verbose && print(verbose, segs[[kk]]);
+  
+      verbose && exit(verbose);    
+    } # for (kk ...)
+  
+    segs <- Reduce(rbind, segs);
+    rownames(segs) <- NULL;
+  } # if (flavor == "tcn")
 
   # Sanity check
   stopifnot(nrow(dhSegRows) == nrow(tcnSegsExpanded));
@@ -812,7 +907,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
   stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE));
   stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE));
-  stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE));
+  if (flavor != "tcn") {
+    stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE));
+  }
   stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE));
   stopifnot(all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE));
 ##  stopifnot(all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE));
@@ -867,7 +964,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
   class(fit) <- c("PairedPSCBS", "PSCBS", "AbstractCBS");
 
-  # Update 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Update?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.element(flavor, c("tcn&dh", "sqrt(tcn)&dh"))) {
     fit$params$flavor <- gsub("&", ",", flavor, fixed=TRUE); # AD HOC.
     fit <- postsegmentTCN(fit, verbose=verbose);
@@ -927,6 +1027,11 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-04-20
+# o Now it is possible to skip the DH segmentation in Paired PSCBS, i.e.
+#   segmentByPairedPSCBS(..., flavor="tcn").
+# o BUG FIX: segmentByPairedPSCBS() would throw "error in `$<-.data.frame
+#   `(`*tmp*`, "rho" ..." if some loci points has unknown genomic positions.
 # 2011-11-19
 # o GENERALIZATION: Now it is possible to run Paired PSCBS (without
 #   TumorBoost) when only genotypes but not BAFs are available for the
