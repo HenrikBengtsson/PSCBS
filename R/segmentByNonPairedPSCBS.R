@@ -1,8 +1,8 @@
 ###########################################################################/**
 # @RdocDefault segmentByNonPairedPSCBS
-# @alias segmentByPairedNonPSCBS.data.frame
-# @alias segmentByPairedNonPSCBS.PairedPSCBS
-# @alias segmentByPairedNonPSCBS
+# @alias segmentByNonPairedPSCBS.data.frame
+# @alias segmentByNonPairedPSCBS.PairedPSCBS
+# @alias segmentByNonPairedPSCBS
 #
 # @title "Segment total copy numbers and allele B fractions using the Non-paired PSCBS method"
 #
@@ -26,6 +26,7 @@
 #   \item{...}{Additional arguments passed to @see "segmentByPairedPSCBS".}
 #   \item{flavor}{A @character specifying what type of segmentation and 
 #     calling algorithm to be used.}
+#   \item{tauA, tauB}{...}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -151,6 +152,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   if (is.na(tauA) & is.na(tauB)) {
     mBAF <- abs(betaT - 1/2);
     fitT <- findPeaksAndValleys(mBAF);
+    type <- NULL; rm(type); # To please 'R CMD check'.
     fitT <- subset(fitT, type == "peak");
     o <- order(fitT$density, decreasing=TRUE);
     fitT <- fitT[o,];

@@ -1,28 +1,28 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  segmentByPairedPSCBS.R
+%  segmentByNonPairedPSCBS.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{segmentByPairedPSCBS}
-\alias{segmentByPairedPSCBS.default}
-\alias{segmentByPairedPSCBS}
- \alias{segmentByPairedPSCBS.data.frame}
- \alias{segmentByPairedPSCBS.PairedPSCBS}
- \alias{segmentByPairedPSCBS}
+ \name{segmentByNonPairedPSCBS}
+\alias{segmentByNonPairedPSCBS.default}
+\alias{segmentByNonPairedPSCBS}
+ \alias{segmentByNonPairedPSCBS.data.frame}
+ \alias{segmentByNonPairedPSCBS.PairedPSCBS}
+ \alias{segmentByNonPairedPSCBS}
 
- \title{Segment total copy numbers and allele B fractions using the Paired PSCBS method}
+ \title{Segment total copy numbers and allele B fractions using the Non-paired PSCBS method}
 
  \description{
-  Segment total copy numbers and allele B fractions using the Paired PSCBS method [1].
-  This method requires matched normals.
+  Segment total copy numbers and allele B fractions using the Non-paired PSCBS method [1].
+  This method does not requires matched normals.
   This is a low-level segmentation method.
-  It is intended to be applied to one tumor-normal sample at the time.
+  It is intended to be applied to one tumor sample at the time.
  }
 
- \usage{\method{segmentByPairedPSCBS}{default}(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE)}
+ \usage{\method{segmentByNonPairedPSCBS}{default}(CT, betaT, ..., flavor=c("tcn", "tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tauA=NA, tauB=1 - tauA, verbose=FALSE)}
 
  \arguments{
    \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total copy number (TCN)
@@ -32,57 +32,20 @@
    \item{betaT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor allele B fractions (BAFs)
         in [0,1] (due to noise, values may be slightly outside as well)
         or \code{\link[base]{NA}} for non-polymorphic loci.}
-   \item{betaN}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J matched normal BAFs in [0,1]
-        (due to noise, values may be slightly outside as well) or \code{\link[base]{NA}}
-        for non-polymorphic loci.}
-   \item{muN}{An optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genotype calls in
-        \{0,1/2,1\} for AA, AB, and BB, respectively,
-        and \code{\link[base]{NA}} for non-polymorphic loci.
-        If not given, they are estimated from the normal BAFs using
-        \code{\link[aroma.light]{callNaiveGenotypes}} as described in [2].}
-   \item{chromosome}{(Optional) An \code{\link[base]{integer}} scalar (or a \code{\link[base]{vector}} of length J),
-        which can be used to specify which chromosome each locus belongs to
-        in case multiple chromosomes are segments.
-        This argument is also used for annotation purposes.}
-   \item{x}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic locations.
-            If \code{\link[base]{NULL}}, index locations \code{1:J} are used.}
-   \item{alphaTCN, alphaDH}{The significance levels for segmenting total
-        copy numbers (TCNs) and decrease-in-heterozygosity signals (DHs),
-        respectively.}
-   \item{undoTCN, undoDH}{Non-negative \code{\link[base]{numeric}}s.  If less than +\code{\link[base:is.finite]{Inf}},
-        then a cleanup of segmentions post segmentation is done.
-        See argument \code{undo} of \code{\link{segmentByCBS}}() for more
-        details.}
-   \item{...}{Additional arguments passed to \code{\link{segmentByCBS}}().}
+   \item{...}{Additional arguments passed to \code{\link{segmentByPairedPSCBS}}().}
    \item{flavor}{A \code{\link[base]{character}} specifying what type of segmentation and
      calling algorithm to be used.}
-   \item{tbn}{If \code{\link[base:logical]{TRUE}}, \code{betaT} is normalized before segmentation
-     using the TumorBoost method [2], otherwise not.}
-   \item{joinSegments}{If \code{\link[base:logical]{TRUE}}, there are no gaps between neighboring
-     segments.
-     If \code{\link[base:logical]{FALSE}}, the boundaries of a segment are defined by the support
-     that the loci in the segments provides, i.e. there exist a locus
-     at each end point of each segment.  This also means that there
-     is a gap between any neighboring segments, unless the change point
-     is in the middle of multiple loci with the same position.
-     The latter is what \code{DNAcopy::segment()} returns.
-   }
-   \item{knownSegments}{Optional \code{\link[base]{data.frame}} specifying
-     \emph{non-overlapping} known segments.  These segments must
-     not share loci.  See \code{\link{findLargeGaps}}() and \code{\link{gapsToSegments}}().}
-   \item{seed}{An (optional) \code{\link[base]{integer}} specifying the random seed to be
-     set before calling the segmentation method.  The random seed is
-     set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}
+   \item{tauA, tauB}{...}
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 
  \value{
-   Returns the segmentation results as a \code{\link{PairedPSCBS}} object.
+   Returns the segmentation results as a \code{\link{NonPairedPSCBS}} object.
  }
 
  \details{
-   Internally \code{\link{segmentByCBS}}() is used for segmentation.
-   The Paired PSCBS segmentation method does \emph{not} support weights.
+   Internally \code{\link{segmentByPairedPSCBS}}() is used for segmentation.
+   This segmentation method does \emph{not} support weights.
  }
 
  \section{Reproducibility}{
@@ -213,12 +176,10 @@ stopifnot(fit$params$deltaLOH == deltaLOH)
  }
 
  \seealso{
-   Internally, \code{\link[aroma.light]{callNaiveGenotypes}} is used to
-   call naive genotypes, \code{\link[aroma.light]{normalizeTumorBoost}} is
-   used for TumorBoost normalization, and \code{\link{segmentByCBS}}() is used
-   to segment TCN and DH separately.
+   To segment paired tumor-normal total copy numbers and allele B fractions,
+   see \code{\link{segmentByPairedPSCBS}}().
 
-   To segment total copy-numbers, or any other unimodal signals,
+   To segment total copy numbers, or any other unimodal signals,
    see \code{\link{segmentByCBS}}().
  }
 

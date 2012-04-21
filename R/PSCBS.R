@@ -181,8 +181,24 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
 }, private=TRUE) 
 
 
+
+setMethodS3("getSegmentSizes", "PSCBS", function(fit, by=c("length", "count"), ...) {
+  by <- match.arg(by);
+
+  data <- getSegments(fit, ...);
+  if (by == "length") {
+    res <- data[["tcnEnd"]]-data[["tcnStart"]]+1L;
+  } else if (by == "count") {
+    res <- data[["tcnNbrOfLoci"]];
+  }
+  res;
+})
+
+
 ############################################################################
 # HISTORY:
+# 2012-04-21
+# o Moved getSegmentSizes() from PairedPSCBS to PSCBS.
 # 2012-02-27
 # o Added argument 'fields' to getLocusData() for PairedPSCBS.
 # 2011-12-12

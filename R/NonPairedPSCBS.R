@@ -1,19 +1,19 @@
 ###########################################################################/**
-# @RdocClass PairedPSCBS
+# @RdocClass NonPairedPSCBS
 #
-# @title "The PairedPSCBS class"
+# @title "The NonPairedPSCBS class"
 #
 # \description{
 #  @classhierarchy
 #
-#  A PairedPSCBS is an object containing the results from the
-#  Paired PSCBS method.
+#  A NonPairedPSCBS is an object containing the results from the
+#  Non-paired PSCBS method.
 # }
 # 
-# \usage{PairedPSCBS(fit=list(), ...)}
+# \usage{NonPairedPSCBS(fit=list(), ...)}
 #
 # \arguments{
-#   \item{fit}{A @list structure containing the Paired PSCBS results.}
+#   \item{fit}{A @list structure containing the Non-paired PSCBS results.}
 #   \item{...}{Not used.}
 # }
 #
@@ -24,21 +24,22 @@
 # @author
 #
 # \seealso{
-#   The @see "segmentByPairedPSCBS" method returns an object of this class.
+#   The @see "segmentByNonPairedPSCBS" method returns an object of this class.
 # }
 #*/###########################################################################
-setConstructorS3("PairedPSCBS", function(fit=list(), ...) {
+setConstructorS3("NonPairedPSCBS", function(fit=list(), ...) {
   # Argument 'fit':
   if (!is.list(fit)) {
     throw("Argument 'fit' is not a list: ", class(fit)[1]);
   }
 
-  extend(PSCBS(fit=fit, ...), "PairedPSCBS");
+  extend(PSCBS(fit=fit, ...), "NonPairedPSCBS");
 })
 
 
 
-setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., verbose=FALSE) {
+
+setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -251,7 +252,7 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # Setup arguments to be passed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Overriding default arguments");
-  segFcnName <- "segmentByPairedPSCBS";
+  segFcnName <- "segmentByPairedNonPSCBS";
   segFcn <- getMethodS3(segFcnName, "default");
 
   # (a) The default arguments
@@ -308,26 +309,5 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 ##############################################################################
 # HISTORY
 # 2012-04-21
-# o CLEANUP: Removed unused objects in updateMeans().
-# o CLEANUP: Moved getSegmentSizes() from PairedPSCBS to PSCBS.
-# 2011-11-21
-# o BUG FIX: resegment() was trying to call segmentByCBS() instead
-#   of segmentByPairedPSCBS().
-# 2011-11-17
-# o Added resegment() for PairedPSCBS for easy resegmentation.
-# 2011-11-12
-# o Added arguments 'from' and 'adjustFor' to updateMeans().
-# 2011-01-16
-# o BUG FIX: updateMeans() save to the incorrect column names.
-# 2011-01-12
-# o Added updateMeans() for PairedPSCBS.
-# 2011-10-02
-# o CLEANUP: Moved print() and as.data.frame() to PSCBS.
-# o Added Rdoc help.
-# o Now the constructor of PairedPSCBS calls that of PSCBS.
-# 2011-06-28
-# o DOCUMENTATION: Added Rd help for as.data.frame() of PairedPSCBS.
-# 2011-04-08
-# o Added formal constructor for the PairedPSCBS class.
-# o Created.
+# o Created from PairedPSCBS.R.
 ##############################################################################

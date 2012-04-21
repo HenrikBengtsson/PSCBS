@@ -60,6 +60,7 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
  \tab \code{extractCNs} \tab  -\cr
  \tab \code{getSegmentSizes} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.PairedPSCBS]{plotTracks}} \tab Plots parental specific copy numbers along the genome.\cr
+ \tab \code{segmentByNonPairedPSCBS} \tab  -\cr
  \tab \code{segmentByPairedPSCBS} \tab  -\cr
 }
 
