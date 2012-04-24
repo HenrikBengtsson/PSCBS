@@ -68,8 +68,8 @@
  signalType.CBS signalType<- signalType<-.CBS subset.CBS
  tileChromosomes tileChromosomes.AbstractCBS tileChromosomes.CBS
  tileChromosomes.PairedPSCBS updateMeans updateMeans.AbstractCBS
- updateMeans.CBS updateMeans.PairedPSCBS writeLocusData
- writeLocusData.CBS
+ updateMeans.CBS updateMeans.NonPairedPSCBS updateMeans.PairedPSCBS
+ writeLocusData writeLocusData.CBS
  writeSegments
 extractSegments.AbstractCBS extractSegment.AbstractCBS
  extractSegment extractSegments extractSegments.CBS
@@ -78,7 +78,7 @@ isSegmentSplitter isSegmentSplitter.CBS isSegmentSplitter.PSCBS
  extractCNs extractCNs.AbstractCBS extractCNs.CBS
  extractCNs.PairedPSCBS extractTotalCNs extractTotalCNs.CBS
  getSegmentSizes getSegmentSizes.AbstractCBS getSegmentSizes.CBS
- getSegmentSizes.PairedPSCBS
+ getSegmentSizes.PSCBS
 sampleCNs sampleCNs.AbstractCBS
 mergeThreeSegments
 callROH callROHOneSegment callROHOneSegment.PairedPSCBS

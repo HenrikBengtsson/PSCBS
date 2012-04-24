@@ -209,6 +209,7 @@
 \alias{updateMeans}
 \alias{updateMeans.AbstractCBS}
 \alias{updateMeans.CBS}
+\alias{updateMeans.NonPairedPSCBS}
 \alias{updateMeans.PairedPSCBS}
 \alias{writeLocusData}
 \alias{writeLocusData.CBS}
@@ -231,7 +232,7 @@
 \alias{getSegmentSizes}
 \alias{getSegmentSizes.AbstractCBS}
 \alias{getSegmentSizes.CBS}
-\alias{getSegmentSizes.PairedPSCBS}
+\alias{getSegmentSizes.PSCBS}
 \alias{sampleCNs}
 \alias{sampleCNs.AbstractCBS}
 \alias{mergeThreeSegments}

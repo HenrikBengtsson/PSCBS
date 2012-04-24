@@ -22,7 +22,7 @@
 \code{~~+--}\emph{\code{AbstractCBS}}\cr
 
 \bold{Directly known subclasses:}\cr
-\emph{\link[PSCBS]{CBS}}, \emph{\link[PSCBS]{PairedPSCBS}}, \emph{\link[PSCBS]{PSCBS}}\cr
+\emph{\link[PSCBS]{CBS}}, \emph{\link[PSCBS]{NonPairedPSCBS}}, \emph{\link[PSCBS]{PairedPSCBS}}, \emph{\link[PSCBS]{PSCBS}}\cr
 
 public abstract static class \bold{AbstractCBS}\cr
 extends list\cr

@@ -58,7 +58,6 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
  \tab \code{\link[PSCBS:estimateDeltaLOH.PairedPSCBS]{estimateDeltaLOH}} \tab Estimate a threshold for calling LOH from DH.\cr
  \tab \code{\link[PSCBS:estimateKappa.PairedPSCBS]{estimateKappa}} \tab Estimate global background in segmented copy numbers.\cr
  \tab \code{extractCNs} \tab  -\cr
- \tab \code{getSegmentSizes} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.PairedPSCBS]{plotTracks}} \tab Plots parental specific copy numbers along the genome.\cr
  \tab \code{segmentByNonPairedPSCBS} \tab  -\cr
  \tab \code{segmentByPairedPSCBS} \tab  -\cr
@@ -66,7 +65,7 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
  \bold{Methods inherited from PSCBS}:\cr
-append, as.data.frame, drawChangePoints, extractChromosomes, getLocusData, isSegmentSplitter, writeSegments
+append, as.data.frame, drawChangePoints, extractChromosomes, getLocusData, getSegmentSizes, isSegmentSplitter, writeSegments
 
  \bold{Methods inherited from AbstractCBS}:\cr
 all.equal, append, as.data.frame, drawChangePoints, dropChangePoint, dropChangePoints, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomes, getLocusData, getSampleName, getSegments, getSegmentSizes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByHClust, renameChromosomes, report, resegment, sampleCNs, sampleName, sampleName<-, save, setLocusData, setSampleName, setSegments, tileChromosomes, updateMeans
