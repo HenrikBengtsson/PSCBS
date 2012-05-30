@@ -155,9 +155,11 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
   verbose && printf(verbose, "Number of segments called low C1 (LowC1, \"LOH_C1\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
   verbose && exit(verbose);
 
-  calls <- data.frame(lowc1Call=call);
-  colnames(calls) <- sprintf("%sCall", callName);
-  segs <- cbind(segs, calls);
+  key <- sprintf("%sCall", callName);
+#  calls <- data.frame(lowc1Call=call);
+#  colnames(calls) <- key;
+#  segs <- cbind(segs, calls);
+  segs[[key]] <- call;
   fit$output <- segs;
 
   # Append 'delta' and 'alpha' to parameters
@@ -218,9 +220,11 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
   verbose && printf(verbose, "Number of segments called high allelic imbalance (AI/\"LOH_AI\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
   verbose && exit(verbose);
 
-  calls <- data.frame(aiHighCall=call);
-  colnames(calls) <- sprintf("%sCall", callName);
-  segs <- cbind(segs, calls);
+  key <- sprintf("%sCall", callName);
+#  calls <- data.frame(aiHighCall=call);
+#  colnames(calls) <- key;
+#  segs <- cbind(segs, calls);
+  segs[[key]] <- call;
   fit$output <- segs;
 
   # Append 'delta' and 'alpha' to parameters
@@ -238,6 +242,11 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
 
 ##############################################################################
 # HISTORY
+# 2012-05-30
+# o BUG FIX: callLOH(..., force=TRUE) would append multiple 'lohCall' 
+#   columns, if called multiple times.
+# o BUG FIX: callLowC1ByC1() and callExtremeAllelicImbalanceByDH() would
+#   append multiple call columns with the same name if called multiple times.
 # 2012-01-15
 # o DOCUMENTATION: Added details to the help of callLOH() and callAB() on
 #   the difference between (AB,LOH)=(TRUE,FALSE) and (AB,LOH)=(TRUE,NA).

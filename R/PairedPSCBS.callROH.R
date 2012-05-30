@@ -57,6 +57,7 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
   if (is.null(calls)) {
     segs <- cbind(segs, rohCall=calls);
   }
+  delta <- as.double(NA);
 
 
   # testROH() uses matrixStats::rowMins(), iff calculating genotype
@@ -73,7 +74,11 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
 
     # Call only "non-splitter" segments
     if (nbrOfSegments(fitT) > 0) {
-      calls[ss] <- callROHOneSegment(fitT, ..., verbose=less(verbose, 1));
+      callSS <- callROHOneSegment(fitT, ..., verbose=less(verbose, 1));
+      calls[ss] <- callSS;
+      if (is.na(delta)) {
+        delta <- attr(callSS, "delta");
+      }
     }
 
     verbose && exit(verbose);
@@ -89,7 +94,7 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
 
   # Append parameters
   params <- fit$params;
-  # To add...
+  params$deltaROH <- delta;
   fit$params <- params;
 
   # Set DH and (C1,C2) mean levels to NA?
@@ -101,7 +106,7 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
   verbose && exit(verbose);
 
   invisible(fit);
-})
+}) # callROH()
 
 
 
@@ -155,6 +160,8 @@ setMethodS3("callROHOneSegment", "PairedPSCBS", function(fit, ..., verbose=FALSE
 
 ##############################################################################
 # HISTORY
+# 2012-05-30 [HB]
+# o Now callROH() records paramter 'deltaROH' in the results.
 # 2011-11-26 [HB]
 # o Added argument 'updateMeans=TRUE' to callROH() for PairedPSCBS.
 # 2011-11-12 [HB]

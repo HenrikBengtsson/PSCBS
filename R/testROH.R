@@ -1,6 +1,6 @@
 #
 # \arguments{
-#   \item{tauROH}{A @double in [0,1] specifying the maximum fraction of hets
+#   \item{delta}{A @double in [0,1] specifying the maximum fraction of hets
 #     for the segment to be called "ROH". Defaults to 1/12 (which is much
 #     smaller than the typical fraction of hets.}
 # }
@@ -98,6 +98,10 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
   call <- (propHets < delta);
   verbose && print(verbose, call);
 
+  # Record parameter settings
+  attr(call, "minNbrOfSnps") <- minNbrOfSnps;
+  attr(call, "delta") <- delta;
+
   verbose && exit(verbose);
   
   call;
@@ -106,6 +110,8 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
 
 ##############################################################################
 # HISTORY
+# 2012-05-30 [HB]
+# o Now testROH() return parameter settings as attributes.
 # 2011-11-21 [HB]
 # o BUG FIX: The internal sanity check on weights was slightly too
 #   conservative.
