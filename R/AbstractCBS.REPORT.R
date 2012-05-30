@@ -45,7 +45,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   }
 
   # Argument 'studyName':
-  if (is.missing(studyName)) {
+  if (missing(studyName)) {
     throw("Cannot generate report. Argument 'studyName' is missing.");
   }
   studyName <- Arguments$getCharacter(studyName);

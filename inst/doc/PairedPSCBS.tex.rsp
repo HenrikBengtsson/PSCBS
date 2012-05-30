@@ -294,11 +294,14 @@ getSegments(fit, simplify=TRUE)
 
 
 
+\section{Saving results}
+
 \subsection{Writing segments to a tab-delimited text file}
 To write the PSCN segmentation results to file, do:
 \begin{verbatim}
-writeSegments(fit, name="MySample", simplify=TRUE)
+pathname <- writeSegments(fit, name="MySample", simplify=TRUE)
 \end{verbatim}
+
 
 
 \section{Experimental}
