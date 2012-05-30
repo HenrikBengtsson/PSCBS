@@ -45,7 +45,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   # Keep only certain columns
   keep <- match(c("chromosome", "x"), colnames(data));
   keep <- c(keep, 3L);
-  data <- data[,keep];
+  data <- data[,keep,drop=FALSE];
 
   # Sanity check
   stopifnot(ncol(data) == 3);
@@ -114,7 +114,7 @@ setMethodS3("getChromosomes", "DNAcopy", function(fit, ...) {
 })
 
 
-setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1, method=c("diff", "abs", "res"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
+setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1L, method=c("diff", "abs", "res"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -153,7 +153,7 @@ setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1, meth
   # Extract sample of interest
   fit <- subset(fit, samplelist=sample);
 
-  y <- fit$data[,3];
+  y <- fit$data[,3L];
 
   if (method == "diff") {
     y <- diff(y);
@@ -188,7 +188,7 @@ setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1, meth
 }) # estimateStandardDeviation()
 
 
-setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1, ...) {
+setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -201,7 +201,7 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1, ...
   data <- fit$data;
   chr <- data$chrom;
   x <- data$maploc;
-  y <- data[,3];
+  y <- data[,sample,drop=TRUE];
 
   segs <- fit$output;
   nbrOfSegments <- nrow(segs);
@@ -225,8 +225,26 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1, ...
 }, private=TRUE) # extractSegmentMeansByLocus()
 
 
+
+setMethodS3("writeSegments", "DNAcopy", function(fit, samples=seq(length=nbrOfSamples(fit)), ...) {
+  # Argument 'samples':
+  samples <- Arguments$getIndices(samples, max=nbrOfSamples(fit));
+
+  pathnames <- c();
+  for (ii in samples) {
+    fitII <- as.CBS(fit, sample=ii);
+    pathnameII <- writeSegments(fitII, ...);
+    pathnames <- c(pathnames, pathnameII);
+  } # for (ii ...)
+
+  pathnames;
+}) # writeSegments()
+
+
 ############################################################################
 # HISTORY:
+# 2012-05-30
+# o Added writeSegments() for DNAcopy objects.
 # 2011-09-04
 # o as.DNAcopy() did not drop "splitters" for the segment table.
 # 2011-09-03

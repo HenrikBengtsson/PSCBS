@@ -2,8 +2,6 @@ setMethodS3("segmentByCBS", "CNA", function(y, ...) {
   # To please R CMD check
   cnData <- y;
 
-str(cnData);
-
   # Extract signals of interest
   chromosome <- cnData$chrom;
   x <- cnData$maploc;

@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.25.2 [2012-05-30]
+o Added writeSegments() for DNAcopy objects.
+o BUG FIX: as.CNA() for DNAcopy added incorrect chromosome splitters.
+o BUG FIX: as.CNA() for DNAcopy would ignore argument 'sample' and
+  always return the first sample.
+
+
 Version: 0.25.1 [2012-05-30]
 o DOCUMENTATION: Added details to the Paired PSCBS vignette on how
   to tune the various callers.
