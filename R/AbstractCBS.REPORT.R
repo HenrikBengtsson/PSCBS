@@ -40,10 +40,18 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'sampleName':
   sampleName <- Arguments$getCharacter(sampleName);
-  stopifnot(!is.na(sampleName));
+  if (is.na(sampleName)) {
+    throw("Cannot generate report. Argument 'sampleName' is non-valid or missing.");
+  }
 
   # Argument 'studyName':
+  if (is.missing(studyName)) {
+    throw("Cannot generate report. Argument 'studyName' is missing.");
+  }
   studyName <- Arguments$getCharacter(studyName);
+  if (is.na(studyName)) {
+    throw("Cannot generate report. Argument 'studyName' is non-valid.");
+  }
 
   # Argument 'rootPath':
   rootPath <- Arguments$getWritablePath(rootPath);
@@ -169,6 +177,9 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
 
 ############################################################################
 # HISTORY:
+# 2012-05-30
+# o Now report() gives more a informative error message if arguments
+#   'sampleName' or 'studyName' are non-valid or missing.
 # 2012-04-20
 # o Added argument '.filenames'.
 # o Created from former PairedPSCBS.REPORT.R, which history as below.

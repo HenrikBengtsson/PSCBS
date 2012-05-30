@@ -321,13 +321,15 @@ chrsTags <- if (nbrOfChromosomes == 1) {
                           legend.title=theme_text(size=0),
                           legend.text=theme_text(size=16));
  
-          gg <- gg + geom_density(size=2);
+          gg <- gg + geom_density(size=2, na.rm=TRUE);
           gg <- gg + xlab(NULL);
           gg <- gg + ylab(NULL);
           gg <- gg + xlim(lim);
           gg <- gg + opts(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
           gg <- gg + opts(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
-          print(gg);
+          suppressWarnings({
+            print(gg);
+          });
         }, force=FALSE);
       }%>}%
     }%

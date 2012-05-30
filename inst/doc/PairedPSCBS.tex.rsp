@@ -61,7 +61,7 @@ options(str=strOptions(strict.width="cut"));
 <% pkg <- Package("PSCBS"); %>
 \author{<%=getAuthor(pkg)%>}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{April 20, 2012}
+\date{May 30, 2012}
 
 \begin{document}
 
@@ -267,15 +267,15 @@ fit <- callLOH(fit, verbose=-10)
 \end{verbatim}
 Note that in order to call LOH, one has to call allelic balance first.  Since the bootstrapping was already done in the AB caller, it is not repeated here, which is why calling LOH is faster than calling AB.
 Analogously to the AB caller, segments already called ROH will not be called for LOH, and their LOH statuses will have a missing value (\code{NA}).
-Segments already called AB, will be called non-LOH, because AB and LOH are exclusively mutual states.  
+Segments already called AB will be called non-LOH, because AB and LOH are exclusively mutual states.  
 
 \subsubsection{Tuning parameters}
 The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (more precisely the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
-The LOH threshold can be estimated explictly and used in the caller as
+The LOH threshold can be estimated explictly and used as
 \begin{verbatim}
 <%=evalCapture({
-deltaLOH <- estimateDeltaLOH(fit, midpoint=1/2);
-fit <- callLOH(fit, delta=deltaLOH);
+deltaLOH <- estimateDeltaLOH(fit, midpoint=1/2)
+fit <- callLOH(fit, delta=deltaLOH)
 })%>
 \end{verbatim}
 By decreasing argument \code{midpoint} in $[0,1]$, a smaller 

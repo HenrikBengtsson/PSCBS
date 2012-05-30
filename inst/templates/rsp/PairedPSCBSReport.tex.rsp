@@ -1,7 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Authors: Henrik Bengtsson
 % Created on: 2011-09-30
-% Last updated: 2012-02-27
+% Last updated: See HISTORY below.
 %
 % Usage: (compiles *.tex.rsp => tex.rsp.R => *.tex => *.dvi)
 %  R.rsp::rsp("PairedPSCBS.tex.rsp", path="reports,rsp/");
@@ -316,6 +316,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
       \includegraphics{<%={
         toPNG(name=sampleName, tags=tags, width=640, aspectRatio=0.3, {
           gg <- ggplot(data, aes_string(x=ff, y="..count.."));
+
           if (by == "all") {
             if (ff == "CT" && any(!data$isSNP, na.rm=TRUE)) {
               gg <- gg + aes(group=type, colour=type);
@@ -332,13 +333,15 @@ chrsTags <- if (nbrOfChromosomes == 1) {
                           legend.title=theme_text(size=0),
                           legend.text=theme_text(size=16));
  
-          gg <- gg + geom_density(size=2);
+          gg <- gg + geom_density(size=2, na.rm=TRUE);
           gg <- gg + xlab(NULL);
           gg <- gg + ylab(NULL);
           gg <- gg + xlim(lim);
           gg <- gg + opts(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
           gg <- gg + opts(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
-          print(gg);
+          suppressWarnings({
+            print(gg);
+          });
         }, force=FALSE);
       }%>}%
     }%
@@ -408,9 +411,9 @@ dataT <- subset(data, type == "SNP");
                         legend.text=theme_text(size=16));
 
         if (getOption("PSCBS::report/useAlphaChannel", TRUE)) {
-          gg <- gg + geom_point(alpha=min(10e3/nrow(dataT), 0.5));
+          gg <- gg + geom_point(alpha=min(10e3/nrow(dataT), 0.5), na.rm=TRUE);
         } else {
-          gg <- gg + geom_point();
+          gg <- gg + geom_point(na.rm=TRUE);
         }
         gg <- gg + xlab(labList[["betaN"]]) + ylab(labList[[ff]]);
         gg <- gg + xlim(BlimX) + ylim(BlimX);
@@ -630,6 +633,8 @@ assign("renamePDF", function() {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+# 2012-05-30
+# o Removed ggplot2 warnings on missing values.
 # 2012-02-28
 # o Now it is possible to turn off usage of the alpha channel in
 #   plots, e.g. setOption("PSCBS::report/useAlphaChannel", FALSE).
