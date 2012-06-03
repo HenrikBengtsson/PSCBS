@@ -49,15 +49,18 @@ setMethodS3("all.equal", "CBS", function(target, current, check.attributes=FALSE
   # splitters, unless append() is used.
   # TO DO: Fix segmentByCBS() /HB 2011-10-08
   segs <- getSegments(target);
-
-  isSplitter <- isSegmentSplitter(target);
-  segs[isSplitter, "sampleName"] <- NA;
-  target$output <- segs;
+  if (nrow(segs) > 0) {
+    isSplitter <- isSegmentSplitter(target);
+    segs[isSplitter, "sampleName"] <- NA;
+    target$output <- segs;
+  }
 
   segs <- getSegments(current);
-  isSplitter <- isSegmentSplitter(current);
-  segs[isSplitter, "sampleName"] <- NA;
-  current$output <- segs;
+  if (nrow(segs) > 0) {
+    isSplitter <- isSegmentSplitter(current);
+    segs[isSplitter, "sampleName"] <- NA;
+    current$output <- segs;
+  }
 
   NextMethod("all.equal", target, current, check.attributes=check.attributes, ...);
 }, protected=TRUE)
@@ -557,6 +560,9 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2012-06-03
+# o BUG FIX: all.equal(target, current) for CBS objects would give an
+#   error if either 'target' or 'current' had zero segments.
 # 2011-12-12
 # o Added optional argument 'indices' to getLocusData() to be able
 #   to retrieve the locus-level data as indexed by input data.

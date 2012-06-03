@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.25.3 [2012-06-03]
+o BUG FIX: all.equal(target, current) for CBS objects would give an
+  error if either 'target' or 'current' had zero segments.
+
+
 Version: 0.25.2 [2012-05-30]
 o Added writeSegments() for DNAcopy objects.
 o BUG FIX: as.CNA() for DNAcopy added incorrect chromosome splitters.

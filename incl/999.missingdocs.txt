@@ -100,3 +100,4 @@ callGainNeutralLoss
 callGNL callGNLByTCNofAB
 renameChromosomes renameChromosomes.AbstractCBS
 report
+writeSegments.DNAcopy

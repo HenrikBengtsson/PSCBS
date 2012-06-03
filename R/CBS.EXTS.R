@@ -37,9 +37,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   data <- fit$data;
   sample <- Arguments$getIndex(sample, max=ncol(data)-2L);
 
-
   sampleName <- colnames(data)[sample+2L];
-  if (sampleName == "<NA>") sampleName <- as.character(NA);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,6 +86,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup up 'CBS' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (sampleName == "<NA>") sampleName <- as.character(NA);
   res <- list();
   res$sampleName <- sampleName;
   res$data <- data;
@@ -426,6 +425,9 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2012-06-03
+# o BUG FIT: The recent updates of as.CBS() for DNAcopy would not work
+#   for samples with name '<NA>'.
 # 2012-05-30
 # o BUG FIX: as.CNA() for DNAcopy added incorrect chromosome splitters.
 # o BUG FIX: as.CNA() for DNAcopy would ignore argument 'sample' and
