@@ -275,6 +275,7 @@
 \alias{renameChromosomes}
 \alias{renameChromosomes.AbstractCBS}
 \alias{report}
+\alias{writeSegments.DNAcopy}
 
 \description{
   This page contains aliases for all "non-documented" objects that
