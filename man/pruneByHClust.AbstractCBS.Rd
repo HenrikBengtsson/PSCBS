@@ -33,7 +33,7 @@
 }
 
 \value{
-  Returns a pruned PairedPSCBS object.
+  Returns a pruned object of the same class.
 }
 
 \examples{\dontrun{

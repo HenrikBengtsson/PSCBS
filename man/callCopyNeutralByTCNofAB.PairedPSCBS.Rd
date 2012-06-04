@@ -21,13 +21,16 @@
  in allelic balance (AB).
 }
 
-\usage{\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, delta=0.5, alpha=0.05, ..., force=FALSE, verbose=FALSE)}
+\usage{\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, delta=estimateDeltaCN(fit), alpha=0.05, ..., force=FALSE, verbose=FALSE)}
 
 \arguments{
   \item{fit}{A PairedPSCBS fit object as returned by
     \code{\link[PSCBS]{segmentByPairedPSCBS}}.}
   \item{delta}{A non-negative \code{\link[base]{double}} specifying the width of the
-    "acceptance" region.}
+    "acceptance" region.
+    Defaults to half of the distance between two integer TCN states,
+    i.e. 1/2.  This argument should be shrunken as a function of
+    the amount of the normal contaminator.}
   \item{alpha}{A \code{\link[base]{double}} in [0,0.5] specifying the significance level
     of the confidence intervals used.}
   \item{...}{Additional arguments passed to
@@ -39,6 +42,10 @@
 \value{
   Returns a \code{\link{PairedPSCBS}} fit object where a column
   with the copy-neutral call.
+}
+
+\details{
+  ...
 }
 
 %% examples "../incl/callCopyNeutralByTCNofAB.PairedPSCBS.Rex"

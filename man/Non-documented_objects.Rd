@@ -206,11 +206,6 @@
 \alias{tileChromosomes.AbstractCBS}
 \alias{tileChromosomes.CBS}
 \alias{tileChromosomes.PairedPSCBS}
-\alias{updateMeans}
-\alias{updateMeans.AbstractCBS}
-\alias{updateMeans.CBS}
-\alias{updateMeans.NonPairedPSCBS}
-\alias{updateMeans.PairedPSCBS}
 \alias{writeLocusData}
 \alias{writeLocusData.CBS}
 \alias{writeSegments}
@@ -253,6 +248,7 @@
 \alias{hclustCNs}
 \alias{pruneByHClust}
 \alias{updateMeansTogether}
+\alias{updateMeans}
 \alias{drawChangePoints}
 \alias{drawChangePoints.AbstractCBS}
 \alias{drawChangePoints.CBS}
@@ -276,6 +272,8 @@
 \alias{renameChromosomes.AbstractCBS}
 \alias{report}
 \alias{writeSegments.DNAcopy}
+\alias{estimateDeltaCN}
+\alias{estimateDeltaCN.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

@@ -53,7 +53,7 @@ setMethodS3("callCN", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., minS
   if (flavor == "TCN|AB") {
     fit <- callCopyNeutralByTCNofAB(fit, ..., force=force);
   } else {
-    throw("Cannot call allelic balance. Unsupported flavor: ", flavor);
+    throw("Cannot call copy-neutral states. Unsupported flavor: ", flavor);
   }
 
   # Don't call segments with too few data points?
@@ -176,6 +176,25 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 }, protected=TRUE) # calcStatsForCopyNeutralABs()
 
 
+setMethodS3("estimateDeltaCN", "PairedPSCBS", function(fit, scale=1, kappa=estimateKappa(fit), ...) {
+  # Argument 'scale':
+  disallow <- c("NA", "NaN", "Inf");
+  scale <- Arguments$getDouble(scale, range=c(0,Inf), disallow=disallow);
+
+  # Argument 'kappa':
+  disallow <- c("NA", "NaN", "Inf");
+  kappa <- Arguments$getDouble(kappa, range=c(0,1), disallow=disallow);
+
+  # Half a TCN unit length
+  delta <- (1-kappa)/2;
+
+  # Rescale
+  delta <- scale * delta;
+
+  delta;
+}, protected=TRUE) # estimateDeltaCN()
+
+
 
 ###########################################################################/**
 # @set class=PairedPSCBS
@@ -194,7 +213,10 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 #   \item{fit}{A PairedPSCBS fit object as returned by 
 #     @see "PSCBS::segmentByPairedPSCBS".}
 #   \item{delta}{A non-negative @double specifying the width of the 
-#     "acceptance" region.}
+#     "acceptance" region.
+#     Defaults to half of the distance between two integer TCN states,
+#     i.e. 1/2.  This argument should be shrunken as a function of
+#     the amount of the normal contaminator.}
 #   \item{alpha}{A @double in [0,0.5] specifying the significance level
 #     of the confidence intervals used.}
 #   \item{...}{Additional arguments passed to 
@@ -208,23 +230,27 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 #   with the copy-neutral call.
 # }
 #
+# \details{
+#   ...
+# }
+#
 # %% examples "../incl/callCopyNeutralByTCNofAB.PairedPSCBS.Rex"
 #
 # @author
 #
 # @keyword internal
 #*/########################################################################### 
-setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, alpha=0.05, ..., force=FALSE, verbose=FALSE) {
+setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estimateDeltaCN(fit), alpha=0.05, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Argument 'alpha':
-  disallow <- c("NA", "NaN", "Inf");
-  alpha <- Arguments$getDouble(alpha, range=c(0,0.5), disallow=disallow);
-
   # Argument 'delta':
   disallow <- c("NA", "NaN", "Inf");
   delta <- Arguments$getDouble(delta, range=c(0,Inf), disallow=disallow);
+
+  # Argument 'alpha':
+  disallow <- c("NA", "NaN", "Inf");
+  alpha <- Arguments$getDouble(alpha, range=c(0,0.5), disallow=disallow);
 
   # Argument 'force':
   force <- Arguments$getLogical(force);
@@ -251,14 +277,31 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, 
     return(fit);
   }
 
-  # Check that bootstrap estimates exists
-  keys <- sprintf("tcn_%g%%", 100*c(alpha/2, 1-alpha/2));
+  verbose && enter(verbose, "Calling copy-neutral segments");
+
+  verbose && enter(verbose, "Retrieve TCN confidence intervals for all segments");
+
+  # Calculate TCN bootstrap estimates, if missing
+  probs <- c(alpha/2, 1-alpha/2);
+
+  verbose && printf(verbose, "Interval: [%g,%g]\n", probs[1], probs[2]);
+
+  keys <- sprintf("tcn_%g%%", 100*c(probs[1], probs[2]));
   missing <- keys[!is.element(keys, colnames(segs))];
   if (length(missing) > 0) {
-    throw("No such statistics: ", hpaste(missing));
+    statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
+    fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 2)); 
+    segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
+
+    # Assert that they exists
+    missing <- keys[!is.element(keys, colnames(segs))];
+    if (length(missing) > 0) {
+      throw("INTERNAL ERROR: No such statistics: ", hpaste(missing));
+    }
   }
 
-  verbose && enter(verbose, "Calling copy-neutral segments");
+  verbose && exit(verbose);
+
 
   verbose && enter(verbose, "Estimating TCN confidence interval of copy-neutral AB segments");
 
@@ -274,11 +317,10 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, 
   verbose && print(verbose, "TCN statistics:");
   verbose && print(verbose, tcnStats);
 
-  # Extract confidence interval of interest
-  keys <- sprintf("tcn_%g%%", 100*c(alpha/2, 1-alpha/2));
+  # Assert confidence interval of interest
   missing <- keys[!is.element(keys, names(tcnStats))];
   if (length(missing) > 0) {
-    throw("No such statistics: ", hpaste(missing));
+    throw("INTERNAL ERROR: No such statistics: ", hpaste(missing));
   }
   mean <- tcnStats["tcnMean"];
   ci <- tcnStats[keys];
@@ -286,12 +328,13 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, 
 
   verbose && exit(verbose);
 
+
   verbose && enter(verbose, "Identify all copy-neutral segments");;
+  verbose && printf(verbose, "DeltaCN: +/-%g\n", delta);
   range <- ci + delta*c(-1,+1);
   verbose && printf(verbose, "Call (\"acceptance\") region: [%g,%g]\n", range[1], range[2]);
 
   # Get TCN confidence intervals for all segments
-  keys <- sprintf("tcn_%g%%", 100*c(alpha/2, 1-alpha/2));
   ci <- segs[,keys];
   ci <- as.matrix(ci);
 
@@ -303,10 +346,16 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, 
   nbrOfABs <- sum(segs$abCall, na.rm=TRUE);
   nbrOfCNs <- sum(isCN, na.rm=TRUE);
   verbose && cat(verbose, "Total number of segments: ", nbrOfSegs);
+  verbose && cat(verbose, "Number of segments called allelic balance: ", nbrOfABs);
   verbose && cat(verbose, "Number of segments called copy neutral: ", nbrOfCNs);
-  verbose && cat(verbose, "Number of non-AB segments called copy neutral: ", (nbrOfSegs-nbrOfABs)-nbrOfCNs);
+
+  nbrOfCNABs <- sum(isCN & segs$abCall, na.rm=TRUE);
+  verbose && cat(verbose, "Number of AB segments called copy neutral: ", nbrOfCNABs);
+  nbrOfCNNonABs <- sum(isCN & !segs$abCall, na.rm=TRUE);
+  verbose && cat(verbose, "Number of non-AB segments called copy neutral: ", nbrOfCNNonABs);
 
   verbose && exit(verbose);
+
   
   # Sanity check
 #  # All previously called AB regions should remain called here as well
@@ -326,6 +375,12 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=0.5, 
 
 ##############################################################################
 # HISTORY
+# 2012-06-03 [HB]
+# o Added estimateDeltaCN() for PairedPSCBS, which is calculated as a
+#   function of the amount of normal contamination as currently estimated
+#   by estimateKappa().
+# o Now callCopyNeutralByTCNofAB() runs bootstrapping if quantiles are
+#   missing.
 # 2012-02-25 [HB]
 # o Added internal calcStatsForCopyNeutralABs() for PairedPSCBS.
 # 2012-02-24 [HB]

@@ -61,7 +61,7 @@ options(str=strOptions(strict.width="cut"));
 <% pkg <- Package("PSCBS"); %>
 \author{<%=getAuthor(pkg)%>}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{May 30, 2012}
+\date{June 3, 2012}
 
 \begin{document}
 
@@ -207,7 +207,7 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 
 \section{Calling segments}
 The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained from using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
-After the Paired PSCBS method was published, we have also added a method for calling run of homozygosity (ROH).
+After the Paired PSCBS method was published, we have also added a method for calling run of homozygosity (ROH) and copy-neutral (CN) total copy number.
 
 
 
@@ -248,10 +248,8 @@ The AB caller tests whether a segment's DH is zero or not, by comparing its DH l
 Further rationales and details are given in~\citet{OlshenA_etal_2011}.
 The AB threshold can be estimated explictly and used in the caller as 
 \begin{verbatim}
-<%=evalCapture({
 deltaAB <- estimateDeltaAB(fit, scale=1)
 fit <- callAB(fit, delta=deltaAB)
-})%>
 \end{verbatim}
 By decreasing argument \code{scale} (a positive scalar), a smaller 
 threshold will be obtained resulting in a more conservative AB caller.
@@ -271,19 +269,38 @@ Segments already called AB will be called non-LOH, because AB and LOH are exclus
 
 \subsubsection{Tuning parameters}
 The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (more precisely the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
-The LOH threshold can be estimated explictly and used as
+The LOH threshold can be estimated explictly and used as:
 \begin{verbatim}
-<%=evalCapture({
 deltaLOH <- estimateDeltaLOH(fit, midpoint=1/2)
 fit <- callLOH(fit, delta=deltaLOH)
-})%>
 \end{verbatim}
 By decreasing argument \code{midpoint} in $[0,1]$, a smaller 
 threshold will be obtained resulting in a more conservative LOH caller.
 
 
 
-\subsection{Results from calling ROH, AB and LOH}
+\subsection{Calling segments that are copy neutral}
+The copy-neutral (CN) caller tests whether the total CN level of a segment is neutral (e.g. diploid).
+To call the CN state of all segments, do:
+\begin{verbatim}
+<%=evalCapture({
+fit <- callCN(fit, verbose=-10)
+})%>
+\end{verbatim}
+
+
+\subsubsection{Tuning parameters}
+The CN caller identifies segments which TCN mean levels (more precisely the $95\%$ confidence interval) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a TCN unit is a function of the normal contamination and specified by argument \code{deltaCN} to \code{callCN()}.  The greater the normal contamination, the smaller \code{deltaCN} should be such that the width of the acceptance region becomes smaller.  Argument \code{deltaCN} can be estimated explicitly as:
+\begin{verbatim}
+deltaCN <- estimateDeltaCN(fit, scale=1)
+fit <- callCN(fit, delta=deltaCN, verbose=-10)
+\end{verbatim}
+By decreasing argument \code{scale} (a positive scalar), a smaller acceptance region will
+be obtained resulting in a more conservative CN caller.
+
+
+
+\subsection{Results from calling ROH, AB, LOH and CN}
 All calls are appended to the segmentation results as logical columns:
 \begin{verbatim}
 <%=evalCapture({
@@ -291,7 +308,6 @@ getSegments(fit, simplify=TRUE)
 })%>
 \end{verbatim}
 <% segs <- getSegments(fit, simplify=TRUE) %>
-
 
 
 \section{Saving results}

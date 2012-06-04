@@ -521,6 +521,33 @@ setMethodS3("sampleCNs", "AbstractCBS", function(fit, size=NULL, ...) {
   data;
 })
 
+###########################################################################/**
+# @RdocMethod updateMeans
+# @alias updateMeans.CBS
+# @alias updateMeans.NonPairedPSCBS
+# @alias updateMeans.PairedPSCBS
+#
+# @title "Updates the CN mean levels for each segment independently"
+#
+# \description{
+#  @get "title" as if they were one large segment.
+#  The locus-level data is not updated/modified.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Arguments specific to the class.}
+# }
+#
+# \value{
+#   Returns an object of the same class.
+# }
+#
+# @author
+#
+# @keyword internal
+#*/###########################################################################
 setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
@@ -529,6 +556,8 @@ setMethodS3("resegment", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2012-06-03
+# o DOCUMENTATION: Added Rd help for updateMeans().
 # 2011-12-03
 # o Now print() for AbstractCBS returns getSegments(..., simplify=TRUE).
 # 2011-11-17

@@ -8,6 +8,7 @@
 #
 # \description{
 #  @get "title" as if they were one large segment.
+#  The locus-level data is not updated/modified.
 # }
 #
 # @synopsis
@@ -21,7 +22,7 @@
 # }
 #
 # \value{
-#   Returns a \code{hclust} object as returned by @see "stats::hclust".
+#   Returns an object of the same class.
 # }
 #
 # @author
@@ -132,7 +133,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 # }
 #
 # \value{
-#   Returns a pruned PairedPSCBS object.
+#   Returns a pruned object of the same class.
 # }
 #
 # \examples{\dontrun{ 

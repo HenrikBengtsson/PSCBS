@@ -20,6 +20,7 @@
 
 \description{
  Updates the CN mean levels jointly in sets of segments as if they were one large segment.
+ The locus-level data is not updated/modified.
 }
 
 \usage{\method{updateMeansTogether}{AbstractCBS}(...)}
@@ -33,7 +34,7 @@
 }
 
 \value{
-  Returns a \code{hclust} object as returned by \code{\link[stats]{hclust}}.
+  Returns an object of the same class.
 }
 
 \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
