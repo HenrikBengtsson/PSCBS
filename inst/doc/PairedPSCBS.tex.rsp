@@ -332,7 +332,7 @@ By default, the reports are written to directory \code{reports/<studyName>/} und
 
 
 \subsection{Pruning segmentation profile}
-By using hierarchical cluster of the segment means it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer.
+By using hierarchical cluster of the segment means it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer on average.
 \begin{verbatim}
 <%=evalCapture({
 fitP <- pruneByHClust(fit, h=0.25, verbose=-10)

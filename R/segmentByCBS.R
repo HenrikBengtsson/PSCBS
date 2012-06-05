@@ -877,7 +877,15 @@ setMethodS3("segmentByCBS", "data.frame", function(y, ...) {
   # To please R CMD check
   data <- y;
 
-  segmentByCBS(y=data$y, chromosome=data$chromosome, x=data$x, index=data$index, w=data$w, ...);
+  y <- data$y;
+  if (is.null(y)) {
+    y <- data$cn;
+    if (is.null(y)) {
+      y <- data$CT;
+    }
+  }
+
+  segmentByCBS(y=y, chromosome=data$chromosome, x=data$x, index=data$index, w=data$w, ...);
 })
 
 
@@ -889,6 +897,9 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-06-05
+# o Now segmentByCBS() for data frame:s does a better job identifying
+#   the CN signals.
 # 2012-02-22
 # o BUG FIX: segmentByCBS(..., knownSegments=knownSegments) would
 #   incorrectly throw a sanity-check exception if 'knownSegments'
