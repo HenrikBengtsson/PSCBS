@@ -279,8 +279,8 @@ threshold will be obtained resulting in a more conservative LOH caller.
 
 
 
-\subsection{Calling segments that are copy neutral}
-The copy-neutral (CN) caller tests whether the total CN level of a segment is neutral (e.g. diploid).
+\subsection{Calling segments that are total copy number neutral (CN)}
+The total copy number neutral (CN) caller tests whether the total CN level of a segment is neutral (e.g. diploid).
 To call the CN state of all segments, do:
 \begin{verbatim}
 <%=evalCapture({
