@@ -1,31 +1,31 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Do not modify this file since it was automatically generated from:
 % 
-%  PairedPSCBS.callCN.R
+%  PairedPSCBS.callCopyNeutral.R
 % 
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\name{callCN.PairedPSCBS}
-\alias{callCN.PairedPSCBS}
-\alias{PairedPSCBS.callCN}
-\alias{callCN.PairedPSCBS}
-\alias{callCN,PairedPSCBS-method}
-
+\name{callCopyNeutral.PairedPSCBS}
+\alias{callCopyNeutral.PairedPSCBS}
 \alias{PairedPSCBS.callCopyNeutral}
 \alias{callCopyNeutral.PairedPSCBS}
 \alias{callCopyNeutral,PairedPSCBS-method}
+
+\alias{PairedPSCBS.callTCNN}
+\alias{callTCNN.PairedPSCBS}
+\alias{callTCNN,PairedPSCBS-method}
 
 
 \title{Calls segments that are copy neutral}
 
 \description{
- Calls segments that are copy neutral, i.e. that have a total copy number that corresponds
- to the ploidy of the genome.
+ Calls segments that are copy neutral in total copy numbers (TCNs),
+ i.e. that have a TCN that corresponds to the ploidy of the genome.
 }
 
-\usage{\method{callCN}{PairedPSCBS}(fit, flavor=c("TCN|AB"), ..., minSize=1, force=FALSE)}
+\usage{\method{callCopyNeutral}{PairedPSCBS}(fit, flavor=c("TCN|AB"), ..., minSize=1, force=FALSE)}
 
 \arguments{
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of

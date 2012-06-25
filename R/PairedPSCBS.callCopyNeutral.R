@@ -1,13 +1,13 @@
 ###########################################################################/**
 # @set class=PairedPSCBS
-# @RdocMethod callCN
-# @aliasmethod callCopyNeutral
+# @RdocMethod callCopyNeutral
+# @aliasmethod callTCNN
 #
 # @title "Calls segments that are copy neutral"
 #
 # \description{
-#  @get "title", i.e. that have a total copy number that corresponds
-#  to the ploidy of the genome.
+#  @get "title" in total copy numbers (TCNs),
+#  i.e. that have a TCN that corresponds to the ploidy of the genome.
 # }
 #
 # @synopsis
@@ -35,7 +35,7 @@
 # }
 #
 #*/###########################################################################
-setMethodS3("callCN", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., minSize=1, force=FALSE) {
+setMethodS3("callCopyNeutral", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., minSize=1, force=FALSE) {
   # Argument 'flavor':
   flavor <- match.arg(flavor);
 
@@ -45,7 +45,7 @@ setMethodS3("callCN", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., minS
 
   # Already done?
   segs <- as.data.frame(fit);
-  calls <- segs$cnCall;
+  calls <- segs$tcnnCall;
   if (!force && !is.null(calls)) {
     return(invisible(fit));
   }
@@ -60,9 +60,9 @@ setMethodS3("callCN", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., minS
   if (minSize > 1) {
     segs <- as.data.frame(fit);
     ns <- segs$dhNbrOfLoci;
-    calls <- segs$cnCall;
+    calls <- segs$tcnnCall;
     calls[ns < minSize] <- NA;
-    segs$cnCall <- calls;
+    segs$tcnnCall <- calls;
     fit$output <- segs;
     rm(segs, ns, calls); # Not needed anymore
   }
@@ -70,8 +70,8 @@ setMethodS3("callCN", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., minS
   return(invisible(fit));
 })
 
-setMethodS3("callCopyNeutral", "PairedPSCBS", function(...) {
-  callCN(...);
+setMethodS3("callTCNN", "PairedPSCBS", function(...) {
+  callCopyNeutral(...);
 })
 
 
@@ -94,8 +94,8 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 
   verbose && enter(verbose, "calcStatsForCopyNeutralABs");
 
-  segsCN <- fit$params$copyNeutralStats;
-  if (!force && !is.null(segsCN)) {
+  segsTCNN <- fit$params$copyNeutralStats;
+  if (!force && !is.null(segsTCNN)) {
     verbose && exit(verbose);
     return(fit);
   }
@@ -134,43 +134,43 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
   verbose && enter(verbose, "Extracting all copy neutral AB segments across all chromosomes into one big segments");
 
   # (a) Extract those
-  fitCN <- extractSegments(fit, isNeutralAB);
-  verbose && print(verbose, fitCN);
+  fitTCNN <- extractSegments(fit, isNeutralAB);
+  verbose && print(verbose, fitTCNN);
   verbose && exit(verbose);
 
   # (b) Turn into a single-chromosome data set
-  fitCN <- extractSegments(fitCN, !isSegmentSplitter(fitCN));
+  fitTCNN <- extractSegments(fitTCNN, !isSegmentSplitter(fitTCNN));
 
-  fitCN$output$chromosome <- 0L;
-  fitCN$data$chromosome <- 0L;
+  fitTCNN$output$chromosome <- 0L;
+  fitTCNN$data$chromosome <- 0L;
 
   # (c) Turn into one big segment by dropping all change points
-  nCPs <- nbrOfChangePoints(fitCN);
+  nCPs <- nbrOfChangePoints(fitTCNN);
   if (nCPs > 1) {
     verbose && enter(verbose, "Dropping all change points");
-    fitCN <- dropChangePoints(fitCN, idxs=nCPs:1, update=TRUE, 
+    fitTCNN <- dropChangePoints(fitTCNN, idxs=nCPs:1, update=TRUE, 
                               verbose=less(verbose, 5));
     verbose && exit(verbose);
   }
   # Sanity check
-  stopifnot(nbrOfSegments(fitCN) == 1);
+  stopifnot(nbrOfSegments(fitTCNN) == 1);
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Bootstrap the identified copy-neutral states");
-  fitCN <- bootstrapTCNandDHByRegion(fitCN, force=TRUE, ..., 
+  fitTCNN <- bootstrapTCNandDHByRegion(fitTCNN, force=TRUE, ..., 
                                      verbose=less(verbose, 10));
-  segsCN <- getSegments(fitCN, simplified=FALSE);
-  names <- colnames(segsCN);
+  segsTCNN <- getSegments(fitTCNN, simplified=FALSE);
+  names <- colnames(segsTCNN);
   excl <- grep("(^chromosome|Id|Start|End|Call)$", names);
-  segsCN <- segsCN[,-excl,drop=FALSE];
+  segsTCNN <- segsTCNN[,-excl,drop=FALSE];
   # Sanity check
-  stopifnot(ncol(segsCN) > 0);
+  stopifnot(ncol(segsTCNN) > 0);
   verbose && exit(verbose);
 
-  verbose && print(verbose, segsCN);
+  verbose && print(verbose, segsTCNN);
   verbose && exit(verbose);
 
-  fit$params$copyNeutralStats <- segsCN;
+  fit$params$copyNeutralStats <- segsTCNN;
 
   invisible(fit);
 }, protected=TRUE) # calcStatsForCopyNeutralABs()
@@ -265,12 +265,12 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
   verbose && enter(verbose, "callCopyNeutralByTCNofAB");
   verbose && cat(verbose, "Alpha: ", alpha);
-  verbose && cat(verbose, "Delta TCN: ", delta);
+  verbose && cat(verbose, "Delta CN: ", delta);
 
   segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
 
   # Nothing to do?
-  if (!force && !is.null(segs$cnCall)) {
+  if (!force && !is.null(segs$tcnnCall)) {
     # Copy neutral segments are already called
     verbose && cat(verbose, "Already called. Skipping.");
     verbose && exit(verbose);
@@ -340,18 +340,18 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
   # If a confidence interval is completely within the
   # calling region, call it
-  isCN <- (range[1] <= ci[,1] & ci[,2] <= range[2]);
+  isTCNN <- (range[1] <= ci[,1] & ci[,2] <= range[2]);
 
   nbrOfSegs <- nrow(segs);
   nbrOfABs <- sum(segs$abCall, na.rm=TRUE);
-  nbrOfCNs <- sum(isCN, na.rm=TRUE);
+  nbrOfCNs <- sum(isTCNN, na.rm=TRUE);
   verbose && cat(verbose, "Total number of segments: ", nbrOfSegs);
   verbose && cat(verbose, "Number of segments called allelic balance: ", nbrOfABs);
   verbose && cat(verbose, "Number of segments called copy neutral: ", nbrOfCNs);
 
-  nbrOfCNABs <- sum(isCN & segs$abCall, na.rm=TRUE);
+  nbrOfCNABs <- sum(isTCNN & segs$abCall, na.rm=TRUE);
   verbose && cat(verbose, "Number of AB segments called copy neutral: ", nbrOfCNABs);
-  nbrOfCNNonABs <- sum(isCN & !segs$abCall, na.rm=TRUE);
+  nbrOfCNNonABs <- sum(isTCNN & !segs$abCall, na.rm=TRUE);
   verbose && cat(verbose, "Number of non-AB segments called copy neutral: ", nbrOfCNNonABs);
 
   verbose && exit(verbose);
@@ -359,9 +359,9 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
   
   # Sanity check
 #  # All previously called AB regions should remain called here as well
-#  stopifnot(all(isCN[isNeutralAB], na.rm=TRUE));
+#  stopifnot(all(isTCNN[isNeutralAB], na.rm=TRUE));
 
-  segs$cnCall <- isCN;
+  segs$tcnnCall <- isTCNN;
 
   fitC <- fit;
   fitC$output <- segs;
@@ -375,6 +375,9 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
 ##############################################################################
 # HISTORY
+# 2012-06-24 [HB]
+# o Renamed callCN() to callTCNN() in order not to confuse it with
+#   copy numbers in general.
 # 2012-06-03 [HB]
 # o Added estimateDeltaCN() for PairedPSCBS, which is calculated as a
 #   function of the amount of normal contamination as currently estimated

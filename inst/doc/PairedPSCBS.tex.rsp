@@ -61,13 +61,13 @@ options(str=strOptions(strict.width="cut"));
 <% pkg <- Package("PSCBS"); %>
 \author{<%=getAuthor(pkg)%>}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{June 3, 2012}
+\date{June 24, 2012}
 
 \begin{document}
 
 \maketitle
 \begin{abstract}
-The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a match tumor-normal pair.  The method also calls when the identified segments are in run of homozygosity (ROH), in allelic balance (AB), or loss of heterozygosity (LOH).
+The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a match tumor-normal pair.  The method also calls when the identified segments are is a run of homozygosity (ROH), in allelic balance (AB), loss of heterozygosity (LOH), and/or neutral in total copy numbers (TCNN).
 Paired PSCBS was designed to work with data from any SNP microarray technology and generation, including Affymetrix and Illumina.
 
 This document shows how to use the \pkg{PSCBS} package to run Paired PSCBS on a tumor-normal pair.
@@ -142,14 +142,14 @@ gaps
 })%>
 \end{verbatim}
 which shows that there is a 20.5Mb long gap between 121.0Mb and 141.5Mb on Chromosome~1.  This is the centromere of Chromosome~1.
-Gaps cannot be specified directly.  Instead they need to be give as part of a set of "known" segments, which is done as:
+Gaps cannot be specified directly.  Instead they need to be given as part of a set of "known" segments, which is done as:
 \begin{verbatim}
 <%=evalCapture({
 knownSegments <- gapsToSegments(gaps)
 knownSegments
 })%>
 \end{verbatim}
-Below, we will use this to tell Paired PSCBS to segment Chromosome~1 in three independent segments, where the first segments is from the beginning of the chromosomes (hence '-Inf') to 120.1Mb, the second from 120.1-141.5Mb (the above gap), and the third is from 141.5Mb to the end of the chromosome (hence '+Inf').
+Below, we will use this to tell Paired PSCBS to segment Chromosome~1 into three independent segments, where the first segment is from the beginning of the chromosome (hence '-Inf') to 120.1Mb, the second one from 120.1-141.5Mb (the above gap), and the third one is from 141.5Mb to the end of the chromosome (hence '+Inf').
 Just as Paired PSCBS segments chromosomes independently of each other, it also segments priorly known segments independently of each other.
 Specifying known segments is optional.
 
@@ -182,7 +182,7 @@ To plot the PSCN segmentation results, do:
 plotTracks(fit)
 \end{verbatim}
 which by default displays three panels containing TCN, decrease of heterozygosity (DH), and minor and major CNs as in Figure~\ref{figTracks}.
-To only plot one panel with TCN and minor and major CNs and zoom in on a partical region, do:
+To only plot one panel with TCN and minor and major CNs and zoom in on a particular region, do:
 \begin{verbatim}
 plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 \end{verbatim}
@@ -207,13 +207,13 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 
 \section{Calling segments}
 The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained from using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
-After the Paired PSCBS method was published, we have also added a method for calling run of homozygosity (ROH) and copy-neutral (CN) total copy number.
+After the Paired PSCBS method was published, we have also added a method for calling run of homozygosity (ROH) and total copy number neutrality (TCNN).
 
 
 
 \subsection{Calling segments with run of homozygosity (ROH)}
-A region with run of homozygosity (ROH) is a region where all SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease of heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
- However, if there are genotyping errors within an ROH region, we will obtain a non-missing DH mean level and hence also finite minor and major CNs.  In order to adjust for these faulty estimates, we test if the identified segments are in ROH or not by:
+A region is a run of homozygotes (ROH) if all of its SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease of heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
+ However, if there are genotyping errors within an ROH region, we will obtain a non-missing DH mean level and hence also finite minor and major CNs.  In order to adjust for these faulty estimates, we test if the identified segments are ROHs or not by:
 \begin{verbatim}
 <%=evalCapture({
 fit <- callROH(fit, verbose=-10)
@@ -246,7 +246,7 @@ Segments already called ROH will not be called for AB, and their AB statuses wil
 \subsubsection{Tuning parameters}
 The AB caller tests whether a segment's DH is zero or not, by comparing its DH level (more precisely the $5\%$ quantile of its bootstrapped DH mean level) to a threshold.  This threshold will be function of the noise level, because the noiser the BAF signals (and hence the DH signals) are, the greater the bias of the DH mean level for segments in AB will be.  Because of this, the threshold is choosen from data by estimating the noise level of the DH signals near zero.
 Further rationales and details are given in~\citet{OlshenA_etal_2011}.
-The AB threshold can be estimated explictly and used in the caller as 
+The AB threshold can be estimated explicitly and used in the caller as 
 \begin{verbatim}
 deltaAB <- estimateDeltaAB(fit, scale=1)
 fit <- callAB(fit, delta=deltaAB)
@@ -269,7 +269,7 @@ Segments already called AB will be called non-LOH, because AB and LOH are exclus
 
 \subsubsection{Tuning parameters}
 The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (more precisely the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
-The LOH threshold can be estimated explictly and used as:
+The LOH threshold can be estimated explicitly and used as:
 \begin{verbatim}
 deltaLOH <- estimateDeltaLOH(fit, midpoint=1/2)
 fit <- callLOH(fit, delta=deltaLOH)
@@ -279,28 +279,28 @@ threshold will be obtained resulting in a more conservative LOH caller.
 
 
 
-\subsection{Calling segments that are total copy number neutral (CN)}
-The total copy number neutral (CN) caller tests whether the total CN level of a segment is neutral (e.g. diploid).
-To call the CN state of all segments, do:
+\subsection{Calling segments with neutral total copy numbers (TCNN)}
+The total copy number neutral (TCNN) caller tests whether the total CN level of a segment is neutral (e.g. diploid) or not.
+To call the TCNN state of all segments, do:
 \begin{verbatim}
 <%=evalCapture({
-fit <- callCN(fit, verbose=-10)
+fit <- callTCNN(fit, verbose=-10)
 })%>
 \end{verbatim}
 
 
 \subsubsection{Tuning parameters}
-The CN caller identifies segments which TCN mean levels (more precisely the $95\%$ confidence interval) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a TCN unit is a function of the normal contamination and specified by argument \code{deltaCN} to \code{callCN()}.  The greater the normal contamination, the smaller \code{deltaCN} should be such that the width of the acceptance region becomes smaller.  Argument \code{deltaCN} can be estimated explicitly as:
+The TCNN caller identifies segments which TCN mean levels (more precisely the $95\%$ confidence interval) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a total copy number unit is a function of the normal contamination and specified by argument \code{deltaCN} to \code{callCN()}.  The greater the normal contamination, the smaller \code{deltaCN} should be such that the width of the acceptance region becomes smaller.  Argument \code{deltaCN} can be estimated explicitly as:
 \begin{verbatim}
 deltaCN <- estimateDeltaCN(fit, scale=1)
-fit <- callCN(fit, delta=deltaCN, verbose=-10)
+fit <- callTCNN(fit, delta=deltaCN, verbose=-10)
 \end{verbatim}
 By decreasing argument \code{scale} (a positive scalar), a smaller acceptance region will
 be obtained resulting in a more conservative CN caller.
 
 
 
-\subsection{Results from calling ROH, AB, LOH and CN}
+\subsection{Results from calling ROH, AB, LOH and TCNN}
 All calls are appended to the segmentation results as logical columns:
 \begin{verbatim}
 <%=evalCapture({
