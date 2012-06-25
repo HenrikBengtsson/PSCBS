@@ -67,7 +67,7 @@ options(str=strOptions(strict.width="cut"));
 
 \maketitle
 \begin{abstract}
-The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a match tumor-normal pair.  The method also calls when the identified segments are is a run of homozygosity (ROH), in allelic balance (AB), loss of heterozygosity (LOH), and/or neutral in total copy numbers (TCNN).
+The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a match tumor-normal pair.  The method also calls when the identified segments with run of homozygosity (ROH), segments in allelic balance (AB), segments with loss of heterozygosity (LOH), and/or segments with neutral total copy number (TCNN).
 Paired PSCBS was designed to work with data from any SNP microarray technology and generation, including Affymetrix and Illumina.
 
 This document shows how to use the \pkg{PSCBS} package to run Paired PSCBS on a tumor-normal pair.
@@ -207,12 +207,12 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 
 \section{Calling segments}
 The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained from using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
-After the Paired PSCBS method was published, we have also added a method for calling run of homozygosity (ROH) and total copy number neutrality (TCNN).
+After the Paired PSCBS method was published, we have also added methods for calling run of homozygosity (ROH) and neutral total copy number (TCNN).
 
 
 
 \subsection{Calling segments with run of homozygosity (ROH)}
-A region is a run of homozygotes (ROH) if all of its SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease of heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
+A region has a run of homozygotes (ROH) if all of its SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease of heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
  However, if there are genotyping errors within an ROH region, we will obtain a non-missing DH mean level and hence also finite minor and major CNs.  In order to adjust for these faulty estimates, we test if the identified segments are ROHs or not by:
 \begin{verbatim}
 <%=evalCapture({
