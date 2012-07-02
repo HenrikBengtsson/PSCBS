@@ -91,7 +91,7 @@ drawChangePoints drawChangePoints.AbstractCBS
 drawChangePoints.CBS drawChangePoints.PSCBS
  drawChangePointsC1C2 drawChangePointsC1C2.PairedPSCBS
 extractDhSegment extractDhSegment.PairedPSCBS
-callTCNN callCopyNeutral callCopyNeutralByTCNofAB
+callNTCN callCopyNeutral callCopyNeutralByTCNofAB
 dropChangePoints
 calcStatsForCopyNeutralABs calcStatsForCopyNeutralABs.PairedPSCBS
 callGNLcallGNLByTCNofAB callGNLByTCNofAB.PairedPSCBS

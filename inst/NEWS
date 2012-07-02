@@ -2,11 +2,15 @@
 Package: PSCBS
 ==============
 
-Version: 0.27.0 [2012-06-24]
-o Now we refer to "copy neutral" segments as "TCN neutral" segments
-  with acronym 'TCNN'.  The corresponding column in the segmentation
-  results are labelled correspondingly.  The Paired PSCBS vignette 
+Version: 0.27.1 [2012-07-02]
+o Now we refer to "copy neutral" segments as "neutral TCN" segments
+  with acronym 'NTCN'.  The corresponding column in the segmentation
+  results are labeled correspondingly.  The Paired PSCBS vignette 
   was updated accordingly.
+
+
+Version: 0.27.0 [2012-06-24]
+o (An update that should be ignored)
 o DOCUMENTATION: Some grammar corrections of the 'Paired PSCBS' vignette.
 
 

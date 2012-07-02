@@ -257,7 +257,7 @@
 \alias{drawChangePointsC1C2.PairedPSCBS}
 \alias{extractDhSegment}
 \alias{extractDhSegment.PairedPSCBS}
-\alias{callTCNN}
+\alias{callNTCN}
 \alias{callCopyNeutral}
 \alias{callCopyNeutralByTCNofAB}
 \alias{dropChangePoints}

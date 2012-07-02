@@ -13,15 +13,15 @@
 \alias{callCopyNeutral.PairedPSCBS}
 \alias{callCopyNeutral,PairedPSCBS-method}
 
-\alias{PairedPSCBS.callTCNN}
-\alias{callTCNN.PairedPSCBS}
-\alias{callTCNN,PairedPSCBS-method}
+\alias{PairedPSCBS.callNTCN}
+\alias{callNTCN.PairedPSCBS}
+\alias{callNTCN,PairedPSCBS-method}
 
 
-\title{Calls segments that are copy neutral}
+\title{Calls segments that have a neutral total copy number}
 
 \description{
- Calls segments that are copy neutral in total copy numbers (TCNs),
+ Calls segments that have a neutral total copy number (NTCN),
  i.e. that have a TCN that corresponds to the ploidy of the genome.
 }
 
