@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.27.2 [2012-07-08]
+o Updated package dependencies.
+
+
 Version: 0.27.1 [2012-07-02]
 o Now we refer to "copy neutral" segments as "neutral TCN" segments
   with acronym 'NTCN'.  The corresponding column in the segmentation
