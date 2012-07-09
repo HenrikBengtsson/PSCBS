@@ -61,7 +61,7 @@ options(str=strOptions(strict.width="cut"));
 <% pkg <- Package("PSCBS"); %>
 \author{<%=getAuthor(pkg)%>}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{June 24, 2012}
+\date{July 2, 2012}
 
 \begin{document}
 
@@ -98,7 +98,7 @@ The statistical model and the algorithm behind Paired PSCBS is explained in deta
   EXAMPLE
   -------------------------------------------------------------------%>
 \section{Preparing data to be segmented}
-The Paired PSCBS~\citep{OlshenA_etal_2011} method requires tumor-normal paired parent-specific copy-number (PSCN) signals.  More precisely, it requires total copy-number (TCN) estimates for the tumor relative to the matched normal ($C_T$), allele B fractions (BAFs) for the tumor ($\beta_T$) and BAFs for the matched normal ($\beta_N$).  The genomic location of the loci in form of chromosome and physical position are also required.
+The Paired PSCBS~\citep{OlshenA_etal_2011} method requires tumor-normal paired parent-specific copy-number (PSCN) signals.  More precisely, it requires total copy-number (TCN) estimates for the tumor relative to the matched normal ($C_T$), allele B fractions (BAFs) for the tumor ($\beta_T$) and BAFs for the matched normal ($\beta_N$).  The genomic locations of the loci in form of chromosome and physical position are also required.
 
 
 \subsection{Locus-level SNP copy-number signals}
