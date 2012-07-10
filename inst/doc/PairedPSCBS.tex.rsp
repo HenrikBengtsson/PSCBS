@@ -61,7 +61,7 @@ options(str=strOptions(strict.width="cut"));
 <% pkg <- Package("PSCBS"); %>
 \author{<%=getAuthor(pkg)%>}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{July 2, 2012}
+\date{July 10, 2012}
 
 \begin{document}
 
