@@ -17,7 +17,7 @@ options(digits=3);
 options(str=strOptions(strict.width="cut"));
 %>
 
-\documentclass[letter,12pt]{article}
+\documentclass[letter]{article}
 \usepackage{xspace}
 \usepackage{alltt}
 \usepackage{xcolor}
@@ -44,7 +44,7 @@ options(str=strOptions(strict.width="cut"));
 \renewcommand{\floatpagefraction}{1.0}
 
 % Macros
-\newcommand{\keywords}[1]{\footnotesize{\textbf{Keywords: }#1}\xspace}
+\newcommand{\keywords}[1]{{\footnotesize{\textbf{Keywords: }#1}}\xspace}
 \newcommand{\pkg}[1]{\textsl{#1}\xspace}
 \newcommand{\file}[1]{\textsl{#1}\xspace}
 \newcommand{\code}[1]{\texttt{#1}\xspace}
