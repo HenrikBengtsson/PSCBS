@@ -15,7 +15,7 @@ options(digits=3);
 options(str=strOptions(strict.width="cut"));
 %>
 
-\documentclass[letter,12pt]{article}
+\documentclass[letter]{article}
 \usepackage{xspace}
 \usepackage{alltt}
 \usepackage{xcolor}
@@ -42,7 +42,7 @@ options(str=strOptions(strict.width="cut"));
 \renewcommand{\floatpagefraction}{1.0}
 
 % Macros
-\newcommand{\keywords}[1]{\footnotesize{\textbf{Keywords: }#1}\xspace}
+\newcommand{\keywords}[1]{{\footnotesize{\textbf{Keywords: }#1}}\xspace}
 \newcommand{\pkg}[1]{\textsl{#1}\xspace}
 \newcommand{\file}[1]{\textsl{#1}\xspace}
 \newcommand{\code}[1]{\texttt{#1}\xspace}
@@ -67,7 +67,7 @@ options(str=strOptions(strict.width="cut"));
 
 \maketitle
 \begin{abstract}
-The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a match tumor-normal pair.  The method also calls segments with run of homozygosity (ROH), segments in allelic balance (AB), segments with loss of heterozygosity (LOH), and segments with neutral total copy number (NTCN).
+The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a matched tumor-normal pair.  The method also calls segments with run of homozygosity (ROH), segments in allelic balance (AB), segments with loss of heterozygosity (LOH), and segments with neutral total copy number (NTCN).
 Paired PSCBS was designed to work with data from any SNP microarray technology and generation, including Affymetrix and Illumina.
 
 This document shows how to use the \pkg{PSCBS} package to run Paired PSCBS on a tumor-normal pair.
@@ -142,7 +142,7 @@ gaps
 })%>
 \end{verbatim}
 which shows that there is a 20.5Mb long gap between 121.0Mb and 141.5Mb on Chromosome~1.  This is the centromere of Chromosome~1.
-Gaps cannot be specified directly.  Instead they need to be given as part of a set of "known" segments, which is done as:
+It is not possible to specify "gaps" to the segmentation function.  Instead they need to be given as part of a set of "known" segments, which is done as:
 \begin{verbatim}
 <%=evalCapture({
 knownSegments <- gapsToSegments(gaps)
@@ -155,7 +155,7 @@ Specifying known segments is optional.
 
 
 \subsection{Identifying PSCN segments}
-We are now ready to segment the locus-level PSCN signals.  This is done by\footnote{We fix the random seed in order for the results of this vignette to be exactly reproducible.}:
+We are now ready to segment the locus-level PSCN signals.  This is done by\footnote{We fix the random seed in order for the results of this vignette to be numerically reproducible.}:
 \begin{verbatim}
 <%=evalCapture({
 fit <- segmentByPairedPSCBS(data, knownSegments=knownSegments, seed=0xBEEF, verbose=-10)
@@ -182,7 +182,7 @@ To plot the PSCN segmentation results, do:
 plotTracks(fit)
 \end{verbatim}
 which by default displays three panels containing TCN, decrease of heterozygosity (DH), and minor and major CNs as in Figure~\ref{figTracks}.
-To only plot one panel with TCN and minor and major CNs and zoom in on a particular region, do:
+To only plot one panel with TCN and minor and major CNs and zoom in on a particular region, do (not shown):
 \begin{verbatim}
 plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 \end{verbatim}
@@ -228,7 +228,7 @@ than a threshold, the segmented is called ROH, otherwise not.
 The default threshold is 1/12.
 To use a different threshold, set argument \code{delta} to a scalar in $[0,1]$.
 For example, using \code{callROH(fit, delta=1/30)} makes the ROH caller
-more conservative.
+more conservative.\footnote{It is our plan to replace this basic test with a bionomial test.}
 
 
 \subsection{Calling segments in allelic balance (AB)}
@@ -244,7 +244,7 @@ Segments already called ROH will not be called for AB, and their AB statuses wil
 
 
 \subsubsection{Tuning parameters}
-The AB caller tests whether a segment's DH is zero or not, by comparing its DH level (more precisely the $5\%$ quantile of its bootstrapped DH mean level) to a threshold.  This threshold will be function of the noise level, because the noiser the BAF signals (and hence the DH signals) are, the greater the bias of the DH mean level for segments in AB will be.  Because of this, the threshold is choosen from data by estimating the noise level of the DH signals near zero.
+The AB caller tests whether a segment's DH is zero or not, by comparing its DH level (more precisely the $5\%$ quantile of its bootstrapped DH mean level) to a threshold.  This threshold will be a function of the noise level, because the noiser the BAF signals (and hence the DH signals) are, the greater the bias of the DH mean level for segments in AB will be.  Because of this, the threshold is choosen from data by estimating the noise level of the DH signals near zero.
 Further rationales and details are given in~\citet{OlshenA_etal_2011}.
 The AB threshold can be estimated explicitly and used in the caller as 
 \begin{verbatim}
@@ -268,7 +268,7 @@ Analogously to the AB caller, segments already called ROH will not be called for
 Segments already called AB will be called non-LOH, because AB and LOH are exclusively mutual states.  
 
 \subsubsection{Tuning parameters}
-The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (more precisely the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
+The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (more precisely the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be a function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
 The LOH threshold can be estimated explicitly and used as:
 \begin{verbatim}
 deltaLOH <- estimateDeltaLOH(fit, midpoint=1/2)
@@ -290,7 +290,7 @@ fit <- callNTCN(fit, verbose=-10)
 
 
 \subsubsection{Tuning parameters}
-The NTCN caller identifies segments which TCN mean levels (more precisely the $95\%$ confidence interval) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a total copy number unit is a function of the normal contamination and specified by argument \code{deltaCN} to \code{callCN()}.  The greater the normal contamination, the smaller \code{deltaCN} should be such that the width of the acceptance region becomes smaller.  Argument \code{deltaCN} can be estimated explicitly as:
+The NTCN caller identifies segments which TCN mean levels (more precisely the $95\%$ confidence interval) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a total copy number unit is a function of the normal contamination and specified by argument \code{delta} to \code{callNTCN()}.  The greater the normal contamination, the smaller \code{delta} should be such that the width of the acceptance region becomes smaller.  Argument \code{delta} can be estimated explicitly as:
 \begin{verbatim}
 deltaCN <- estimateDeltaCN(fit, scale=1)
 fit <- callNTCN(fit, delta=deltaCN, verbose=-10)
@@ -332,12 +332,13 @@ By default, the reports are written to directory \code{reports/<studyName>/} und
 
 
 \subsection{Pruning segmentation profile}
-By using hierarchical cluster of the segment means it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer on average.
+By applying hierarchical clustering on the segment means, it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer on average.  To to prune Paired PSCBS segmentation results this way, do:
 \begin{verbatim}
 <%=evalCapture({
 fitP <- pruneByHClust(fit, h=0.25, verbose=-10)
 })%>
 \end{verbatim}
+The result of this is shown in Figure~\ref{figTracksPruned}.
 \begin{figure}[htp]
  \begin{center}
   \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c("pruned", "tracks"), aspectRatio=0.6, {
