@@ -5,7 +5,7 @@ Package: PSCBS
 Version: 0.27.3 [2012-07-10]
 o DOCUMENTATION: Minor updates to the Paired PSCBS vignettes.
 o CLEANUP: One redundancy tests relied on a non-critical function
-  that will be removed from R.utils 1.16.0 (now in R.devices 2.1.1).
+  that will be removed in R.utils 1.16.0 (now in R.devices 2.1.1).
 
 
 Version: 0.27.2 [2012-07-08]
