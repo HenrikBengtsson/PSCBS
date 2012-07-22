@@ -22,7 +22,7 @@ if (Sys.getenv("_R_CHECK_FULL_") == "") {
   nSegs <- 4L
 } else {
   # Full tests
-  nSegs <- 12L
+  nSegs <- 13L
 }
 
 str(dataS)

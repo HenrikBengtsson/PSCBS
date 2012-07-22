@@ -67,7 +67,7 @@ options(str=strOptions(strict.width="cut"));
 
 \maketitle
 \begin{abstract}
-The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a matched tumor-normal pair.  The method also calls segments with run of homozygosity (ROH), segments in allelic balance (AB), segments with loss of heterozygosity (LOH), and segments with neutral total copy number (NTCN).
+The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a matched tumor-normal pair.  The method also calls segments with run of homozygosity (ROH), segments in allelic balance (AB), segments with loss of heterozygosity (LOH) and segments with neutral total copy number (NTCN).
 Paired PSCBS was designed to work with data from any SNP microarray technology and generation, including Affymetrix and Illumina.
 
 This document shows how to use the \pkg{PSCBS} package to run Paired PSCBS on a tumor-normal pair.

@@ -26,10 +26,10 @@
  \section{Requirements}{
    This package requires external packages
    R.methodsS3 (>= 1.4.2), R.oo (>= 1.9.8), R.utils (>= 1.12.1), utils, R.methodsS3 (>= 1.4.2), R.oo (>= 1.9.8), DNAcopy (>=
-1.24.0), R.rsp (>= 0.7.5),
-   and also suggests DNAcopy (>= 1.24.0), aroma.light (>= 1.22.0), matrixStats (>=
+1.27.2), R.rsp (>= 0.8.2),
+   and also suggests DNAcopy (>= 1.27.2), aroma.light (>= 1.22.0), matrixStats (>=
 0.5.2), R.cache (>= 0.6.2), digest (>= 0.5.2), Hmisc (>=
-3.8-3), ggplot2 (>= 0.8.9).
+3.9-3), ggplot2 (>= 0.9.1).
  }
 
  \section{Installation and updates}{

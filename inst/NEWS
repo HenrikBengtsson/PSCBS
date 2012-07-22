@@ -2,6 +2,22 @@
 Package: PSCBS
 ==============
 
+Version: 0.28.0 [2012-07-22]
+o Added argument 'minLength' to gapsToSegments().  The default is no
+  longer to drop zero-length (minLength == -1L) segments, because
+  if (and only if) such a segment contains a locus, then segmentByNnn()
+  will currently generate an (internal) error.
+o GENERALIZATION/BUG FIX: Now segmentByPairedPSCBS() drops loci for
+  which CT is missing (regardless of betaT). For instance, in rare cases
+  when the reference (e.g. the normal) is missing, then it may be that
+  CT is missing while betaT is not.
+
+
+Version: 0.27.4 [2012-07-22]
+o Now verbose output of segmentByPairedPSCBS() specifies region
+  ranges with greater precision.
+
+
 Version: 0.27.3 [2012-07-10]
 o DOCUMENTATION: Minor updates to the Paired PSCBS vignettes.
 o CLEANUP: One redundancy tests relied on a non-critical function

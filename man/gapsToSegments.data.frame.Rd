@@ -20,13 +20,14 @@
   and \code{+Inf}.
  }
 
- \usage{\method{gapsToSegments}{data.frame}(gaps, resolution=1, ...)}
+ \usage{\method{gapsToSegments}{data.frame}(gaps, resolution=1, minLength=0, ...)}
 
  \arguments{
    \item{gaps}{A \code{\link[base]{data.frame}} with columns \code{chromosome}, \code{start},
      and \code{stop}. Any overlapping gaps will throw an error.}
    \item{resolution}{A non-negative \code{\link[base]{numeric}} specifying the minimum
      length unit, which by default equals one nucleotide/base pair.}
+   \item{minLength}{Minimum length of segments to be kept.}
    \item{...}{Not used.}
  }
 
@@ -34,7 +35,6 @@
    Returns \code{\link[base]{data.frame}} with columns \code{chromosome} (if that argument
    is given), \code{start}, \code{stop} and \code{length}.
    The segments are ordered along the genome.
-   Zero length segments are automatically dropped.
  }
 
  \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}

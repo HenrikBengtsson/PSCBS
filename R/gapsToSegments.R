@@ -17,6 +17,7 @@
 #     and \code{stop}. Any overlapping gaps will throw an error.}
 #   \item{resolution}{A non-negative @numeric specifying the minimum
 #     length unit, which by default equals one nucleotide/base pair.}
+#   \item{minLength}{Minimum length of segments to be kept.}
 #   \item{...}{Not used.}
 # }
 #
@@ -24,7 +25,6 @@
 #   Returns @data.frame with columns \code{chromosome} (if that argument
 #   is given), \code{start}, \code{stop} and \code{length}.
 #   The segments are ordered along the genome.
-#   Zero length segments are automatically dropped.
 # }
 # 
 # @author
@@ -36,7 +36,7 @@
 # @keyword IO
 # @keyword internal
 #*/###########################################################################  
-setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, ...) {
+setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLength=0L, ...) {
   # To please R CMD check
   chromosome <- NULL; rm(chromosome);
 
@@ -92,8 +92,8 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, ...) {
   # Append segment lengths
   knownSegments$length <- knownSegments$end - knownSegments$start;
 
-  # Drop zero-length segments
-  keep <- (knownSegments$length > 0);
+  # Drop too short segments
+  keep <- (knownSegments$length >= minLength);
   knownSegments <- knownSegments[keep,];
 
 
@@ -115,6 +115,8 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, ...) {
 
 ###############################################################################
 # HISTORY:
+# 2012-07-22
+# o Added argument 'minLength' to gapsToSegments().
 # 2011-12-12
 # o BUG FIX: Now gapsToSegments() gave invalid segments for chromosomes
 #   with more than one gap.

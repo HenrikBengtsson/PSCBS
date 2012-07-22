@@ -348,6 +348,23 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Drop loci for which CT is missing (regardless of betaT)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ok <- (!is.na(data$CT));
+  if (any(!ok)) {
+    verbose && enter(verbose, "Dropping loci for which CT is missing");
+    verbose && cat(verbose, "Number of loci dropped: ", sum(!ok));
+    data <- data[ok,,drop=FALSE];
+    nbrOfLoci <- nrow(data);
+    verbose && exit(verbose);
+  }
+  rm(ok); # Not needed anymore
+
+  # Sanity check
+  stopifnot(nrow(data) == nbrOfLoci);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Reorder data points along the genome, because that is what
   # DNAcopy::segment() will return.  At the end, we will undo
   # the sort such that the returned 'data' object is always in
@@ -368,6 +385,17 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
   # Sanity check
   stopifnot(nrow(data) == nbrOfLoci);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Assert no missing values in (chromosome, x, CT)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sanity check
+  ok <- (!is.na(data$chromosome) & !is.na(data$x) & !is.na(data$CT));
+  if (!all(ok)) {
+    throw("INTERNAL ERROR: Detected (chromosome, x, CT) with missing values also after filtering.");
+  }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Multiple chromosomes?
@@ -486,6 +514,16 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   }
 
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Assert no missing values in (chromosome, x, CT)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sanity check
+  ok <- (!is.na(data$chromosome) & !is.na(data$x) & !is.na(data$CT));
+  if (!all(ok)) {
+    throw("INTERNAL ERROR: Detected (chromosome, x, CT) with missing values also after filtering.");
+  }
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup input data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -525,6 +563,20 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   verbose && enter(verbose, "Identification of change points by total copy numbers");
 
   fields <- attachLocally(data, fields=c("CT", "chromosome", "x", "index"));
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Assert no missing values in (chromosome, x, CT)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Sanity check
+  if (any(is.na(chromosome))) {
+    throw("INTERNAL ERROR: Detected missing values in chromosome.");
+  }
+  if (any(is.na(x))) {
+    throw("INTERNAL ERROR: Detected missing values in x.");
+  }
+  if (any(is.na(CT))) {
+    throw("INTERNAL ERROR: Detected missing values in CT.");
+  }
 
   # Physical positions of loci
   fit <- segmentByCBS(CT, 
@@ -607,7 +659,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     
       xStart <- tcnSegments[kk,"tcnStart"];
       xEnd <- tcnSegments[kk,"tcnEnd"];
-      regionTag <- sprintf("[%g,%g]", xStart, xEnd);
+      regionTag <- sprintf("[%10g,%10g]", xStart, xEnd);
       verbose && enter(verbose, sprintf("Total CN segment #%d (%s) of %d", kk, regionTag, nbrOfSegs));
 
       # Empty segment?
@@ -682,7 +734,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     
       xStart <- tcnSegments[kk,"tcnStart"];
       xEnd <- tcnSegments[kk,"tcnEnd"];
-      regionTag <- sprintf("[%g,%g]", xStart, xEnd);
+      regionTag <- sprintf("[%10g,%10g]", xStart, xEnd);
       verbose && enter(verbose, sprintf("Total CN segment #%d (%s) of %d", kk, regionTag, nbrOfSegs));
     
       # Empty segment?
@@ -1027,6 +1079,13 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-07-22
+# o GENERALIZATION/BUG FIX: Now segmentByPairedPSCBS() drops loci for
+#   which CT is missing (regardless of betaT). For instance, in rare cases
+#   when the reference (e.g. the normal) is missing, then it may be that
+#   CT is missing while betaT is not.
+# o Now the verbose output in segmentByPairedPSCBS() specifies the range
+#   of segments with greater precision.
 # 2012-04-20
 # o Now it is possible to skip the DH segmentation in Paired PSCBS, i.e.
 #   segmentByPairedPSCBS(..., flavor="tcn").

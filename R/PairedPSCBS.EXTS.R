@@ -214,6 +214,8 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
       tcnSegRowsIIBefore <- tcnSegRowsII;
       nbrOfTCNsBefore <- segsII[1,"tcnNbrOfLoci"];
+      # Sanity check
+      stopifnot(diff(segRowsRange)+1L == nbrOfTCNsBefore);
 
       for (jj in seq(length=J)) {
         verbose && enter(verbose, sprintf("DH segment #%d of %d", jj, J));
