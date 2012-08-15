@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.28.1 [2012-08-15]
+o Minor grammatical corrections of the Paired PSCBS vignette.
+
+
 Version: 0.28.0 [2012-07-22]
 o Added argument 'minLength' to gapsToSegments().  The default is no
   longer to drop zero-length (minLength == -1L) segments, because

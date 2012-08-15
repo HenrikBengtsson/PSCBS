@@ -132,7 +132,7 @@ Dropping TCN outliers is optional.
 
 \subsection{Skipping centromeres and other large gaps}
 \label{secGaps}
-Like the CBS method, Paired PSCBS does not take the physical locations (in units of nucleotides) of the loci in to account when segmenting the data, only their relative ordering along the genome.  This means that after having ordered the loci along genome, it will treat two "neighboring" loci that are on both sides of the centromere equally as two neighboring loci that are only few hundred bases apart.  This may introduce erroneous change points that appears to be inside the centromere and biological impossible interpretation of the identified copy-number states.  The same issues occur for other large gaps of the genome where there are no observed signals.
+Like the CBS method, Paired PSCBS does not take the physical locations (in units of nucleotides) of the loci in to account when segmenting the data, only their relative ordering along the genome.  This means that after having ordered the loci along genome, it will treat two "neighboring" loci that are on both sides of the centromere equally to two neighboring loci that are only a few hundred bases apart.  This may introduce erroneous change points that appear to be inside the centromere.  The same issues occur for other large gaps of the genome where there are no observed signals.
 
 To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observered loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
 \begin{verbatim}
@@ -172,8 +172,8 @@ getSegments(fit, simplify=TRUE)
 })%>
 \end{verbatim}
 <% segs <- getSegments(fit, simplify=TRUE) %>
-Note how Segment~\#<%=which(segs$tcnNbrOfLoci == 0)%> has no mean-level estimates.  It is because it corresponds to the centromere (the gap) that was identified above.  Paired PSCBS did indeed try to segment it, but since there are no data points, all estimates are missing values.
-Similarly, for Segment~\#<%=which(segs$dhNbrOfLoci == 0)%> the DH and minor and major CNs mean estimates are all missing values.  This is because, Paired PSCBS identified that segment by first segmenting the TCN signals by themselves, and thereafter it tried segmenting the DH signals within that segment.  Since there are no heterozygous SNPs in the segment, there exist no DH signals, and hence no DH mean estimate.
+Note that Segment~\#<%=which(segs$tcnNbrOfLoci == 0)%> has no mean-level estimates.  It is because it corresponds to the centromere (the gap) that was identified above.  Paired PSCBS did indeed try to segment it, but since there are no data points, all estimates are missing values.
+Similarly, for Segment~\#<%=which(segs$dhNbrOfLoci == 0)%> the DH and minor and major CNs mean estimates are all missing values.  This is because, Paired PSCBS identified that segment by first segmenting the TCN signals by themselves, and after which it tried to segment the DH signals within that segment.  Since there are no heterozygous SNPs in the segment, there are no DH signals, and hence there is no DH mean estimate.
 
 
 \subsection{Displaying genomic PSCN profiles}
@@ -182,7 +182,7 @@ To plot the PSCN segmentation results, do:
 plotTracks(fit)
 \end{verbatim}
 which by default displays three panels containing TCN, decrease of heterozygosity (DH), and minor and major CNs as in Figure~\ref{figTracks}.
-To only plot one panel with TCN and minor and major CNs and zoom in on a particular region, do (not shown):
+To plot only one panel with TCN and minor and major CNs and zoom in on a particular region, do (not shown):
 \begin{verbatim}
 plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 \end{verbatim}
@@ -206,13 +206,13 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 
 
 \section{Calling segments}
-The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained from using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
-After the Paired PSCBS method was published, we have also added methods for calling run of homozygosity (ROH) and neutral total copy number (NTCN).
+The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
+After the Paired PSCBS method was published, we have added methods for calling run of homozygosity (ROH) and neutral total copy number (NTCN).
 
 
 
 \subsection{Calling segments with run of homozygosity (ROH)}
-A region has a run of homozygotes (ROH) if all of its SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease of heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
+A region has a run of homozygotes (ROH) if all of its SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease in heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
  However, if there are genotyping errors within an ROH region, we will obtain a non-missing DH mean level and hence also finite minor and major CNs.  In order to adjust for these faulty estimates, we test if the identified segments are ROHs or not by:
 \begin{verbatim}
 <%=evalCapture({
@@ -244,7 +244,7 @@ Segments already called ROH will not be called for AB, and their AB statuses wil
 
 
 \subsubsection{Tuning parameters}
-The AB caller tests whether a segment's DH is zero or not, by comparing its DH level (more precisely the $5\%$ quantile of its bootstrapped DH mean level) to a threshold.  This threshold will be a function of the noise level, because the noiser the BAF signals (and hence the DH signals) are, the greater the bias of the DH mean level for segments in AB will be.  Because of this, the threshold is choosen from data by estimating the noise level of the DH signals near zero.
+The AB caller tests whether a segment's DH is zero or not, by comparing its DH level (or more precisely, the $5\%$ quantile of its bootstrapped DH mean level) to a threshold.  This threshold will be a function of the noise level, because the noiser the BAF signals (and hence the DH signals), the greater the bias of the DH mean level for segments in AB will be.  Because of this, the threshold is choosen from data by estimating the noise level of the DH signals near zero.
 Further rationales and details are given in~\citet{OlshenA_etal_2011}.
 The AB threshold can be estimated explicitly and used in the caller as 
 \begin{verbatim}
@@ -268,7 +268,7 @@ Analogously to the AB caller, segments already called ROH will not be called for
 Segments already called AB will be called non-LOH, because AB and LOH are exclusively mutual states.  
 
 \subsubsection{Tuning parameters}
-The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (more precisely the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be a function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
+The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (or more precisely, the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be a function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
 The LOH threshold can be estimated explicitly and used as:
 \begin{verbatim}
 deltaLOH <- estimateDeltaLOH(fit, midpoint=1/2)
@@ -290,13 +290,13 @@ fit <- callNTCN(fit, verbose=-10)
 
 
 \subsubsection{Tuning parameters}
-The NTCN caller identifies segments which TCN mean levels (more precisely the $95\%$ confidence interval) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a total copy number unit is a function of the normal contamination and specified by argument \code{delta} to \code{callNTCN()}.  The greater the normal contamination, the smaller \code{delta} should be such that the width of the acceptance region becomes smaller.  Argument \code{delta} can be estimated explicitly as:
+The NTCN caller identifies segments which TCN mean levels (or more precisely, which $95\%$ confidence intervals) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a total copy number unit is a function of the normal contamination and specified by the argument \code{delta} to \code{callNTCN()}.  The greater the normal contamination, the smaller the \code{delta} should be, such that the width of the acceptance region becomes smaller.  The argument \code{delta} can be estimated explicitly as:
 \begin{verbatim}
 deltaCN <- estimateDeltaCN(fit, scale=1)
 fit <- callNTCN(fit, delta=deltaCN, verbose=-10)
 \end{verbatim}
-By decreasing argument \code{scale} (a positive scalar), a smaller acceptance region will
-be obtained resulting in a more conservative CN caller.
+By decreasing the argument \code{scale} (a positive scalar), a smaller acceptance region will
+be obtained, which results in a more conservative CN caller.
 
 
 
@@ -321,18 +321,18 @@ pathname <- writeSegments(fit, name="MySample", simplify=TRUE)
 
 
 \section{Experimental}
-In this section we illustrate some of the ongoing and future work of the PSCBS package.  Please be aware that these methods are very much under construction, possibly incomplete and in worst case even incorrect.
+In this section we illustrate some of the ongoing and future work that will be contained in the PSCBS package.  Please be aware that these methods are very much under construction, possibly incomplete and in the worst case, even incorrect.
 
 \subsection{Report generation}
 A multipage PDF report that contains both whole-genome and per-chromosome summaries and figures can be generated by:
 \begin{verbatim}
 > report(fit, sampleName="PairedPSCBS", studyName="PSCBS-Ex", verbose=-10)
 \end{verbatim}
-By default, the reports are written to directory \code{reports/<studyName>/} under the current working directory.  In addition to the PDF, that directory also contains subdirectory \code{figures/} holding all generated figure files (e.g. PNGs and PDFs) for easy inclusing elsewhere.
+By default, the reports are written to directory \code{reports/<studyName>/} under the current working directory.  In addition to the PDF, that directory also contains subdirectory \code{figures/} holding all generated figure files (e.g. PNGs and PDFs) for easy inclusion elsewhere.
 
 
 \subsection{Pruning segmentation profile}
-By applying hierarchical clustering on the segment means, it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer on average.  To to prune Paired PSCBS segmentation results this way, do:
+By applying hierarchical clustering on the segment means, it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer on average.  To prune Paired PSCBS segmentation results this way, do:
 \begin{verbatim}
 <%=evalCapture({
 fitP <- pruneByHClust(fit, h=0.25, verbose=-10)
