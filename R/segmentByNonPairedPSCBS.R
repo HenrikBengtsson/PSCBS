@@ -149,9 +149,9 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   verbose && enter(verbose, "Calling \"genotypes\" from tumor allele B fractions");
   verbose && str(verbose, betaT);
 
-  if (is.na(tauA) & is.na(tauB)) {
+  if (is.na(tauA) && is.na(tauB)) {
     mBAF <- abs(betaT - 1/2);
-    fitT <- findPeaksAndValleys(mBAF);
+    fitT <- aroma.light::findPeaksAndValleys(mBAF);
     type <- NULL; rm(type); # To please 'R CMD check'.
     fitT <- subset(fitT, type == "peak");
     o <- order(fitT$density, decreasing=TRUE);
@@ -258,6 +258,9 @@ setMethodS3("segmentByNonPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-08-20
+# o BUG FIX: segmentByNonPairedPSCBS() forgot to specify namespace
+#   aroma.light when trying to call findPeaksAndValleys().
 # 2012-04-20
 # o Created from segmentByPairedPSCBS.R.
 ############################################################################
