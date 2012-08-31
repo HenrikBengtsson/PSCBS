@@ -113,6 +113,8 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 # @keyword internal
 #*/###########################################################################  
 setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, adjust=1, minDensity=0.2, ..., verbose=FALSE) {
+  require("matrixStats") || throw("Package not loaded: matrixStats");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -201,6 +203,9 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, adjust=1, 
 
 #############################################################################
 # HISTORY:
+# 2012-08-30
+# o ROBUSTNESS: estimateKappaByC1Density() did not make sure that
+#   weightedMedians() was actually available.  Now it requires matrixStats.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-04-08

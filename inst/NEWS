@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.28.3 [2012-08-30]
+o Updated code and Rd cross reference to use the 'matrixStats'
+  package for weightedMedian(), which used to be in 'aroma.light'.
+
+
 Version: 0.28.2 [2012-08-20]
 o BUG FIX: segmentByNonPairedPSCBS() forgot to specify namespace
   aroma.light when trying to call findPeaksAndValleys().

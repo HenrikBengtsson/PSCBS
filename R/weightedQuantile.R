@@ -36,8 +36,8 @@
 #   Internally the following functions may be used:
 #   @see "stats::quantile" (if no weights are specified), or
 #   @see "Hmisc::wtd.quantile".
-#   For a weighted median estimator, @see "aroma.light::weightedMedian"
-#   of the \pkg{aroma.light} package.
+#   For a weighted median estimator, @see "matrixStats::weightedMedian"
+#   of the \pkg{matrixStats} package.
 # }
 #
 # @keyword univar
@@ -119,6 +119,8 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
 
 ############################################################################
 # HISTORY:
+# 2012-08-30
+# o Updated Rdoc cross reference for matrixStats to point to matrixStats.
 # 2011-04-08
 # o Created.
 ############################################################################

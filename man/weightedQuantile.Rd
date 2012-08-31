@@ -45,8 +45,8 @@
   Internally the following functions may be used:
   \code{\link[stats]{quantile}} (if no weights are specified), or
   \code{\link[Hmisc]{wtd.quantile}}.
-  For a weighted median estimator, \code{\link[aroma.light]{weightedMedian}}
-  of the \pkg{aroma.light} package.
+  For a weighted median estimator, \code{\link[matrixStats]{weightedMedian}}
+  of the \pkg{matrixStats} package.
 }
 
 

@@ -130,7 +130,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 # @keyword internal
 #*/###########################################################################  
 setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpoint=1/2, maxC=3, ..., verbose=FALSE) {
-  require("aroma.light") || throw("Package not loaded: aroma.light");
+  require("matrixStats") || throw("Package not loaded: matrixStats");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -229,6 +229,9 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
 ############################################################################
 # HISTORY:
+# 2012-08-30
+# o Now estimateKappaByC1Density() relies on matrixStats (and no longer
+#   aroma.light) to implement weightedMedians().
 # 2012-01-13
 # o Corrected some of verbose messages of estimateDeltaLOHByMinC1ForNonAB()
 #   for PairedPSCBS objects.
