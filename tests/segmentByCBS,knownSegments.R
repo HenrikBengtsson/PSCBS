@@ -19,8 +19,8 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-subplots(6, ncol=1)
-par(mar=c(2,1,1,1)+0.1);
+subplots(7, ncol=1)
+par(mar=c(1.7,1,0.2,1)+0.1);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation
@@ -84,6 +84,14 @@ plotTracks(fit4)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
+
+fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, undo=Inf, verbose=TRUE)
+print(fit5)
+plotTracks(fit5)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+stopifnot(nbrOfSegments(fit5) == nrow(knownSegments));
+
+
 # One can also force a separator between two segments by setting
 # 'start' and 'end' to NAs ('chromosome' has to be given)
 knownSegments <- data.frame(
@@ -91,7 +99,7 @@ knownSegments <- data.frame(
   start     =x[c(  1, NA, 401)],
   end       =x[c(349, NA,   J)]
 )
-fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
-print(fit5)
-plotTracks(fit5)
+fit6 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+print(fit6)
+plotTracks(fit6)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)

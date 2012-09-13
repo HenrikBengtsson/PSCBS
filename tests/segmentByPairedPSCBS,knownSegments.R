@@ -48,6 +48,7 @@ print(fit)
 # Plot results
 dev.set(2L)
 plotTracks(fit)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 # Sanity check
 stopifnot(nbrOfSegments(fit) == nSegs)
@@ -73,6 +74,7 @@ print(fit)
 # Plot results
 dev.set(3L)
 plotTracks(fit)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 # Sanity check [TO FIX: See above]
 stopifnot(nbrOfSegments(fit) == nSegs)
@@ -97,8 +99,35 @@ print(fit)
 # Plot results
 dev.set(4L)
 plotTracks(fit)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 # Sanity check
 stopifnot(nbrOfSegments(fit) == nSegs-1L)
 
 fit3 <- fit
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# (d) Skip the identification of new change points
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+knownSegments <- data.frame(
+  chromosome = c(        1,         1),
+  start      = c(     -Inf, 141510003),
+  end        = c(120992603,      +Inf)
+)
+
+# Paired PSCBS segmentation
+fit <- segmentByPairedPSCBS(dataS, knownSegments=knownSegments, 
+                            undoTCN=Inf, undoDH=Inf,
+                            seed=0xBEEF, verbose=-10)
+print(fit)
+
+# Plot results
+dev.set(5L)
+plotTracks(fit)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+# Sanity check
+stopifnot(nbrOfSegments(fit) == nrow(knownSegments))
+
+fit4 <- fit
