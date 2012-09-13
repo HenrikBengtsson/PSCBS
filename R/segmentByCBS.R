@@ -702,10 +702,16 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, sprintf("Calling %s() of %s", methodName, pkgName));
 
-  # WORKAROUND for the case when there are no data points.
+  # There are a few cases where we can/need to do a dummy segmentation
+  # based on a single data points:
+  # (a) WORKAROUND for the case when there are no data points.
+  # (b) SPEEDUP: When undo=+Inf we don't really have to segment.
   nbrOfNonMissingLoci <- sum(!is.na(cnData$y));
   if (nbrOfNonMissingLoci == 0) {
     args[[1]] <- DNAcopy::CNA(genomdat=0, chrom=0, maploc=0);
+  } else if (undo == +Inf) {
+    args[[1]] <- DNAcopy::CNA(genomdat=0, chrom=0, maploc=0);
+    verbose && cat(verbose, "Skipping identification of new change points (undo=+Inf)");
   }
 
   # In case the method writes to stdout, we capture it
@@ -752,13 +758,45 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       output$num.mark <- 0L;
       output$seg.mean <- as.double(NA);
       segRows[1,] <- as.integer(NA);
-    } else {  
+    } else {
       output <- output[-1,,drop=FALSE];
       segRows <- segRows[-1,,drop=FALSE];
     }
     fit$output <- output;
     fit$segRows <- segRows;
-  } # if (nbrOfNonMissingLoci == 0)
+  } else if (undo == +Inf) {
+    # Drop dummy data point...
+    fit$data <- cnData; ## fit$data[-1,,drop=FALSE];
+    # ...dummy region found
+    output <- fit$output;
+    segRows <- fit$segRows;
+
+    # Sanity check
+    stopifnot(nrow(output) == 1);
+
+    # Was a region specified?
+    if (nbrOfSegments == 1) {
+      seg <- knownSegments[1,];
+      output$ID <- sampleName;
+      output$chrom <- seg$chromosome;
+      if (is.finite(seg$start)) {
+        output$loc.start <- seg$start;
+      } else {
+        output$loc.start <- min(cnData$maploc, na.rm=TRUE);
+      }
+      if (is.finite(seg$end)) {
+        output$loc.end <- seg$end;
+      } else {
+        output$loc.end <- max(cnData$maploc, na.rm=TRUE);
+      }
+    }
+    output$num.mark <- nrow(fit$data);
+    output$seg.mean <- mean(fit$data$y, na.rm=TRUE);
+    segRows$endRow <- nrow(fit$data);
+
+    fit$output <- output;
+    fit$segRows <- segRows;
+  } # if (undo == +Inf)
 
   verbose && cat(verbose, "Captured output that was sent to stdout:");
   stdout <- paste(stdout, collapse="\n");
@@ -901,6 +939,8 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 ############################################################################
 # HISTORY:
 # 2012-09-13
+# o SPEEDUP: Now segmentByCBS(..., undo=+Inf) returns much faster, which
+#   is possible because there is no need to identify new change points.
 # o CONSISTENCY FIX: Changed the behavior of extreme values of argument
 #   'undo' to segmentByCBS() such that 'undo=0' (was 'undo=+Inf') now
 #   means that it will not ask DNAcopy::segment() to undo the segmentation,

@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.28.5 [2012-09-13]
+o SPEEDUP: Now segmentByCBS(..., undo=+Inf) returns much faster, which
+  is possible because there is no need to identify new change points.
+
+
 Version: 0.28.4 [2012-09-13]
 o CONSISTENCY FIX: Changed the behavior of extreme values of argument
   'undo' to segmentByCBS() such that 'undo=0' (was 'undo=+Inf') now
