@@ -24,7 +24,7 @@
   see [1,2].
  }
 
- \usage{\method{segmentByCBS}{default}(y, chromosome=0, x=NULL, index=seq(along = y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE)}
+ \usage{\method{segmentByCBS}{default}(y, chromosome=0, x=NULL, index=seq(along = y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE)}
 
  \arguments{
    \item{y}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic signals to be segmented.}
@@ -36,9 +36,12 @@
    \item{index}{An optional \code{\link[base]{integer}} \code{\link[base]{vector}} of length J specifying
      the genomewide indices of the loci.}
    \item{w}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} in [0,1] of J weights.}
-   \item{undo}{A non-negative \code{\link[base]{numeric}}.  If less than +\code{\link[base:is.finite]{Inf}}, then
+   \item{undo}{A non-negative \code{\link[base]{numeric}}.  If greater than zero, then
        arguments \code{undo.splits="sdundo"} and \code{undo.SD=undo}
-       are passed to \code{DNAcopy::segment()}.}
+       are passed to \code{DNAcopy::segment()}.
+       In the special case when \code{undo} is @+Inf, the segmentation
+       result will not contain any changepoints (in addition to what
+       is specified by argument \code{knownSegments}).}
    \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
        segmentation function.}
    \item{joinSegments}{If \code{\link[base:logical]{TRUE}}, there are no gaps between neighboring
@@ -165,7 +168,13 @@ fitD <- segmentByCBS(y, x=x, seed=0xBEEF)
 
 # Test #5: Allow for some missing genomic annotations
 x[495] <- NA
-fitD <- segmentByCBS(y, x=x, seed=0xBEEF)
+fitE <- segmentByCBS(y, x=x, seed=0xBEEF)
+
+
+# Test #6: Undo all change points found
+fitF <- segmentByCBS(y, x=x, undo=Inf, seed=0xBEEF)
+print(fitF)
+stopifnot(nbrOfSegments(fitF) == 1L)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

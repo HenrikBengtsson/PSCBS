@@ -83,6 +83,14 @@ plotTracks(fit4)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
+
+fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, undo=Inf, verbose=TRUE)
+print(fit5)
+plotTracks(fit5)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)s
+stopifnot(nbrOfSegments(fit5) == nrow(knownSegments));
+
+
 # One can also force a separator between two segments by setting
 # 'start' and 'end' to NAs ('chromosome' has to be given)
 knownSegments <- data.frame(
@@ -90,7 +98,8 @@ knownSegments <- data.frame(
   start     =x[c(  1, NA, 401)],
   end       =x[c(349, NA,   J)]
 )
-fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
-print(fit5)
-plotTracks(fit5)
+fit6 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+print(fit6)
+plotTracks(fit6)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+

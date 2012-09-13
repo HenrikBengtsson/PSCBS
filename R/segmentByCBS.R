@@ -27,9 +27,12 @@
 #   \item{index}{An optional @integer @vector of length J specifying
 #     the genomewide indices of the loci.}
 #   \item{w}{Optional @numeric @vector in [0,1] of J weights.}
-#   \item{undo}{A non-negative @numeric.  If less than +@Inf, then
+#   \item{undo}{A non-negative @numeric.  If greater than zero, then
 #       arguments \code{undo.splits="sdundo"} and \code{undo.SD=undo}
-#       are passed to \code{DNAcopy::segment()}.}
+#       are passed to \code{DNAcopy::segment()}.
+#       In the special case when \code{undo} is @+Inf, the segmentation
+#       result will not contain any changepoints (in addition to what
+#       is specified by argument \code{knownSegments}).}
 #   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
 #       segmentation function.}
 #   \item{joinSegments}{If @TRUE, there are no gaps between neighboring
@@ -102,7 +105,7 @@
 # }
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=Inf, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -665,7 +668,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     params$weights <- data$w;
   }
 
-  if (undo < Inf) {
+  if (undo > 0) {
     params$undo.splits <- "sdundo";
     params$undo.SD <- undo;
   }
@@ -897,6 +900,14 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-09-13
+# o CONSISTENCY FIX: Changed the behavior of extreme values of argument
+#   'undo' to segmentByCBS() such that 'undo=0' (was 'undo=+Inf') now
+#   means that it will not ask DNAcopy::segment() to undo the segmentation,
+#   and such that 'undo=+Inf' means that no changepoints will be identified.
+#   The latter case allows you to effectively skip the segmentation but
+#   still calculate all the CBS statistics across a set of  known segments
+#   via segmentByCBS(..., undo=+Inf, knownSegments=knownSegments).
 # 2012-06-05
 # o Now segmentByCBS() for data frame:s does a better job identifying
 #   the CN signals.

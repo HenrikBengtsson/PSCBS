@@ -40,7 +40,7 @@
 #   \item{alphaTCN, alphaDH}{The significance levels for segmenting total
 #        copy numbers (TCNs) and decrease-in-heterozygosity signals (DHs),
 #        respectively.}
-#   \item{undoTCN, undoDH}{Non-negative @numerics.  If less than +@Inf, 
+#   \item{undoTCN, undoDH}{Non-negative @numerics.  If greater than 0, 
 #        then a cleanup of segmentions post segmentation is done.
 #        See argument \code{undo} of @see "segmentByCBS" for more
 #        details.}
@@ -132,7 +132,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=Inf, undoDH=Inf, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -1079,6 +1079,10 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-09-13
+# o CONSISTENCY FIX: Changed the behavior of extreme values of argument
+#   'undoTCN' and 'undoDH' to segmentByPairedPSCBS() such that it is
+#   consistent with the new rules for 'undo' of segmentByCBS().
 # 2012-07-22
 # o GENERALIZATION/BUG FIX: Now segmentByPairedPSCBS() drops loci for
 #   which CT is missing (regardless of betaT). For instance, in rare cases

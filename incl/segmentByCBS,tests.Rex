@@ -35,7 +35,13 @@ fitD <- segmentByCBS(y, x=x, seed=0xBEEF)
 
 # Test #5: Allow for some missing genomic annotations
 x[495] <- NA
-fitD <- segmentByCBS(y, x=x, seed=0xBEEF)
+fitE <- segmentByCBS(y, x=x, seed=0xBEEF)
+
+
+# Test #6: Undo all change points found
+fitF <- segmentByCBS(y, x=x, undo=Inf, seed=0xBEEF)
+print(fitF)
+stopifnot(nbrOfSegments(fitF) == 1L)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

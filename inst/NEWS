@@ -2,6 +2,18 @@
 Package: PSCBS
 ==============
 
+Version: 0.28.4 [2012-09-13]
+o CONSISTENCY FIX: Changed the behavior of extreme values of argument
+  'undo' to segmentByCBS() such that 'undo=0' (was 'undo=+Inf') now
+  means that it will not ask DNAcopy::segment() to undo the segmentation,
+  and such that 'undo=+Inf' means that no changepoints will be identified.
+  The latter case allows you to effectively skip the segmentation but
+  still calculate all the CBS statistics across a set of known segments
+  via segmentByCBS(..., undo=+Inf, knownSegments=knownSegments).
+  Arguments 'undoTCN' and 'undoDH' to segmentByPairedPSCBS() are
+  adjusted analogously.
+
+
 Version: 0.28.3 [2012-08-30]
 o Updated code and Rd cross reference to use the 'matrixStats'
   package for weightedMedian(), which used to be in 'aroma.light'.
