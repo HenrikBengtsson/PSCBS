@@ -505,6 +505,8 @@ setMethodS3("dropRegion", "AbstractCBS", function(fit, region, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("shiftTCN", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -541,6 +543,8 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2012-09-13
+# o Added shiftTCN().
 # 2012-02-27
 # o Added renameChromosomes() to AbstractCBS.
 # 2012-02-25

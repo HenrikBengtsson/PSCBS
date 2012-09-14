@@ -304,7 +304,6 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 }, protected=TRUE) # resegment()
 
 
-
 ##############################################################################
 # HISTORY
 # 2012-04-21

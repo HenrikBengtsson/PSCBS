@@ -20,7 +20,7 @@
   and \code{+Inf}.
  }
 
- \usage{\method{gapsToSegments}{data.frame}(gaps, resolution=1, minLength=0, ...)}
+ \usage{\method{gapsToSegments}{data.frame}(gaps, resolution=1, minLength=0, dropGaps=FALSE, ...)}
 
  \arguments{
    \item{gaps}{A \code{\link[base]{data.frame}} with columns \code{chromosome}, \code{start},
@@ -28,6 +28,7 @@
    \item{resolution}{A non-negative \code{\link[base]{numeric}} specifying the minimum
      length unit, which by default equals one nucleotide/base pair.}
    \item{minLength}{Minimum length of segments to be kept.}
+   \item{dropGaps}{If \code{\link[base:logical]{TRUE}}, the gaps themselves are not part of the output.}
    \item{...}{Not used.}
  }
 

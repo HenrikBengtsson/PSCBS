@@ -53,8 +53,45 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
     return(res);
   }
 
-  # Don't compare other attributes
-  NextMethod("all.equal", target, current, check.attributes=check.attributes, ...);
+  # Compare locus-level data
+  dataT <- getLocusData(target);
+  dataC <- getLocusData(current);
+  res <- all.equal(dataT, dataC, check.attributes=check.attributes, ...);
+  if (!isTRUE(res)) {
+    attr(res, "what") <- "getLocusData()";
+    return(res);
+  }
+
+  # Compare segments
+  dataT <- getSegments(target);
+  dataC <- getSegments(current);
+  res <- all.equal(dataT, dataC, check.attributes=check.attributes, ...);
+  if (!isTRUE(res)) {
+    attr(res, "what") <- "getSegments()";
+    return(res);
+  }
+
+  # Compare field names
+  fieldsT <- names(target);
+  fieldsC <- names(current);
+  res <- all.equal(fieldsT, fieldsC, check.attributes=check.attributes, ...);
+  if (!isTRUE(res)) {
+      attr(res, "what") <- "names";
+    return(res);
+  }
+
+  # Compare other fields
+  for (key in fieldsT) {
+    dataT <- target[[key]];
+    dataC <- current[[key]];
+    res <- all.equal(dataT, dataC, check.attributes=check.attributes, ...);
+    if (!isTRUE(res)) {
+      attr(res, "what") <- sprintf("[[\"%s\"]]", key);
+      return(res);
+    }
+  } # for (key ...)
+
+  return(TRUE);
 }, protected=TRUE)
 
 
@@ -556,6 +593,9 @@ setMethodS3("resegment", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2012-09-13
+# o Updated all.equal() for AbstractCBS to compare locus-level data,
+#   segments, and other fields.
 # 2012-06-03
 # o DOCUMENTATION: Added Rd help for updateMeans().
 # 2011-12-03

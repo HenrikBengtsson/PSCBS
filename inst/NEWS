@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.28.6 [2012-09-13]
+o Added argument 'dropGaps' to gapsToSegments().
+o Updated all.equal() for AbstractCBS to compare locus-level data,
+  segments, and other fields.
+
+
 Version: 0.28.5 [2012-09-13]
 o SPEEDUP: Now segmentByCBS(..., undo=+Inf) returns much faster, which
   is possible because there is no need to identify new change points.

@@ -18,6 +18,7 @@
 #   \item{resolution}{A non-negative @numeric specifying the minimum
 #     length unit, which by default equals one nucleotide/base pair.}
 #   \item{minLength}{Minimum length of segments to be kept.}
+#   \item{dropGaps}{If @TRUE, the gaps themselves are not part of the output.}
 #   \item{...}{Not used.}
 # }
 #
@@ -36,7 +37,7 @@
 # @keyword IO
 # @keyword internal
 #*/###########################################################################  
-setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLength=0L, ...) {
+setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLength=0L, dropGaps=FALSE, ...) {
   # To please R CMD check
   chromosome <- NULL; rm(chromosome);
 
@@ -48,11 +49,9 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
   stopifnot(all(is.element(c("chromosome", "start", "end"), keys)));
   stopifnot(all(gaps$start <= gaps$end, na.rm=TRUE));
 
-
   # Order gaps by the genome
   o <- order(gaps$chromosome, gaps$start, gaps$end);
   gaps <- gaps[o,];
-
 
   # For each chromosome...
   knownSegments <- NULL;
@@ -73,13 +72,22 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
     # All boundaries in order
     # (this is possible because gaps are non-overlapping)
     naValue <- as.double(NA);
-    bps <- rep(naValue, times=4*nCC);
-    bps[seq(from=1, to=4*nCC, by=4)] <- starts - resolution;
-    bps[seq(from=2, to=4*nCC, by=4)] <- starts;
-    bps[seq(from=3, to=4*nCC, by=4)] <- ends;
-    bps[seq(from=4, to=4*nCC, by=4)] <- ends + resolution;
-    bps <- c(-Inf, bps, +Inf);
-    dim(bps) <- c(2L, 2*nCC+1L);
+    if (dropGaps) {
+      bps <- rep(naValue, times=2*nCC);
+      bps[seq(from=1, to=2*nCC, by=2)] <- starts - resolution;
+      bps[seq(from=2, to=2*nCC, by=2)] <- ends + resolution;
+      bps <- c(-Inf, bps, +Inf);
+      dim(bps) <- c(2L, 2*nCC);
+    } else {
+      bps <- rep(naValue, times=4*nCC);
+      bps[seq(from=1, to=4*nCC, by=4)] <- starts - resolution;
+      bps[seq(from=2, to=4*nCC, by=4)] <- starts;
+      bps[seq(from=3, to=4*nCC, by=4)] <- ends;
+      bps[seq(from=4, to=4*nCC, by=4)] <- ends + resolution;
+      bps <- c(-Inf, bps, +Inf);
+      dim(bps) <- c(2L, 2*nCC+1L);
+    }
+
     knownSegmentsCC <- data.frame(chromosome=chr, start=bps[1L,], end=bps[2L,]);
 
     knownSegments <- rbind(knownSegments, knownSegmentsCC);
@@ -115,6 +123,8 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
 
 ###############################################################################
 # HISTORY:
+# 2012-09-13
+# o Added argument 'dropGaps' to gapsToSegments().
 # 2012-07-22
 # o Added argument 'minLength' to gapsToSegments().
 # 2011-12-12

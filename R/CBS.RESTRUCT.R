@@ -1,3 +1,20 @@
+setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
+  # Argument 'shift':
+  shift <- Arguments$getDouble(shift, disallow=c("NA", "NaN", "Inf"));
+
+  data <- getLocusData(fit);
+  data$y <- data$y + shift;
+  fit$data <- data;
+  rm(data);
+
+  if (update) {
+    fit <- updateMeans(fit, ...);  
+  }
+
+  fit;
+}, protected=TRUE)
+
+
 ###########################################################################/**
 # @set "class=CBS"
 # @RdocMethod append
@@ -321,6 +338,8 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
 
 ############################################################################
 # HISTORY:
+# 2012-09-13
+# o Added shiftTCN() for CBS.
 # 2012-02-24
 # o ROBUSTNESS: Added more sanity checks validating the correctness of
 #   what is returned by extractSegments() for CBS.

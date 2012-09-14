@@ -1,3 +1,18 @@
+setMethodS3("shiftTCN", "PairedPSCBS", function(fit, shift, update=TRUE, ...) {
+  # Argument 'shift':
+  shift <- Arguments$getDouble(shift, disallow=c("NA", "NaN", "Inf"));
+
+  data <- getLocusData(fit);
+  data$CT <- data$CT + shift;
+  fit$data <- data;
+  rm(data);
+
+  if (update) {
+    fit <- updateMeans(fit, ...);  
+  }
+
+  fit;
+}, protected=TRUE)
 
 
 setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
@@ -407,6 +422,8 @@ print(tcnSegRowsII);
 
 ############################################################################
 # HISTORY:
+# 2012-09-13
+# o Added shiftTCN() for PairedPSCBS.
 # 2012-01-21
 # o CLEANUP: Removed left-over debug output in postsegmentTCN().
 # 2012-01-09
