@@ -99,4 +99,3 @@ stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit))
 
 plotTracks(fitT, Clim=Clim)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
-

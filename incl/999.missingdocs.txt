@@ -101,3 +101,5 @@ renameChromosomes renameChromosomes.AbstractCBS
 report
 writeSegments.DNAcopy
 estimateDeltaCN estimateDeltaCN.PairedPSCBS
+shiftTCN shiftTCN.AbstractCBS shiftTCN.CBS
+shiftTCN.PairedPSCBS

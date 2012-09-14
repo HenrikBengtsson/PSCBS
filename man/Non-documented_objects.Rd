@@ -274,6 +274,10 @@
 \alias{writeSegments.DNAcopy}
 \alias{estimateDeltaCN}
 \alias{estimateDeltaCN.PairedPSCBS}
+\alias{shiftTCN}
+\alias{shiftTCN.AbstractCBS}
+\alias{shiftTCN.CBS}
+\alias{shiftTCN.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
