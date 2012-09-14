@@ -270,26 +270,6 @@ setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25
 
 
 
-setMethodS3("getChromosomeOffsets", "CBS", function(fit, resolution=1e6, ...) {
-  # Argument 'resolution':
-  if (!is.null(resolution)) {
-    resolution <- Arguments$getDouble(resolution, range=c(1,Inf));
-  }
-
-  data <- getChromosomeRanges(fit, ...);
-  splits <- data[,"start"] + data[,"length"];
-
-  if (!is.null(resolution)) {
-    splits <- ceiling(splits / resolution);
-    splits <- resolution * splits;
-  }
-
-  offsets <- c(0L, cumsum(splits));
-  names(offsets) <- c(rownames(data), NA);
-
-  offsets;
-}, protected=TRUE) # getChromosomeOffsets()
-
 
 setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -310,6 +290,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
   segs <- getSegments(fit);
+  knownSegments <- fit$params$knownSegments;
 
   # Identify all chromosome
   chromosomes <- getChromosomes(fit);
@@ -354,14 +335,24 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
     idxs <- which(segs$chromosome == chromosome);
     segs[idxs,segFields] <- offset + segs[idxs,segFields];
 
+    # Offset known segments
+    idxs <- which(knownSegments$chromosome == chromosome);
+    knownSegments[idxs,c("start", "end")] <- offset + knownSegments[idxs,c("start", "end")];
+
     verbose && exit(verbose);
   } # for (kk ...)
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- fit;
   fitT$data <- data;
   fitT$output <- segs;
   fitT$chromosomeStats <- chrStats;
+  fitT$params$knownSegments <- knownSegments;
+  fitT$params$chrOffsets <- chrOffsets;
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sanity checks

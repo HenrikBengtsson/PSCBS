@@ -42,6 +42,15 @@ setMethodS3("as.data.frame", "PSCBS", function(x, ...) {
 }, protected=TRUE)
 
 
+setMethodS3("getLocusSignalNames", "PSCBS", function(fit, ...) {
+  c("CT", "rho");
+}, protected=TRUE)
+
+setMethodS3("getSegmentTrackPrefixes", "PSCBS", function(fit, ...) {
+  c("tcn", "dh");
+}, protected=TRUE)
+
+
 setMethodS3("getLocusData", "PSCBS", function(fit, indices=NULL, fields=c("asis", "full"), ...) {
   # Argument 'indices':
   if (!is.null(indices)) {
@@ -182,23 +191,12 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
 
 
 
-setMethodS3("getSegmentSizes", "PSCBS", function(fit, by=c("length", "count"), ...) {
-  by <- match.arg(by);
-
-  data <- getSegments(fit, ...);
-  if (by == "length") {
-    res <- data[["tcnEnd"]]-data[["tcnStart"]]+1L;
-  } else if (by == "count") {
-    res <- data[["tcnNbrOfLoci"]];
-  }
-  res;
-})
-
-
 ############################################################################
 # HISTORY:
 # 2012-04-21
-# o Moved getSegmentSizes() from PairedPSCBS to PSCBS.
+# o CLEANUP: Moved getSegmentSizes() from PSCBS to AbstractCBS.
+# 2012-04-21
+# o CLEANUP: Moved getSegmentSizes() from PairedPSCBS to PSCBS.
 # 2012-02-27
 # o Added argument 'fields' to getLocusData() for PairedPSCBS.
 # 2011-12-12

@@ -178,6 +178,23 @@ setMethodS3("signalType<-", "CBS", function(x, value) {
 
 
 
+setMethodS3("getLocusSignalNames", "CBS", function(fit, ...) {
+  data <- fit$data;
+  names <- colnames(data);
+  if (is.element("y", names)) {
+    return("y");
+  } else if (is.element("CT", names)) {
+    return("CT");
+  }
+
+  throw("INTERNAL ERROR: Unknown locus signal names: ", paste(names, collapse=", "));
+}, protected=TRUE)
+
+setMethodS3("getSegmentTrackPrefixes", "CBS", function(fit, ...) {
+  c("");
+}, protected=TRUE)
+
+
 setMethodS3("getLocusData", "CBS", function(fit, indices=NULL, addCalls=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -266,18 +283,6 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
   segs;
 }, private=TRUE)
 
-
-setMethodS3("getSegmentSizes", "CBS", function(fit, by=c("length", "count"), ...) {
-  by <- match.arg(by);
-
-  data <- getSegments(fit, ...);
-  if (by == "length") {
-    res <- data[["end"]]-data[["start"]]+1L;
-  } else if (by == "count") {
-    res <- data[["nbrOfLoci"]];
-  }
-  res;
-})
 
 
 setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {

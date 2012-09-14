@@ -77,7 +77,7 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
       bps[seq(from=1, to=2*nCC, by=2)] <- starts - resolution;
       bps[seq(from=2, to=2*nCC, by=2)] <- ends + resolution;
       bps <- c(-Inf, bps, +Inf);
-      dim(bps) <- c(2L, 2*nCC);
+      dim(bps) <- c(2L, nCC+1L);
     } else {
       bps <- rep(naValue, times=4*nCC);
       bps[seq(from=1, to=4*nCC, by=4)] <- starts - resolution;

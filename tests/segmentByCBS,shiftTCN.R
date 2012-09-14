@@ -27,7 +27,7 @@ x <- x[keep]
 y <- y[keep]
 
 data <- list()
-for (chr in 1:10) {
+for (chr in 1:2) {
   data[[chr]] <- data.frame(chromosome=chr, y=y, x=x)
 }
 data <- Reduce(rbind, data)
@@ -99,3 +99,14 @@ stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit))
 
 plotTracks(fitT, Clim=Clim)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
+segList <- seqOfSegmentsByDP(fit);
+K <- length(segList);
+subplots(K, ncol=2, byrow=FALSE);
+par(mar=c(2,1,1,1));
+for (kk in 1:K) {
+  knownSegments <- segList[[kk]];
+  fitKK <- resegment(fit, knownSegments=knownSegments, undo=+Inf);
+  plotTracks(fitKK, Clim=c(-3,3));
+} # for (kk ...)

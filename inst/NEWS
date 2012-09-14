@@ -2,7 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.29.0 [2012-09-14]
+o Added trial version of pruneByDP() for AbstractCBS.
+
+
 Version: 0.28.6 [2012-09-13]
+o Now tileChromosomes() also adjusts 'knownSegments'.
 o Added argument 'dropGaps' to gapsToSegments().
 o Updated all.equal() for AbstractCBS to compare locus-level data,
   segments, and other fields.

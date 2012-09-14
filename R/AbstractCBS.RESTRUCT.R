@@ -111,19 +111,22 @@ setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
 
   data <- getLocusData(fit);
   segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
+  knownSegments <- fit$params$knownSegments;
   
   for (cc in seq(length=n)) {
     chr <- from[cc];
     chrN <- to[cc];
     data$chromosome[data$chromosome == chr] <- chrN;
     segs$chromosome[segs$chromosome == chr] <- chrN;
+    knownSegments$chromosome[knownSegments$chromosome == chr] <- chrN;
   } # for (cc ...)
   
   fit$data <- data;
   fit$output <- segs;
+  fit$params$knownSegments <- knownSegments;
 
   fit;
-}, protected=TRUE)
+}, protected=TRUE) # renameChromosomes()
 
 
 setMethodS3("extractChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
@@ -544,6 +547,7 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 ############################################################################
 # HISTORY:
 # 2012-09-13
+# o Now renameChromosomes() also adjusts 'knownSegments'.
 # o Added shiftTCN().
 # 2012-02-27
 # o Added renameChromosomes() to AbstractCBS.

@@ -576,6 +576,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
   segs <- getSegments(fit);
+  knownSegments <- fit$params$knownSegments;
 
   # Identify all chromosome
   chromosomes <- getChromosomes(fit);
@@ -635,13 +636,23 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
     idxs <- which(segs$chromosome == chromosome);
     segs[idxs,segFields] <- offset + segs[idxs,segFields];
 
+    # Offset known segments
+    idxs <- which(knownSegments$chromosome == chromosome);
+    knownSegments[idxs,c("start", "end")] <- offset + knownSegments[idxs,c("start", "end")];
+
     verbose && exit(verbose);
   } # for (kk ...)
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fit$data <- data;
   fit$output <- segs;
   fit$chromosomeStats <- chromosomeStats;
+  fit$params$knownSegments <- knownSegments;
+#  fitT$params$chrOffsets <- chrOffsets;
+
 
   verbose && exit(verbose);
 
@@ -959,6 +970,61 @@ setMethodS3("drawChangePoints", "PSCBS", function(fit, labels=FALSE, col="#66666
   }
 }, protected=TRUE)
 
+
+
+
+setMethodS3("getChromosomeRanges", "PairedPSCBS", function(fit, ...) {
+  # To please R CMD check, cf. subset()
+  chromosome <- NULL; rm(chromosome);
+
+  segs <- getSegments(fit, splitter=FALSE);
+  chromosomes <- sort(unique(segs$chromosome));
+
+  # Allocate
+  naValue <- as.double(NA);
+  res <- matrix(naValue, nrow=length(chromosomes), ncol=3);
+  rownames(res) <- chromosomes;
+  colnames(res) <- c("start", "end", "length");
+
+  # Get start and end of each chromosome.
+  for (ii in seq(length=nrow(res))) {
+    chr <- chromosomes[ii];
+    segsII <- subset(segs, chromosome == chr);
+    res[ii,"start"] <- min(segsII$tcnStart, na.rm=TRUE);
+    res[ii,"end"] <- max(segsII$tcnEnd, na.rm=TRUE);
+  } # for (ii ...)
+
+  res[,"length"] <- res[,"end"] - res[,"start"] + 1L;
+
+  # Sanity check
+  stopifnot(nrow(res) == length(chromosomes));
+
+  res <- as.data.frame(res);
+  res <- cbind(chromosome=chromosomes, res);
+
+  res;
+}, protected=TRUE) # getChromosomeRanges() 
+
+
+setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6, ...) {
+  # Argument 'resolution':
+  if (!is.null(resolution)) {
+    resolution <- Arguments$getDouble(resolution, range=c(1,Inf));
+  }
+
+  data <- getChromosomeRanges(fit, ...);
+  splits <- data[,"start"] + data[,"length"];
+
+  if (!is.null(resolution)) {
+    splits <- ceiling(splits / resolution);
+    splits <- resolution * splits;
+  }
+
+  offsets <- c(0L, cumsum(splits));
+  names(offsets) <- c(rownames(data), NA);
+
+  offsets;
+}, protected=TRUE) # getChromosomeOffsets() 
 
 
 

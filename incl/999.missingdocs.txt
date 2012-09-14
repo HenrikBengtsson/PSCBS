@@ -40,7 +40,7 @@
  extractSegmentMeansByLocus
  extractSegmentMeansByLocus.DNAcopy extractTCNAndDHs getCallStatistics
  getCallStatisticsByArms getCallStatisticsByArms.CBS
- getChromosomeOffsets getChromosomeOffsets.CBS getChromosomeRanges
+ getChromosomeOffsets getChromosomeRanges
  getChromosomeRanges.CBS getChromosomes getChromosomes.DNAcopy getFGA
  getFGG getFGL getFractionOfGenomeAltered getFractionOfGenomeGained
  getFractionOfGenomeLost getLocusData getLocusData.CBS
@@ -103,3 +103,14 @@ writeSegments.DNAcopy
 estimateDeltaCN estimateDeltaCN.PairedPSCBS
 shiftTCN shiftTCN.AbstractCBS shiftTCN.CBS
 shiftTCN.PairedPSCBS
+getChromosomeOffsets.AbstractCBS getChromosomeRanges.PairedPSCBS
+getChromosomeRanges.AbstractCBS
+seqOfSegmentsByDP seqOfSegmentsByDP.AbstractCBS
+seqOfSegmentsByDP.CBS seqOfSegmentsByDP.PairedPSCBS
+seqOfSegmentsByDP.matrix
+getChromosomeOffsets.PairedPSCBS getLocusSignalNames
+getLocusSignalNames.AbstractCBS getLocusSignalNames.CBS
+getLocusSignalNames.PSCBS getSegmentTrackPrefixes
+getSegmentTrackPrefixes.AbstractCBS getSegmentTrackPrefixes.CBS
+getSegmentTrackPrefixes.PSCBS
+pruneByDP

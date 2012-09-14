@@ -61,14 +61,15 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
  \tab \code{\link[PSCBS:plotTracks.PairedPSCBS]{plotTracks}} \tab Plots parental specific copy numbers along the genome.\cr
  \tab \code{segmentByNonPairedPSCBS} \tab  -\cr
  \tab \code{segmentByPairedPSCBS} \tab  -\cr
+ \tab \code{seqOfSegmentsByDP} \tab  -\cr
 }
 
 
  \bold{Methods inherited from PSCBS}:\cr
-append, as.data.frame, drawChangePoints, extractChromosomes, getLocusData, getSegmentSizes, isSegmentSplitter, writeSegments
+append, as.data.frame, drawChangePoints, extractChromosomes, getLocusData, getLocusSignalNames, getSegmentTrackPrefixes, isSegmentSplitter, writeSegments
 
  \bold{Methods inherited from AbstractCBS}:\cr
-all.equal, append, as.data.frame, drawChangePoints, dropChangePoint, dropChangePoints, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomes, getLocusData, getSampleName, getSegments, getSegmentSizes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByHClust, renameChromosomes, report, resegment, sampleCNs, sampleName, sampleName<-, save, setLocusData, setSampleName, setSegments, shiftTCN, tileChromosomes, updateMeans
+all.equal, append, as.data.frame, drawChangePoints, dropChangePoint, dropChangePoints, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomeOffsets, getChromosomeRanges, getChromosomes, getLocusData, getLocusSignalNames, getSampleName, getSegments, getSegmentSizes, getSegmentTrackPrefixes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByDP, pruneByHClust, renameChromosomes, report, resegment, sampleCNs, sampleName, sampleName<-, save, seqOfSegmentsByDP, setLocusData, setSampleName, setSegments, shiftTCN, tileChromosomes, updateMeans
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within

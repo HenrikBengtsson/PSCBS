@@ -301,6 +301,10 @@ setMethodS3("getLocusData", "AbstractCBS", abstract=TRUE);
 
 setMethodS3("setLocusData", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
+setMethodS3("getLocusSignalNames", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+setMethodS3("getSegmentTrackPrefixes", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
 
 ###########################################################################/**
 # @RdocMethod nbrOfLoci
@@ -540,7 +544,25 @@ setMethodS3("nbrOfChromosomes", "AbstractCBS", function(this, ...) {
 })
 
 
-setMethodS3("getSegmentSizes", "AbstractCBS", abstract=TRUE);
+setMethodS3("getSegmentSizes", "AbstractCBS", function(fit, by=c("length", "count"), ...) {
+  by <- match.arg(by);
+
+  if (by == "length") {
+    prefix <- getSegmentTrackPrefixes(fit)[1];
+    keys <- toCamelCase(paste(prefix, " ", c("start", "end")));
+  } else if (by == "count") {
+    keys <- "nbrOfLoci";
+  }
+  data <- getSegments(fit, ...)[,keys];
+  
+  if (by == "length") {
+    res <- data[[2L]]-data[[1L]]+1L;
+  } else if (by == "count") {
+    res <- data[[1L]];
+  }
+  res;
+})
+
 
 setMethodS3("extractCNs", "AbstractCBS", abstract=TRUE);
 
@@ -591,8 +613,34 @@ setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
 setMethodS3("resegment", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
+setMethodS3("getChromosomeRanges", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+setMethodS3("getChromosomeOffsets", "AbstractCBS", function(fit, resolution=1e6, ...) {
+  # Argument 'resolution':
+  if (!is.null(resolution)) {
+    resolution <- Arguments$getDouble(resolution, range=c(1,Inf));
+  }
+
+  data <- getChromosomeRanges(fit, ...);
+  splits <- data[,"start"] + data[,"length"];
+
+  if (!is.null(resolution)) {
+    splits <- ceiling(splits / resolution);
+    splits <- resolution * splits;
+  }
+
+  offsets <- c(0L, cumsum(splits));
+  names(offsets) <- c(rownames(data), NA);
+
+  offsets;
+}, protected=TRUE) # getChromosomeOffsets()
+
+
 ############################################################################
 # HISTORY:
+# 2012-09-14
+# o GENERALIZATION: Added getSegmentSizes() for AbstractCBS.
+# o GENERALIZATION: Added getChromosomeOffsets() for AbstractCBS.
 # 2012-09-13
 # o Updated all.equal() for AbstractCBS to compare locus-level data,
 #   segments, and other fields.
