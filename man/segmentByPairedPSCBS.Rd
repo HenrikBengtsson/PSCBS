@@ -22,7 +22,7 @@
   It is intended to be applied to one tumor-normal sample at the time.
  }
 
- \usage{\method{segmentByPairedPSCBS}{default}(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE)}
+ \usage{\method{segmentByPairedPSCBS}{default}(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE)}
 
  \arguments{
    \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total copy number (TCN)
@@ -70,6 +70,8 @@
    \item{knownSegments}{Optional \code{\link[base]{data.frame}} specifying
      \emph{non-overlapping} known segments.  These segments must
      not share loci.  See \code{\link{findLargeGaps}}() and \code{\link{gapsToSegments}}().}
+   \item{dropMissingCT}{If \code{\link[base:logical]{TRUE}}, loci for which 'CT' is missing
+     are dropped, otherwise not.}
    \item{seed}{An (optional) \code{\link[base]{integer}} specifying the random seed to be
      set before calling the segmentation method.  The random seed is
      set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}

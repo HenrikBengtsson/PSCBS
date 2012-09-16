@@ -61,6 +61,8 @@
 #   \item{knownSegments}{Optional @data.frame specifying 
 #     \emph{non-overlapping} known segments.  These segments must
 #     not share loci.  See @see "findLargeGaps" and @see "gapsToSegments".}
+#   \item{dropMissingCT}{If @TRUE, loci for which 'CT' is missing 
+#     are dropped, otherwise not.}
 #   \item{seed}{An (optional) @integer specifying the random seed to be 
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
@@ -132,7 +134,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -236,6 +238,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
   if (!all(is.element(c("chromosome", "start", "end"), colnames(knownSegments)))) {
     throw("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)));
+  }
+
+  # Argument 'dropMissingCT':
+  dropMissingCT <- Arguments$getLogical(dropMissingCT);
+  if (!dropMissingCT) {
+    if (is.element(flavor, c("tcn&dh", "sqrt(tcn)&dh"))) {
+      throw("Missing values in 'CT' are (currently) not supported by the chosen 'flavor': ", flavor);
+    }
   }
 
 
@@ -350,18 +360,20 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Drop loci for which CT is missing (regardless of betaT)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ok <- (!is.na(data$CT));
-  if (any(!ok)) {
-    verbose && enter(verbose, "Dropping loci for which CT is missing");
-    verbose && cat(verbose, "Number of loci dropped: ", sum(!ok));
-    data <- data[ok,,drop=FALSE];
-    nbrOfLoci <- nrow(data);
-    verbose && exit(verbose);
+  if (dropMissingCT) {
+    ok <- (!is.na(data$CT));
+    if (any(!ok)) {
+      verbose && enter(verbose, "Dropping loci for which CT is missing");
+      verbose && cat(verbose, "Number of loci dropped: ", sum(!ok));
+      data <- data[ok,,drop=FALSE];
+      nbrOfLoci <- nrow(data);
+      verbose && exit(verbose);
+    }
+    rm(ok); # Not needed anymore
+  
+    # Sanity check
+    stopifnot(nrow(data) == nbrOfLoci);
   }
-  rm(ok); # Not needed anymore
-
-  # Sanity check
-  stopifnot(nrow(data) == nbrOfLoci);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -391,9 +403,17 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # Assert no missing values in (chromosome, x, CT)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sanity check
-  ok <- (!is.na(data$chromosome) & !is.na(data$x) & !is.na(data$CT));
+  ok <- (!is.na(data$chromosome) & !is.na(data$x));
   if (!all(ok)) {
-    throw("INTERNAL ERROR: Detected (chromosome, x, CT) with missing values also after filtering.");
+    throw("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.");
+  }
+
+  # Sanity check
+  if (dropMissingCT) {
+    ok <- (!is.na(data$CT));
+    if (!all(ok)) {
+      throw("INTERNAL ERROR: Detected CT with missing values also after filtering.");
+    }
   }
 
 
@@ -518,9 +538,17 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # Assert no missing values in (chromosome, x, CT)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sanity check
-  ok <- (!is.na(data$chromosome) & !is.na(data$x) & !is.na(data$CT));
+  ok <- (!is.na(data$chromosome) & !is.na(data$x));
   if (!all(ok)) {
-    throw("INTERNAL ERROR: Detected (chromosome, x, CT) with missing values also after filtering.");
+    throw("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.");
+  }
+
+  # Sanity check
+  if (dropMissingCT) {
+    ok <- (!is.na(data$CT));
+    if (!all(ok)) {
+      throw("INTERNAL ERROR: Detected CT with missing values also after filtering.");
+    }
   }
 
 
@@ -568,15 +596,19 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # Assert no missing values in (chromosome, x, CT)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sanity check
-  if (any(is.na(chromosome))) {
-    throw("INTERNAL ERROR: Detected missing values in chromosome.");
+  ok <- (!is.na(data$chromosome) & !is.na(data$x));
+  if (!all(ok)) {
+    throw("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.");
   }
-  if (any(is.na(x))) {
-    throw("INTERNAL ERROR: Detected missing values in x.");
+
+  # Sanity check
+  if (dropMissingCT) {
+    ok <- (!is.na(data$CT));
+    if (!all(ok)) {
+      throw("INTERNAL ERROR: Detected CT with missing values also after filtering.");
+    }
   }
-  if (any(is.na(CT))) {
-    throw("INTERNAL ERROR: Detected missing values in CT.");
-  }
+
 
   # Physical positions of loci
   fit <- segmentByCBS(CT, 
@@ -799,7 +831,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
       nbrOfLociKK <- nrow(dataKK);
     
       # Sanity check
-      stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK);
+      stopifnot(length(dataKK$CT) == nbrOfTCNLociKK);
+    ##  stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK);
     
       verbose && cat(verbose, "Locus data for TCN segment:");
       verbose && str(verbose, dataKK);
@@ -1079,6 +1112,8 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-09-15
+# o Added argument 'dropMissingCT' to segmentByPairedPSCBS().
 # 2012-09-13
 # o CONSISTENCY FIX: Changed the behavior of extreme values of argument
 #   'undoTCN' and 'undoDH' to segmentByPairedPSCBS() such that it is
