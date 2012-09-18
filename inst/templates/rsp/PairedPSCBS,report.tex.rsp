@@ -18,13 +18,13 @@ stopifnot(exists("rspArgs", mode="list"));
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 # REPORT CONFIGURATION
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
-REPORT_DENSITIES <- getOption("PSCBS::reports/densities", TRUE));
-REPORT_TUMORBOOST <- getOption("PSCBS::reports/TumorBoost", TRUE));
+REPORT_DENSITIES <- getOption("PSCBS::reports/densities", TRUE);
+REPORT_TUMORBOOST <- getOption("PSCBS::reports/TumorBoost", TRUE);
 REPORT_USE_ALPHA_CHANNEL <- getOption("PSCBS::report/useAlphaChannel", TRUE);
-REPORT_PER_CHROMOSOME <- getOption("PSCBS::reports/perChromosome", TRUE));
-REPORT_C1C2 <- getOption("PSCBS::reports/pscnSegmentationTransitions", FALSE));
+REPORT_PER_CHROMOSOME <- getOption("PSCBS::reports/perChromosome", TRUE);
+REPORT_C1C2 <- getOption("PSCBS::reports/pscnSegmentationTransitions", FALSE);
 # To implement:
-REPORT_PER_GENOTYPE <- getOption("PSCBS::reports/perGenotype", TRUE));
+REPORT_PER_GENOTYPE <- getOption("PSCBS::reports/perGenotype", TRUE);
 %>
 
 

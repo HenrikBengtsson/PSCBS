@@ -61,7 +61,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   if (!is.null(rspTags)) {
     rspTags <- Arguments$getCharacters(rspTags);
     rspTags <- unlist(strsplit(rspTags, split=",", fixed=TRUE));
-    rspTags <- rspTags[nchar(rspTags) == 0L];
+    rspTags <- rspTags[nchar(rspTags) > 0L];
   }
 
   # Argument 'rootPath':
