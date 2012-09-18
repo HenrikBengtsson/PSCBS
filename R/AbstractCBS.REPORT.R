@@ -21,6 +21,8 @@
 #   \item{rspTags}{Optional @character @vector of tags for further specifying
 #      which RSP report to generate.}
 #   \item{rootPath}{The root directory where to write the report.}
+#   \item{force}{If @TRUE, RSP template files are copied to the reports/
+#      directory, regardless if they already exists there or not.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -36,7 +38,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filenames=c(rsp="*", "PSCBS.bib", "bioinformatics-journals-abbr.bib", "natbib.bst"), verbose=FALSE) {
+setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filenames=c(rsp="*", "PSCBS.bib", "bioinformatics-journals-abbr.bib", "natbib.bst"), force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -69,6 +71,9 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   if (!is.null(.filenames)) {
     .filenames <- Arguments$getCharacters(.filenames, useNames=TRUE);
   }
+
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -157,8 +162,8 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
     pathname <- filePath(rspArgs$reportPath, destFilename);
     verbose && cat(verbose, "Source: ", srcPathname);
     verbose && cat(verbose, "Destination: ", pathname);
-    if (!isFile(pathname)) {
-      copyFile(srcPathname, pathname, ...);
+    if (force || !isFile(pathname)) {
+      copyFile(srcPathname, pathname, overwrite=force, ...);
       # Sanity check
       stopifnot(isFile(pathname));
     }
@@ -199,6 +204,9 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
 ############################################################################
 # HISTORY:
 # 2012-09-18
+# o Added argument 'force' to report() for AbstractCBS.  This will
+#   copy the RSP template files again, although they are already in
+#   reports/ output directory.
 # o Now report(fit, ..., rspTags) for AbstractCBS looks for the RSP 
 #   template named <className>(,<rspTags>),report.tex.rsp, where
 #   className is class(fit)[1] and  argument 'rspTags' is an optional

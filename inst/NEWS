@@ -13,6 +13,9 @@ o REPORT: Now report(fit, ..., rspTags) for AbstractCBS looks for the
   className is class(fit)[1] and  argument 'rspTags' is an optional
   comma-separated character string/vector.  This makes it possible
   to have different types of report for the same class of objects.
+o REPORT: Added argument 'force' to report() for AbstractCBS.  This 
+  will copy the RSP template files again, although they are already 
+  in reports/ output directory.
 
 
 Version: 0.29.1 [2012-09-15]
