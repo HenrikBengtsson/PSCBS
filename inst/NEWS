@@ -2,6 +2,19 @@
 Package: PSCBS
 ==============
 
+Version: 0.29.2 [2012-09-18]
+o REPORT: Now report() for AbstractCBS looks for the RSP template in 
+  templates/, and as a backup in templates,PSCBS/.  If the latter does 
+  not exist, it is automatically created as a soft link to templates/ 
+  of the PSCBS package.  This allows anyone to create their own 
+  customized copy (in templates/) of the default PSCBS RSP report.
+o REPORT: Now report(fit, ..., rspTags) for AbstractCBS looks for the 
+  RSP template named <className>(,<rspTags>),report.tex.rsp, where
+  className is class(fit)[1] and  argument 'rspTags' is an optional
+  comma-separated character string/vector.  This makes it possible
+  to have different types of report for the same class of objects.
+
+
 Version: 0.29.1 [2012-09-15]
 o Added argument 'dropMissingCT' to segmentByPairedPSCBS().
 

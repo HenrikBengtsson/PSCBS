@@ -14,6 +14,20 @@ stopifnot(exists("rspArgs", mode="list"));
 %>
 
 
+<%
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+# REPORT CONFIGURATION
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
+REPORT_DENSITIES <- getOption("PSCBS::reports/densities", TRUE));
+REPORT_TUMORBOOST <- getOption("PSCBS::reports/TumorBoost", TRUE));
+REPORT_USE_ALPHA_CHANNEL <- getOption("PSCBS::report/useAlphaChannel", TRUE);
+REPORT_PER_CHROMOSOME <- getOption("PSCBS::reports/perChromosome", TRUE));
+REPORT_C1C2 <- getOption("PSCBS::reports/pscnSegmentationTransitions", FALSE));
+# To implement:
+REPORT_PER_GENOTYPE <- getOption("PSCBS::reports/perGenotype", TRUE));
+%>
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LATEX STARTUP
@@ -276,6 +290,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 % SIGNAL DENSITIES
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 <% signalDensities <- function(fit, ...) { %>
+<% if (!REPORT_DENSITIES) return(); %>
 \clearpage
 \section{Signal densities}
 \label{sec:SignalDensities}
@@ -364,11 +379,11 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 <%=signalDensities(fit)%>
 
 
-
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % BEFORE AND AFTER TUMORBOOST
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 <% beforeAndAfterTumorBoost <- function(fit, ...) { %>
+<% if (!REPORT_TUMORBOOST) return(); %>
 \clearpage
 \section{Before and after TumorBoost}
 \label{sec:BeforeAndAfterTumorBoost}
@@ -410,7 +425,7 @@ dataT <- subset(data, type == "SNP");
                         legend.title=theme_text(size=0),
                         legend.text=theme_text(size=16));
 
-        if (getOption("PSCBS::report/useAlphaChannel", TRUE)) {
+        if (REPORT_USE_ALPHA_CHANNEL) {
           gg <- gg + geom_point(alpha=min(10e3/nrow(dataT), 0.5), na.rm=TRUE);
         } else {
           gg <- gg + geom_point(na.rm=TRUE);
@@ -497,11 +512,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 % PARENT-SPECIFIC COPY-NUMBER TRANSITIONS
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 <% pscnSegmentationTransitions <- function(fit, ...) { %>
-<%
-if (!getOption("PSCBS::reports/pscnSegmentationTransitions", FALSE)) {
-  return();
-}
-%>
+<% if (!REPORT_C1C2) return(); %>
 \clearpage
 \section{Parent-specific copy-number transitions}
 \label{sec:PSCNSegmentationTransitions}
@@ -557,7 +568,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 % PER CHROMOSOME SEGMENTATION
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-<% if (nbrOfChromosomes(fit) > 1) { %>
+<% if (REPORT_PER_CHROMOSOME && nbrOfChromosomes(fit) > 1) { %>
 <% for (chr in getChromosomes(fit)) { %>
 \chapter{Chromosome <%=chr%> Results}
 \label{sec:Chromosome<%=chr%>Results}
@@ -574,7 +585,7 @@ fitT <- extractChromosome(fit, chromosome=chr);
 
 <%=pscnSegmentationTransitions(fitT)%>
 <% } # for (chr ...) %>
-<% } # if (nbrOfChromosomes(fit) > 1) %>
+<% } # if (REPORT_PER_CHROMOSOME && nbrOfChromosomes(fit) > 1) %>
 
 
 <%--
@@ -633,6 +644,8 @@ assign("renamePDF", function() {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+# 2012-09-16
+# o Added easy report configuration at the very top.
 # 2012-05-30
 # o Removed ggplot2 warnings on missing values.
 # 2012-02-28
