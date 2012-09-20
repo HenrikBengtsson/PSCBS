@@ -154,7 +154,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Shift every other segment
+  # Shift every other region
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Shifting TCN levels for every second segment");
 
@@ -162,39 +162,94 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   segKeys <- toCamelCase(paste(segPrefix, c("start", "end")));
   segRowsKey <- toCamelCase(paste(segPrefix, "seg rows"));
 
-  fitList <- list();
-  for (kk in seq(length=nrow(knownSegments))) {
-    verbose && enter(verbose, sprintf("Segment #%d of %d", kk, nrow(knownSegments)));
-    seg <- knownSegments[kk,];
-    verbose && print(verbose, seg);
+  verbose && enter(verbose, "Split up into independent segments");
+  chromosomes <- getChromosomes(fit);
 
-    start <- seg$start;
-    end <- seg$end;
-    fitKK <- extractByChromosome(fit, seg$chromosome);
-    verbose && cat(verbose, "Extract by chromosome:");
-    verbose && print(verbose, fitKK);
-    segsKK <- getSegments(fitKK);
-    idxStart <- min(which(segsKK[[segKeys[1]]] >= start));
-    idxEnd <- max(which(segsKK[[segKeys[2]]] <= end));
-    idxs <- idxStart:idxEnd;
-    fitKK <- extractSegments(fitKK, idxs);
-    if (kk %% 2 == 0) {
-      fitKK <- shiftTCN(fitKK, shift=shift);
+  fitList <- list();
+  for (jj in seq(along=chromosomes)) {
+    chr <- chromosomes[jj];
+    verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", jj, chr, length(chromosomes)));
+
+    # Subset segmentation results on this chromosome
+    fitJJ <- extractByChromosome(fit, chr);
+    verbose && cat(verbose, "Number of loci on chromosome: ", nbrOfLoci(fitJJ));
+    
+    # Nothing to do and nothing to add?
+    if (nbrOfLoci(fitJJ) == 0L) {
+      verbose && exit(verbose);
+      next;
     }
-    fitList[[kk]] <- fitKK;
+
+    # Find known segments on this chromosome
+    knownSegmentsJJ <- subset(knownSegments, chromosome == chr);
+    verbose && cat(verbose, "Known segments on chromosome:");
+    verbose && print(verbose, knownSegmentsJJ);
+
+    # Nothing to do?
+    if (nrow(knownSegmentsJJ) == 0L) {
+      fitList <- append(fitList, list(fitJJ));
+      verbose && exit(verbose);
+      next;
+    }
+
+    # Get the segments on this chromosome
+    segsJJ <- getSegments(fitJJ);
+
+    # Extract the individual known segments on this chromosome
+    fitListJJ <- list();
+    for (kk in seq(length=nrow(knownSegmentsJJ))) {
+      verbose && enter(verbose, sprintf("Known segment #%d of %d", kk, nrow(knownSegmentsJJ)));
+      seg <- knownSegmentsJJ[kk,];
+      verbose && print(verbose, seg);
+
+      start <- seg$start;
+      end <- seg$end;
+
+      idxStart <- min(which(segsJJ[[segKeys[1]]] >= start));
+      idxEnd <- max(which(segsJJ[[segKeys[2]]] <= end));
+      idxs <- idxStart:idxEnd;
+
+      # Extract the particular known segment
+      fitKK <- extractSegments(fitJJ, idxs);
+
+      # Only add if it has loci
+      if (nbrOfLoci(fitKK) > 0L) {
+        fitListJJ <- append(fitListJJ, list(fitKK));
+      }
+
+      verbose && exit(verbose);
+    } # for (kk ...)
+
+    # Append
+    fitList <- append(fitList, fitListJJ);
+    rm(fitListJJ);
 
     verbose && exit(verbose);
-  } # for (kk ...)
+  } # for (jj ...)
+
+  verbose && cat(verbose, "Number of independent regions: ", length(fitList));
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "Shift every other region");
+  for (jj in seq(from=1L, to=length(fitList), by=2L)) {
+    fitJJ <- fitList[[jj]];
+    fitJJ <- shiftTCN(fitJJ, shift=shift);
+    fitList[[jj]] <- fitJJ;
+  } # for (jj ...)
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "Merge");
   fitT <- Reduce(function(a, b) append(a,b, addSplit=FALSE), fitList);
   # Sanity check
   stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit));
+  verbose && exit(verbose);
+  rm(fitList);
 
   verbose && print(verbose, fitT);
   verbose && exit(verbose);
 
-
   fit <- fitT;
-
+  rm(fitT);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract signals for DP
@@ -410,6 +465,10 @@ threshold = 0.5,
 
 ############################################################################
 # HISTORY:
+# 2012-09-20
+# o BUG FIX: seqOfSegmentsByDP() for AbstractCBS would not handle empty
+#   segments, which could occur if 'knownSegments' for instance included
+#   centromere gaps.
 # 2012-09-14
 # o Added pruneByDP(..., nbrOfSegments) for AbstractCBS.
 # o Added seqOfSegmentsByDP() which is a matrix version of dpseg() from

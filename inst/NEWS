@@ -9,6 +9,9 @@ o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
   In addition, the callNnn() methods that need to call this method,
   does it by decreasing the amount of verbose output substantially,
   which in turn speeds up the process a fair bit.
+o BUG FIX: seqOfSegmentsByDP() for AbstractCBS would not handle empty
+  segments, which could occur if 'knownSegments' for instance included
+  centromere gaps.
 
 
 Version: 0.29.2 [2012-09-18]
