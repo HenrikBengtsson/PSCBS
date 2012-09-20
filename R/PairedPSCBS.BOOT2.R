@@ -1,6 +1,7 @@
-setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975), na.rm=TRUE), by=c("betaTN", "betaT"), ..., seed=NULL, force=FALSE, verbose=FALSE) {
+setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975), na.rm=TRUE), by=c("betaTN", "betaT"), ..., seed=NULL, .debug=FALSE, force=FALSE, verbose=FALSE) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -15,6 +16,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   if (!is.null(seed)) {
     seed <- Arguments$getInteger(seed);
   }
+
+  # Argument '.debug':
+  .debug <- Arguments$getLogical(.debug);
 
   # Argument 'force':
   force <- Arguments$getLogical(force);
@@ -191,39 +195,56 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   idxsCT <- which(!is.na(CT));
   idxsRho <- which(!is.na(rho));
 
-  for (jj in seq(length=nbrOfSegments)) {
-    segJJ <- segs[jj,,drop=FALSE];
-    chr <- segJJ[["chromosome"]];
-    tcnId <- segJJ[["tcnId"]];
-    dhId <- segJJ[["dhId"]];
+  # Vectorized pre-adjustments
+  for (key in c("tcnNbrOfLoci", "dhNbrOfLoci")) {
+    counts <- segs[[key]];
+    counts[is.na(counts)] <- 0L;
+    segs[[key]] <- counts;
+  }
+
+  hasTcnLoci <- (is.finite(tcnSegRows[,1]) & is.finite(tcnSegRows[,2]));
+  hasDhLoci <- (is.finite(dhSegRows[,1]) & is.finite(dhSegRows[,2]));
+
+  # Identify "splitter" segments which have no data
+  chrs <- segs[["chromosome"]];
+  tcnIds <- segs[["tcnId"]];
+  dhIds <- segs[["dhId"]];
+  tcnMeans <- segs[["tcnMean"]];
+  dhMeans <- segs[["dhMean"]];
+  isSplitter <- (is.na(chrs) && is.na(tcnIds) && is.na(dhIds));
+ 
+  # Get all segment indices except for "splitters"
+  jjs <- seq(length=nbrOfSegments);
+  jjs <- jjs[!isSplitter];
+
+  for (jj in jjs) {
+    chr <- chrs[jj];
+    tcnId <- tcnIds[jj];
+    dhId <- dhIds[jj];
 
     verbose && enter(verbose, sprintf("Segment #%d (chr %d, tcnId=%d, dhId=%d) of %d", jj, chr, tcnId, dhId, nbrOfSegments));
 
-    # Nothing todo?
-    if (is.na(chr) && is.na(tcnId) && is.na(dhId)) {
-      verbose && exit(verbose);
-      next;
-    }
+    # Sanity check
+    if (.debug) stopifnot(!is.na(chr) && !is.na(tcnId) && !is.na(dhId));
 
+    # Get the segment data
+    segJJ <- segs[jj,,drop=FALSE];
     verbose && print(verbose, segJJ);
 
     nbrOfTCNs <- segJJ[,"tcnNbrOfLoci"];
-    if (is.na(nbrOfTCNs)) nbrOfTCNs <- 0L;
     nbrOfDHs <- segJJ[,"dhNbrOfLoci"];
-    if (is.na(nbrOfDHs)) nbrOfDHs <- 0L;
     verbose && cat(verbose, "Number of TCNs: ", nbrOfTCNs);
     verbose && cat(verbose, "Number of DHs: ", nbrOfDHs);
-
+    if (.debug) {
+      stopifnot(!is.na(nbrOfTCNs));
+      stopifnot(!is.na(nbrOfDHs));
+    }
 
     tcnSegRowJJ <- unlist(tcnSegRows[jj,]);
     dhSegRowJJ <- unlist(dhSegRows[jj,]);
 
-##    # Sanity check [MOVED TO segmentByPairedPSCBS()]
-##    stopifnot(is.na(tcnSegRowJJ[1]) || is.na(dhSegRowJJ[1]) || (tcnSegRowJJ[1] <= dhSegRowJJ[1]));
-##    stopifnot(is.na(tcnSegRowJJ[2]) || is.na(dhSegRowJJ[2]) || (dhSegRowJJ[2] <= tcnSegRowJJ[2]));
-
     # Indices of all loci
-    if (all(!is.na(tcnSegRowJJ))) {
+    if (hasTcnLoci[jj]) {
       idxsAll <- tcnSegRowJJ[1]:tcnSegRowJJ[2];
     } else {
       idxsAll <- integer(0);
@@ -251,7 +272,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Identify loci used to bootstrap DH means");
 
-    if (all(!is.na(dhSegRowJJ))) {
+    if (hasDhLoci[jj]) {
       idxsDH <- dhSegRowJJ[1]:dhSegRowJJ[2];
       idxsDH <- intersect(idxsDH, hets);
       # Drop missing values
@@ -264,7 +285,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     verbose && str(verbose, idxsDH);
 
     # Sanity check
-    stopifnot(length(idxsDH) == nbrOfDHs);
+    if (.debug) stopifnot(length(idxsDH) == nbrOfDHs);
 
     verbose && exit(verbose);
 
@@ -283,7 +304,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     verbose && cat(verbose, "Non-polymorphic loci:");
     verbose && str(verbose, idxsNonSNP);
     # Sanity check
-    stopifnot(length(idxsSNP) + length(idxsNonSNP) == length(idxsAll));
+    if (.debug) stopifnot(length(idxsSNP) + length(idxsNonSNP) == length(idxsAll));
 
     # Identify heterozygous and homozygous SNPs
     idxsHet <- intersect(idxsSNP, hets);
@@ -307,16 +328,16 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     # but rho is missing, e.g. CT = sum(c(thetaA,thetaB), na.rm=TRUE) and
     # thetaB is missing. /HB 2010-12-01
 
-    # Sanity check
-    stopifnot(length(idxsHet) + length(idxsHom) + length(idxsNonSNP) == nbrOfTCNs);
-    stopifnot(length(intersect(idxsDH, idxsHetNonDH)) == 0);
-
-
     idxsTCN <- sort(unique(c(idxsHet, idxsHom, idxsNonSNP)));
-    stopifnot(length(idxsTCN) == nbrOfTCNs);
-
     verbose && cat(verbose, "Loci to resample for TCN:");
     verbose && str(verbose, idxsTCN);
+
+    # Sanity check
+    if (.debug) {
+      stopifnot(length(idxsHet) + length(idxsHom) + length(idxsNonSNP) == nbrOfTCNs);
+      stopifnot(length(intersect(idxsDH, idxsHetNonDH)) == 0);
+      stopifnot(length(idxsTCN) == nbrOfTCNs);
+    }
 
     verbose && exit(verbose);
 
@@ -329,23 +350,23 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Sanity checks
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    if (nbrOfTCNs > 0) {
+    if (nbrOfTCNs > 0L) {
       ys <- CT[idxsTCN];
       mu <- mean(ys, na.rm=TRUE);
-      dMu <- (mu - segJJ$tcnMean);
+      dMu <- (mu - tcnMeans[jj]);
       if (abs(dMu) > tol) {
-        str(list(nbrOfTCNs=nbrOfTCNs, tcnNbrOfLoci=segJJ$tcnNbrOfLoci, mu=mu, tcnMean=segJJ$tcnMean, dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])));
+        str(list(nbrOfTCNs=nbrOfTCNs, tcnNbrOfLoci=segJJ$tcnNbrOfLoci, mu=mu, tcnMean=tcnMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])));
         stop("INTERNAL ERROR: Incorrect TCN mean!");
       }
     }
 
-    shouldHaveDHs <- (nbrOfDHs > 0 && !is.na(segJJ$dhMean));
+    shouldHaveDHs <- (nbrOfDHs > 0L && !is.na(dhMeans[jj]));
     if (shouldHaveDHs) {
       ys <- rho[idxsDH];
       mu <- mean(ys, na.rm=TRUE);
-      dMu <- (mu - segJJ$dhMean);
+      dMu <- (mu - dhMeans[jj]);
       if (abs(dMu) > tol) {
-        str(list(nbrOfDHs=nbrOfDHs, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=segJJ$dhMean, dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])));
+        str(list(nbrOfDHs=nbrOfDHs, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=dhMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])));
         stop("INTERNAL ERROR: Incorrect DH mean!");
       }
     }
@@ -356,6 +377,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Bootstrapping while preserving (#hets, #homs, #nonSNPs)");
     verbose && cat(verbose, "Number of bootstrap samples: ", B);
+
+    nHoms <- length(idxsHom);
+    nNonSNPs <- length(idxsNonSNP);
+    nHetNonDHs <- length(idxsHetNonDH);
 
     # Defaults
     idxsDHBB <- NULL;
@@ -378,27 +403,26 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
   
       # (2) Bootstrap TCNs
       if (nbrOfTCNs > 0) {
-### str(list(idxsHetNonDH=idxsHetNonDH, idxsHom=idxsHom, idxsNonSNP=idxsNonSNP));
-
         # (a) Resample non-DH hets SNPs
-        idxsHetNonDHBB <- resample(idxsHetNonDH, size=length(idxsHetNonDH), replace=TRUE);
+        idxsHetNonDHBB <- resample(idxsHetNonDH, size=nHetNonDHs, replace=TRUE);
         idxsHetBB <- c(idxsDHBB, idxsHetNonDHBB);
-        # Sanity check
-        stopifnot(length(intersect(idxsDHBB, idxsHetNonDHBB)) == 0);
 
         # (a) Resample homozygous SNPs
-        idxsHomBB <- resample(idxsHom, size=length(idxsHom), replace=TRUE);
+        idxsHomBB <- resample(idxsHom, size=nHoms, replace=TRUE);
   
         # (b) Resample non-SNPs
-        idxsNonSNPBB <- resample(idxsNonSNP, size=length(idxsNonSNP), replace=TRUE);
+        idxsNonSNPBB <- resample(idxsNonSNP, size=nNonSNPs, replace=TRUE);
       
         # (c) Resampled TCN units
         idxsTCNBB <- c(idxsHetBB, idxsHomBB, idxsNonSNPBB);
 
         # Sanity check
-        stopifnot(length(intersect(idxsHetBB, idxsHomBB)) == 0);
-        stopifnot(length(intersect(idxsHetBB, idxsNonSNPBB)) == 0);
-        stopifnot(length(intersect(idxsHomBB, idxsNonSNPBB)) == 0);
+        if (.debug) {
+          stopifnot(length(intersect(idxsDHBB, idxsHetNonDHBB)) == 0L);
+          stopifnot(length(intersect(idxsHetBB, idxsHomBB)) == 0L);
+          stopifnot(length(intersect(idxsHetBB, idxsNonSNPBB)) == 0L);
+          stopifnot(length(intersect(idxsHomBB, idxsNonSNPBB)) == 0L);
+        }
 
         # Extract signals
         CTBB <- CT[idxsTCNBB];
@@ -573,6 +597,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000, st
 
 ##############################################################################
 # HISTORY
+# 2012-09-20
+# o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
+#   longer do sanity checks within the bootstrap loop.  This significantly
+#   speed up the method.  To run checks, use argument .debug=TRUE.
 # 2012-02-26
 # o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS would resample
 #   from a subset of the intended TCNs, iff the DH mean was non-finite

@@ -137,7 +137,7 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
   # Calculate C1 confidence intervals, if not already done
   probs <- c(alpha, 1-alpha);
   statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 2));
+  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
 
   segs <- as.data.frame(fit);
 
@@ -202,7 +202,7 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
   # Calculate DH confidence intervalls, if not already done
   probs <- c(alpha, 1-alpha);
   statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 2));
+  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
 
   segs <- as.data.frame(fit);
 

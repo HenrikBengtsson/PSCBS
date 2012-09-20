@@ -15,7 +15,7 @@ setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, deltaAB=estimateDelt
   probs <- sort(unique(c(alphaAB, alphaHighAI)));
   probs <- sort(unique(c(probs, 1-probs)));
   statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 1));
+  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
 
   # Call allelic balance
   fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
@@ -46,7 +46,7 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDelta
   probs <- sort(unique(c(alphaAB, alphaLowC1)));
   probs <- sort(unique(c(probs, 1-probs)));
   statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 1));
+  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
 
   # Call allelic balance
   fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));

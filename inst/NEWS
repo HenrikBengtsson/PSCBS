@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.29.3 [2012-09-20]
+o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
+  longer do sanity checks within the bootstrap loop.  This significantly
+  speed up the method.  To run checks, use argument .debug=TRUE.
+  In addition, the callNnn() methods that need to call this method,
+  does it by decreasing the amount of verbose output substantially,
+  which in turn speeds up the process a fair bit.
+
+
 Version: 0.29.2 [2012-09-18]
 o REPORT: Now report() for AbstractCBS looks for the RSP template in 
   templates/, and as a backup in templates,PSCBS/.  If the latter does 

@@ -158,7 +158,7 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 
   verbose && enter(verbose, "Bootstrap the identified copy-neutral states");
   fitNTCN <- bootstrapTCNandDHByRegion(fitNTCN, force=TRUE, ..., 
-                                     verbose=less(verbose, 10));
+                                     verbose=less(verbose, 50));
   segsNTCN <- getSegments(fitNTCN, simplified=FALSE);
   names <- colnames(segsNTCN);
   excl <- grep("(^chromosome|Id|Start|End|Call)$", names);
@@ -290,7 +290,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
   missing <- keys[!is.element(keys, colnames(segs))];
   if (length(missing) > 0) {
     statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-    fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 2)); 
+    fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50)); 
     segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
 
     # Assert that they exists
