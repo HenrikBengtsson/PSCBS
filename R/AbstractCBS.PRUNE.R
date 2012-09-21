@@ -83,7 +83,7 @@ setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbos
 
   verbose && cat(verbose, "Target number of segments: ", nbrOfSegments);
 
-  verbose && enter(verbose, "Dynamical programming");
+  verbose && enter(verbose, "Dynamic programming");
   segList <- seqOfSegmentsByDP(fit, ...);
 
   # Select the one with expected number of segments
@@ -99,7 +99,7 @@ setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbos
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Rebuilding segmentation results");
-  fitDP <- resegment(fit, knownSegments=knownSegments, undoTCN=+Inf, undoDH=+Inf); 
+  fitDP <- resegment(fit, knownSegments=knownSegments, undoTCN=+Inf, undoDH=+Inf, verbose=less(verbose, 10)); 
   verbose && print(verbose, fitDP);
   verbose && exit(verbose);
 
@@ -241,11 +241,12 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   verbose && enter(verbose, "Merge");
   fitT <- Reduce(function(a, b) append(a,b, addSplit=FALSE), fitList);
   # Sanity check
-  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit));
+##  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit)); # Not true anymore
   verbose && exit(verbose);
   rm(fitList);
 
-  verbose && print(verbose, fitT);
+  segsT <- getSegments(fitT);
+  verbose && print(verbose, tail(segsT));
   verbose && exit(verbose);
 
   fit <- fitT;
@@ -343,7 +344,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
     startsKK <- startsKK - offsetsKK;
     endsKK <- endsKK - offsetsKK;
     segsKK <- data.frame(chromosome=chrsKK, start=startsKK, end=endsKK);
-    verbose && print(verbose, segsKK);
+    verbose && print(verbose, tail(segsKK));
     segList[[kk]] <- segsKK;
 
     verbose && exit(verbose);
