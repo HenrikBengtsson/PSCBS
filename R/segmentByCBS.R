@@ -191,7 +191,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Argument 'knownSegments':
   if (is.null(knownSegments)) {
-    knownSegments <- data.frame(chromosome=NA, start=+Inf, end=-Inf);
+    knownSegments <- data.frame(chromosome=NA, start=+Inf, end=-Inf, length=+Inf);
   } else {
 #    if (!joinSegments) {
 #      throw("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.");
@@ -337,7 +337,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       if (!is.null(knownSegments)) {
         knownSegmentsKK <- subset(knownSegments, chromosome == chromosomeKK);
         if (nrow(knownSegmentsKK) == 0L) {
-          knownSegmentsKK <- data.frame(chromosome=chromosomeKK, start=-Inf, end=+Inf);
+          knownSegmentsKK <- data.frame(chromosome=chromosomeKK, start=-Inf, end=+Inf, length=+Inf);
         }
         verbose && cat(verbose, "Known segments:");
         verbose && print(verbose, knownSegmentsKK);
@@ -412,7 +412,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   knownSegments <- subset(knownSegments, chromosome == currChromosome);
   if (nrow(knownSegments) == 0L) {
-    knownSegments <- data.frame(chromosome=currChromosome, start=-Inf, end=+Inf);
+    knownSegments <- data.frame(chromosome=currChromosome, start=-Inf, end=+Inf, length=+Inf);
   }
   nbrOfSegments <- nrow(knownSegments);
 
@@ -516,6 +516,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     } # for (jj ...)
 
     verbose && enter(verbose, "Merging (independently) segmented known segments");
+    verbose && cat(verbose, "Number of segments: ", length(fitList));
     appendT <- function(...) append(..., addSplit=FALSE);
     fit <- Reduce(appendT, fitList);
     # Not needed anymore
