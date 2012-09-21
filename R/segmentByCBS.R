@@ -191,7 +191,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Argument 'knownSegments':
   if (is.null(knownSegments)) {
-    knownSegments <- data.frame(chromosome=integer(0), start=integer(0), end=integer(0));
+    knownSegments <- data.frame(chromosome=NA, start=+Inf, end=-Inf);
   } else {
 #    if (!joinSegments) {
 #      throw("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.");
@@ -336,6 +336,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       knownSegmentsKK <- NULL;
       if (!is.null(knownSegments)) {
         knownSegmentsKK <- subset(knownSegments, chromosome == chromosomeKK);
+        if (nrow(knownSegmentsKK) == 0L) {
+          knownSegmentsKK <- data.frame(chromosome=chromosomeKK, start=-Inf, end=+Inf);
+        }
         verbose && cat(verbose, "Known segments:");
         verbose && print(verbose, knownSegmentsKK);
       }
@@ -408,6 +411,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && cat(verbose, "Chromosome: ", currChromosome);
 
   knownSegments <- subset(knownSegments, chromosome == currChromosome);
+  if (nrow(knownSegments) == 0L) {
+    knownSegments <- data.frame(chromosome=currChromosome, start=-Inf, end=+Inf);
+  }
   nbrOfSegments <- nrow(knownSegments);
 
   verbose && cat(verbose, "Known segments for this chromosome:");
@@ -938,6 +944,9 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-09-20
+# o BUG FIX: segmentByCBS(... knownSegments) could return segments for 
+#   chromosome 0 even though it did not exist in the input data.
 # 2012-09-13
 # o SPEEDUP: Now segmentByCBS(..., undo=+Inf) returns much faster, which
 #   is possible because there is no need to identify new change points.

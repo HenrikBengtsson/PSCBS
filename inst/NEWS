@@ -12,6 +12,8 @@ o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
 o BUG FIX: seqOfSegmentsByDP() for AbstractCBS would not handle empty
   segments, which could occur if 'knownSegments' for instance included
   centromere gaps.
+o BUG FIX: segmentByCBS(... knownSegments) could return segments for 
+  chromosome 0 even though it did not exist in the input data.
 
 
 Version: 0.29.2 [2012-09-18]
