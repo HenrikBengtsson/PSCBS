@@ -419,7 +419,7 @@ setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...)
 # @synopsis
 #
 # \arguments{
-#  \item{splitters, ...}{Arguments passed to @seemethod "getSegments".}
+#  \item{...}{Not used.}
 # }
 #
 # \value{
@@ -435,7 +435,8 @@ setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...)
 # }
 #*/###########################################################################  
 setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ...) {
-  nbrOfSegments(fit, splitters=FALSE) - nbrOfChromosomes(fit);
+  segs <- getSegments(fit, splitters=TRUE, addGaps=TRUE);
+  sum(is.na(diff(segs$chromosome)));
 })
 
 
@@ -638,6 +639,9 @@ setMethodS3("getChromosomeOffsets", "AbstractCBS", function(fit, resolution=1e6,
 
 ############################################################################
 # HISTORY:
+# 2012-09-21
+# o Now nbrOfChangePoints() for AbstractCBS calculates only change points
+#   of connected neighboring segments.
 # 2012-09-14
 # o GENERALIZATION: Added getSegmentSizes() for AbstractCBS.
 # o GENERALIZATION: Added getChromosomeOffsets() for AbstractCBS.

@@ -14,6 +14,8 @@ o Now getSegments(..., splitters=TRUE) for CBS and PSCBS inserts NA
   two segments are not connected (zero distance).
 o ROBUSTNESS: Now append() for CBS and PSCBS drops column 'length'
   from 'knownSegments', iff it exists.
+o Now nbrOfChangePoints() for AbstractCBS calculates only change points
+  of connected neighboring segments.
 o BUG FIX: seqOfSegmentsByDP() for AbstractCBS would not handle empty
   segments, which could occur if 'knownSegments' for instance included
   centromere gaps.
