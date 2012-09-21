@@ -488,7 +488,7 @@ setMethodS3("linesC1C2", "PairedPSCBS", function(fit, ...) {
 
 
 setMethodS3("drawChangePointsC1C2", "PairedPSCBS", function(fit, col="#00000033", labels=FALSE, lcol="#333333", cex=0.7, adj=c(+1.5,+0.5), ...) {
-  xy <- extractMinorMajorCNs(fit);
+  xy <- extractMinorMajorCNs(fit, splitters=TRUE, addGaps=TRUE);
   xy <- xy[,1:2,drop=FALSE];
   res <- lines(xy, col=col, ...);
 
@@ -531,7 +531,7 @@ setMethodS3("linesDeltaC1C2", "PairedPSCBS", function(fit, ...) {
 
 
 setMethodS3("arrowsC1C2", "PairedPSCBS", function(fit, length=0.05, ...) {
-  xy <- extractMinorMajorCNs(fit);
+  xy <- extractMinorMajorCNs(fit, splitters=TRUE, addGaps=TRUE);
   xy <- xy[,1:2,drop=FALSE];
   x <- xy[,1,drop=TRUE];
   y <- xy[,2,drop=TRUE];
@@ -1030,6 +1030,10 @@ setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6,
 
 ############################################################################
 # HISTORY:
+# 2012-09-21
+# o ROBUSTNESS: Now drawChangePointsC1C2() and arrowsC1C2() for PairedPSCBS
+#   makes sure to retrieve segments with NA splitters between chromosomes 
+#   and gaps. 
 # 2012-02-29
 # o BUG FIX: plotTracks(..., add=TRUE) for PairedPSCBS would add TCNs
 #   when BAFs and DHs where intended.

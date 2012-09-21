@@ -148,7 +148,7 @@ setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
 #   @seeclass
 # }
 #*/###########################################################################  
-setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE, ...) {
+setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE, addGaps=FALSE, ...) {
   # Argument 'splitters':
   splitters <- Arguments$getLogical(splitters);
 
@@ -158,6 +158,24 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
   if (!splitters) {
     isSplitter <- isSegmentSplitter(fit);
     segs <- segs[!isSplitter,];
+  }
+
+  # Add splitters for "gaps"...
+  if (splitters && addGaps) {
+    n <- nrow(segs);
+    chrs <- segs$chromosome;
+    starts <- segs$tcnStart[-1L];
+    ends <- segs$tcnEnd[-n];
+    gapsAfter <- which(starts != ends);
+    onSameChr <- (chrs[gapsAfter+1L] == chrs[gapsAfter] );
+    gapsAfter <- gapsAfter[onSameChr];
+    nGaps <- length(gapsAfter);
+    if (nGaps > 0L) {
+      idxs <- seq(length=n);
+      values <- rep(as.integer(NA), times=nGaps);
+      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      segs <- segs[idxs,];
+    }
   }
 
 ##  if (nrow(segs) > 0) {
@@ -193,6 +211,10 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
 
 ############################################################################
 # HISTORY:
+# 2012-09-21
+# o Now getSegments(..., splitters=TRUE) for CBS and PSCBS inserts NA
+#   rows whereever there is a "gap" between segments.  A "gap" is when
+#   two segments are not connected (zero distance).
 # 2012-04-21
 # o CLEANUP: Moved getSegmentSizes() from PSCBS to AbstractCBS.
 # 2012-04-21

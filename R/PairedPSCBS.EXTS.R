@@ -113,7 +113,7 @@ setMethodS3("extractCNs", "PairedPSCBS", function(fit, splitters=TRUE, ...) {
 
 
 setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
-  xy <- extractC1C2(...);
+  xy <- extractC1C2(..., splitters=TRUE, addGaps=TRUE);
   X <- xy[,1:2,drop=FALSE];
   dX <- matrixStats::colDiffs(X);
   dX;
@@ -422,6 +422,9 @@ print(tcnSegRowsII);
 
 ############################################################################
 # HISTORY:
+# 2012-09-21
+# o ROBUSTNESS: Now extractDeltaC1C2() for PairedPSCBS makes sure to
+#   retrieve segments with NA splitters between chromosomes and gaps.
 # 2012-09-13
 # o Added shiftTCN() for PairedPSCBS.
 # 2012-01-21

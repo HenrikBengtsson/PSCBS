@@ -2,13 +2,16 @@
 Package: PSCBS
 ==============
 
-Version: 0.29.3 [2012-09-20]
+Version: 0.29.3 [2012-09-21]
 o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
   longer do sanity checks within the bootstrap loop.  This significantly
   speed up the method.  To run checks, use argument .debug=TRUE.
   In addition, the callNnn() methods that need to call this method,
   does it by decreasing the amount of verbose output substantially,
   which in turn speeds up the process a fair bit.
+o Now getSegments(..., splitters=TRUE) for CBS and PSCBS inserts NA
+  rows whereever there is a "gap" between segments.  A "gap" is when
+  two segments are not connected (zero distance).
 o ROBUSTNESS: Now append() for CBS and PSCBS drops column 'length'
   from 'knownSegments', iff it exists.
 o BUG FIX: seqOfSegmentsByDP() for AbstractCBS would not handle empty
