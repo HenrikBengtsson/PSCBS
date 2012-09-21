@@ -1,115 +1,3 @@
-###########################################################################/**
-# @set class=AbstractCBS
-# @RdocMethod pruneByDP
-#
-# @title "Prunes the CN profile using dynamical programming"
-#
-# \description{
-#  @get "title" by specifying the target number of segments or alternative
-#  how of many change points to drop.
-# }
-#
-# @synopsis
-#
-# \arguments{
-#  \item{nbrOfSegments}{An @integer specifying the number of segments after
-#     pruning. If negative, the it specifies the number of change points
-#     to drop.}
-#  \item{...}{Optional arguments passed to @seemethod "seqOfSegmentsByDP".}
-#  \item{verbose}{See @see "R.utils::Verbose".}
-# }
-#
-# \value{
-#   Returns a pruned object of the same class.
-# }
-#
-# \examples{\dontrun{ 
-#  # Drop two segments
-#  fitP <- pruneByDP(fit, nbrOfSegments=-2);
-# }}
-#
-# @author
-#
-# \references{
-#   [1] ... \cr
-# }
-#
-# @keyword internal
-#*/###########################################################################
-setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Some pre-extraction
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  knownSegments <- fit$params$knownSegments;
-  if (nrow(knownSegments) == 0L) {
-    chromosome <- getChromosomes(fit);
-    knownSegments <- data.frame(chromosome=chromosome, start=-Inf, end=+Inf);
-  }
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Argument 'nbrOfSegments':
-  nbrOfSegments <- Arguments$getInteger(nbrOfSegments);
-  # Specifying number of change points *to drop*?
-  if (nbrOfSegments < 0) {
-    nbrOfCPsToDrop <- -nbrOfSegments;
-    nbrOfSegments <- nbrOfSegments(fit, splitters=FALSE) - nbrOfCPsToDrop;
-  }
-
-  if (nbrOfSegments < nrow(knownSegments)) {
-    throw("Argument 'nbrOfSegments' is less than number of \"known\" segments: ", nbrOfSegments, " < ", nrow(knownSegments));
-  }
-  if (nbrOfSegments > nbrOfSegments(fit, splitters=FALSE)) {
-    throw("Argument 'nbrOfSegments' is greater than the number of \"found\" segments: ", nbrOfSegments, " > ", nbrOfSegments(fit, splitters=FALSE));
-  }
-
-  # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
-  if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
-  }
-
-
-  verbose && enter(verbose, "Prune segments by dynamical programming");
-
-  # Nothing to do?
-  if (nbrOfSegments == nbrOfSegments(fit, splitters=FALSE)) {
-    verbose && cat(verbose, "No need for pruning, because the number of \"target\" segments is the same as the number of \"found\" segments: ", nbrOfSegments, " == ", nbrOfSegments(fit, splitters=FALSE));
-    return(fit);
-    verbose && exit(verbose);
-  }
-
-  verbose && cat(verbose, "Target number of segments: ", nbrOfSegments);
-
-  verbose && enter(verbose, "Dynamic programming");
-  segList <- seqOfSegmentsByDP(fit, ...);
-
-  # Select the one with expected number of segments
-  nbrOfCPs <- sapply(segList, FUN=nrow);
-  verbose && printf(verbose, "Range of number of CPs among solutions: [%d,%d]\n", min(nbrOfCPs), max(nbrOfCPs));
-
-  keep <- which(nbrOfCPs == nbrOfSegments);
-  stopifnot(length(keep) == 1L);
-
-  knownSegments <- segList[[keep]];
-  verbose && printf(verbose, "Solution with %d segments:\n", nbrOfSegments);
-  verbose && print(verbose, knownSegments);
-  verbose && exit(verbose);
-
-  verbose && enter(verbose, "Rebuilding segmentation results");
-  fitDP <- resegment(fit, knownSegments=knownSegments, undoTCN=+Inf, undoDH=+Inf, verbose=less(verbose, 10)); 
-  verbose && print(verbose, fitDP);
-  verbose && exit(verbose);
-
-  verbose && exit(verbose);
-
-  fitDP;
-}, protected=TRUE) # pruneByDP()
-
-
-
 setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
@@ -154,7 +42,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Shift every other region
+  # Shift every other non-empty region
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Shifting TCN levels for every second segment");
 
@@ -162,7 +50,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   segKeys <- toCamelCase(paste(segPrefix, c("start", "end")));
   segRowsKey <- toCamelCase(paste(segPrefix, "seg rows"));
 
-  verbose && enter(verbose, "Split up into independent segments");
+  verbose && enter(verbose, "Split up into non-empty independent regions");
   chromosomes <- getChromosomes(fit);
 
   fitList <- list();
@@ -227,11 +115,12 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
     verbose && exit(verbose);
   } # for (jj ...)
 
-  verbose && cat(verbose, "Number of independent regions: ", length(fitList));
+  nbrOfRegions <- length(fitList);
+  verbose && cat(verbose, "Number of independent non-empty regions: ", nbrOfRegions);
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Shift every other region");
-  for (jj in seq(from=1L, to=length(fitList), by=2L)) {
+  for (jj in seq(from=1L, to=nbrOfRegions, by=2L)) {
     fitJJ <- fitList[[jj]];
     fitJJ <- shiftTCN(fitJJ, shift=shift);
     fitList[[jj]] <- fitJJ;
@@ -250,7 +139,10 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   verbose && exit(verbose);
 
   fit <- fitT;
-  rm(fitT);
+
+  # Not needed anymore
+  rm(knownSegments, fitT);
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract signals for DP
@@ -264,7 +156,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   Y <- as.matrix(data[,by,drop=FALSE]);
   verbose && print(verbose, summary(Y));
 
-  # Change-point indices
+  # "DP" change-point indices (excluding the two outer/boundary ones)
   segRows <- fit[[segRowsKey]];
   segIdxs <- seq(length=nrow(segRows)-1L);
   cpIdxs <- segRows$endRow[segIdxs];
@@ -276,24 +168,31 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   # Dynamic-programming segmention pruning
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Dynamic programming");
+
+  verbose && cat(verbose, "Number of \"DP\" change points: ", length(cpIdxs));
+  verbose && str(verbose, cpIdxs);
+
   res <- seqOfSegmentsByDP(Y, candidatechangepoints=cpIdxs, ...);
   verbose && str(verbose, res);
-  verbose && exit(verbose);
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Adjustments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Excluding cases where known segments are broken");
 
   # Sanity checks
   jumpList <- res$jump;
   lastJump <- jumpList[[length(jumpList)]];
   stopifnot(identical(cpIdxs, as.integer(lastJump)));
 
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Adjustments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Excluding cases where known segments no longer correct");
+
+  verbose && cat(verbose, "Number of independent non-empty regions: ", nbrOfRegions);
+
   # Drop the K first
-  nbrOfCPs <- nrow(knownSegments) - 1L;
-  if (nbrOfCPs > 0) {
+  nbrOfCPs <- nbrOfRegions - 1L;
+  if (nbrOfCPs > 0L) {
     K <- nbrOfCPs - 1L;  # Don't count the flat segmentation
     jumpList <- jumpList[-(1:K)];
   }
@@ -307,7 +206,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Converting to physical segments");
 
-  segs <- getSegments(fit);
+  segs <- getSegments(fit, splitters=TRUE, addGaps=FALSE);
   segs <- segs[,c("chromosome", segKeys)];
   jumpIdxList <- lapply(jumpList, FUN=function(idxs) {
     match(idxs, table=cpIdxs);
@@ -356,8 +255,39 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   # Sanity check
   lastSegs <- segList[[length(segList)]];
 #  stopifnot(identical(lastSegs, segs));
-
   verbose && str(verbose, segList);
+
+  nbrOfCPsSeq <- sapply(jumpList, FUN=length);
+  verbose && cat(verbose, "Sequence of number of \"DP\" change points:");
+  verbose && print(verbose, nbrOfCPsSeq);
+
+  nbrOfSegsSeq <- sapply(segList, FUN=nrow);
+  verbose && cat(verbose, "Sequence of number of segments:");
+  verbose && print(verbose, nbrOfSegsSeq);
+
+  nbrOfChangePointsSeq <- nbrOfSegsSeq - nbrOfRegions;
+  verbose && cat(verbose, "Sequence of number of \"discovered\" change points:");
+  verbose && print(verbose, nbrOfChangePointsSeq);
+
+  stopifnot(nbrOfSegsSeq == nbrOfCPsSeq + 1L);
+  stopifnot(nbrOfSegsSeq[1L] == nbrOfRegions);
+
+  segList <- lapply(segList, FUN=function(seg) {
+    attr(seg, "nbrOfChangePoints") <- nrow(seg) - nbrOfRegions;
+    seg;
+  });
+
+  K <- (nbrOfRegions-1L);
+  modelFit <- list(
+    nbrOfSegments=nbrOfSegsSeq,
+    nbrOfChangePoints=nbrOfSegsSeq - nbrOfRegions,
+    nbrOfRegions=nbrOfRegions,
+    idxBest=res$kbest - K + 1L,
+    rse=res$rse[-(1:K)],
+    V=res$V[-(1:K),-(1:K),drop=FALSE],
+    seqOfSegmentsByDP=res
+  );
+  attr(segList, "modelFit") <- modelFit;
 
   verbose && exit(verbose);
   
@@ -464,8 +394,124 @@ threshold = 0.5,
 }) # seqOfSegmentsByDP()
 
 
+
+###########################################################################/**
+# @set class=AbstractCBS
+# @RdocMethod pruneByDP
+#
+# @title "Prunes the CN profile using dynamical programming"
+#
+# \description{
+#  @get "title" by specifying the target number of segments or alternative
+#  how of many change points to drop.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{nbrOfSegments}{An @integer specifying the number of segments after
+#     pruning. If negative, the it specifies the number of change points
+#     to drop.}
+#  \item{...}{Optional arguments passed to @seemethod "seqOfSegmentsByDP".}
+#  \item{verbose}{See @see "R.utils::Verbose".}
+# }
+#
+# \value{
+#   Returns a pruned object of the same class.
+# }
+#
+# \examples{\dontrun{ 
+#  # Drop two segments
+#  fitP <- pruneByDP(fit, nbrOfSegments=-2);
+# }}
+#
+# @author
+#
+# \references{
+#   [1] ... \cr
+# }
+#
+# @keyword internal
+#*/###########################################################################
+setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Some pre-extraction
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  knownSegments <- fit$params$knownSegments;
+  if (nrow(knownSegments) == 0L) {
+    chromosome <- getChromosomes(fit);
+    knownSegments <- data.frame(chromosome=chromosome, start=-Inf, end=+Inf);
+  }
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'nbrOfSegments':
+  nbrOfSegments <- Arguments$getInteger(nbrOfSegments);
+  # Specifying number of change points *to drop*?
+  if (nbrOfSegments < 0L) {
+    nbrOfCPsToDrop <- -nbrOfSegments;
+    nbrOfSegments <- nbrOfSegments(fit, splitters=FALSE) - nbrOfCPsToDrop;
+  }
+
+  if (nbrOfSegments < nrow(knownSegments)) {
+    throw("Argument 'nbrOfSegments' is less than number of \"known\" segments: ", nbrOfSegments, " < ", nrow(knownSegments));
+  }
+  if (nbrOfSegments > nbrOfSegments(fit, splitters=FALSE)) {
+    throw("Argument 'nbrOfSegments' is greater than the number of \"found\" segments: ", nbrOfSegments, " > ", nbrOfSegments(fit, splitters=FALSE));
+  }
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Prune segments by dynamical programming");
+
+  # Nothing to do?
+  if (nbrOfSegments == nbrOfSegments(fit, splitters=FALSE)) {
+    verbose && cat(verbose, "No need for pruning, because the number of \"target\" segments is the same as the number of \"found\" segments: ", nbrOfSegments, " == ", nbrOfSegments(fit, splitters=FALSE));
+    return(fit);
+    verbose && exit(verbose);
+  }
+
+  verbose && cat(verbose, "Target number of segments: ", nbrOfSegments);
+
+  verbose && enter(verbose, "Dynamic programming");
+  segList <- seqOfSegmentsByDP(fit, ...);
+
+  # Select the one with expected number of segments
+  nbrOfCPs <- sapply(segList, FUN=nrow);
+  verbose && printf(verbose, "Range of number of CPs among solutions: [%d,%d]\n", min(nbrOfCPs), max(nbrOfCPs));
+
+  keep <- which(nbrOfCPs == nbrOfSegments);
+  stopifnot(length(keep) == 1L);
+
+  knownSegments <- segList[[keep]];
+  verbose && printf(verbose, "Solution with %d segments:\n", nbrOfSegments);
+  verbose && print(verbose, knownSegments);
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "Rebuilding segmentation results");
+  fitDP <- resegment(fit, knownSegments=knownSegments, undoTCN=+Inf, undoDH=+Inf, verbose=less(verbose, 10)); 
+  verbose && print(verbose, fitDP);
+  verbose && exit(verbose);
+
+  verbose && exit(verbose);
+
+  fitDP;
+}, protected=TRUE) # pruneByDP()
+
+
+
+
 ############################################################################
 # HISTORY:
+# 2012-09-21
+# o Now seqOfSegmentsByDP() return a 'modelFit' attribute.
 # 2012-09-20
 # o BUG FIX: seqOfSegmentsByDP() for AbstractCBS would not handle empty
 #   segments, which could occur if 'knownSegments' for instance included
