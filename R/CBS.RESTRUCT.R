@@ -93,7 +93,11 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Parameters
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  res$params$knownSegments <- rbind(this$params$knownSegments, other$params$knownSegments);
+  ksT <- this$params$knownSegments;
+  ksT$length <- NULL;  # In case it's been added
+  ksO <- other$params$knownSegments;
+  ksO$length <- NULL;  # In case it's been added
+  res$params$knownSegments <- rbind(ksT, ksO);
 
 
   # Sanity check

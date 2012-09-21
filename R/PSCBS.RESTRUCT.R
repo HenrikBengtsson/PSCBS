@@ -75,7 +75,11 @@ setMethodS3("append", "PSCBS", function(x, other, addSplit=TRUE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Parameters
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  res$params$knownSegments <- rbind(this$params$knownSegments, other$params$knownSegments);
+  ksT <- this$params$knownSegments;
+  ksT$length <- NULL;  # In case it's been added
+  ksO <- other$params$knownSegments;
+  ksO$length <- NULL;  # In case it's been added
+  res$params$knownSegments <- rbind(ksT, ksO);
 
   # Sanity check
   ns <- sapply(res[fields], FUN=nrow);
@@ -155,6 +159,9 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
 
 ############################################################################
 # HISTORY:
+# 2012-09-21
+# o ROBUSTNESS: Now append() for CBS and PSCBS drops column 'length'
+#   from 'knownSegments', iff it exists.
 # 2011-10-20
 # o Now append() for PSCBS also appends '...$params$knownSegments'.
 # 2011-10-02
