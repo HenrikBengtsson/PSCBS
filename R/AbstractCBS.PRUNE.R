@@ -92,7 +92,6 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
       start <- seg$start;
       end <- seg$end;
-
       idxStart <- min(which(segsJJ[[segKeys[1]]] >= start));
       idxEnd <- max(which(segsJJ[[segKeys[2]]] <= end));
       idxs <- idxStart:idxEnd;
@@ -204,6 +203,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the possible sets of segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose <- less(verbose, 20);
   verbose && enter(verbose, "Converting to physical segments");
 
   segs <- getSegments(fit, splitters=TRUE, addGaps=FALSE);
@@ -250,6 +250,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   } # for (kk ...)
 
   verbose && exit(verbose);
+  verbose <- more(verbose, 20);
 
 
   # Sanity check

@@ -20,10 +20,10 @@
    the number of chromosomes.
  }
 
- \usage{\method{nbrOfChangePoints}{AbstractCBS}(fit, ...)}
+ \usage{\method{nbrOfChangePoints}{AbstractCBS}(fit, ignoreGaps=FALSE, dropEmptySegments=TRUE, ...)}
 
  \arguments{
-  \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.}
+  \item{...}{Not used.}
  }
 
  \value{

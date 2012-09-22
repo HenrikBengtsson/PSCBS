@@ -434,9 +434,18 @@ setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...)
 #   @seeclass
 # }
 #*/###########################################################################  
-setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ...) {
-  segs <- getSegments(fit, splitters=TRUE, addGaps=TRUE);
-  sum(is.na(diff(segs$chromosome)));
+setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ignoreGaps=FALSE, dropEmptySegments=TRUE, ...) {
+  segs <- getSegments(fit, splitters=TRUE, addGaps=!ignoreGaps);
+  if (dropEmptySegments) {
+    prefix <- getSegmentTrackPrefixes(fit);
+    keys <- sapply(prefix, FUN=function(x) {
+      toCamelCase(paste(c(x, "nbr of loci"), collapse=" "));
+    });
+    counts <- as.matrix(segs[,keys]);
+    counts <- rowSums(counts, na.rm=TRUE);
+    segs$chromosome[counts == 0L] <- NA;
+  }
+  sum(!is.na(diff(segs$chromosome)));
 })
 
 

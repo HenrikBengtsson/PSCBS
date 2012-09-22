@@ -131,7 +131,7 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
     throw("Cannot call copy-neutral states, because none of the segments in allelic-balance are copy neutral.");
   }
 
-  verbose && enter(verbose, "Extracting all copy neutral AB segments across all chromosomes into one big segments");
+  verbose && enter(verbose, "Extracting all copy neutral AB segments across all chromosomes into one big segment");
 
   # (a) Extract those
   fitNTCN <- extractSegments(fit, isNeutralAB);
@@ -140,16 +140,17 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 
   # (b) Turn into a single-chromosome data set
   fitNTCN <- extractSegments(fitNTCN, !isSegmentSplitter(fitNTCN));
-
-  fitNTCN$output$chromosome <- 0L;
+  isSplitter <- is.na(fitNTCN$output$chromosome);
   fitNTCN$data$chromosome <- 0L;
+  fitNTCN$output$chromosome <- 0L;
+  fitNTCN$output$chromosome[isSplitter] <- NA;
+
 
   # (c) Turn into one big segment by dropping all change points
-  nCPs <- nbrOfChangePoints(fitNTCN);
+  nCPs <- nbrOfChangePoints(fitNTCN, ignoreGaps=TRUE);
   if (nCPs > 1) {
     verbose && enter(verbose, "Dropping all change points");
-    fitNTCN <- dropChangePoints(fitNTCN, idxs=nCPs:1, update=TRUE, 
-                              verbose=less(verbose, 5));
+    fitNTCN <- dropChangePoints(fitNTCN, idxs=nCPs:1, ignoreGaps=TRUE, update=TRUE, verbose=less(verbose, 5));
     verbose && exit(verbose);
   }
   # Sanity check
@@ -375,6 +376,10 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
 ##############################################################################
 # HISTORY
+# 2012-09-21 [HB]
+# o BUG FIX: Recent updates in how nbrOfChangePoints() is calculated,
+#   caused callGNL() to throw an exception.  Added argument 'ignoreGaps'
+#   to nbrOfChangePoints().
 # 2012-07-02 [HB]
 # o Renamed callTCNN() to callNTCN().
 # 2012-06-24 [HB]

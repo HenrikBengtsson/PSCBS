@@ -255,7 +255,7 @@ setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
   # Argument 'idx':
-  max <- nbrOfChangePoints(fit, splitters=TRUE);
+  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
   idx <- Arguments$getIndex(idx, max=max);
 
   mergeTwoSegments(fit, left=idx, ...);
@@ -299,7 +299,7 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 #*/###########################################################################  
 setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, ...) {
   # Argument 'idxs':
-  max <- nbrOfChangePoints(fit, splitters=TRUE);
+  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
   idxs <- Arguments$getIndices(idxs, max=max);
 
   # Assert that there is only one chromosome

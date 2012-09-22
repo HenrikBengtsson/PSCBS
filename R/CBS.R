@@ -282,6 +282,20 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
 
   # Add splitters for "gaps"...
   if (splitters && addGaps) {
+    # Chromosome gaps
+    n <- nrow(segs);
+    chrs <- segs$chromosome;
+    gapsAfter <- which(diff(chrs) != 0L);
+    gapsAfter <- gapsAfter[!is.na(chrs[gapsAfter])];
+    nGaps <- length(gapsAfter);
+    if (nGaps > 0L) {
+      idxs <- seq(length=n);
+      values <- rep(as.integer(NA), times=nGaps);
+      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      segs <- segs[idxs,];
+    }
+
+    # Other gaps
     n <- nrow(segs);
     chrs <- segs$chromosome;
     starts <- segs$tcnStart[-1L];
