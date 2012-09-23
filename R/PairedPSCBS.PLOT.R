@@ -236,9 +236,20 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
         }
         if (is.element("c2", subtracks)) {
           drawLevels(fit, what="c2", col="red", xScale=xScale);
+          # In case C2 overlaps with TCN
+          if (is.element("tcn", subtracks)) {
+            drawLevels(fit, what="tcn", col="purple", lty="22", xScale=xScale);
+          }
         }
         if (is.element("c1", subtracks)) {
           drawLevels(fit, what="c1", col="blue", xScale=xScale);
+          # In case C1 overlaps with C1
+          if (is.element("c2", subtracks)) {
+            drawLevels(fit, what="c2", col="red", lty="22", xScale=xScale);
+            if (is.element("tcn", subtracks)) {
+              drawLevels(fit, what="tcn", col="purple", lty="22", xScale=xScale);
+            }
+          }
         }
       }
     }
@@ -346,7 +357,7 @@ setMethodS3("plot", "PairedPSCBS", function(x, ...) {
 }, private=TRUE)
 
 
-setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "betaTN", "dh", "c1", "c2"), xScale=1e-6, ...) {
+setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "betaTN", "dh", "c1", "c2"), lend=1L, xScale=1e-6, ...) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -392,7 +403,7 @@ setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "betaTN", "
     colnames(segsTT) <- c("loc.start", "loc.end", "seg.mean");
     dummy <- list(output=segsTT);
     class(dummy) <- "DNAcopy";
-    drawLevels(dummy, xScale=xScale, ...);
+    drawLevels(dummy, lend=lend, xScale=xScale, ...);
   } # for (cc ...)
 }, private=TRUE)
 
@@ -859,7 +870,12 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
       drawConfidenceBands(fit, what="c1", quantiles=quantiles, col="blue", xScale=xScale);
       drawLevels(fit, what="tcn", col="purple", xScale=xScale);
       drawLevels(fit, what="c2", col="red", xScale=xScale);
-      drawLevels(fit, what="c1", col="blue", xScale=xScale);
+      # In case C2 overlaps with TCN
+      drawLevels(fit, what="tcn", col="purple", lty="22", xScale=xScale);
+      # In case C1 overlaps with C1
+      drawLevels(fit, what="c1", col="blue", xScale=xScale); 
+      drawLevels(fit, what="c2", col="red", lty="22", xScale=xScale);
+      drawLevels(fit, what="tcn", col="purple", lty="22", xScale=xScale);
       if (!is.null(onEnd)) onEnd(gh=gh);
     }
   
@@ -1030,6 +1046,10 @@ setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6,
 
 ############################################################################
 # HISTORY:
+# 2012-09-23
+# o Now plotTracks() [and plotTracksManyChromosomes()] draws segment levels
+#   in TCN-C2-C1 order, and then goes back and draws C2 and TCN with dashed
+#   lines, just in case C1 is overlapping C2 and C2 is overlapping TCN.
 # 2012-09-21
 # o ROBUSTNESS: Now drawChangePointsC1C2() and arrowsC1C2() for PairedPSCBS
 #   makes sure to retrieve segments with NA splitters between chromosomes 

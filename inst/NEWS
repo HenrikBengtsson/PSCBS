@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.29.4 [2012-09-23]
+o Now plotTracks() [and plotTracksManyChromosomes()] draws segment levels
+  such that it is easier to see them even when they are overlapping.
+
+ 
 Version: 0.29.3 [2012-09-21]
 o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
   longer do sanity checks within the bootstrap loop.  This significantly
