@@ -1,5 +1,5 @@
 setMethodS3("seqOfSegmentsByDP", "PairedPSCBS", function(fit, by=c("CT", "rho"), ...) {
-  NextMethod("seqOfSegmentsByDP", fit, by=by, ...);
+  NextMethod("seqOfSegmentsByDP", by=by);
 })
 
 

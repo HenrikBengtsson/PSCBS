@@ -62,7 +62,7 @@ setMethodS3("all.equal", "CBS", function(target, current, check.attributes=FALSE
     current$output <- segs;
   }
 
-  NextMethod("all.equal", target, current, check.attributes=check.attributes, ...);
+  NextMethod("all.equal", target=target, current=current, check.attributes=check.attributes);
 }, protected=TRUE)
 
 

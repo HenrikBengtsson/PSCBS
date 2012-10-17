@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.29.5 [2012-10-16]
+o ROBUSTNESS/BUG FIX: No longer passing '...' to NextMethod(), cf.
+  R-devel thread 'Do *not* pass '...' to NextMethod() - it'll do it 
+  for you; missing documentation, a bug or just me?' on Oct 16, 2012.   
+
+
 Version: 0.29.4 [2012-09-23]
 o Now plotTracks() [and plotTracksManyChromosomes()] draws segment levels
   such that it is easier to see them even when they are overlapping.

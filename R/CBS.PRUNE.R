@@ -206,7 +206,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
 
 
 setMethodS3("seqOfSegmentsByDP", "CBS", function(fit, by=c("y"), ...) {
-  NextMethod("seqOfSegmentsByDP", fit, by=by, ...);
+  NextMethod("seqOfSegmentsByDP", by=by);
 }) 
 
 
