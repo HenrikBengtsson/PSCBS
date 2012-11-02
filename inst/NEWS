@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.29.6 [2012-11-01]
+o Bumped the package dependencies.
+o CRAN POLICY: Made the examples run faster for R CMD check.
+
+
 Version: 0.29.5 [2012-10-16]
 o ROBUSTNESS/BUG FIX: No longer passing '...' to NextMethod(), cf.
   R-devel thread 'Do *not* pass '...' to NextMethod() - it'll do it 

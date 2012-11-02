@@ -141,7 +141,7 @@ str(data)
 dataS <- dropSegmentationOutliers(data)
 
 # Speed up example by segmenting fewer loci
-dataS <- dataS[seq(from=1, to=nrow(data), by=5),]
+dataS <- dataS[seq(from=1, to=nrow(data), by=10),]
 
 str(dataS)
 
@@ -162,7 +162,7 @@ plotTracks(fit)
 # (used by the AB caller, which, if skipped here,
 #  will do it automatically)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- bootstrapTCNandDHByRegion(fit, verbose=-10)
+fit <- bootstrapTCNandDHByRegion(fit, B=100, verbose=-10)
 print(fit)
 plotTracks(fit)
 
