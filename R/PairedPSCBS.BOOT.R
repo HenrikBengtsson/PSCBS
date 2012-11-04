@@ -106,7 +106,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
     nbrOfDHs <- segJJ[,"dhNbrOfLoci"];
     if (is.na(nbrOfDHs)) nbrOfDHs <- 0L;
 
-    units <- whichVector(chr == chromosome & start <= x & x <= stop);
+    units <- which(chr == chromosome & start <= x & x <= stop);
     nbrOfUnits <- length(units);
 
     # Special case?

@@ -71,14 +71,14 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   # Keep only chromosome of interest
   chr <- as.numeric(seg[,"chromosome"]);
   if (!is.na(chr)) {
-    keep <- whichVector(data$chromosome == chr);
+    keep <- which(data$chromosome == chr);
     units <- units[keep];
     data <- data[keep,];
   }
 
   # Keep only loci within the segment
   xRange <- as.numeric(seg[,c("dhStart", "dhEnd")]);
-  keep <- whichVector(xRange[1] <= data$x & data$x <= xRange[2]);
+  keep <- which(xRange[1] <= data$x & data$x <= xRange[2]);
   units <- units[keep];
   data <- data[keep,];
 
@@ -87,7 +87,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
 
   # Keep only SNPs?
   if (is.element(what, c("SNPs", "hets"))) {
-    keep <- whichVector(isSnp);
+    keep <- which(isSnp);
     units <- units[keep];
     data <- data[keep,];
   }
@@ -95,7 +95,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   # Keep only heterozygous SNPs?
   if (what == "hets") {
     isHet <- (muN == 1/2);
-    keep <- whichVector(isHet);
+    keep <- which(isHet);
     units <- units[keep];
     data <- data[keep,];
   }
