@@ -128,10 +128,10 @@ ClimX <- Clim + c(-1,1)*diff(Clim)*0.08;
 muNCols <- c("#999999", "#000000", "#999999");
 
 require("ggplot2") || throw("Package not loaded: ggplot2");
-xnbrOpts <- theme_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
-ynbrOpts <- theme_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
-xlabOpts <- theme_text(colour="black", size=28, hjust=0.5);
-ylabOpts <- theme_text(colour="black", size=28, vjust=0.5, angle=90);
+xnbrOpts <- element_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
+ynbrOpts <- element_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
+xlabOpts <- element_text(colour="black", size=28, hjust=0.5);
+ylabOpts <- element_text(colour="black", size=28, vjust=0.5, angle=90);
 
 labList <- list(
   CT    = expression(C[T]),
@@ -318,8 +318,8 @@ chrsTags <- if (nbrOfChromosomes == 1) {
           gg <- gg + opts(legend.position=c(0.97, 0.75),
                           legend.justification = 1,
                           legend.direction="vertical",
-                          legend.title=theme_text(size=0),
-                          legend.text=theme_text(size=16));
+                          legend.title=element_text(size=0),
+                          legend.text=element_text(size=16));
  
           gg <- gg + geom_density(size=2, na.rm=TRUE);
           gg <- gg + xlab(NULL);
@@ -471,6 +471,8 @@ assign("renamePDF", function() {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+# 2012-11-03
+# o Replaced deprecated ggplot2 functions.
 # 2012-02-28
 # o Now it is possible to turn off usage of the alpha channel in
 #   plots, e.g. setOption("PSCBS::report/useAlphaChannel", FALSE).
