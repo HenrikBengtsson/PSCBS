@@ -5,6 +5,11 @@ Package: PSCBS
 Version: 0.30.0 [2012-11-05]
 o GENERALIZATION: Now bootstrapTCNandDHByRegion() works for more 
   "flavors", e.g the default ('tcn') used by segmentByNonPairedPSCBS().
+o CRAN POLICY: Now the package prepopulates the memoization cache when
+  loaded, iff 'R CMD check' is loading the package.  This speeds up the
+  example tests when run by 'R CMD check', because it avoids having
+  them calculate internal CBS statistics.  In a normal run, these are
+  calculated on the fly and then memoized.
 
 
 Version: 0.29.9 [2012-11-05]
