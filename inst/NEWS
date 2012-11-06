@@ -2,9 +2,12 @@
 Package: PSCBS
 ==============
 
-Version: 0.29.9 [2012-11-05]
+Version: 0.30.0 [2012-11-05]
 o GENERALIZATION: Now bootstrapTCNandDHByRegion() works for more 
   "flavors", e.g the default ('tcn') used by segmentByNonPairedPSCBS().
+
+
+Version: 0.29.9 [2012-11-05]
 o DOCUMENTATION FIX: example(segmentByNonPairedPSCBS) was for
   the paired case.
 o CRAN POLICY: Further speed up of examples such that they run

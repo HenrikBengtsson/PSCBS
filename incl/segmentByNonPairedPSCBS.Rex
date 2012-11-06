@@ -17,7 +17,7 @@ str(data)
 dataS <- dropSegmentationOutliers(data)
 
 # Speed up example by segmenting fewer loci
-dataS <- dataS[seq(from=1, to=nrow(data), by=10),]
+dataS <- dataS[seq(from=1, to=nrow(data), by=20),]
 
 str(dataS)
 
@@ -29,9 +29,6 @@ fit <- segmentByNonPairedPSCBS(CT, betaT=betaT,
                             seed=0xBEEF, verbose=verbose)
 print(fit)
 
-# Plot results
-plotTracks(fit)
-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Bootstrap segment level estimates
@@ -40,7 +37,6 @@ plotTracks(fit)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fit <- bootstrapTCNandDHByRegion(fit, B=100, verbose=verbose)
 print(fit)
-plotTracks(fit)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -51,11 +47,10 @@ plotTracks(fit)
 # (which be done by default by the caller, if skipped here)
 deltaAB <- estimateDeltaAB(fit, flavor="qq(DH)", verbose=verbose)
 print(deltaAB)
-## [1] 0.1657131
 
 fit <- callAB(fit, delta=deltaAB, verbose=verbose)
 print(fit)
-plotTracks(fit)
+
 
 # Even if not explicitly specified, the estimated 
 # threshold parameter is returned by the caller
@@ -70,7 +65,6 @@ stopifnot(fit$params$deltaAB == deltaAB)
 # (which be done by default by the caller, if skipped here)
 deltaLOH <- estimateDeltaLOH(fit, flavor="minC1|nonAB", verbose=verbose)
 print(deltaLOH)
-## [1] 0.625175
 
 fit <- callLOH(fit, delta=deltaLOH, verbose=verbose)
 print(fit)
