@@ -142,7 +142,7 @@ str(data)
 dataS <- dropSegmentationOutliers(data)
 
 # Speed up example by segmenting fewer loci
-dataS <- dataS[seq(from=1, to=nrow(data), by=5),]
+dataS <- dataS[seq(from=1, to=nrow(data), by=10),]
 
 str(dataS)
 
