@@ -71,8 +71,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   if (!params$joinSegments) {
     throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.");
   }
-  if (regexpr("&", params$flavor, fixed=TRUE) == -1) {
-    throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using flavor=\"tcn&dh\".");
+  if (regexpr(",", params$flavor, fixed=TRUE) != -1) {
+    throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor));
   }
   # Sanity check (same as above, but just in case)
   stopifnot(all(segs$tcnStart == segs$dhStart, na.rm=TRUE));
@@ -597,6 +597,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 ##############################################################################
 # HISTORY
+# 2012-11-05
+# o GENERALIZATION: Now bootstrapTCNandDHByRegion() works for more "flavors",
+#   including the default ('tcn') used by segmentByNonPairedPSCBS().
 # 2012-09-20
 # o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
 #   longer do sanity checks within the bootstrap loop.  This significantly

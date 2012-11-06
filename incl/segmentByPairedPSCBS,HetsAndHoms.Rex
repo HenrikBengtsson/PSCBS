@@ -1,3 +1,4 @@
+verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
@@ -28,7 +29,7 @@ gaps <- findLargeGaps(dataS, minLength=2e6)
 knownSegments <- gapsToSegments(gaps, dropGaps=TRUE)
 
 fit <- segmentByPairedPSCBS(dataS, knownSegments=knownSegments,
-                            seed=0xBEEF, verbose=-10)
+                            seed=0xBEEF, verbose=verbose)
 print(fit)
 
 
@@ -49,7 +50,7 @@ for (key in c("homozygotes", "heterozygotes")) {
   dataT$CT[excl] <- NA
 
   fitT <- segmentByPairedPSCBS(dataT, knownSegments=segs,
-                               undoTCN=Inf, undoDH=Inf, verbose=-10)
+                               undoTCN=Inf, undoDH=Inf, verbose=verbose)
   fitList[[key]] <- fitT
 } # for (key ...)
 

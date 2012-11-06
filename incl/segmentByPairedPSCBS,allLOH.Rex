@@ -14,6 +14,7 @@
 # that is in LOH.  It is unlikely to happen when processing
 # whole-genome data.
 #############################################################
+verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
@@ -24,7 +25,7 @@ pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS"
 data <- R.utils::loadObject(pathname)
 
 # Subset data (such that all regions will be in LOH)
-data <- subset(data, position <= 125e6)
+data <- subset(data, x <= 125e6)
 
 str(data)
 
@@ -36,10 +37,10 @@ str(data)
 dataS <- dropSegmentationOutliers(data)
 
 # Paired PSCBS segmentation
-fit <- segmentByPairedPSCBS(dataS, seed=0xBEEF, verbose=-10)
+fit <- segmentByPairedPSCBS(dataS, seed=0xBEEF, verbose=verbose)
 
-fit <- callAB(fit, verbose=-10)
-fit <- callLOH(fit, verbose=-10)
+fit <- callAB(fit, verbose=verbose)
+fit <- callLOH(fit, verbose=verbose)
 print(fit)
 str(fit$params) # deltaAB=1.17, deltaLowC1=-Inf
 plotTracks(fit)

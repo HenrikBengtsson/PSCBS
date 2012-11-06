@@ -2,6 +2,16 @@
 Package: PSCBS
 ==============
 
+Version: 0.29.9 [2012-11-05]
+o GENERALIZATION: Now bootstrapTCNandDHByRegion() works for more 
+  "flavors", e.g the default ('tcn') used by segmentByNonPairedPSCBS().
+o DOCUMENTATION FIX: example(segmentByNonPairedPSCBS) was for
+  the paired case.
+o CRAN POLICY: Further speed up of examples such that they run
+  faster with R CMD check, which is now achieved by turning off
+  verbose output when not running in interactive mode, e.g. R CMD check.
+
+
 Version: 0.29.8 [2012-11-04]
 o CLEANUP: Replaced all whichVector() with which(), because the
   latter is now the fastest again.

@@ -74,7 +74,7 @@
 #   to work, argument \code{tbn} must be set to @FALSE.
 # }
 #
-# @examples "../incl/segmentByPairedPSCBS.Rex"
+# @examples "../incl/segmentByNonPairedPSCBS.Rex"
 #
 # @author
 #
@@ -150,8 +150,9 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   verbose && str(verbose, betaT);
 
   if (is.na(tauA) && is.na(tauB)) {
+    require("aroma.light") || throw("Package not loaded: aroma.light");
     mBAF <- abs(betaT - 1/2);
-    fitT <- aroma.light::findPeaksAndValleys(mBAF);
+    fitT <- findPeaksAndValleys(mBAF);
     type <- NULL; rm(type); # To please 'R CMD check'.
     fitT <- subset(fitT, type == "peak");
     o <- order(fitT$density, decreasing=TRUE);
@@ -258,6 +259,9 @@ setMethodS3("segmentByNonPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2012-11-05
+# o DOCUMENTATION FIX: example(segmentByNonPairedPSCBS) was for the
+#   paired case.
 # 2012-08-20
 # o BUG FIX: segmentByNonPairedPSCBS() forgot to specify namespace
 #   aroma.light when trying to call findPeaksAndValleys().
