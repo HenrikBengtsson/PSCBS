@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.31.0 [2013-01-05]
+o CLEANUP: Now packages R.methodsS3 and R.oo are only imported.
+o CLEANUP: Package no longer explicitly imports digest.
+
+
 Version: 0.30.0 [2012-11-05]
 o GENERALIZATION: Now bootstrapTCNandDHByRegion() works for more 
   "flavors", e.g the default ('tcn') used by segmentByNonPairedPSCBS().
