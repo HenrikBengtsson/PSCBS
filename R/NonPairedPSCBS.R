@@ -39,7 +39,7 @@ setConstructorS3("NonPairedPSCBS", function(fit=list(), ...) {
 
 
 
-setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., verbose=FALSE) {
+setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., FUN=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -53,6 +53,10 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
     knownValues <- c("ab", "loh", "roh");
     adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE);
   }
+
+  # Argument 'FUN':
+  FUN <- match.arg(FUN);
+  FUN <- get(FUN, mode="function");
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -143,7 +147,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
         units <- units[keep];
   
         # (d) Update mean
-        gamma <- mean(value[units]);
+        gamma <- FUN(value[units]);
   
         # Sanity check
         stopifnot(length(units) == 0 || !is.na(gamma));

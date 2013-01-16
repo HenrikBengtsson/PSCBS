@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.32.0 [2013-01-15]
+o Now updateMeans() and updateMeansTogether() methods can estimate
+  the mean levels either by the sample mean or the median.
+
+
 Version: 0.31.0 [2013-01-05]
 o CLEANUP: Now packages R.methodsS3 and R.oo are only imported.
 o CLEANUP: Package no longer explicitly imports digest.

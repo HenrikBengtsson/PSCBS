@@ -421,10 +421,13 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 
-setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
+setMethodS3("updateMeans", "CBS", function(fit, ..., FUN=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'FUN':
+  FUN <- match.arg(FUN);
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -449,6 +452,17 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
   y <- data$y;
   w <- data$w;
   hasWeights <- !is.null(w);
+
+  if (hasWeights) {
+    if(FUN == "mean") {
+      FUN <- weighted.mean;
+    } else if(FUN == "median") {
+      require("matrixStats") || throw("Package not loaded: matrixStats");
+      FUN <- weightedMedian;
+    }
+  } else {
+    FUN <- get(FUN, mode="function");
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Update segments
@@ -488,9 +502,9 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., verbose=FALSE) {
     # (d) Update mean
     if (hasWeights) {
       wSS <- wSS / sum(wSS);
-      gamma <- sum(wSS*ySS);
+      gamma <- FUN(ySS, w=wSS);
     } else {
-      gamma <- mean(ySS);
+      gamma <- FUN(ySS);
     }
 
     # Sanity check
