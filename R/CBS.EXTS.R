@@ -230,6 +230,10 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
   nbrOfSegments <- nrow(segs);
   nbrOfLoci <- nrow(data);
 
+  # Get mean estimators
+  estList <- getMeanEstimators(fit, "y");
+  avgY <- estList$y;
+
   yS <- y;
   for (ss in seq(length=nbrOfSegments)) {
     seg <- segs[ss,];
@@ -243,7 +247,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
     # Sanity check
     ## stopifnot(sum(ok) == seg$nbrOfLoci); # Not dealing with ties
 
-    mu <- mean(ySS[ok]);
+    mu <- avgY(ySS[ok]);
     yS[idxs] <- mu;
   } # for (ss ...)
 

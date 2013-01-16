@@ -1,4 +1,4 @@
-setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., FUN=c("mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -13,9 +13,8 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., FUN=c("mea
     sort(unique(idxs));
   });
 
-  # Argument 'FUN':
-  FUN <- match.arg(FUN);
-  FUN <- get(FUN, mode="function");
+  # Argument 'avg':
+  avg <- match.arg(avg);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -28,6 +27,12 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., FUN=c("mea
 
   verbose && cat(verbose, "Segments:");
   verbose && str(verbose, idxList);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Setting up averaging functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  avgFUN <- get(avg, mode="function");
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -60,7 +65,7 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., FUN=c("mea
     keep <- which(!is.na(y));
   
     # (d) Update mean
-    gamma <- FUN(y[keep]);
+    gamma <- avgFUN(y[keep]);
  
     # Sanity check
     stopifnot(length(gamma) == 0 || !is.na(gamma));
@@ -78,6 +83,7 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., FUN=c("mea
   # Return results
   res <- fit;
   res$output <- segs;
+  res <- setMeanEstimators(res, y=avg);
 
   verbose && exit(verbose);
 

@@ -114,3 +114,7 @@ getLocusSignalNames.PSCBS getSegmentTrackPrefixes
 getSegmentTrackPrefixes.AbstractCBS getSegmentTrackPrefixes.CBS
 getSegmentTrackPrefixes.PSCBS
 pruneByDP
+getMeanEstimators getMeanEstimators.AbstractCBS
+resegment.NonPairedPSCBS setMeanEstimators
+setMeanEstimators.AbstractCBS
+

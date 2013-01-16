@@ -192,6 +192,10 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Argument 'FUN':
+  FUN <- match.arg(FUN);
+  FUN <- get(FUN, mode="function");
+
   # Argument 'sample':
   sample <- Arguments$getIndex(sample, max=nbrOfSamples(fit));
 
@@ -207,6 +211,10 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
   nbrOfSegments <- nrow(segs);
   nbrOfLoci <- nbrOfLoci(fit);
 
+  # Get mean estimators
+  estList <- getMeanEstimators(fit, "y");
+  avgY <- estList$y;
+
   yS <- y;
   for (ss in seq(length=nbrOfSegments)) {
     seg <- segs[ss,];
@@ -217,7 +225,7 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
     ok <- is.finite(ySS);
     # Sanity check
     ## stopifnot(sum(ok) == seg$num.mark); # Not dealing with ties
-    mu <- mean(ySS[ok]);
+    mu <- avgY(ySS[ok]);
     yS[idxs] <- mu;
   } # for (ss ...)
 

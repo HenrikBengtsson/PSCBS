@@ -39,7 +39,7 @@ setConstructorS3("NonPairedPSCBS", function(fit=list(), ...) {
 
 
 
-setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., FUN=c("mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -54,9 +54,9 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
     adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE);
   }
 
-  # Argument 'FUN':
-  FUN <- match.arg(FUN);
-  FUN <- get(FUN, mode="function");
+  # Argument 'avgTCN' & 'avgDH':
+  avgTCN <- match.arg(avgTCN);
+  avgDH <- match.arg(avgDH);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -64,10 +64,20 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
     pushState(verbose);
     on.exit(popState(verbose));
   }
+
  
   verbose && enter(verbose, "Updating mean level estimates");
   verbose && cat(verbose, "Adjusting for:");
   verbose && print(verbose, adjustFor);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Setting up averaging functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  avgList <- list(
+    tcn = get(avgTCN, mode="function"),
+    dh = get(avgDH, mode="function")
+  );
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -123,6 +133,8 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
       chrTag <- sprintf("chr%02d", chr);
   
       for (what in c("tcn", "dh")) {
+        avgFUN <- avgList[[what]];
+
         keys <- paste(what, c("Start", "End"), sep="");
         xStart <- seg[[keys[1]]];
         xEnd <- seg[[keys[2]]];
@@ -147,7 +159,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
         units <- units[keep];
   
         # (d) Update mean
-        gamma <- FUN(value[units]);
+        gamma <- avgFUN(value[units]);
   
         # Sanity check
         stopifnot(length(units) == 0 || !is.na(gamma));
@@ -218,6 +230,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # Return results
   res <- fit;
   res$output <- segs;
+  res <- setMeanEstimators(res, tcn=avgTCN, dh=avgDH);
 
   verbose && exit(verbose);
 
@@ -226,8 +239,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
 
 
 
-
-setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
+setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -312,6 +324,8 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ##############################################################################
 # HISTORY
+# 2013-01-15
+# o regsegment() was defined for PairedPSCBS instead of NonPairedPSCBS.
 # 2012-04-21
 # o Created from PairedPSCBS.R.
 ##############################################################################

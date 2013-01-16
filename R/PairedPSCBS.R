@@ -38,7 +38,7 @@ setConstructorS3("PairedPSCBS", function(fit=list(), ...) {
 
 
 
-setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., FUN=c("mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -53,9 +53,9 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
     adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE);
   }
 
-  # Argument 'FUN':
-  FUN <- match.arg(FUN);
-  FUN <- get(FUN, mode="function");
+  # Argument 'avgTCN' & 'avgDH':
+  avgTCN <- match.arg(avgTCN);
+  avgDH <- match.arg(avgDH);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -67,6 +67,15 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   verbose && enter(verbose, "Updating mean level estimates");
   verbose && cat(verbose, "Adjusting for:");
   verbose && print(verbose, adjustFor);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Setting up averaging functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  avgList <- list(
+    tcn = get(avgTCN, mode="function"),
+    dh = get(avgDH, mode="function")
+  );
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -122,6 +131,8 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
       chrTag <- sprintf("chr%02d", chr);
   
       for (what in c("tcn", "dh")) {
+        avgFUN <- avgList[[what]];
+
         keys <- paste(what, c("Start", "End"), sep="");
         xStart <- seg[[keys[1]]];
         xEnd <- seg[[keys[2]]];
@@ -146,7 +157,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
         units <- units[keep];
   
         # (d) Update mean
-        gamma <- FUN(value[units]);
+        gamma <- avgFUN(value[units]);
   
         # Sanity check
         stopifnot(length(units) == 0 || !is.na(gamma));
@@ -217,12 +228,12 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   # Return results
   res <- fit;
   res$output <- segs;
+  res <- setMeanEstimators(res, tcn=avgTCN, dh=avgDH);
 
   verbose && exit(verbose);
 
   res;
 }, private=TRUE) # updateMeans()
-
 
 
 

@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.32.0 [2013-01-15]
+Version: 0.32.0 [2013-01-16]
 o Now updateMeans() and updateMeansTogether() methods can estimate
   the mean levels either by the sample mean or the median.
 

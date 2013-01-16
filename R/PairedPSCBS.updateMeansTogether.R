@@ -1,4 +1,4 @@
-setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., FUN=c("mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -13,9 +13,9 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., FU
     sort(unique(idxs));
   });
 
-  # Argument 'FUN':
-  FUN <- match.arg(FUN);
-  FUN <- get(FUN, mode="function");
+  # Argument 'avgTCN' & 'avgDH':
+  avgTCN <- match.arg(avgTCN);
+  avgDH <- match.arg(avgDH);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -28,6 +28,15 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., FU
 
   verbose && cat(verbose, "Segments:");
   verbose && str(verbose, idxList);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Setting up averaging functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  avgList <- list(
+    tcn = get(avgTCN, mode="function"),
+    dh = get(avgDH, mode="function")
+  );
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -59,6 +68,8 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., FU
     naValue <- as.double(NA);
     mus <- c(tcn=naValue, dh=naValue, c1=naValue, c2=naValue);
     for (key in c("tcn", "dh")) {
+      avgFUN <- avgList[[key]];
+
       # (c) Adjust for missing values
       if (key == "tcn") {
         value <- CT;
@@ -68,7 +79,7 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., FU
       keep <- which(!is.na(value));
   
       # (d) Update mean
-      gamma <- FUN(value[keep]);
+      gamma <- avgFUN(value[keep]);
   
       # Sanity check
       stopifnot(length(gamma) == 0 || !is.na(gamma));
@@ -90,6 +101,7 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., FU
   # Return results
   res <- fit;
   res$output <- segs;
+  res <- setMeanEstimators(res, tcn=avgTCN, dh=avgDH);
 
   verbose && exit(verbose);
 

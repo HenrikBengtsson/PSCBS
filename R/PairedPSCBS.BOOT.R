@@ -44,6 +44,11 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
   }
 
 
+  # Get mean estimators
+  estList <- getMeanEstimators(fit, "dh");
+  avgDH <- estList$dh;
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Precalculate signals
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -134,7 +139,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
 
     if (nbrOfUnits >= 1) {
       # Sanity check
-      mu <- mean(rho[units], na.rm=FALSE);
+      mu <- avgDH(rho[units], na.rm=FALSE);
       dMu <- (mu - segJJ$dhMean);
       tol <- 0.0005;
       if (abs(dMu) > tol) {
@@ -152,7 +157,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
         rhoB <- rho[unitsS];
 
         # Calculate new mean level (no NAs here)
-        rhoMean[bb] <- mean(rhoB, na.rm=FALSE);
+        rhoMean[bb] <- avgDH(rhoB, na.rm=FALSE);
       } # for (bb ...)
     } else {
       rhoMean <- double(0);
@@ -207,7 +212,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
   if (any(dups)) {
     stats <- stats[,!dups, drop=FALSE];
   }
-  
+
   fitB <- fit;
   fitB$output <- segs;
 
@@ -220,6 +225,8 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
 
 ##############################################################################
 # HISTORY
+# 2013-01-15
+# o Now bootstrapDHByRegion() uses the params$avgDH estimator, iff given.
 # 2012-02-24
 # o Added argument 'force' to bootstrapDHByRegion().
 # 2011-06-14

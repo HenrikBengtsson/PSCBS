@@ -106,6 +106,11 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   }
 
 
+  # Get mean estimators
+  estList <- getMeanEstimators(fit, c("tcn", "dh"));
+  avgTCN <- estList$tcn;
+  avgDH <- estList$dh;
+ 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Get signals
@@ -351,8 +356,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
     # Sanity checks
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (nbrOfTCNs > 0L) {
+      # Sanity check
       ys <- CT[idxsTCN];
-      mu <- mean(ys, na.rm=TRUE);
+      mu <- avgTCN(ys, na.rm=TRUE);
       dMu <- (mu - tcnMeans[jj]);
       if (abs(dMu) > tol) {
         str(list(nbrOfTCNs=nbrOfTCNs, tcnNbrOfLoci=segJJ$tcnNbrOfLoci, mu=mu, tcnMean=tcnMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])));
@@ -362,8 +368,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
     shouldHaveDHs <- (nbrOfDHs > 0L && !is.na(dhMeans[jj]));
     if (shouldHaveDHs) {
+      # Sanity check
       ys <- rho[idxsDH];
-      mu <- mean(ys, na.rm=TRUE);
+      mu <- avgDH(ys, na.rm=TRUE);
       dMu <- (mu - dhMeans[jj]);
       if (abs(dMu) > tol) {
         str(list(nbrOfDHs=nbrOfDHs, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=dhMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])));
@@ -396,7 +403,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
         rhoBB <- rho[idxsDHBB];
 
         # Calculate bootstrap mean
-        M[jj,bb,"dh"] <- mean(rhoBB, na.rm=TRUE);
+        M[jj,bb,"dh"] <- avgDH(rhoBB, na.rm=TRUE);
       } else {
         idxsHetNonDH <- idxsDH;
       } # if (shouldHaveDHs > 0)
@@ -428,7 +435,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
         CTBB <- CT[idxsTCNBB];
 
         # Calculate bootstrap mean
-        M[jj,bb,"tcn"] <- mean(CTBB, na.rm=TRUE);
+        M[jj,bb,"tcn"] <- avgTCN(CTBB, na.rm=TRUE);
       } # if (nbrOfUnitsJJ > 0)
     } # (for bb ...)
     verbose && exit(verbose);
@@ -597,6 +604,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 ##############################################################################
 # HISTORY
+# 2013-01-15
+# o Now bootstrapTCNandDHByRegion() uses the params$avgTCN and params$avgDH
+#   estimators, iff given.
 # 2012-11-05
 # o GENERALIZATION: Now bootstrapTCNandDHByRegion() works for more "flavors",
 #   including the default ('tcn') used by segmentByNonPairedPSCBS().

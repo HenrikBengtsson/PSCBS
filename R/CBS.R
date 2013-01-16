@@ -421,12 +421,12 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 
-setMethodS3("updateMeans", "CBS", function(fit, ..., FUN=c("mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Argument 'FUN':
-  FUN <- match.arg(FUN);
+  # Argument 'avg':
+  avg <- match.arg(avg);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -453,16 +453,23 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., FUN=c("mean", "median"), ve
   w <- data$w;
   hasWeights <- !is.null(w);
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # Setting up averaging functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   if (hasWeights) {
-    if(FUN == "mean") {
-      FUN <- weighted.mean;
-    } else if(FUN == "median") {
+    if(avg == "mean") {
+      avgFUN <- weighted.mean;
+    } else if(avg == "median") {
       require("matrixStats") || throw("Package not loaded: matrixStats");
-      FUN <- weightedMedian;
+      avgFUN <- weightedMedian;
+    } else {
+      throw("Value of argument 'avg' is not supported with weights: ", avg);
     }
   } else {
-    FUN <- get(FUN, mode="function");
+    avgFUN <- get(avg, mode="function");
   }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Update segments
@@ -502,9 +509,9 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., FUN=c("mean", "median"), ve
     # (d) Update mean
     if (hasWeights) {
       wSS <- wSS / sum(wSS);
-      gamma <- FUN(ySS, w=wSS);
+      gamma <- avgFUN(ySS, w=wSS);
     } else {
-      gamma <- FUN(ySS);
+      gamma <- avgFUN(ySS);
     }
 
     # Sanity check
@@ -522,6 +529,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., FUN=c("mean", "median"), ve
   # Return results
   res <- fit;
   res$output <- segs;
+  res <- setMeanEstimators(res, y=avg);
 
   verbose && exit(verbose);
 

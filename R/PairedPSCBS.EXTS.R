@@ -147,6 +147,11 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   }
 
 
+  # Get mean estimators
+  estList <- getMeanEstimators(fit, "tcn");
+  avgTCN <- estList$tcn;
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the data and segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -290,7 +295,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
           throw("Not implemented yet.")  # /HB 2010-12-02
         } # if (joinSegments)
   
-        gamma <- mean(CT[units]);
+        gamma <- avgTCN(CT[units]);
         # Sanity check
         stopifnot(length(units) == 0 || !is.na(gamma));
 
@@ -422,6 +427,8 @@ print(tcnSegRowsII);
 
 ############################################################################
 # HISTORY:
+# 2013-01-15
+# o Now postsegmentTCN() uses the params$avgTCN estimator, iff given.
 # 2012-09-21
 # o ROBUSTNESS: Now extractDeltaC1C2() for PairedPSCBS makes sure to
 #   retrieve segments with NA splitters between chromosomes and gaps.
