@@ -22,7 +22,7 @@
   It is intended to be applied to one tumor-normal sample at the time.
  }
 
- \usage{\method{segmentByPairedPSCBS}{default}(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE)}
+ \usage{\method{segmentByPairedPSCBS}{default}(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE)}
 
  \arguments{
    \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total copy number (TCN)
@@ -53,6 +53,8 @@
         then a cleanup of segmentions post segmentation is done.
         See argument \code{undo} of \code{\link{segmentByCBS}}() for more
         details.}
+   \item{avgTCN, avgDH}{A \code{\link[base]{character}} string specifying how to calculating
+         segment mean levels.}
    \item{...}{Additional arguments passed to \code{\link{segmentByCBS}}().}
    \item{flavor}{A \code{\link[base]{character}} specifying what type of segmentation and
      calling algorithm to be used.}

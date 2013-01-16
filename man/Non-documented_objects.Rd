@@ -295,6 +295,11 @@
 \alias{getSegmentTrackPrefixes.CBS}
 \alias{getSegmentTrackPrefixes.PSCBS}
 \alias{pruneByDP}
+\alias{getMeanEstimators}
+\alias{getMeanEstimators.AbstractCBS}
+\alias{resegment.NonPairedPSCBS}
+\alias{setMeanEstimators}
+\alias{setMeanEstimators.AbstractCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

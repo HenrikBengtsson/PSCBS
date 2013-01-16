@@ -44,6 +44,8 @@
 #        then a cleanup of segmentions post segmentation is done.
 #        See argument \code{undo} of @see "segmentByCBS" for more
 #        details.}
+#   \item{avgTCN, avgDH}{A @character string specifying how to calculating
+#         segment mean levels.}
 #   \item{...}{Additional arguments passed to @see "segmentByCBS".}
 #   \item{flavor}{A @character specifying what type of segmentation and 
 #     calling algorithm to be used.}
@@ -134,7 +136,7 @@
 #
 # @keyword IO
 #*/########################################################################### 
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -212,6 +214,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # Argument 'undoDH':
   undoDH <- Arguments$getDouble(undoDH, range=c(0,Inf));
 
+  # Argument 'avgTCN' & 'avgDH':
+  avgTCN <- match.arg(avgTCN);
+  avgDH <- match.arg(avgDH);
 
   # Argument 'flavor':
   flavor <- match.arg(flavor);
@@ -1053,6 +1058,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (avgTCN != "mean" || avgDH != "mean") {
+    verbose && enter(verbose, "Updating mean level using different estimator");
+    verbose && cat(verbose, "TCN estimator: ", avgTCN);
+    verbose && cat(verbose, "DH estimator: ", avgDH);
+    fit <- updateMeans(fit, avgTCN=avgTCN, avgDH=avgDH, verbose=less(verbose, 20));
+    verbose && exit(verbose);
+  }
+
   if (is.element(flavor, c("tcn&dh", "sqrt(tcn)&dh"))) {
     fit$params$flavor <- gsub("&", ",", flavor, fixed=TRUE); # AD HOC.
     fit <- postsegmentTCN(fit, verbose=verbose);
@@ -1112,6 +1125,8 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-01-16
+# o Added arguments 'avgTCN' and 'avgDH' to segmentByPairedPSCBS().
 # 2012-09-15
 # o Added argument 'dropMissingCT' to segmentByPairedPSCBS().
 # 2012-09-13
