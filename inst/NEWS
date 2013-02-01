@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.32.1 [2013-02-01]
+o BUG FIX: segmentByPairedPSCBS(..., avgDH="median") only worked for
+  single-chromosome data.  Same for avgTCN="median".
+
+
 Version: 0.32.0 [2013-01-16]
 o Added arguments 'avgTCN' and 'avgDH' to segmentByPairedPSCBS().
 o Now updateMeans() and updateMeansTogether() methods can estimate

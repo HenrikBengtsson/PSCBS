@@ -23,6 +23,12 @@ dataS <- dropSegmentationOutliers(data)
 # Speed up example by segmenting fewer loci
 dataS <- dataS[seq(from=1, to=nrow(data), by=20),]
 
+# Fake a second chromosome
+dataT <- dataS
+dataT$chromosome <- 2L
+dataS <- rbind(dataS, dataT)
+rm(dataT)
+
 str(dataS)
 
 R.oo::attachLocally(dataS)

@@ -458,7 +458,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
                 knownSegments=knownSegmentsKK,
                 alphaTCN=alphaTCN, alphaDH=alphaDH,
                 undoTCN=undoTCN, undoDH=undoDH,
-                flavor=flavor, ...,
+                avgTCN=avgTCN, avgDH=avgDH,
+                flavor=flavor,
+                ...,
                 seed=NULL,
                 verbose=verbose);
 
@@ -1125,6 +1127,9 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-02-01
+# o BUG FIX: segmentByPairedPSCBS(..., avgDH="median") only worked for
+#   single-chromosome data.  Same for avgTCN="median".
 # 2013-01-16
 # o Added arguments 'avgTCN' and 'avgDH' to segmentByPairedPSCBS().
 # 2012-09-15
