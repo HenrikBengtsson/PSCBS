@@ -8,6 +8,8 @@ o Added resetSegments() for AbstractCBS, which drops extra segments
   obtained from the segment algorithm.
 o ROBUSTNESS: Now aroma.light is explicitly required in cases
   where it is needed.
+o DOCUMENTATION: Added a paragraph on avgDH="median" to the PSCBS
+  vignette's 'Experimental' section.
 
 
 Version: 0.32.1 [2013-02-01]
