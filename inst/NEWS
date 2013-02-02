@@ -6,6 +6,8 @@ Version: 0.32.2 [2013-02-01]
 o Added resetSegments() for AbstractCBS, which drops extra segments
   columns (e.g. bootstrap statistics and calls) except those
   obtained from the segment algorithm.
+o ROBUSTNESS: Now aroma.light is explicitly required in cases
+  where it is needed.
 
 
 Version: 0.32.1 [2013-02-01]

@@ -29,6 +29,8 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=NULL, ..., minDensity=1e-10, verbose=FALSE) {
+  require("aroma.light") || throw("Package not loaded: aroma.light");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
