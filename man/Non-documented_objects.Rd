@@ -300,6 +300,7 @@
 \alias{resegment.NonPairedPSCBS}
 \alias{setMeanEstimators}
 \alias{setMeanEstimators.AbstractCBS}
+\alias{resetSegments}
 
 \description{
   This page contains aliases for all "non-documented" objects that

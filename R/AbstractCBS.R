@@ -372,6 +372,60 @@ setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
 setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
+###########################################################################/**
+# @RdocMethod resetSegments
+#
+# @title "Reset the segments"
+#
+# \description{
+#   @get "title".  More precisely, it removes columns in the segmentation
+#   result table that have been added by methods after the actual
+#   segmentation method, e.g. bootstrap estimated mean level quantiles
+#   and various calls. 
+#   It leave the basic segmentation results untouched,
+#   i.e. the partitioning and the segment means.
+# }
+# 
+# @synopsis
+#
+# \arguments{
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns an object if the same class as the input result.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass
+# }
+#*/###########################################################################  
+setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
+  segs <- fit$output;
+  names <- colnames(segs);
+
+  excl <- NULL;
+
+  # Drop all quantile mean level estimates (from bootstrapping)
+  idxs <- grep("_[0-9.]*[%]$", names);
+  excl <- c(excl, idxs);
+
+  # Drop all calls
+  idxs <- grep("Call$", names);
+  excl <- c(excl, idxs);
+
+  excl <- unique(excl);
+  if (length(excl) > 0L) {
+    segs <- segs[,-excl];
+  }
+
+  fit$output <- segs;
+  invisible(fit);
+}, protected=TRUE)
+
+
 
 ###########################################################################/**
 # @RdocMethod nbrOfSegments
@@ -707,6 +761,10 @@ setMethodS3("getChromosomeOffsets", "AbstractCBS", function(fit, resolution=1e6,
 
 ############################################################################
 # HISTORY:
+# 2013-02-01
+# o Added resetSegments() for AbstractCBS, which drops extra segments
+#   columns (e.g. bootstrap statisistics and calls) except those
+#   obtained from the segment algorithm.
 # 2013-01-15
 # o Added get-/setMeanEstimators() for AbstractCBS.
 # 2012-09-21
