@@ -41,6 +41,9 @@
    a segment is called gained or lost if its segment level is
    at least two standard deviations away from the median segment level
    on Chr1-22, where standard deviation is estimated using MAD.
+   Then same is done for \code{method == "ucsf-dmad"} with the difference
+   that the standard deviation is estimated using a robust first order
+   variance estimator.
  }
 
  \examples{

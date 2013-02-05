@@ -20,7 +20,7 @@
  \title{Drops chromosomal regions (a connected set of segments)}
 
  \description{
-   Drops chromosomal regions (a connected set of segments) each of a cetain size (number of segments).
+   Drops chromosomal regions (a connected set of segments) each of a certain size (number of segments).
    \emph{None of the statistics are recalculated}.
  }
 

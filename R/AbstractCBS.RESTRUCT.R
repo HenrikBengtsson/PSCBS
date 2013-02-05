@@ -381,7 +381,7 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
 # @title "Drops chromosomal regions (a connected set of segments)"
 #
 # \description{
-#   @get "title" each of a cetain size (number of segments).
+#   @get "title" each of a certain size (number of segments).
 #   \emph{None of the statistics are recalculated}.
 # }
 # 

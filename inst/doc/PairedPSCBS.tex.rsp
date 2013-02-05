@@ -317,6 +317,7 @@ To write the PSCN segmentation results to file, do:
 \begin{verbatim}
 pathname <- writeSegments(fit, name="MySample", simplify=TRUE)
 \end{verbatim}
+With \code{simplify=FALSE} (default) quantile estimates of the different mean levels will also be written, which roughly doubles the file size.
 
 
 
