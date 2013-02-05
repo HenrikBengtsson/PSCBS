@@ -183,6 +183,9 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
   verbose && exit(verbose);
 
 
+  # Dropping previous segment calls and quantile mean-level estimates.
+  fit <- resetSegments(fit);
+
   verbose && enter(verbose, "Merging mean levels of clustered segments");
   fit <- updateMeansTogether(fit, idxList=idxList, verbose=less(verbose, 10));
   verbose && exit(verbose);
@@ -233,6 +236,9 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
 ############################################################################
 # HISTORY:
+# 2013-02-05
+# o Now pruneByHClust() drops any existing segment calls and quantile
+#   mean-level estimates.
 # 2011-12-06
 # o Now pruneByHClust(..., update=TRUE) for AbstractCBS updates the 
 #   mean levels of the merged segments at the end.

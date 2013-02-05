@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.32.3 [2013-02-05]
+o Now pruneByHClust() drops any existing segment calls and quantile
+  mean-level estimates.
+
+
 Version: 0.32.2 [2013-02-01]
 o Added resetSegments() for AbstractCBS, which drops extra segments
   columns (e.g. bootstrap statistics and calls) except those

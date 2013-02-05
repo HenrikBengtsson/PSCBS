@@ -1,9 +1,9 @@
 Package: PSCBS
-Version: 0.32.2
+Version: 0.32.3
 Depends: R.utils (>= 1.19.5)
 Imports: utils, R.methodsS3 (>= 1.4.2), R.oo (>= 1.11.7), R.utils (>= 1.19.5), DNAcopy (>= 1.27.2), R.rsp (>= 0.8.2)
 Suggests: DNAcopy (>= 1.27.2), aroma.light (>= 1.22.0), matrixStats (>= 0.6.2), R.cache (>= 0.6.5), Hmisc (>= 3.10-1), ggplot2 (>= 0.9.3)
-Date: 2013-02-01
+Date: 2013-02-05
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Author: A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan
 Description: Segmentation of allele-specific DNA copy number data and detection of regions with abnormal copy number within each parental chromosome.  Both tumor-normal paired and tumor-only analyses are supported.
