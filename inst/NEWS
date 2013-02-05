@@ -19,7 +19,8 @@ o DOCUMENTATION: Added a paragraph on avgDH="median" to the PSCBS
 
 Version: 0.32.1 [2013-02-01]
 o BUG FIX: segmentByPairedPSCBS(..., avgDH="median") only worked for
-  single-chromosome data.  Same for avgTCN="median".
+  single-chromosome data.  Same for avgTCN="median".  Thanks Ritu Roy
+  at UCSF for reporting on this.
 
 
 Version: 0.32.0 [2013-01-16]
