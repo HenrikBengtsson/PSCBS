@@ -406,10 +406,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
         M[jj,bb,"dh"] <- avgDH(rhoBB, na.rm=TRUE);
       } else {
         idxsHetNonDH <- idxsDH;
-      } # if (shouldHaveDHs > 0)
+      } # if (shouldHaveDHs)
   
       # (2) Bootstrap TCNs
-      if (nbrOfTCNs > 0) {
+      if (nbrOfTCNs > 0L) {
         # (a) Resample non-DH hets SNPs
         idxsHetNonDHBB <- resample(idxsHetNonDH, size=nHetNonDHs, replace=TRUE);
         idxsHetBB <- c(idxsDHBB, idxsHetNonDHBB);
@@ -436,7 +436,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
         # Calculate bootstrap mean
         M[jj,bb,"tcn"] <- avgTCN(CTBB, na.rm=TRUE);
-      } # if (nbrOfUnitsJJ > 0)
+      } # if (nbrOfTCNs > 0L)
     } # (for bb ...)
     verbose && exit(verbose);
 
@@ -528,7 +528,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Statistical sanity checks
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  if (B >= 100) {
+  if (B >= 100L) {
     verbose && enter(verbose, "Statistical sanity checks (iff B >= 100)");
 
     # Find extreme quantiles
@@ -557,19 +557,21 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
           key <- sprintf("%sMean", field);
           segMean <- segs[[key]];
 
-          # Segmentation mean statistics
-          verbose && printf(verbose, "mean: %g [%g,%g]\n", segMean, range[1], range[2]);
-          verbose && printf(verbose, "mean: %g, range: [%g,%g]\n", segMean, range[1], range[2]);
-  
           # Segmentation counts
           cfield <- sprintf("%sNbrOfLoci", ifelse(field == "tcn", "tcn", "dh"));
           counts <- segs[,cfield,drop=TRUE];
   
-          # Compare only segments with enough data points
-          keep <- (counts > 1);
-          range <- range[keep,,drop=FALSE];
-          segMean <- segMean[keep];
+          if (verbose) {
+            for (rr in seq_len(length(segMean))) {
+              verbose && printf(verbose, "mean=%g, range=[%g,%g], n=%d\n", segMean[rr], range[rr,1], range[rr,2], counts[rr]);
+            } # for (rr ...)
+          }
   
+          # Compare only segments with enough data points
+          keep <- (counts > 1L);
+          range <- range[keep,,drop=FALSE];
+          segMean <- segMean[keep];  
+
           # Sanity checks
           stopifnot(all(range[,2] + tol >= range[,1], na.rm=TRUE));
           stopifnot(all(segMean + tol >= range[,1], na.rm=TRUE));
@@ -589,7 +591,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
     }
 
     verbose && exit(verbose);
-  } # if (B >= 100)
+  } # if (B >= 100L)
   
   
   fitB <- fit;
@@ -604,6 +606,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 ##############################################################################
 # HISTORY
+# 2013-02-07
+# o Improved some verbose outputs of bootstrapTCNandDHByRegion().
 # 2013-01-15
 # o Now bootstrapTCNandDHByRegion() uses the params$avgTCN and params$avgDH
 #   estimators, iff given.

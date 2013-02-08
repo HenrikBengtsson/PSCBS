@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.32.4 [2013-02-07]
+o Improved some verbose outputs of bootstrapTCNandDHByRegion().
+
+
 Version: 0.32.3 [2013-02-05]
 o Now pruneByHClust() drops any existing segment calls and quantile
   mean-level estimates.
