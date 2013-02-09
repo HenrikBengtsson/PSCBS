@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.32.5 [2013-02-09]
+o Added a VignetteBuilder field to DESCRIPTION.
+o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS did not 
+  bootstrap for all available loci when calculating total CNs 
+  statistics, iff the segment had been called run-of-homozygosity 
+  (ROH). Internal validation tests caught this. Thanks to Oscar Rueda
+  at the Cancer Research UK Cambridge Institute for reporting on this.
+
+
 Version: 0.32.4 [2013-02-07]
 o Improved some verbose outputs of bootstrapTCNandDHByRegion().
 

@@ -385,6 +385,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
     verbose && enter(verbose, "Bootstrapping while preserving (#hets, #homs, #nonSNPs)");
     verbose && cat(verbose, "Number of bootstrap samples: ", B);
 
+    if (!shouldHaveDHs) {
+      idxsHetNonDH <- idxsDH;
+    }
+
     nHoms <- length(idxsHom);
     nNonSNPs <- length(idxsNonSNP);
     nHetNonDHs <- length(idxsHetNonDH);
@@ -404,8 +408,6 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
         # Calculate bootstrap mean
         M[jj,bb,"dh"] <- avgDH(rhoBB, na.rm=TRUE);
-      } else {
-        idxsHetNonDH <- idxsDH;
       } # if (shouldHaveDHs)
   
       # (2) Bootstrap TCNs
@@ -563,7 +565,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   
           if (verbose) {
             for (rr in seq_len(length(segMean))) {
-              verbose && printf(verbose, "mean=%g, range=[%g,%g], n=%d\n", segMean[rr], range[rr,1], range[rr,2], counts[rr]);
+              verbose && printf(verbose, "Seg %3d. mean=%g, range=[%g,%g], n=%d\n", rr, segMean[rr], range[rr,1], range[rr,2], counts[rr]);
             } # for (rr ...)
           }
   
@@ -606,6 +608,12 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 ##############################################################################
 # HISTORY
+# 2013-02-09
+# o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS did not bootstrap
+#   for all available loci when calculating total CNs statistics, iff
+#   the segment had been called run-of-homozygosity (ROH).
+#   Thanks to Oscar Rueda at the Cancer Research UK Cambridge Institute 
+#   for reporting on this.
 # 2013-02-07
 # o Improved some verbose outputs of bootstrapTCNandDHByRegion().
 # 2013-01-15
