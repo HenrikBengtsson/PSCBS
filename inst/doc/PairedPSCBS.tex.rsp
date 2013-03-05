@@ -1,3 +1,11 @@
+<%-------------------------------------------------------------------
+  DIRECTIVES FOR R:
+
+  %\VignetteIndexEntry{Paired PSCBS}
+  %\VignetteKeyword{copy numbers, allele specific, parent specific, genomic aberrations}
+  %\VignetteEngine{rsp}
+  -------------------------------------------------------------------%>
+
 <% t0 <- Sys.time() %>
 
 <%
