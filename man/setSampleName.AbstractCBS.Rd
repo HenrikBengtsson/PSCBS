@@ -9,9 +9,7 @@
  \name{setSampleName.AbstractCBS}
 \alias{setSampleName.AbstractCBS}
 \alias{AbstractCBS.setSampleName}
-\alias{setSampleName.AbstractCBS}
 \alias{setSampleName,AbstractCBS-method}
-
  \alias{AbstractCBS.sampleName<-}
 \alias{sampleName<-.AbstractCBS}
 \alias{sampleName<-,AbstractCBS-method}
@@ -23,7 +21,9 @@
   Sets the name of the sample segmented.
  }
 
- \usage{\method{setSampleName}{AbstractCBS}(fit, name, ...)}
+ \usage{
+\method{setSampleName}{AbstractCBS}(fit, name, ...)
+}
 
  \arguments{
    \item{name}{A \code{\link[base]{character}} string.}

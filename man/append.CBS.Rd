@@ -10,9 +10,7 @@
  \name{append.CBS}
 \alias{append.CBS}
 \alias{CBS.append}
-\alias{append.CBS}
 \alias{append,CBS-method}
-
 
  \title{Appends one segmentation result to another}
 
@@ -20,7 +18,9 @@
    Appends one segmentation result to another.
  }
 
- \usage{\method{append}{CBS}(x, other, addSplit=TRUE, ...)}
+ \usage{
+\method{append}{CBS}(x, other, addSplit=TRUE, ...)
+}
 
  \arguments{
   \item{x, other}{The two \code{\link{CBS}} objects to be combined.}

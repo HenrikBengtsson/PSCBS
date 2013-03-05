@@ -10,9 +10,7 @@
 \name{estimateDeltaLOHByMinC1ForNonAB.PairedPSCBS}
 \alias{estimateDeltaLOHByMinC1ForNonAB.PairedPSCBS}
 \alias{PairedPSCBS.estimateDeltaLOHByMinC1ForNonAB}
-\alias{estimateDeltaLOHByMinC1ForNonAB.PairedPSCBS}
 \alias{estimateDeltaLOHByMinC1ForNonAB,PairedPSCBS-method}
-
 
 \title{Estimate a threshold for calling LOH from DH}
 
@@ -20,7 +18,9 @@
  Estimate a threshold for calling LOH from DH based on the location of guessed C1=0 and C1=1 peaks.
 }
 
-\usage{\method{estimateDeltaLOHByMinC1ForNonAB}{PairedPSCBS}(this, midpoint=1/2, maxC=3, ..., verbose=FALSE)}
+\usage{
+\method{estimateDeltaLOHByMinC1ForNonAB}{PairedPSCBS}(this, midpoint=1/2, maxC=3, ..., verbose=FALSE)
+}
 
 \arguments{
   \item{midpoint}{A \code{\link[base]{numeric}} scalar in [0,1] specifying the relative

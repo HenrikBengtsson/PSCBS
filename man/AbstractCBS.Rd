@@ -33,7 +33,9 @@ extends list\cr
   \code{\link{CBS}} and \code{\link{PairedPSCBS}}.
  }
 
- \usage{AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)}
+ \usage{
+AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
+}
 
  \arguments{
    \item{fit}{A \code{\link[base]{list}} structure containing the segmentation results.}

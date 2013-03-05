@@ -10,9 +10,7 @@
  \name{mergeTwoSegments.PairedPSCBS}
 \alias{mergeTwoSegments.PairedPSCBS}
 \alias{PairedPSCBS.mergeTwoSegments}
-\alias{mergeTwoSegments.PairedPSCBS}
 \alias{mergeTwoSegments,PairedPSCBS-method}
-
 
  \title{Merge two neighboring segments}
 
@@ -20,7 +18,9 @@
    Merge two neighboring segments by recalculating segment statistics.
  }
 
- \usage{\method{mergeTwoSegments}{PairedPSCBS}(this, left, update=TRUE, verbose=FALSE, ...)}
+ \usage{
+\method{mergeTwoSegments}{PairedPSCBS}(this, left, update=TRUE, verbose=FALSE, ...)
+}
 
  \arguments{
   \item{left}{An \code{\link[base]{integer}} specifying the segments (left, left+1)

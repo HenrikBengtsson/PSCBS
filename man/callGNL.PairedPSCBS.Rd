@@ -10,9 +10,7 @@
 \name{callGNL.PairedPSCBS}
 \alias{callGNL.PairedPSCBS}
 \alias{PairedPSCBS.callGNL}
-\alias{callGNL.PairedPSCBS}
 \alias{callGNL,PairedPSCBS-method}
-
 \alias{PairedPSCBS.callGainNeutralLoss}
 \alias{callGainNeutralLoss.PairedPSCBS}
 \alias{callGainNeutralLoss,PairedPSCBS-method}
@@ -25,7 +23,9 @@
  that corresponds to the ploidy of the genome.
 }
 
-\usage{\method{callGNL}{PairedPSCBS}(fit, flavor=c("TCN|AB"), ..., minSize=1, force=FALSE)}
+\usage{
+\method{callGNL}{PairedPSCBS}(fit, flavor=c("TCN|AB"), ..., minSize=1, force=FALSE)
+}
 
 \arguments{
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of

@@ -10,9 +10,7 @@
 \name{updateMeansTogether.AbstractCBS}
 \alias{updateMeansTogether.AbstractCBS}
 \alias{AbstractCBS.updateMeansTogether}
-\alias{updateMeansTogether.AbstractCBS}
 \alias{updateMeansTogether,AbstractCBS-method}
-
 \alias{updateMeansTogether.CBS}
 \alias{updateMeansTogether.PairedPSCBS}
 
@@ -23,7 +21,9 @@
  The locus-level data is not updated/modified.
 }
 
-\usage{\method{updateMeansTogether}{AbstractCBS}(...)}
+\usage{
+\method{updateMeansTogether}{AbstractCBS}(...)
+}
 
 \arguments{
  \item{idxList}{A \code{\link[base]{list}}, where each element is an \code{\link[base]{integer}} \code{\link[base]{vector}}

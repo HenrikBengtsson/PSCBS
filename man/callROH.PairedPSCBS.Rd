@@ -10,9 +10,7 @@
 \name{callROH.PairedPSCBS}
 \alias{callROH.PairedPSCBS}
 \alias{PairedPSCBS.callROH}
-\alias{callROH.PairedPSCBS}
 \alias{callROH,PairedPSCBS-method}
-
 
 \title{Calls segments that are in ROH}
 
@@ -21,7 +19,9 @@
  Run of homozygosity (ROH) is a property of the normal (germline) sample.
 }
 
-\usage{\method{callROH}{PairedPSCBS}(fit, ..., updateMeans=TRUE, force=FALSE, verbose=FALSE)}
+\usage{
+\method{callROH}{PairedPSCBS}(fit, ..., updateMeans=TRUE, force=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{...}{Additional arguments passed to \code{\link{testROH}}().}

@@ -10,9 +10,7 @@
  \name{append.PSCBS}
 \alias{append.PSCBS}
 \alias{PSCBS.append}
-\alias{append.PSCBS}
 \alias{append,PSCBS-method}
-
 
  \title{Appends one segmentation result to another}
 
@@ -20,7 +18,9 @@
    Appends one segmentation result to another.
  }
 
- \usage{\method{append}{PSCBS}(x, other, addSplit=TRUE, ...)}
+ \usage{
+\method{append}{PSCBS}(x, other, addSplit=TRUE, ...)
+}
 
  \arguments{
   \item{x, other}{The two \code{\link{PSCBS}} objects to be combined.}

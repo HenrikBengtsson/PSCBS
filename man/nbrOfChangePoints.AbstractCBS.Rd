@@ -9,9 +9,7 @@
  \name{nbrOfChangePoints.AbstractCBS}
 \alias{nbrOfChangePoints.AbstractCBS}
 \alias{AbstractCBS.nbrOfChangePoints}
-\alias{nbrOfChangePoints.AbstractCBS}
 \alias{nbrOfChangePoints,AbstractCBS-method}
-
 
  \title{Gets the number of change points}
 
@@ -20,7 +18,9 @@
    the number of chromosomes.
  }
 
- \usage{\method{nbrOfChangePoints}{AbstractCBS}(fit, ignoreGaps=FALSE, dropEmptySegments=TRUE, ...)}
+ \usage{
+\method{nbrOfChangePoints}{AbstractCBS}(fit, ignoreGaps=FALSE, dropEmptySegments=TRUE, ...)
+}
 
  \arguments{
   \item{...}{Not used.}

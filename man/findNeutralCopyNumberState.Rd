@@ -16,7 +16,9 @@
  Call segments to be copy neutral based on allelic imbalance calls and total copy number estimates.
 }
 
-\usage{\method{findNeutralCopyNumberState}{default}(C, isAI, weights=NULL, ..., minDensity=1e-10, verbose=FALSE)}
+\usage{
+\method{findNeutralCopyNumberState}{default}(C, isAI, weights=NULL, ..., minDensity=1e-10, verbose=FALSE)
+}
 
 \arguments{
   \item{C}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of region-level total copy number estimates.}

@@ -10,9 +10,7 @@
 \name{callCopyNeutralByTCNofAB.PairedPSCBS}
 \alias{callCopyNeutralByTCNofAB.PairedPSCBS}
 \alias{PairedPSCBS.callCopyNeutralByTCNofAB}
-\alias{callCopyNeutralByTCNofAB.PairedPSCBS}
 \alias{callCopyNeutralByTCNofAB,PairedPSCBS-method}
-
 
 \title{Calls regions that are copy neutral}
 
@@ -21,7 +19,9 @@
  in allelic balance (AB).
 }
 
-\usage{\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, delta=estimateDeltaCN(fit), alpha=0.05, ..., force=FALSE, verbose=FALSE)}
+\usage{
+\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, delta=estimateDeltaCN(fit), alpha=0.05, ..., force=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{fit}{A PairedPSCBS fit object as returned by

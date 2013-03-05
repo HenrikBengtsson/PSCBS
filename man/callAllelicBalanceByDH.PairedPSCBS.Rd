@@ -10,9 +10,7 @@
 \name{callAllelicBalanceByDH.PairedPSCBS}
 \alias{callAllelicBalanceByDH.PairedPSCBS}
 \alias{PairedPSCBS.callAllelicBalanceByDH}
-\alias{callAllelicBalanceByDH.PairedPSCBS}
 \alias{callAllelicBalanceByDH,PairedPSCBS-method}
-
 
 \title{Calls segments that are in allelic balance}
 
@@ -22,7 +20,9 @@
  bootstrap estimator.
 }
 
-\usage{\method{callAllelicBalanceByDH}{PairedPSCBS}(fit, delta=estimateDeltaAB(fit, flavor = "qq(DH)"), alpha=0.05, ..., verbose=FALSE)}
+\usage{
+\method{callAllelicBalanceByDH}{PairedPSCBS}(fit, delta=estimateDeltaAB(fit, flavor = "qq(DH)"), alpha=0.05, ..., verbose=FALSE)
+}
 
 \arguments{
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of

@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.32.6 [2013-03-04]
+o DOCUMENTATION: Updated the help usage section for all static methods. 
+
+
 Version: 0.32.5 [2013-02-09]
 o Added a VignetteBuilder field to DESCRIPTION.
 o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS did not 

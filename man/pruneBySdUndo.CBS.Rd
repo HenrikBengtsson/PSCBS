@@ -10,9 +10,7 @@
 \name{pruneBySdUndo.CBS}
 \alias{pruneBySdUndo.CBS}
 \alias{CBS.pruneBySdUndo}
-\alias{pruneBySdUndo.CBS}
 \alias{pruneBySdUndo,CBS-method}
-
 
 \title{Prune the CBS profile by dropping change points that are too small}
 
@@ -22,7 +20,9 @@
  of the copy-number signals.
 }
 
-\usage{\method{pruneBySdUndo}{CBS}(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE)}
+\usage{
+\method{pruneBySdUndo}{CBS}(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE)
+}
 
 \arguments{
   \item{fit}{A \code{\link{CBS}} object.}

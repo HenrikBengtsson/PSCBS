@@ -10,9 +10,7 @@
  \name{append.AbstractCBS}
 \alias{append.AbstractCBS}
 \alias{AbstractCBS.append}
-\alias{append.AbstractCBS}
 \alias{append,AbstractCBS-method}
-
 
  \title{Appends one segmentation result to another}
 
@@ -21,7 +19,9 @@
    where both holds segmentation results \emph{of the same sample}.
  }
 
- \usage{\method{append}{AbstractCBS}(...)}
+ \usage{
+\method{append}{AbstractCBS}(...)
+}
 
  \arguments{
   \item{x, other}{The two \code{\link{AbstractCBS}} objects to be combined.}

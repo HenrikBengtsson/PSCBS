@@ -10,9 +10,7 @@
 \name{report.AbstractCBS}
 \alias{report.AbstractCBS}
 \alias{AbstractCBS.report}
-\alias{report.AbstractCBS}
 \alias{report,AbstractCBS-method}
-
 
 \title{Generates a report of the segmentation results}
 
@@ -22,7 +20,9 @@
  \code{\link{CBS}} and \code{\link{PairedPSCBS}}.
 }
 
-\usage{\method{report}{AbstractCBS}(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filenames=c(rsp = "*", "PSCBS.bib", "bioinformatics-journals-abbr.bib", "natbib.bst"), force=FALSE, verbose=FALSE)}
+\usage{
+\method{report}{AbstractCBS}(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filenames=c(rsp = "*", "PSCBS.bib", "bioinformatics-journals-abbr.bib", "natbib.bst"), force=FALSE, verbose=FALSE)
+}
 
 \arguments{
   \item{fit}{An \code{\link{AbstractCBS}} object.}

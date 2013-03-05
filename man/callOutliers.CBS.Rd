@@ -9,9 +9,7 @@
 \name{callOutliers.CBS}
 \alias{callOutliers.CBS}
 \alias{CBS.callOutliers}
-\alias{callOutliers.CBS}
 \alias{callOutliers,CBS-method}
-
 
 \title{Calls outliers}
 
@@ -19,7 +17,9 @@
  Calls outliers.
 }
 
-\usage{\method{callOutliers}{CBS}(fit, adjust=1, method=c("ucsf-mad"), ...)}
+\usage{
+\method{callOutliers}{CBS}(fit, adjust=1, method=c("ucsf-mad"), ...)
+}
 
 \arguments{
  \item{adjust}{A positive scale factor adjusting the sensitivity of the

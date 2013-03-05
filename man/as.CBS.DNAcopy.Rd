@@ -10,9 +10,7 @@
 \name{as.CBS.DNAcopy}
 \alias{as.CBS.DNAcopy}
 \alias{DNAcopy.as.CBS}
-\alias{as.CBS.DNAcopy}
 \alias{as.CBS,DNAcopy-method}
-
 
 \title{Coerces a DNAcopy object to a CBS object}
 
@@ -20,7 +18,9 @@
  Coerces a DNAcopy object to a CBS object.
 }
 
-\usage{\method{as.CBS}{DNAcopy}(fit, sample=1, ...)}
+\usage{
+\method{as.CBS}{DNAcopy}(fit, sample=1, ...)
+}
 
 \arguments{
   \item{fit}{A \code{\link{DNAcopy}} object (of the \pkg{DNAcopy} package.)}

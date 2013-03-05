@@ -10,9 +10,7 @@
 \name{hclustCNs.AbstractCBS}
 \alias{hclustCNs.AbstractCBS}
 \alias{AbstractCBS.hclustCNs}
-\alias{hclustCNs.AbstractCBS}
 \alias{hclustCNs,AbstractCBS-method}
-
 
 \title{Performs a hierarchical clustering of the CN mean levels}
 
@@ -20,7 +18,9 @@
  Performs a hierarchical clustering of the CN mean levels.
 }
 
-\usage{\method{hclustCNs}{AbstractCBS}(fit, size=NULL, distMethod="euclidean", hclustMethod="ward", ..., verbose=FALSE)}
+\usage{
+\method{hclustCNs}{AbstractCBS}(fit, size=NULL, distMethod="euclidean", hclustMethod="ward", ..., verbose=FALSE)
+}
 
 \arguments{
  \item{size}{Argument passed to \code{\link[PSCBS:sampleCNs.AbstractCBS]{*sampleCNs}()}.}

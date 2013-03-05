@@ -9,9 +9,7 @@
 \name{getFractionOfGenomeLost.CBS}
 \alias{getFractionOfGenomeLost.CBS}
 \alias{CBS.getFractionOfGenomeLost}
-\alias{getFractionOfGenomeLost.CBS}
 \alias{getFractionOfGenomeLost,CBS-method}
-
 \alias{CBS.getFractionOfGenomeGained}
 \alias{getFractionOfGenomeGained.CBS}
 \alias{getFractionOfGenomeGained,CBS-method}
@@ -40,7 +38,9 @@
  using definitions closely related to those presented in [1].
 }
 
-\usage{\method{getFractionOfGenomeLost}{CBS}(fit, ...)}
+\usage{
+\method{getFractionOfGenomeLost}{CBS}(fit, ...)
+}
 
 \arguments{
  \item{...}{Not used.}

@@ -10,9 +10,7 @@
 \name{pruneByDP.AbstractCBS}
 \alias{pruneByDP.AbstractCBS}
 \alias{AbstractCBS.pruneByDP}
-\alias{pruneByDP.AbstractCBS}
 \alias{pruneByDP,AbstractCBS-method}
-
 
 \title{Prunes the CN profile using dynamical programming}
 
@@ -21,7 +19,9 @@
  how of many change points to drop.
 }
 
-\usage{\method{pruneByDP}{AbstractCBS}(fit, nbrOfSegments, ..., verbose=FALSE)}
+\usage{
+\method{pruneByDP}{AbstractCBS}(fit, nbrOfSegments, ..., verbose=FALSE)
+}
 
 \arguments{
  \item{nbrOfSegments}{An \code{\link[base]{integer}} specifying the number of segments after

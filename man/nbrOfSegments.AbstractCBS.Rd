@@ -9,9 +9,7 @@
  \name{nbrOfSegments.AbstractCBS}
 \alias{nbrOfSegments.AbstractCBS}
 \alias{AbstractCBS.nbrOfSegments}
-\alias{nbrOfSegments.AbstractCBS}
 \alias{nbrOfSegments,AbstractCBS-method}
-
 
  \title{Gets the number of segments}
 
@@ -19,7 +17,9 @@
    Gets the number of segments.
  }
 
- \usage{\method{nbrOfSegments}{AbstractCBS}(this, splitters=FALSE, ...)}
+ \usage{
+\method{nbrOfSegments}{AbstractCBS}(this, splitters=FALSE, ...)
+}
 
  \arguments{
   \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.}

@@ -10,9 +10,7 @@
  \name{estimateKappaByC1Density.PairedPSCBS}
 \alias{estimateKappaByC1Density.PairedPSCBS}
 \alias{PairedPSCBS.estimateKappaByC1Density}
-\alias{estimateKappaByC1Density.PairedPSCBS}
 \alias{estimateKappaByC1Density,PairedPSCBS-method}
-
 
  \title{Estimate global background in segmented copy numbers}
 
@@ -24,7 +22,9 @@
   but not necessarily the only one.
  }
 
- \usage{\method{estimateKappaByC1Density}{PairedPSCBS}(this, adjust=1, minDensity=0.2, ..., verbose=FALSE)}
+ \usage{
+\method{estimateKappaByC1Density}{PairedPSCBS}(this, adjust=1, minDensity=0.2, ..., verbose=FALSE)
+}
 
  \arguments{
    \item{adjust}{A \code{\link[base]{numeric}} scale factor specifying the size of

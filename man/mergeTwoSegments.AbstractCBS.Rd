@@ -9,9 +9,7 @@
  \name{mergeTwoSegments.AbstractCBS}
 \alias{mergeTwoSegments.AbstractCBS}
 \alias{AbstractCBS.mergeTwoSegments}
-\alias{mergeTwoSegments.AbstractCBS}
 \alias{mergeTwoSegments,AbstractCBS-method}
-
  \alias{AbstractCBS.dropChangePoint}
 \alias{dropChangePoint.AbstractCBS}
 \alias{dropChangePoint,AbstractCBS-method}
@@ -24,7 +22,9 @@
    common change point and recalculating the segment statistics.
  }
 
- \usage{\method{mergeTwoSegments}{AbstractCBS}(...)}
+ \usage{
+\method{mergeTwoSegments}{AbstractCBS}(...)
+}
 
  \arguments{
   \item{left}{An \code{\link[base]{integer}} specifying the segments (left, left+1)

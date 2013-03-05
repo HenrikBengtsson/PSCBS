@@ -10,9 +10,7 @@
 \name{callLOH.PairedPSCBS}
 \alias{callLOH.PairedPSCBS}
 \alias{PairedPSCBS.callLOH}
-\alias{callLOH.PairedPSCBS}
 \alias{callLOH,PairedPSCBS-method}
-
 
 \title{Calls segments that are in LOH}
 
@@ -20,7 +18,9 @@
  Calls segments that are in LOH, i.e. that have "zero" minor copy number.
 }
 
-\usage{\method{callLOH}{PairedPSCBS}(fit, flavor=c("SmallC1", "LargeDH"), ..., minSize=1, xorCalls=TRUE, force=FALSE)}
+\usage{
+\method{callLOH}{PairedPSCBS}(fit, flavor=c("SmallC1", "LargeDH"), ..., minSize=1, xorCalls=TRUE, force=FALSE)
+}
 
 \arguments{
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of

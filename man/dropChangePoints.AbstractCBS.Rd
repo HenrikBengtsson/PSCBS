@@ -9,9 +9,7 @@
  \name{dropChangePoints.AbstractCBS}
 \alias{dropChangePoints.AbstractCBS}
 \alias{AbstractCBS.dropChangePoints}
-\alias{dropChangePoints.AbstractCBS}
 \alias{dropChangePoints,AbstractCBS-method}
-
 
  \title{Drops zero or more change points}
 
@@ -23,7 +21,9 @@
    \emph{NOTE: This method only works if there is only one chromosome.}
  }
 
- \usage{\method{dropChangePoints}{AbstractCBS}(fit, idxs, update=TRUE, ...)}
+ \usage{
+\method{dropChangePoints}{AbstractCBS}(fit, idxs, update=TRUE, ...)
+}
 
  \arguments{
   \item{idxs}{An \code{\link[base]{integer}} \code{\link[base]{vector}} specifying the change points to be dropped.}

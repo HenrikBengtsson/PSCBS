@@ -9,9 +9,7 @@
 \name{pruneByHClust.AbstractCBS}
 \alias{pruneByHClust.AbstractCBS}
 \alias{AbstractCBS.pruneByHClust}
-\alias{pruneByHClust.AbstractCBS}
 \alias{pruneByHClust,AbstractCBS-method}
-
 
 \title{Prunes the CN profile by pruning and merging through hierarchical clustering}
 
@@ -19,7 +17,9 @@
  Prunes the CN profile by pruning and merging through hierarchical clustering.
 }
 
-\usage{\method{pruneByHClust}{AbstractCBS}(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, update=TRUE, verbose=FALSE)}
+\usage{
+\method{pruneByHClust}{AbstractCBS}(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, update=TRUE, verbose=FALSE)
+}
 
 \arguments{
  \item{...}{Arguments passed to \code{\link[stats]{cutree}},

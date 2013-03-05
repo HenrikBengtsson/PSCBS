@@ -9,9 +9,7 @@
  \name{mergeNonCalledSegments.CBS}
 \alias{mergeNonCalledSegments.CBS}
 \alias{CBS.mergeNonCalledSegments}
-\alias{mergeNonCalledSegments.CBS}
 \alias{mergeNonCalledSegments,CBS-method}
-
 
  \title{Merge neighboring segments that are not called}
 
@@ -19,7 +17,9 @@
    Merge neighboring segments that are not called
  }
 
- \usage{\method{mergeNonCalledSegments}{CBS}(fit, ..., verbose=FALSE)}
+ \usage{
+\method{mergeNonCalledSegments}{CBS}(fit, ..., verbose=FALSE)
+}
 
  \arguments{
   \item{...}{Not used.}

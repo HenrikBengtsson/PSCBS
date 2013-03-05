@@ -9,9 +9,7 @@
  \name{save.AbstractCBS}
 \alias{save.AbstractCBS}
 \alias{AbstractCBS.save}
-\alias{save.AbstractCBS}
 \alias{save,AbstractCBS-method}
-
 
  \title{Saves an AbstractCBS object to file}
 
@@ -19,7 +17,9 @@
   Saves an AbstractCBS object to file.
  }
 
- \usage{\method{save}{AbstractCBS}(this, ...)}
+ \usage{
+\method{save}{AbstractCBS}(this, ...)
+}
 
  \arguments{
    \item{...}{Additional arguments passed to \code{\link[R.utils]{saveObject}}.}

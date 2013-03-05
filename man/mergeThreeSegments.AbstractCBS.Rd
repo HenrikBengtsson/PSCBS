@@ -9,9 +9,7 @@
  \name{mergeThreeSegments.AbstractCBS}
 \alias{mergeThreeSegments.AbstractCBS}
 \alias{AbstractCBS.mergeThreeSegments}
-\alias{mergeThreeSegments.AbstractCBS}
 \alias{mergeThreeSegments,AbstractCBS-method}
-
 
  \title{Merge a segment and its two flanking segments}
 
@@ -19,7 +17,9 @@
    Merge a segment and its two flanking segments into one segment, and recalculating the segment statistics.
  }
 
- \usage{\method{mergeThreeSegments}{AbstractCBS}(fit, middle, ...)}
+ \usage{
+\method{mergeThreeSegments}{AbstractCBS}(fit, middle, ...)
+}
 
  \arguments{
   \item{middle}{An \code{\link[base]{integer}} specifying the three segments

@@ -6,12 +6,11 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{load.AbstractCBS}
+ \name{AbstractCBS$load}
+\alias{AbstractCBS$load}
 \alias{load.AbstractCBS}
 \alias{AbstractCBS.load}
-\alias{load.AbstractCBS}
 \alias{load,AbstractCBS-method}
-
 
  \title{Loads an AbstractCBS object from file}
 
@@ -19,8 +18,13 @@
   Loads an AbstractCBS object from file and assert that it is of the requested class.
  }
 
- \synopsis{load.AbstractCBS(static, ...)}
-\usage{AbstractCBS$load(...)}
+ \usage{
+## Static method (use this):
+## AbstractCBS$load(...)
+
+## Don't use the below:
+\method{load}{AbstractCBS}(static, ...)
+}
 
  \arguments{
    \item{...}{Additional arguments passed to \code{\link[R.utils]{loadObject}}.}

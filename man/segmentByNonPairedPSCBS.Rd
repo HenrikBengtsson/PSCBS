@@ -22,7 +22,9 @@
   It is intended to be applied to one tumor sample at the time.
  }
 
- \usage{\method{segmentByNonPairedPSCBS}{default}(CT, betaT, ..., flavor=c("tcn", "tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tauA=NA, tauB=1 - tauA, verbose=FALSE)}
+ \usage{
+\method{segmentByNonPairedPSCBS}{default}(CT, betaT, ..., flavor=c("tcn", "tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tauA=NA, tauB=1 - tauA, verbose=FALSE)
+}
 
  \arguments{
    \item{CT}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J tumor total copy number (TCN)

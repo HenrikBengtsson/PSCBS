@@ -9,9 +9,7 @@
  \name{getLocusData.AbstractCBS}
 \alias{getLocusData.AbstractCBS}
 \alias{AbstractCBS.getLocusData}
-\alias{getLocusData.AbstractCBS}
 \alias{getLocusData,AbstractCBS-method}
-
 
  \title{Gets the locus-level data}
 
@@ -19,7 +17,9 @@
    Gets the locus-level data.
  }
 
- \usage{\method{getLocusData}{AbstractCBS}(...)}
+ \usage{
+\method{getLocusData}{AbstractCBS}(...)
+}
 
  \arguments{
   \item{splitters}{If \code{\link[base:logical]{TRUE}}, "splitters" between chromosomes are

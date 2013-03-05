@@ -10,9 +10,7 @@
  \name{plotTracks.CBS}
 \alias{plotTracks.CBS}
 \alias{CBS.plotTracks}
-\alias{plotTracks.CBS}
 \alias{plotTracks,CBS-method}
-
 
  \title{Plots copy numbers along the genome}
 
@@ -21,7 +19,9 @@
   Each type of track is plotted in its own panel.
  }
 
- \usage{\method{plotTracks}{CBS}(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", cex=1, grid=FALSE, Clim="auto", xScale=1e-06, Clab="auto", ..., byIndex=FALSE, mar=NULL, add=FALSE)}
+ \usage{
+\method{plotTracks}{CBS}(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", cex=1, grid=FALSE, Clim="auto", xScale=1e-06, Clab="auto", ..., byIndex=FALSE, mar=NULL, add=FALSE)
+}
 
  \arguments{
    \item{x}{A result object returned by \code{\link{segmentByCBS}}().}

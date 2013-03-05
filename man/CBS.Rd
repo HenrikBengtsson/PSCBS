@@ -36,7 +36,9 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 
  }
 
- \usage{CBS(...)}
+ \usage{
+CBS(...)
+}
 
  \arguments{
   \item{...}{Arguments passed to the constructor of \code{\link{AbstractCBS}}.}

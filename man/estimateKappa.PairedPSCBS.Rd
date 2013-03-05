@@ -10,9 +10,7 @@
 \name{estimateKappa.PairedPSCBS}
 \alias{estimateKappa.PairedPSCBS}
 \alias{PairedPSCBS.estimateKappa}
-\alias{estimateKappa.PairedPSCBS}
 \alias{estimateKappa,PairedPSCBS-method}
-
 
 \title{Estimate global background in segmented copy numbers}
 
@@ -23,7 +21,9 @@
  but not necessarily the only one.
 }
 
-\usage{\method{estimateKappa}{PairedPSCBS}(this, flavor=c("density(C1)"), ...)}
+\usage{
+\method{estimateKappa}{PairedPSCBS}(this, flavor=c("density(C1)"), ...)
+}
 
 \arguments{
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of

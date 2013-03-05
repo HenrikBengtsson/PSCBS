@@ -10,9 +10,7 @@
 \name{estimateDeltaABBySmallDH.PairedPSCBS}
 \alias{estimateDeltaABBySmallDH.PairedPSCBS}
 \alias{PairedPSCBS.estimateDeltaABBySmallDH}
-\alias{estimateDeltaABBySmallDH.PairedPSCBS}
 \alias{estimateDeltaABBySmallDH,PairedPSCBS-method}
-
 
 \title{Estimate a threshold for calling allelic balance from DH}
 
@@ -20,7 +18,9 @@
  Estimate a threshold for calling allelic balance from DH.
 }
 
-\usage{\method{estimateDeltaABBySmallDH}{PairedPSCBS}(fit, q1=0.05, q2=0.9, ..., verbose=FALSE)}
+\usage{
+\method{estimateDeltaABBySmallDH}{PairedPSCBS}(fit, q1=0.05, q2=0.9, ..., verbose=FALSE)
+}
 
 \arguments{
   \item{q1}{A \code{\link[base]{numeric}} value specifying the weighted quantile of the

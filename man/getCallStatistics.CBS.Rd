@@ -9,9 +9,7 @@
 \name{getCallStatistics.CBS}
 \alias{getCallStatistics.CBS}
 \alias{CBS.getCallStatistics}
-\alias{getCallStatistics.CBS}
 \alias{getCallStatistics,CBS-method}
-
 
 \title{Calculates various call statistics per chromosome}
 
@@ -19,7 +17,9 @@
  Calculates various call statistics per chromosome.
 }
 
-\usage{\method{getCallStatistics}{CBS}(fit, regions=NULL, shrinkRegions=TRUE, ..., verbose=FALSE)}
+\usage{
+\method{getCallStatistics}{CBS}(fit, regions=NULL, shrinkRegions=TRUE, ..., verbose=FALSE)
+}
 
 \arguments{
  \item{regions}{An optional \code{\link[base]{data.frame}} with columns "chromosome",

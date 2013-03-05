@@ -9,9 +9,7 @@
  \name{nbrOfLoci.AbstractCBS}
 \alias{nbrOfLoci.AbstractCBS}
 \alias{AbstractCBS.nbrOfLoci}
-\alias{nbrOfLoci.AbstractCBS}
 \alias{nbrOfLoci,AbstractCBS-method}
-
 
  \title{Gets the number of loci}
 
@@ -19,7 +17,9 @@
    Gets the number of loci.
  }
 
- \usage{\method{nbrOfLoci}{AbstractCBS}(fit, splitters=FALSE, ...)}
+ \usage{
+\method{nbrOfLoci}{AbstractCBS}(fit, splitters=FALSE, ...)
+}
 
  \arguments{
   \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getLocusData.AbstractCBS]{*getLocusData}()}.}

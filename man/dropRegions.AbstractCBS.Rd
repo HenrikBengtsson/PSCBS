@@ -9,9 +9,7 @@
  \name{dropRegions.AbstractCBS}
 \alias{dropRegions.AbstractCBS}
 \alias{AbstractCBS.dropRegions}
-\alias{dropRegions.AbstractCBS}
 \alias{dropRegions,AbstractCBS-method}
-
  \alias{AbstractCBS.dropRegion}
 \alias{dropRegion.AbstractCBS}
 \alias{dropRegion,AbstractCBS-method}
@@ -24,7 +22,9 @@
    \emph{None of the statistics are recalculated}.
  }
 
- \usage{\method{dropRegions}{AbstractCBS}(this, regions, H=1, ..., asMissing=FALSE, verbose=FALSE)}
+ \usage{
+\method{dropRegions}{AbstractCBS}(this, regions, H=1, ..., asMissing=FALSE, verbose=FALSE)
+}
 
  \arguments{
   \item{regions}{An \code{\link[base]{integer}} \code{\link[base]{vector}} of length R specifying the indices

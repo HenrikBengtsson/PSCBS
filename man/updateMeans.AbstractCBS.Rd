@@ -9,9 +9,7 @@
 \name{updateMeans.AbstractCBS}
 \alias{updateMeans.AbstractCBS}
 \alias{AbstractCBS.updateMeans}
-\alias{updateMeans.AbstractCBS}
 \alias{updateMeans,AbstractCBS-method}
-
 \alias{updateMeans.CBS}
 \alias{updateMeans.NonPairedPSCBS}
 \alias{updateMeans.PairedPSCBS}
@@ -23,7 +21,9 @@
  The locus-level data is not updated/modified.
 }
 
-\usage{\method{updateMeans}{AbstractCBS}(...)}
+\usage{
+\method{updateMeans}{AbstractCBS}(...)
+}
 
 \arguments{
  \item{...}{Arguments specific to the class.}

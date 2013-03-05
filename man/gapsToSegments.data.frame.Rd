@@ -9,8 +9,6 @@
 
  \name{gapsToSegments.data.frame}
 \alias{gapsToSegments.data.frame}
-\alias{gapsToSegments.data.frame}
-
  \alias{gapsToSegments}
 
  \title{Gets the genomic segments that are complementary to the gaps}
@@ -20,7 +18,9 @@
   and \code{+Inf}.
  }
 
- \usage{\method{gapsToSegments}{data.frame}(gaps, resolution=1, minLength=0, dropGaps=FALSE, ...)}
+ \usage{
+\method{gapsToSegments}{data.frame}(gaps, resolution=1, minLength=0, dropGaps=FALSE, ...)
+}
 
  \arguments{
    \item{gaps}{A \code{\link[base]{data.frame}} with columns \code{chromosome}, \code{start},

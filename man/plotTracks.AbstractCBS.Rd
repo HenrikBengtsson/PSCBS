@@ -10,9 +10,7 @@
  \name{plotTracks.AbstractCBS}
 \alias{plotTracks.AbstractCBS}
 \alias{AbstractCBS.plotTracks}
-\alias{plotTracks.AbstractCBS}
 \alias{plotTracks,AbstractCBS-method}
-
 
  \title{Plots the segmentation result along the genome}
 
@@ -20,7 +18,9 @@
    Plots the segmentation result along the genome.
  }
 
- \usage{\method{plotTracks}{AbstractCBS}(...)}
+ \usage{
+\method{plotTracks}{AbstractCBS}(...)
+}
 
  \arguments{
   \item{...}{...}

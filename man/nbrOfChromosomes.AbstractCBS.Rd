@@ -9,9 +9,7 @@
  \name{nbrOfChromosomes.AbstractCBS}
 \alias{nbrOfChromosomes.AbstractCBS}
 \alias{AbstractCBS.nbrOfChromosomes}
-\alias{nbrOfChromosomes.AbstractCBS}
 \alias{nbrOfChromosomes,AbstractCBS-method}
-
 
  \title{Gets the number of chromosomes}
 
@@ -19,7 +17,9 @@
    Gets the number of chromosomes.
  }
 
- \usage{\method{nbrOfChromosomes}{AbstractCBS}(this, ...)}
+ \usage{
+\method{nbrOfChromosomes}{AbstractCBS}(this, ...)
+}
 
  \arguments{
   \item{...}{Arguments passed to \code{\link[PSCBS:getChromosomes.AbstractCBS]{*getChromosomes}()}.}

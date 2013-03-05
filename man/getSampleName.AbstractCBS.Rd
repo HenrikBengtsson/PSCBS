@@ -9,9 +9,7 @@
  \name{getSampleName.AbstractCBS}
 \alias{getSampleName.AbstractCBS}
 \alias{AbstractCBS.getSampleName}
-\alias{getSampleName.AbstractCBS}
 \alias{getSampleName,AbstractCBS-method}
-
  \alias{AbstractCBS.sampleName}
 \alias{sampleName.AbstractCBS}
 \alias{sampleName,AbstractCBS-method}
@@ -23,7 +21,9 @@
   Gets the name of the sample segmented.
  }
 
- \usage{\method{getSampleName}{AbstractCBS}(fit, ...)}
+ \usage{
+\method{getSampleName}{AbstractCBS}(fit, ...)
+}
 
  \arguments{
    \item{...}{Not used.}

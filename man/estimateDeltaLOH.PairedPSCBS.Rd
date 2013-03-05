@@ -10,9 +10,7 @@
 \name{estimateDeltaLOH.PairedPSCBS}
 \alias{estimateDeltaLOH.PairedPSCBS}
 \alias{PairedPSCBS.estimateDeltaLOH}
-\alias{estimateDeltaLOH.PairedPSCBS}
 \alias{estimateDeltaLOH,PairedPSCBS-method}
-
 
 \title{Estimate a threshold for calling LOH from DH}
 
@@ -20,7 +18,9 @@
  Estimate a threshold for calling LOH from DH to be used by the \code{\link[PSCBS:callLOH.PairedPSCBS]{*callLOH}()} method.
 }
 
-\usage{\method{estimateDeltaLOH}{PairedPSCBS}(this, flavor=c("minC1|nonAB"), ..., max=Inf, verbose=FALSE)}
+\usage{
+\method{estimateDeltaLOH}{PairedPSCBS}(this, flavor=c("minC1|nonAB"), ..., max=Inf, verbose=FALSE)
+}
 
 \arguments{
   \item{scale}{An optional \code{\link[base]{numeric}} scale factor.}
