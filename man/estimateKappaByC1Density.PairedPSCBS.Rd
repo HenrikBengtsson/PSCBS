@@ -23,10 +23,12 @@
  }
 
  \usage{
-\method{estimateKappaByC1Density}{PairedPSCBS}(this, adjust=1, minDensity=0.2, ..., verbose=FALSE)
+\method{estimateKappaByC1Density}{PairedPSCBS}(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, minDensity=0.2, ..., verbose=FALSE)
 }
 
  \arguments{
+   \item{typeOfWeights}{A \code{\link[base]{character}} string specifying how weights
+    are calculated.}
    \item{adjust}{A \code{\link[base]{numeric}} scale factor specifying the size of
     the bandwidth parameter used by the density estimator.}
    \item{minDensity}{A non-negative \code{\link[base]{numeric}} threshold specifying
@@ -45,7 +47,11 @@
   \item Retrieve segment-level minor copy numbers and corresponding weights:
    \enumerate{
     \item Grabs the segment-level C1 estimates.
-    \item Calculate segment weights proportional to the number of heterozygous SNPs.
+    \item Calculate segment weights.
+          The default (\code{typeOfWeights="dhNbrOfLoci"}) is to use
+          weights proportional to the number of heterozygous SNPs.
+          An alternative (\code{typeOfWeights="sqrt(dhNbrOfLoci)"}) is
+          to use the square root of those counts.
    }
 
   \item Identify subset of regions with C1=0:

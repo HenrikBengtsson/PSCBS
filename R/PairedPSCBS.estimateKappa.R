@@ -61,6 +61,8 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 # @synopsis
 #
 # \arguments{
+#   \item{typeOfWeights}{A @character string specifying how weights
+#    are calculated.}
 #   \item{adjust}{A @numeric scale factor specifying the size of
 #    the bandwidth parameter used by the density estimator.}
 #   \item{minDensity}{A non-negative @numeric threshold specifying
@@ -79,7 +81,11 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #  \item Retrieve segment-level minor copy numbers and corresponding weights:
 #   \enumerate{
 #    \item Grabs the segment-level C1 estimates.
-#    \item Calculate segment weights proportional to the number of heterozygous SNPs.
+#    \item Calculate segment weights.
+#          The default (\code{typeOfWeights="dhNbrOfLoci"}) is to use
+#          weights proportional to the number of heterozygous SNPs.
+#          An alternative (\code{typeOfWeights="sqrt(dhNbrOfLoci)"}) is 
+#          to use the square root of those counts.
 #   }
 #
 #  \item Identify subset of regions with C1=0:
@@ -112,13 +118,16 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #
 # @keyword internal
 #*/###########################################################################  
-setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, adjust=1, minDensity=0.2, ..., verbose=FALSE) {
+setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, minDensity=0.2, ..., verbose=FALSE) {
   require("matrixStats") || throw("Package not loaded: matrixStats");
   require("aroma.light") || throw("Package not loaded: aroma.light");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'typeOfWeights':
+  typeOfWeights <- match.arg(typeOfWeights);
+
   # Argument 'adjust':
   adjust <- Arguments$getDouble(adjust, range=c(0,Inf));
 
@@ -151,7 +160,14 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, adjust=1, 
   verbose && cat(verbose, "Number of segments: ", length(c1));
 
   # Calculate region weights
-  weights <- n / sum(n);
+  if (typeOfWeights == "dhNbrOfLoci") {
+    w <- n;
+  } else if (typeOfWeights == "sqrt(dhNbrOfLoci)") {
+    w <- sqrt(n);
+  }
+
+  # Standardize weights to sum to one
+  weights <- w / sum(w);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -204,6 +220,10 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, adjust=1, 
 
 #############################################################################
 # HISTORY:
+# 2013-03-05
+# o Added argument 'typeOfWeights' to estimateKappaByC1Density() for
+#   PairedPSCBS, making it possible to specify what type of weights the
+#   density estimate should use.
 # 2012-08-30
 # o ROBUSTNESS: estimateKappaByC1Density() did not make sure that
 #   weightedMedians() was actually available.  Now it requires matrixStats.

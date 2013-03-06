@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.33.0 [2013-03-05]
+o Added argument 'typeOfWeights' to estimateKappaByC1Density() for
+  PairedPSCBS, and hence indirectly to estimateKappa().  The default
+  is typeOfWeights="dhNbrOfLoci", which may give too much overall 
+  weight to very long segments causing the estimator to fail when
+  there are only a few number of "C1 = 0" segments.  An alternative
+  is to use typeOfWeights="sqrt(dhNbrOfLoci)".
+
+
 Version: 0.32.6 [2013-03-04]
 o DOCUMENTATION: Updated the help usage section for all static methods. 
 
