@@ -90,7 +90,7 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
   wnSnps <- sum(w, na.rm=TRUE);  # == 1 /HB
 
   # Sanity check
-  stopifnot(isZero(wnSnps - 1.0, neps=10));
+  stopifnot(isZero(wnSnps - 1.0, eps=sqrt(.Machine$double.eps)));
 
   propHets <- wnHets/wnSnps;
   verbose && print(verbose, propHets);

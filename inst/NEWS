@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.33.1 [2013-03-07]
+o Relaxed the internal precision tests of testROH().  This was done
+  in response to the CRAN farm lowering its precision on some hosts.
+
+
 Version: 0.33.0 [2013-03-05]
 o Added argument 'typeOfWeights' to estimateKappaByC1Density() for
   PairedPSCBS, and hence indirectly to estimateKappa().  The default
