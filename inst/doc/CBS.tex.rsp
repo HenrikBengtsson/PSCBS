@@ -3,7 +3,7 @@
 
   %\VignetteIndexEntry{Total copy-number segmentation using CBS}
   %\VignetteKeyword{copy numbers, genomic aberrations}
-  %\VignetteEngine{rsp}
+  %\VignetteEngine{R.rsp::rsp}
   -------------------------------------------------------------------%>
 
 <% t0 <- Sys.time() %>
