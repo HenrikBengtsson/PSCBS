@@ -30,7 +30,7 @@
    Returns a \code{\link[base]{data.frame}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    \code{\link[PSCBS:extractMinorMajorCNs.PairedPSCBS]{*extractMinorMajorCNs}()}.

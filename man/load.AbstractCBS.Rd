@@ -34,7 +34,7 @@
    Returns the loaded AbstractCBS object.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Internally \code{\link[R.utils]{loadObject}} is used.

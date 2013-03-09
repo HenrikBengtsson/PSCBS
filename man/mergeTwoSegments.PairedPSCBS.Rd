@@ -34,7 +34,7 @@
    Returns a \code{\link{PairedPSCBS}} with one less segment.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    To drop regions (a connected set of segments) see \code{dropRegions()}.

@@ -35,7 +35,7 @@
   A \code{\link[base]{logical}} \code{\link[base]{vector}} of "neutral copy number state" calls.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Pierre Neuvial, Henrik Bengtsson}
 
 
 \keyword{internal}

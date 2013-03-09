@@ -59,7 +59,7 @@
   or when the AB caller could not call it.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   Internally, one of the following methods are used:

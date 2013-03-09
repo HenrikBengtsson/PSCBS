@@ -34,7 +34,7 @@
    Returns an object if the same class as the input result.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    For more information see \code{\link{AbstractCBS}}.

@@ -43,7 +43,7 @@
   a segment is called an amplification if ...
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \references{
   [1] Fridlyand et al. \emph{Breast tumor copy number aberration

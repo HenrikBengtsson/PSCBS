@@ -234,7 +234,6 @@
 \alias{callROHOneSegment}
 \alias{callROHOneSegment.PairedPSCBS}
 \alias{testROH}
-\alias{testROH.numeric}
 \alias{pruneBySdUndo}
 \alias{updateBoundaries}
 \alias{updateBoundaries.CBS}
@@ -314,7 +313,7 @@
   The rest are deprecated methods.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{documentation}

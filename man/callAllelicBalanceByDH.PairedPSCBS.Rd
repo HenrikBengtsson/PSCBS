@@ -37,7 +37,7 @@
   Returns a \code{\link{PairedPSCBS}} object with allelic-balance calls.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \section{Algorithm}{
  \itemize{

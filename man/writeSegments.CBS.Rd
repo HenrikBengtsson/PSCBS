@@ -38,7 +38,7 @@
    Returns the pathname of the the file written.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Utilizes \code{\link[PSCBS:getSegments.CBS]{*getSegments}()}.

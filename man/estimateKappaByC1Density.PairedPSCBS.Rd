@@ -75,7 +75,7 @@
   }
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Instead of calling this method explicitly, it is recommended

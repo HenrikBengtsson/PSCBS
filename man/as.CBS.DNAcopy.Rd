@@ -33,7 +33,7 @@
   Returns a \code{\link{CBS}} object.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy()}}.

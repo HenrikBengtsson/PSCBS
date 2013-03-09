@@ -36,7 +36,7 @@
   Returns the threshold estimate as a \code{\link[base]{numeric}} scalar.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   Internally, one of the following methods are used:

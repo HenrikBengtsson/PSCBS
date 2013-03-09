@@ -84,7 +84,7 @@ fitP <- pruneBySdUndo(fit, rho=1)
 drawLevels(fitP, col="red")
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

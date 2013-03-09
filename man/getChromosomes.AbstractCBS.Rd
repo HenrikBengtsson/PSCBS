@@ -29,7 +29,7 @@
    Returns a unique and sorted \code{\link[base]{vector}} of chromosomes segmented.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{*nbrOfChromosomes}()}.

@@ -76,7 +76,7 @@ stopifnot(all.equal(fitC2, fitC))
 
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   \code{\link[PSCBS:as.CBS.DNAcopy]{as.CBS()}}.

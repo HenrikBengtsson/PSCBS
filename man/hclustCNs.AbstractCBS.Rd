@@ -34,7 +34,7 @@
   Returns a \code{hclust} object as returned by \code{\link[stats]{hclust}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   This method is utilized by \code{\link[PSCBS:pruneByHClust.AbstractCBS]{*pruneByHClust}()}.

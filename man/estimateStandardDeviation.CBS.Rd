@@ -38,7 +38,7 @@
  Returns a non-negative \code{\link[base]{numeric}} scale.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{CBS}}.

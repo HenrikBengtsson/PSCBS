@@ -38,7 +38,7 @@
   that it is reported by \code{\link[utils]{sessionInfo}}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 
 \keyword{internal}

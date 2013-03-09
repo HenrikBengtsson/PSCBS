@@ -45,7 +45,7 @@
   tumor-specific MAD away from the smoothed values." [1; Suppl. Mat.]
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \references{
   [1] Fridlyand et al. \emph{Breast tumor copy number aberration

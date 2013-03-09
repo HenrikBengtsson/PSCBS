@@ -37,7 +37,7 @@
    \code{start}, \code{stop} and \code{length}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Use \code{\link{gapsToSegments}}() to turn the set of identified gaps into

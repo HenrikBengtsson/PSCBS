@@ -30,7 +30,7 @@
    a unique segment.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Utilizes \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.

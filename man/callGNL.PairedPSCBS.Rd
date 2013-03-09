@@ -42,7 +42,7 @@
   Returns a \code{\link{PairedPSCBS}} object with added calls.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   Internally, one of the following methods are used:

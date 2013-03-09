@@ -32,7 +32,7 @@
    and L is the number of locus-specific fields.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    For more information see \code{\link{AbstractCBS}}.

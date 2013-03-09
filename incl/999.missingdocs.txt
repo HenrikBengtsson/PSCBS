@@ -81,7 +81,7 @@ isSegmentSplitter isSegmentSplitter.CBS isSegmentSplitter.PSCBS
 sampleCNs sampleCNs.AbstractCBS
 mergeThreeSegments
 callROH callROHOneSegment callROHOneSegment.PairedPSCBS
-testROH testROH.numeric
+testROH
 pruneBySdUndo updateBoundaries updateBoundaries.CBS
 resegment resegment.AbstractCBS resegment.CBS resegment.PairedPSCBS
 callSegmentationOutliers.data.frame

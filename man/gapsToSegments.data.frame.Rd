@@ -38,7 +38,7 @@
    The segments are ordered along the genome.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    \code{\link{findLargeGaps}}().

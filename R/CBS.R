@@ -31,7 +31,7 @@
 #  The @see "segmentByCBS" method returns an object of this class.
 # }
 #
-# \author{Henrik Bengtsson}
+# @author
 #*/###########################################################################  
 setConstructorS3("CBS", function(...) {
   extend(AbstractCBS(list(data=NULL, output=NULL), ...), "CBS");

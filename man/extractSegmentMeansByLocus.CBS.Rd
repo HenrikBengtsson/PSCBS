@@ -30,7 +30,7 @@
  Returns a \code{\link[base]{numeric}} \code{\link[base]{vector}} of length \code{nbrOfLoci()}.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{CBS}}.

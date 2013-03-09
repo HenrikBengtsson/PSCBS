@@ -31,7 +31,7 @@
    Returns an \code{\link{AbstractCBS}} of the same class with two less segment.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Internally \code{\link[PSCBS:mergeTwoSegments.AbstractCBS]{*mergeTwoSegments}()} is used.

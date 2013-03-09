@@ -40,7 +40,7 @@
  fitP <- pruneByDP(fit, nbrOfSegments=-2);
 }}
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \references{
   [1] ... \cr

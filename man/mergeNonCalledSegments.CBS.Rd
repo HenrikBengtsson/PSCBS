@@ -31,7 +31,7 @@
    with the same of fewer number of segments.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    For more information see \code{\link{CBS}}.

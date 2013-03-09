@@ -33,7 +33,7 @@
    Returns a \code{\link{CBS}} object of the same class as argument \code{x}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    For more information see \code{\link{CBS}}.

@@ -41,7 +41,7 @@
   Returns the weighted quantile.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   Internally the following functions may be used:

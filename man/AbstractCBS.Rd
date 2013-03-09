@@ -70,5 +70,5 @@ all.equal, as.data.frame, attachLocally, callHooks, relist, within
 
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 \keyword{classes}

@@ -44,7 +44,7 @@
    are dropped.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Internally \code{\link[PSCBS:extractRegions.AbstractCBS]{*extractRegions}()} is used.

@@ -1,14 +1,40 @@
+###########################################################################/**
+# @set "class=numeric"
+# @RdocMethod testROH
+#
+# @title "Tests if a segment is in Run-of-Homozygosity (ROH)"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
 #
 # \arguments{
-#   \item{delta}{A @double in [0,1] specifying the maximum fraction of hets
-#     for the segment to be called "ROH". Defaults to 1/12 (which is much
-#     smaller than the typical fraction of hets.}
+#   \item{betaN}{A @numeric @vector of J matched normal BAFs in [0,1]
+#        (due to noise, values may be slightly outside as well) or @NA
+#        for non-polymorphic loci.}
+#   \item{muN}{An optional @numeric @vector of J genotype calls in 
+#        \{0,1/2,1\} for AA, AB, and BB, respectively, 
+#        and @NA for non-polymorphic loci.}
+#   \item{csN}{A @numeric @vector of J genotype confidence scores.
+#        If @NULL, ad hoc scores calculated from \code{betaN} are used.}
+#   \item{minNbrOfSnps}{Minimum number of SNPs required to test segment.
+#        If not tested, @NA is returned.}
+#   \item{delta}{A @double scalar specifying the maximum (weighted) 
+#        proportion of heterozygous SNPs allowed in an ROH region.}
+#   \item{...}{Not used.}
+#  \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # \value{
-#  Returns @TRUE if segment is ROH, otherwise @FALSE.
-#  If it was not possible to make a call, then @NA is returned.
+#  Returns a @logical.
 # }
+#
+# @author "PN, HB"
+#
+# @keyword internal
+#*/###########################################################################
 setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1, delta=1/12, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -110,6 +136,8 @@ setMethodS3("testROH", "numeric", function(betaN, muN, csN=NULL, minNbrOfSnps=1,
 
 ##############################################################################
 # HISTORY
+# 2013-03-08 [HB]
+# o Added Rdoc help.
 # 2012-05-30 [HB]
 # o Now testROH() return parameter settings as attributes.
 # 2011-11-21 [HB]

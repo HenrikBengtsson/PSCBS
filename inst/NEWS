@@ -2,9 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.33.2 [2013-03-08]
+o Added an Authors@R field to the DESCRIPTION.
+
+
 Version: 0.33.1 [2013-03-07]
 o Relaxed the internal precision tests of testROH().  This was done
   in response to the CRAN farm lowering its precision on some hosts.
+o DOCUMENTATION: Preparing package vignettes for the upcoming 
+  R 3.0.0 support for non-Sweave vignettes.
 
 
 Version: 0.33.0 [2013-03-05]

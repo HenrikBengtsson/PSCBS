@@ -28,7 +28,7 @@
 1.19.5), DNAcopy (>= 1.27.2), R.rsp (>= 0.8.2),
    and also suggests DNAcopy (>= 1.27.2), aroma.light (>= 1.22.0), matrixStats (>=
 0.6.2), R.cache (>= 0.6.5), Hmisc (>= 3.10-1), ggplot2 (>=
-0.9.3).
+0.9.3), R.rsp (>= 0.9.1).
  }
 
  \section{Installation and updates}{

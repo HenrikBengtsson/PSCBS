@@ -24,7 +24,7 @@
 #   A @logical @vector of "neutral copy number state" calls.
 # }
 #
-# @author
+# @author "PN, HB"
 #
 # @keyword internal
 #*/###########################################################################

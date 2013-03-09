@@ -42,7 +42,7 @@
   Returns the pathname of the generated PDF.
 }
 
-\author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+\author{Henrik Bengtsson}
 
 \seealso{
   For more information see \code{\link{AbstractCBS}}.

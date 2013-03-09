@@ -30,7 +30,7 @@
    Returns an \code{\link[base]{integer}}.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{*nbrOfSegments}()}

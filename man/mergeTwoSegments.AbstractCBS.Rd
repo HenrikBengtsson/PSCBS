@@ -38,7 +38,7 @@
    Returns an \code{\link{AbstractCBS}} of the same class with one less segment.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    To merge a segment and its two flanking segments, see

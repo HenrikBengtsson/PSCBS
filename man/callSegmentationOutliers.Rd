@@ -45,7 +45,7 @@
    be outliers.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Internally \code{\link[DNAcopy]{smooth.CNA}} is utilized to identify

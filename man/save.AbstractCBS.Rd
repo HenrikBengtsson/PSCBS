@@ -29,7 +29,7 @@
    Returns what \code{\link[R.utils]{saveObject}} returns.
  }
 
- \author{Henrik Bengtsson (\url{http://www.braju.com/R/})}
+ \author{Henrik Bengtsson}
 
  \seealso{
    Internally \code{\link[R.utils]{saveObject}} is used.
