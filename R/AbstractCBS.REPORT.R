@@ -157,6 +157,13 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   # Sanity check
   stopifnot(is.element("rsp", names(filenames)));
 
+  # Make sure 'rsp' is first
+  idx <- which(names(filenames) == "rsp");
+  filename <- c(filenames[idx], filenames[-idx]);
+
+  # Drop duplicated filenames
+  filenames <- filenames[!duplicated(filenames)];
+
   rspFilename <- filenames["rsp"];
   rspPathname <- file.path(srcPath, rspFilename);
   verbose && cat(verbose, "RSP template file: ", rspPathname);
@@ -165,8 +172,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   destFilenames <- filenames;
   destFilenames["rsp"] <- sprintf("%s,%s", sampleName, rspFilename);
 
-  dups <- duplicated(filenames);
-  for (kk in seq(along=filenames)[!dups]) {
+  for (kk in seq(along=filenames)) {
     filename <- filenames[kk];
     destFilename <- destFilenames[kk];
     verbose && enter(verbose, sprintf("File #%d ('%s') of %d", kk, filename, length(filenames)));

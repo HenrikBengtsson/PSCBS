@@ -118,3 +118,5 @@ getMeanEstimators getMeanEstimators.AbstractCBS
 resegment.NonPairedPSCBS setMeanEstimators
 setMeanEstimators.AbstractCBS
 resetSegments
+getLocusData.NonPairedPSCBS getLocusData.PairedPSCBS
+

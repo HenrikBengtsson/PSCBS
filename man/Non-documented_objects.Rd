@@ -300,6 +300,8 @@
 \alias{setMeanEstimators}
 \alias{setMeanEstimators.AbstractCBS}
 \alias{resetSegments}
+\alias{getLocusData.NonPairedPSCBS}
+\alias{getLocusData.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
