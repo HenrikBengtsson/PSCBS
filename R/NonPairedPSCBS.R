@@ -37,6 +37,35 @@ setConstructorS3("NonPairedPSCBS", function(fit=list(), ...) {
 })
 
 
+setMethodS3("getLocusData", "NonPairedPSCBS", function(fit, ..., fields=c("asis", "full")) {
+  # Argument 'fields':
+  fields <- match.arg(fields);
+
+
+  data <- NextMethod("getLocusData", fields="asis");
+
+
+  if (fields == "full") {
+    names <- colnames(data);
+
+    data$isHet <- (data$muN == 1/2);
+
+    data$rho <- 2*abs(data$betaT-1/2);
+    data$rho[!data$isHet] <- NA;
+
+    data$c1 <- 1/2*(1-data$rho)*data$CT;
+    data$c2 <- data$CT - data$c1;
+
+    data$isSNP <- (!is.na(data$betaT) | !is.na(data$muN));
+    data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus");
+
+    # Labels
+    data$muNx <- c("AA", "AB", "BB")[2*data$muN + 1L];
+    data$isHetx <- c("AA|BB", "AB")[data$isHet + 1L];
+  }
+
+  data;
+}, protected=TRUE) # getLocusData()
 
 
 setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), verbose=FALSE) {
@@ -324,6 +353,8 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ##############################################################################
 # HISTORY
+# 2013-03-08
+# o Added getLocusData() for NonPairedPSCBS.
 # 2013-01-15
 # o regsegment() was defined for PairedPSCBS instead of NonPairedPSCBS.
 # 2012-04-21

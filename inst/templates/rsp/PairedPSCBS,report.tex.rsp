@@ -342,18 +342,18 @@ chrsTags <- if (nbrOfChromosomes == 1) {
           }
  
           # See https://github.com/hadley/ggplot2/wiki/Legend-Attributes
-          gg <- gg + opts(legend.position=c(0.97, 0.75),
-                          legend.justification = 1,
-                          legend.direction="vertical",
-                          legend.title=element_text(size=0),
-                          legend.text=element_text(size=16));
+          gg <- gg + theme(legend.position=c(0.97, 0.75),
+                           legend.justification = 1,
+                           legend.direction="vertical",
+                           legend.title=element_text(size=0),
+                           legend.text=element_text(size=16));
  
           gg <- gg + geom_density(size=2, na.rm=TRUE);
           gg <- gg + xlab(NULL);
           gg <- gg + ylab(NULL);
           gg <- gg + xlim(lim);
-          gg <- gg + opts(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
-          gg <- gg + opts(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
+          gg <- gg + theme(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
+          gg <- gg + theme(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
           suppressWarnings({
             print(gg);
           });

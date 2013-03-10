@@ -133,6 +133,8 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   verbose && cat(verbose, "Source path: ", srcPath);
 
   filenames <- .filenames;
+
+  # Construct the filename of the main RSP file to compile, iff missing.
   idx <- which(filenames == "*");
   if (length(idx) > 0) {
     className <- class(fit)[1];
@@ -140,6 +142,15 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
     rsp <- sprintf("%s,report.tex.rsp", fullname);
     filenames[idx] <- rsp;
   }
+
+  # Include files that are listed in the optional '.install_extras' file.
+  extras <- file.path(srcPath, ".install_extras");
+  if (isFile(extras)) {
+    extras <- readLines(extras, warn=FALSE);
+    extras <- extras[sapply(file.path(srcPath, extras), FUN=isFile)];
+    filenames <- c(filenames, extras);
+  }
+
   verbose && cat(verbose, "Template files:");
   verbose && print(verbose, filenames);
 
@@ -154,7 +165,8 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   destFilenames <- filenames;
   destFilenames["rsp"] <- sprintf("%s,%s", sampleName, rspFilename);
 
-  for (kk in seq(along=filenames)) {
+  dups <- duplicated(filenames);
+  for (kk in seq(along=filenames)[!dups]) {
     filename <- filenames[kk];
     destFilename <- destFilenames[kk];
     verbose && enter(verbose, sprintf("File #%d ('%s') of %d", kk, filename, length(filenames)));
@@ -203,6 +215,11 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
 
 ############################################################################
 # HISTORY:
+# 2013-03-09
+# o Now report() also inclused files listed in the optional file
+#   '.install_extras' of the source RSP template directory.
+#   The same filename is used by 'R CMD build/check' for including
+#   extra vignette source files.
 # 2012-09-18
 # o Added argument 'force' to report() for AbstractCBS.  This will
 #   copy the RSP template files again, although they are already in

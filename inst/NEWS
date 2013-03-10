@@ -2,8 +2,16 @@
 Package: PSCBS
 ==============
 
-Version: 0.33.2 [2013-03-08]
+Version: 0.33.2 [2013-03-09]
+o Added getLocusData() for PairedPSCBS and NonPairedPSCBS.
 o Added an Authors@R field to the DESCRIPTION.
+o DOCUMENTATION: Updated the vignettes and the report templates to
+  utilize the new ggplot2 themes - ggplot2 no longer gives a
+  warning on using deprecated functions.
+o Now report() for AbstractCBS also includes files listed in the 
+  optional file '.install_extras' of the source RSP template 
+  directory.  The same filename is used by 'R CMD build/check' for
+  including additional source files needed to build the vignettes.
 
 
 Version: 0.33.1 [2013-03-07]
