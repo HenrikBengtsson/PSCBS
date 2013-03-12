@@ -42,7 +42,7 @@ o DOCUMENTATION: Updated the help usage section for all static methods.
 Version: 0.32.5 [2013-02-09]
 o Added a VignetteBuilder field to DESCRIPTION.
 o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS did not 
-  bootstrap for all available loci when calculating total CNs 
+  bootstrap from all available loci when calculating total CNs 
   statistics, iff the segment had been called run-of-homozygosity 
   (ROH). Internal validation tests caught this. Thanks to Oscar Rueda
   at the Cancer Research UK Cambridge Institute for reporting on this.
