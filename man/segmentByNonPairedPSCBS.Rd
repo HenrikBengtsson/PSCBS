@@ -37,7 +37,10 @@
    \item{...}{Additional arguments passed to \code{\link{segmentByPairedPSCBS}}().}
    \item{flavor}{A \code{\link[base]{character}} specifying what type of segmentation and
      calling algorithm to be used.}
-   \item{tauA, tauB}{...}
+   \item{tauA, tauB}{Lower and upper thresholds for calling SNPs
+     heterozygous based on the tumor allele B fractions (\code{betaT}).
+     If \code{\link[base]{NA}}, then they are estimates from data.
+   }
    \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
  }
 

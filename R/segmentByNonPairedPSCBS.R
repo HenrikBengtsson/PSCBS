@@ -26,7 +26,10 @@
 #   \item{...}{Additional arguments passed to @see "segmentByPairedPSCBS".}
 #   \item{flavor}{A @character specifying what type of segmentation and 
 #     calling algorithm to be used.}
-#   \item{tauA, tauB}{...}
+#   \item{tauA, tauB}{Lower and upper thresholds for calling SNPs 
+#     heterozygous based on the tumor allele B fractions (\code{betaT}).
+#     If @NA, then they are estimates from data.
+#   }
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #

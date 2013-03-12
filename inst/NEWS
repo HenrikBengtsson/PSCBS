@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.33.3 [2013-03-12]
+o DOCUMENTATION: Documented 'tauA' and 'tauB' in the help for
+  segmentByNonPairedPSCBS().
+
+
 Version: 0.33.2 [2013-03-09]
 o Added getLocusData() for PairedPSCBS and NonPairedPSCBS.
 o Added an Authors@R field to the DESCRIPTION.
