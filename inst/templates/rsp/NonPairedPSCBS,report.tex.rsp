@@ -10,6 +10,16 @@
 library("PSCBS");
 library("R.cache");
 stopifnot(exists("rspArgs", mode="list"));
+
+# Should go into R.rsp
+toLatex.default <- function(object, ...) {
+  if (is.null(object)) return("");
+  object;
+} # toLatex()
+
+getChecksum <- function(object, ...) {
+  digest::digest(object);
+}
 %>
 
 
@@ -31,36 +41,47 @@ REPORT_PER_GENOTYPE <- getOption("PSCBS::reports/perGenotype", TRUE);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % LATEX STARTUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\documentclass[twoside,12pt]{report}
-\usepackage{fancyvrb}
+\documentclass[twoside,12pt]{article}
+\usepackage{fancyvrb} % Custom verbose environments
+\usepackage{lastpage} % Total number of pages
 \usepackage{xspace}
 \usepackage{subfigure}  % \subfigure[<title>]{}
 \usepackage[round]{natbib}
 
-\addtolength{\oddsidemargin}{-0.5in}
-\addtolength{\evensidemargin}{-0.5in}
-\addtolength{\textwidth}{1in}
-\addtolength{\topmargin}{-0.8in}
-\addtolength{\textheight}{1.3in}
+% No paragraph indentation
+\setlength{\parindent}{0cm}
+
+\addtolength{\oddsidemargin}{-0.4in}
+\addtolength{\evensidemargin}{-1.02in}
+\addtolength{\textwidth}{1.5in}
+\addtolength{\topmargin}{-1.0in}
+\addtolength{\textheight}{1.5in}
 
 \renewcommand{\topfraction}{1.00}   % max fraction of floats at top
 \renewcommand{\bottomfraction}{1.0} % max fraction of floats at bottom
 \renewcommand{\textfraction}{0.00}
 
+% Header contain project and sample metadata
 \usepackage{fancyhdr}
-\pagestyle{fancy}
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}{\fancyhf{}} % Custom header (specified below)
+\renewcommand{\headrulewidth}{0pt} % Drop horizontal ruler
+\fancyfoot{} % clear all footer fields
+
+%% \pagestyle{fancy}
 %% \fancyhead{} % clear all header fields
 %% \fancyfoot{} % clear all footer fields
 %% \fancyhead[LE,RO]{\slshape \rightmark}
 %% \fancyfoot[C]{\thepage}
 
-\fancyhf{}
-\fancyhead[LE,RO]{\thepage}
-\fancyhead[RE]{\textit{\nouppercase{\leftmark}}}
-\fancyhead[LO]{\textit{\nouppercase{\rightmark}}}
+%%% \fancyhf{}
+%%% \fancyhead[LE,RO]{\thepage}
+%%% \fancyhead[RE]{\textit{\nouppercase{\leftmark}}}
+%%% \fancyhead[LO]{\textit{\nouppercase{\rightmark}}}
+
+\newcommand{\chrLabel}[1]{WG\xspace}
 
 \newcommand{\code}[1]{\texttt{#1}\xspace}
-
 
 \newcommand{\TCN}{TCN\xspace}
 \newcommand{\BAF}{\BAF\xspace}
@@ -69,7 +90,21 @@ REPORT_PER_GENOTYPE <- getOption("PSCBS::reports/perGenotype", TRUE);
 \newcommand{\BAFTN}{BAF$^*_{T}$\xspace}
 
 
-<% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName="PairedPSCBS", Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
+<% updateChromosomeLabels <- function(fit, ...) { %>
+<%
+chromosomes <- getChromosomes(fit);
+nbrOfChromosomes <- length(chromosomes);
+chrsTags <- if (nbrOfChromosomes == 1) {
+  sprintf("chr%02d", chromosomes[1]);
+} else {
+  sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
+}
+%>
+\renewcommand{\chrLabel}{<%=chrsTags%>}
+<% } # updateChromosomeLabels() %>
+
+
+<% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName=NULL, Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
 <%
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Validate arguments
@@ -77,6 +112,15 @@ REPORT_PER_GENOTYPE <- getOption("PSCBS::reports/perGenotype", TRUE);
 # Argument 'fit':
 fit <- Arguments$getInstanceOf(fit, "PairedPSCBS");
 fitClass <- class(fit)[1L];
+if (inherits(fit, "NonPairedPSCBS")) {
+  fitClassLbl <- "Non-paired PSCBS";
+} else if (inherits(fit, "PairedPSCBS")) {
+  fitClassLbl <- "Paired PSCBS";
+} else if (inherits(fit, "CBS")) {
+  fitClassLbl <- "CBS";
+} else {
+  fitClassLbl <- fitClass;
+}
 
 # Argument 'sampleName':
 if (is.null(sampleName)) {
@@ -88,10 +132,15 @@ sampleNameEscDots <- gsub(".", "_", sampleName, fixed=TRUE);
 # Argument 'dataSet':
 if (!is.null(dataSet)) {
   dataSet <- Arguments$getCharacter(dataSet);
+} else {
+  dataSet <- "?";
 }
+dataSetLbl <- sprintf("Data set: %s\\\\", toLatex(dataSet));
 
 # Argument 'studyName':
+if (is.null(studyName)) studyName <- fitClassLbl;
 studyName <- Arguments$getCharacter(studyName);
+studyLbl <- sprintf("Study: %s\\\\", toLatex(studyName));
 
 # Argument 'reportPath':
 reportPath <- Arguments$getWritablePath(reportPath);
@@ -113,19 +162,27 @@ oPar <- setOption("devNew/args/par", list(lwd=2));
 on.exit({
   setOption("devNew/args/par", oPar);
 }, add=TRUE);
+
+updateChromosomeLabels(fit);
 %>
 
-<%
-studyLbl <- sprintf("Study: %s\\\\", toLatex(studyName));
-if (!is.null(dataSet)) {
-  dataSetLbl <- sprintf("Data set: %s\\\\", toLatex(dataSet));
-} else {
-  dataSetLbl <- "";
+\fancyhead[C]{%
+ \small
+ \raggedright
+%% \textbf{Study:Dataset:Sample}:
+  <%=toLatex(studyName)%>:<%=toLatex(dataSet)%>:<%=toLatex(sampleName)%>:\chrLabel
+ \hfill
+ \thepage/\pageref{LastPage}\\
+%%  \textbf{Compiled} & <%=Sys.Date()%>
+ \centering
+ \resizebox{\headwidth}{!}{\includegraphics{<%=
+   tags <- c("wg", fitClass, "tcn,c1,c2", getChecksum(fit));
+   toPNG(name=sampleNameEscDots, tags=tags, width=1024, aspectRatio=0.07, {
+     plotTracks(fit, tracks="tcn,c1,c2", scatter=NULL, lwd=5, Clim=c(0,4), calls=NULL, xlab="", ylab="", oma=c(0,0,0,0), mar=c(0,0,0,0));
+   }, force=T)%>}}%
+%% \vspace{0.2ex}
+%% \hline
 }
-%>
-
-\title{Paired PSCBS Report:\\<%=studyLbl%><%=dataSetLbl%>Sample: <%=toLatex(sampleName)%>}
-\author{Report template by Henrik Bengtsson}
 
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % GRAPHICS SETTINGS
@@ -177,45 +234,34 @@ symbolList <- list(
 %>
 
 \begin{document}
-
+\title{<%=fitClassLbl%> Report:\\<%=studyLbl%><%=dataSetLbl%>Sample: <%=toLatex(sampleName)%>}
+\author{Report template by Henrik Bengtsson}
 \maketitle
-\begin{abstract}
-This is a quality control (QC) report on the paired tumor-normal sample '<%=toLatex(sampleName)%>' in data set '<%=dataSet%>'.
-\end{abstract}
+\thispagestyle{fancy}
 
-\tableofcontents
-
-\clearpage
-
+%%\tableofcontents
 
 %>
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Introduction}
-
-\chapter{Data}
-\label{ch:Data}
-
-\section{Samples}
-
-\section{Microarray data}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % METHODS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Methods}
-\label{ch:Methods}
+\section{Introduction}
+\label{sec:Introduction}
+This is a quality control (QC) report based on non-paired tumor SNP microarray data.
 
-\section{Segmentation}
-\label{sec:Segmentation}
-We use the Paired PSCBS segmentation method~\citep{OlshenA_etal_2011} with TumorBoost normalization~\citep{BengtssonH_etal_2010} to partion the genome into segments such that all signals in a particular segment are likely to originate from the same underlying parent-specific copy-number state.
-Since there is no match normal, germline genotypes cannot be called.  Because of this, heterozygous SNPs needs to be inferred from the data given, that is, the tumor SNP signals.  Heterozygous SNPs are "called" based on the allele B fractions of the tumor.
+\subsection{Method}
+\label{sec:Method}
+We use a non-paired PSCBS segmentation method to partion the genome into segments such that all signals in a particular segment are likely to originate from the same underlying parent-specific copy-number state.  This method is adopted from the Paired PSCBS segmentation method~\citep{OlshenA_etal_2011} with two main differences.
+First, heterozygous SNPs are "called" based on tumor allele B fractions ("tumor BAFs"), which are poor proxies for the corresponding normal ones.  This is a major disadvantage compared to having a matched normal.
+Second, the tumor BAFs cannot be normalized using the TumorBoost method~\citep{BengtssonH_etal_2010}.  
 
 
 <%--
-\section{Post-segmentation pruning}
+\subsection{Post-segmentation pruning}
 \label{sec:PostSegmentationPruning}
 <%
 fitP <- pruneByHClust(fit, h=0.25);
@@ -223,6 +269,7 @@ fitP <- pruneByHClust(fit, h=0.25);
 %>
 --%>
 
+\clearpage
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -231,7 +278,7 @@ fitP <- pruneByHClust(fit, h=0.25);
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 % WHOLE-GENOME RESULTS
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-\chapter{Whole-Genome Results}
+\section{Whole-Genome Results}
 \label{ch:WholeGenomeResults}
 
 
@@ -239,7 +286,7 @@ fitP <- pruneByHClust(fit, h=0.25);
 % SUMMARY ANNOTATION AND GENOTYPE CALLS
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 <% summaryOfAnnotationAndGenotypeCalls <- function(fit, ...) { %>
-\section{Summary of annotation and genotype calls}
+\subsection{Summary of annotation and genotype calls}
 <%
 data <- getLocusData(fit, fields="full");
 nbrOfLoci <- nrow(data);
@@ -259,8 +306,8 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 } else {
   sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
 }
+updateChromosomeLabels(fit);
 %>
-
 \begin{table}[htbp]
  \begin{center}
   \begin{tabular}{lrr}
@@ -274,7 +321,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
   \end{tabular}
   \caption{
   Summary of the locus-level data on <%=chromosomesH%>.
-  A locus is considered to be a SNP if it has either a non-missing BAF for either the tumor or the normal.
+  A locus is considered to be a SNP if it has either a non-missing BAF for the tumor.
   (*) Heterozygous calls are based on (whole-genome) naive calling by thresholding \emph{tumor} DHs.
   }
   \label{tbl:LocusStats}
@@ -301,7 +348,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 <% pscnSegmentationTracks <- function(fit, ...) { %>
 \clearpage
-\section{Parent-specific copy-number segmentation tracks}
+\subsection{Parent-specific copy-number segmentation tracks}
 \label{sec:PSCNSegmentationTracks}
 <%
 chromosomes <- getChromosomes(fit);
@@ -335,9 +382,9 @@ chrsTags <- if (nbrOfChromosomes == 1) {
   <% } # for (track ...) %>
  \end{center}
  \caption{
-   Results of Paired PSCBS segmentation on <%=chromosomesH%> projected onto
+   Results of <%=fitClassLbl%> segmentation on <%=chromosomesH%> projected onto
    TCN (top), DH (middle), as well as TCN, $C_1$ and $C_2$ (bottom).
-   Paired PSCBS segmentation is always done on TCN and DH data.
+   PSCBS segmentation is always done on TCN and DH data.
    There are in total $S=<%=nbrOfSegments(fit, splitters=FALSE)%>$ segments. 
  }
  \label{fig:PairedPSCBS}
@@ -354,7 +401,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 <% pscnSegmentationTransitions <- function(fit, ...) { %>
 <% if (!REPORT_C1C2) return(); %>
 \clearpage
-\section{Parent-specific copy-number transitions}
+\subsection{Parent-specific copy-number transitions}
 \label{sec:PSCNSegmentationTransitions}
 <%
 # plotC1C2Grid()
@@ -410,7 +457,8 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 <% if (REPORT_PER_CHROMOSOME && nbrOfChromosomes(fit) > 1) { %>
 <% for (chr in getChromosomes(fit)) { %>
-\chapter{Chromosome <%=chr%> Results}
+\clearpage
+\section{Chromosome <%=chr%>}
 \label{sec:Chromosome<%=chr%>Results}
 <%
 fitT <- extractChromosome(fit, chromosome=chr);
@@ -430,7 +478,7 @@ fitT <- extractChromosome(fit, chromosome=chr);
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 % PRUNED: WHOLE-GENOME SEGMENTATION
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-\section{Hierarchical pruning}
+\subsection{Hierarchical pruning}
 \label{sec:HierarchicalPruning}
 
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -442,15 +490,13 @@ fitT <- extractChromosome(fit, chromosome=chr);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % REFERENCES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \clearpage
+\clearpage
 \bibliography{bioinformatics-journals-abbr,PSCBS}
 %\bibliographystyle{plain}
 \bibliographystyle{natbib}
 
-
 \appendix
-\chapter{Appendix}
-
+\section{Appendix}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Session information
@@ -458,8 +504,7 @@ fitT <- extractChromosome(fit, chromosome=chr);
 % \clearpage
 \section*{Session information}
 <%=toLatex(sessionInfo())%>
-This report was automatically generated using \code{rsp()} of the R.rsp package.
-The template for this report was created by Henrik Bengtsson on April 20, 2012.
+This report was generated via \code{report(fit)} which utilizes the R.rsp package.  The template for this report was created by Henrik Bengtsson and last updated on March 12, 2012.
 \end{document}
 
 <% } # pairedPSCBSReport() %>
