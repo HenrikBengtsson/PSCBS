@@ -31,7 +31,7 @@ Report configuration
 --------------------------------------------------------------------%>
 <%@define PERCHROMOSOME="${PSCBS::reports/perChromosome}" default="TRUE"%>
 <%@define DENSITIES="${PSCBS::reports/densities}" default="TRUE"%>
-<%@define C1C2="${PSCBS::reports/pscnSegmentationTransitions}" default="TRUE"%>
+<%@define C1C2="${PSCBS::reports/pscnSegmentationTransitions}" default="FALSE"%>
 
 <%-- Used? --%>
 <%@define USEALPHACHANNEL="${PSCBS::reports/useAlphaChannel}" default="TRUE"%>
@@ -73,7 +73,7 @@ Report configuration
 \newcommand{\BAFTN}{BAF$^*_{T}$\xspace}
 
 
-<% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName=NULL, Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
+<% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName=NULL, chromosomes=NULL, Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
 
 <%@ifeq DENSITIES="TRUE"%>
  <%@include file="signalDensities.tex.rsp"%>
@@ -119,6 +119,11 @@ if (is.null(studyName)) studyName <- fitClassLbl;
 studyName <- Arguments$getCharacter(studyName);
 studyLbl <- sprintf("Study: %s\\\\", toLatex(studyName));
 
+# Argument 'chromosomes':
+if (!is.null(chromosomes)) {
+  fit <- extractChromosomes(fit, chromosomes);
+}
+
 # Argument 'reportPath':
 reportPath <- Arguments$getWritablePath(reportPath);
 
@@ -160,7 +165,7 @@ BlimX <- Blim + c(-1,1)*diff(Blim)*0.08;
 
 %>
 <%-- Setup of constants etc used in graphics --%>
-<@include file="reportSetupGraphics.R"%>
+<%@include file="reportSetupGraphics.tex.rsp"%>
 
 \begin{document}
 \title{<%=fitClassLbl%> Report:\\<%=studyLbl%><%=dataSetLbl%>Sample: <%=toLatex(sampleName)%>}
