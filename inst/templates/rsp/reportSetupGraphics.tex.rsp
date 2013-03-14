@@ -1,0 +1,35 @@
+<%
+muNCols <- c("#999999", "#000000", "#999999");
+
+require("ggplot2") || throw("Package not loaded: ggplot2");
+xnbrOpts <- element_text(colour="grey50", size=20, hjust=1, lineheight=0.9);
+ynbrOpts <- element_text(colour="grey50", size=20, vjust=1, lineheight=0.9);
+xlabOpts <- element_text(colour="black", size=28, hjust=0.5);
+ylabOpts <- element_text(colour="black", size=28, vjust=0.5, angle=90);
+
+labList <- list(
+  CT    = expression(C[T]),
+  betaN = expression(beta[N]),
+  betaT = expression(beta[T]),
+  betaTN = expression(tilde(beta)[T]),
+  rho = expression(rho),
+  rhoN = expression(tilde(rho)),
+  c1 = expression(C[1]),
+  c2 = expression(C[2]),
+  c1N = expression(tilde(C)[1]),
+  c2N = expression(tilde(C)[2])
+);
+
+symbolList <- list(
+  CT    = "$C_{T}$",
+  betaN = "$\\beta_{N}$",
+  betaT = "$\\beta_{T}$",
+  betaTN = "$\\tilde{\\beta}_{T}$",
+  rho = "$\\rho$",
+  rhoN = "$\\tilde{\\rho}$",
+  c1 = "$C_{1}$",
+  c2 = "$C_{2}$",
+  c1N = "$\\tilde{C}_{1}$",
+  c2N = "$\\tilde{C}_{2}$"
+);
+%>

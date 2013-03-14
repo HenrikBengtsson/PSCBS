@@ -1,3 +1,8 @@
 natbib.bst
 PSCBS.bib
+pscnSegmentationTracks.tex.rsp
+pscnSegmentationTransitions.tex.rsp
+reportHeader.tex.rsp
+reportSetupGraphics.tex.rsp
 signalDensities.tex.rsp
+summaryOfAnnotationAndGenotypeCalls.tex.rsp
