@@ -341,6 +341,35 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
         } # for (ss in ...)
         verbose && exit(verbose);
       } # for (cc in ...)
+
+      # Add call parameter estimates, e.g. deltaAB
+      for (cc in seq(along=callColumns)) {
+        callColumn <- callColumns[cc];
+        callLabel <- callLabels[cc];
+        h <- NULL;
+        if (callLabel == "AB") {
+          if (track == "dh") {
+            h <- fit$params$deltaAB;
+            label <- expression(Delta[AB]);
+            col <- "orange";
+          }
+        } else if (callLabel == "LOH") {
+          if (regexpr("c1", track) != -1L) {
+            h <- fit$params$deltaLowC1;
+            label <- expression(Delta[LOH]);
+            col <- "blue";
+          }
+        }
+
+        if (!is.null(h)) {
+          abline(h=h, lty=4, lwd=2, col=col);
+          for (ss in 1:2) {
+            side <- c(2,4)[ss];
+            adj <- c(1.2,-0.2)[ss];
+            mtext(side=side, at=h, label, adj=adj, las=2, xpd=TRUE);
+          }
+        }
+      } # for (cc in ...)
     } # if (length(callColumns) > 0)
 
     verbose && exit(verbose);
@@ -959,6 +988,35 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
         } # for (ss in ...)
         verbose && exit(verbose);
       } # for (cc in ...)
+
+      # Add call parameter estimates, e.g. deltaAB
+      for (cc in seq(along=callColumns)) {
+        callColumn <- callColumns[cc];
+        callLabel <- callLabels[cc];
+        h <- NULL;
+        if (callLabel == "AB") {
+          if (track == "dh") {
+            h <- fit$params$deltaAB;
+            label <- expression(Delta[AB]);
+            col <- "orange";
+          }
+        } else if (callLabel == "LOH") {
+          if (regexpr("c1", track) != -1L) {
+            h <- fit$params$deltaLowC1;
+            label <- expression(Delta[LOH]);
+            col <- "blue";
+          }
+        }
+
+        if (!is.null(h)) {
+          abline(h=h, lty=4, lwd=2, col=col);
+          for (ss in 1:2) {
+            side <- c(2,4)[ss];
+            adj <- c(1.2,-0.2)[ss];
+            mtext(side=side, at=h, label, adj=adj, las=2, xpd=TRUE);
+          }
+        }
+      } # for (cc in ...)
     } # if (length(callColumns) > 0)
 
     verbose && exit(verbose);
@@ -1046,6 +1104,8 @@ setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6,
 
 ############################################################################
 # HISTORY:
+# 2013-03-18
+# o Now plotTracksManyChromosomes() draws AB and LOH call thresholds.
 # 2012-09-23
 # o Now plotTracks() [and plotTracksManyChromosomes()] draws segment levels
 #   in TCN-C2-C1 order, and then goes back and draws C2 and TCN with dashed

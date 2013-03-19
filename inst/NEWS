@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.33.4 [2013-03-18]
+o VISUALIZATION: Now plotTracks() for PairedPSCBS displays call
+  thresholds Delta_AB and Delta_LOH.
+
+
 Version: 0.33.3 [2013-03-12]
 o DOCUMENTATION: Documented 'tauA' and 'tauB' in the help for
   segmentByNonPairedPSCBS().

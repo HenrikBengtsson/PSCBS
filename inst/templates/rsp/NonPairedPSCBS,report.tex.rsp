@@ -29,15 +29,15 @@ Include RSP templates
 <%--------------------------------------------------------------------
 Report configuration
 --------------------------------------------------------------------%>
-<%@define PERCHROMOSOME="${PSCBS::reports/perChromosome}" default="TRUE"%>
-<%@define DENSITIES="${PSCBS::reports/densities}" default="TRUE"%>
-<%@define C1C2="${PSCBS::reports/pscnSegmentationTransitions}" default="FALSE"%>
+<%@logical PER_CHROMOSOME="${PSCBS::reports/perChromosome}" default="TRUE"%>
+<%@logical DENSITIES="${PSCBS::reports/densities}" default="TRUE"%>
+<%@logical C1C2="${PSCBS::reports/pscnSegmentationTransitions}" default="FALSE"%>
 
 <%-- Used? --%>
-<%@define USEALPHACHANNEL="${PSCBS::reports/useAlphaChannel}" default="TRUE"%>
+<%@logical USE_ALPHA_CHANNEL="${PSCBS::reports/useAlphaChannel}" default="TRUE"%>
 
 <%-- To implement --%>
-<%@define PERGENOTYPE="${PSCBS::reports/perGenotype}" default="TRUE"%>
+<%@logical PER_GENOTYPE="${PSCBS::reports/perGenotype}" default="TRUE"%>
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,7 +75,7 @@ Report configuration
 
 <% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName=NULL, chromosomes=NULL, Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
 
-<%@ifeq DENSITIES="TRUE"%>
+<%@if name="DENSITIES"%>
  <%@include file="signalDensities.tex.rsp"%>
 <%@endif%>
 <%@include file="summaryOfAnnotationAndGenotypeCalls.tex.rsp"%>
@@ -216,11 +216,11 @@ fitP <- pruneByHClust(fit, h=0.25);
 \label{ch:WholeGenomeResults}
 
 <%=summaryOfAnnotationAndGenotypeCalls(fit)%>
-<%@ifeq DENSITIES="TRUE"%>
+<%@if name="DENSITIES"%>
 <%=signalDensities(fit, fields=c("CT", "betaT", "rho", "c1", "c2"))%>
 <%@endif%>
 <%=pscnSegmentationTracks(fit)%>
-<%@ifeq C1C2="TRUE"%>
+<%@if name="C1C2"%>
 <%=pscnSegmentationTransitions(fit)%>
 <%@endif%>
 
@@ -228,7 +228,7 @@ fitP <- pruneByHClust(fit, h=0.25);
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 % PER CHROMOSOME SEGMENTATION
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-<%@ifeq PERCHROMOSOME="TRUE"%>
+<%@if name="PER_CHROMOSOME"%>
 <% if (nbrOfChromosomes(fit) > 1) { %>
 <% for (chr in getChromosomes(fit)) { %>
 <%
@@ -239,16 +239,16 @@ fitT <- extractChromosome(fit, chromosome=chr);
 \label{sec:Chromosome<%=chr%>Results}
 <%reportHeaderUpdate(fit)%>
 <%=summaryOfAnnotationAndGenotypeCalls(fitT)%>
-<%@ifeq DENSITIES="TRUE"%>
+<%@if name="DENSITIES"%>
 <%=signalDensities(fitT, fields=c("CT", "betaT", "rho", "c1", "c2"))%>
 <%@endif%>
 <%=pscnSegmentationTracks(fitT)%>
-<%@ifeq C1C2="TRUE"%>
+<%@if name="C1C2"%>
 <%=pscnSegmentationTransitions(fitT)%>
 <%@endif%>
 <% } # for (chr ...) %>
 <% } # if (REPORT_PER_CHROMOSOME && nbrOfChromosomes(fit) > 1) %>
-<%@endif # PERCHROMOSOME %>
+<%@endif # PER_CHROMOSOME %>
 
 <%--
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

@@ -2,7 +2,6 @@
 % SIGNAL DENSITIES
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 <% signalDensities <- function(fit,  fields=c("CT", "betaN", "betaT", "rho", "c1", "c2", "betaTN", "rhoN", "c1N", "c2N"), ...) { %>
-<% if (!REPORT_DENSITIES) return(); %>
 <%
 # Argument 'fields':
 fields <- match.arg(fields, several.ok=TRUE);
@@ -18,6 +17,7 @@ unknown <- setdiff(fields, names(data));
 if (length(unknown) > 0L) {
   throw("Unknown locus data fields: ", paste(sQuote(unknown), collapse=", "));
 }
+params <- fit$params;
 
 chromosomes <- getChromosomes(fit);
 nbrOfChromosomes <- length(chromosomes);
@@ -55,6 +55,21 @@ chrsTags <- if (nbrOfChromosomes == 1) {
             if (ff == "CT" && any(!data$isSNP, na.rm=TRUE)) {
               gg <- gg + aes(group=type, colour=type);
             }
+
+            h <- NULL;
+            if (ff == "rho") {
+              h <- params$deltaAB;
+              label <- expression(Delta[AB]);
+              col <- "orange";
+            } else if (ff == "c1") {
+              h <- params$deltaLowC1;
+              label <- expression(Delta[LOH]);
+              col <- "blue";
+            }
+
+            if (!is.null(h)) {
+              gg <- gg + geom_vline(xintercept=h, colour=col, size=1.5);
+            }
           } else if (by == "muN") {
             gg <- gg + aes_string(group="muNx", colour="muNx");
             gg <- gg + scale_color_manual(values=muNCols);
@@ -84,7 +99,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 <% } # for (ff ...) %>
  \end{center}
  \caption{
-   Density estimates of locus-level signals on <%=chromosomesH%> with and without TumorBoost normalization.  The signals in the left and right panels are without and with stratification on genotype calls (AA and BB in gray and AB in black).
+   Density estimates of \emph{locus-level} signals on <%=chromosomesH%> with and without TumorBoost normalization.  The signals in the left and right panels are without and with stratification on genotype calls (AA and BB in gray and AB in black).
    If there are no allelic imbalances in the tumor, then the density of 
    the tumor should be similar to a normal sample, that is, three bands
    of signals corresponding to the three genotype groups.
