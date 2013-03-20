@@ -124,7 +124,7 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 
   # Identify copy neutral AB segments
   isNeutralAB <- findNeutralCopyNumberState(C=C, isAI=!isAB, weights=weights,
-                                                       ..., verbose=verbose);
+                                     ..., flavor="maxPeak", verbose=verbose);
   nAB <- sum(isNeutralAB, na.rm=TRUE);
   verbose && cat(verbose, "Number of copy-neutral AB segments: ", nAB);
   if (nAB == 0) {
@@ -339,9 +339,17 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
   ci <- segs[,keys];
   ci <- as.matrix(ci);
 
-  # If a confidence interval is completely within the
-  # calling region, call it
-  isNTCN <- (range[1] <= ci[,1] & ci[,2] <= range[2]);
+  ## WAS: If a confidence interval is completely within the
+  ##      calling region, call it
+  ## isNTCN <- (range[1] <= ci[,1] & ci[,2] <= range[2]);
+
+  # If a segments confidence interval is completely outside the
+  # copy-neutral region ("H_0"), that is, it is completely within
+  # the rejection region ("H_1"), then the H_0 hypothesis that the
+  # segment is copy-neutral in TCN is rejected.
+  isLoss <- (ci[,2] < range[1]); # (a) completely below, or
+  isGain <- (ci[,1] > range[2]); # (b) completely above.
+  isNTCN <- (!isLoss & !isGain); #  => completely inside => not rejected.
 
   nbrOfSegs <- nrow(segs);
   nbrOfABs <- sum(segs$abCall, na.rm=TRUE);
@@ -364,8 +372,13 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
   segs$ntcnCall <- isNTCN;
 
+  params <- fit$params;
+  params$deltaCN <- delta;
+  params$ntcnRange <- range;
+
   fitC <- fit;
   fitC$output <- segs;
+  fitC$params <- params;
 
   verbose && exit(verbose);
   
@@ -376,6 +389,17 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
 ##############################################################################
 # HISTORY
+# 2013-03-19 [HB]
+# o CALLING: Defined a formal hypthesis test for how segments are called
+#   copy-neutral in TCN (NTCN), with the null hypothesis being that a 
+#   segment is NTCN.  In order for a segment to not be NTCN, its confidence
+#   interval has to be completely outside the null region.  This changed
+#   how callCopyNeutralByTCNofAB() for PairedPSCBS calls segments; it is
+#   now a bit more conservative in rejecting NTCN.
+# o ROBUSTNESS: Now calcStatsForCopyNeutralABs() for PairedPSCBS does
+#   a better job in identifying the TCN mode of the AB segments.
+# o Now callCopyNeutralByTCNofAB() records parameters 'deltaCN' and 
+#   'ntcnRange'.
 # 2012-09-21 [HB]
 # o BUG FIX: Recent updates in how nbrOfChangePoints() is calculated,
 #   caused callGNL() to throw an exception.  Added argument 'ignoreGaps'
