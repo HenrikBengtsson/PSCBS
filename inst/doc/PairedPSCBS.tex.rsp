@@ -67,7 +67,7 @@ options(str=strOptions(strict.width="cut"));
 
 \title{Paired PSCBS}
 <% pkg <- Package("PSCBS"); %>
-\author{<%=getAuthor(pkg)%>}
+\author{<%=paste(getAuthor(pkg), collapse=", ")%>}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
 \date{Feb 1, 2013}
 

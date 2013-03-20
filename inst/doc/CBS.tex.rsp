@@ -64,7 +64,7 @@ options(str=strOptions(strict.width="cut"));
 
 \title{Total copy-number segmentation using CBS}
 <% pkg <- Package("PSCBS"); %>
-\author{<%=getAuthor(pkg)%>}
+\author{<%=paste(getAuthor(pkg), collapse=", ")%>}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
 \date{May 11, 2012}
 
