@@ -27,7 +27,7 @@
 #   that it is reported by @see "utils::sessionInfo".
 # }
 #
-# @author
+# @author "HB"
 #
 # @keyword internal
 #*/############################################################################

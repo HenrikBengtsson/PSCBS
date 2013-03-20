@@ -30,7 +30,7 @@
 #   Returns the pathname of the generated PDF.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass

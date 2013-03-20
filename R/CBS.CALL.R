@@ -39,7 +39,7 @@
 #   @include "../incl/segmentByCBS,calls.Rex"
 # }
 # 
-# @author
+# @author "HB"
 #
 # \references{
 #   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
@@ -445,7 +445,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 #   tumor-specific MAD away from the smoothed values." [1; Suppl. Mat.]
 # }
 #
-# @author
+# @author "HB"
 #
 # \references{
 #   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
@@ -694,7 +694,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #   particularly for large density arrays.
 # }
 #
-# @author
+# @author "HB"
 #
 # \references{
 #   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
@@ -889,7 +889,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
 #  Returns a @double in [0,1].
 # }
 #
-# @author
+# @author "HB"
 #
 # \references{
 #   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
@@ -1138,7 +1138,7 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
 #   with the same of fewer number of segments.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass

@@ -2,9 +2,22 @@
 Package: PSCBS
 ==============
 
-Version: 0.33.4 [2013-03-18]
-o VISUALIZATION: Now plotTracks() for PairedPSCBS displays call
-  thresholds Delta_AB and Delta_LOH.
+Version: 0.34.0 [2013-03-19]
+o CALLING: Defined a formal hypthesis test for how segments are called
+  copy-neutral in TCN (NTCN), with the null hypothesis being that a 
+  segment is NTCN.  In order for a segment to not be NTCN, its confidence
+  interval has to be completely outside the null region.  This changed
+  how callCopyNeutralByTCNofAB() for PairedPSCBS calls segments; it is
+  now a bit more conservative in rejecting NTCN.
+
+
+Version: 0.33.4 [2013-03-19]
+o ROBUSTNESS: Now calcStatsForCopyNeutralABs() for PairedPSCBS does
+  a better job in identifying the TCN mode of the AB segments.
+o Added argument 'flavor' to findNeutralCopyNumberState() specifying 
+  how to identify the main mode of the AB segments.
+o VISUALIZATION: Now plotTracks() for PairedPSCBS displays thresholds
+  for calling AB, LOH and and NTCN.
 
 
 Version: 0.33.3 [2013-03-12]

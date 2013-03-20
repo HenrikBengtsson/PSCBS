@@ -38,7 +38,7 @@
 #
 # @examples "../incl/segmentByCBS,pruneBySdUndo.Rex"
 #
-# @author
+# @author "HB, PN"
 #
 # @keyword internal
 #*/###########################################################################  

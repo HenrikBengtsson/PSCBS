@@ -36,7 +36,7 @@
   Returns a \code{\link{PairedPSCBS}} object with ROH calls.
 }
 
-\author{Henrik Bengtsson}
+\author{Pierre Neuvial, Henrik Bengtsson}
 
 \seealso{
   Internally, \code{\link{testROH}}() is used.

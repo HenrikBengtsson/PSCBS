@@ -25,7 +25,7 @@
 #   Returns an object of the same class.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   This method is utilized by @seemethod "pruneByHClust".

@@ -26,7 +26,7 @@
 #   Returns the pathname of the the file written.
 # }
 # 
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Utilizes @seemethod "getSegments".

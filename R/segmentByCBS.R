@@ -92,7 +92,7 @@
 #   @include "../incl/segmentByCBS,tests.Rex"
 # }
 #
-# @author
+# @author "HB"
 #
 # \references{
 #  [1] @include "../incl/OlshenVenkatraman_2004.Rd" \cr

@@ -28,7 +28,7 @@
 #   The segments are ordered along the genome.
 # }
 # 
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @see "findLargeGaps".

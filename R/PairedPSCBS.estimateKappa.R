@@ -23,7 +23,7 @@
 #   Returns the background estimate as a @numeric scalar.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally, one of the following methods are used:
@@ -109,7 +109,7 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #  }
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Instead of calling this method explicitly, it is recommended

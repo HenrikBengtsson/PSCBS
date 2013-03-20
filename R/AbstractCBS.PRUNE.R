@@ -426,7 +426,7 @@ threshold = 0.5,
 #  fitP <- pruneByDP(fit, nbrOfSegments=-2);
 # }}
 #
-# @author
+# @author "HB, PN"
 #
 # \references{
 #   [1] ... \cr

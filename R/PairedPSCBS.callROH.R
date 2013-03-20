@@ -24,7 +24,7 @@
 #   Returns a @see "PairedPSCBS" object with ROH calls.
 # }
 #
-# @author
+# @author "PN, HB"
 #
 # \seealso{
 #   Internally, @see "testROH" is used.

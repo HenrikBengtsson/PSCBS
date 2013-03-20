@@ -40,7 +40,7 @@
  fitP <- pruneByDP(fit, nbrOfSegments=-2);
 }}
 
-\author{Henrik Bengtsson}
+\author{Henrik Bengtsson, Pierre Neuvial}
 
 \references{
   [1] ... \cr

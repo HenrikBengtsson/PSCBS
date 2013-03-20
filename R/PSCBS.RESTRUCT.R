@@ -21,7 +21,7 @@
 #   Returns a @see "PSCBS" object of the same class as argument \code{x}.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass

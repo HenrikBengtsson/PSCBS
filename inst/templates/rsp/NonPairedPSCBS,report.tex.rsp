@@ -30,7 +30,8 @@ Include RSP templates
 Report configuration
 --------------------------------------------------------------------%>
 <%@logical PER_CHROMOSOME="${PSCBS::reports/perChromosome}" default="TRUE"%>
-<%@logical DENSITIES="${PSCBS::reports/densities}" default="TRUE"%>
+<%@logical SIGNAL_DENSITIES="${PSCBS::reports/signalDensities}" default="TRUE"%>
+<%@logical LEVEL_DENSITIES="${PSCBS::reports/levelDensities}" default="TRUE"%>
 <%@logical C1C2="${PSCBS::reports/pscnSegmentationTransitions}" default="FALSE"%>
 
 <%-- Used? --%>
@@ -75,11 +76,14 @@ Report configuration
 
 <% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName=NULL, chromosomes=NULL, Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
 
-<%@if name="DENSITIES"%>
+<%@if name="SIGNAL_DENSITIES"%>
  <%@include file="signalDensities.tex.rsp"%>
 <%@endif%>
 <%@include file="summaryOfAnnotationAndGenotypeCalls.tex.rsp"%>
 <%@include file="pscnSegmentationTracks.tex.rsp"%>
+<%@if name="LEVEL_DENSITIES"%>
+ <%@include file="levelDensities.tex.rsp"%>
+<%@endif%>
 <%@include file="pscnSegmentationTransitions.tex.rsp"%>
 
 <%
@@ -216,10 +220,13 @@ fitP <- pruneByHClust(fit, h=0.25);
 \label{ch:WholeGenomeResults}
 
 <%=summaryOfAnnotationAndGenotypeCalls(fit)%>
-<%@if name="DENSITIES"%>
+<%@if name="SIGNAL_DENSITIES"%>
 <%=signalDensities(fit, fields=c("CT", "betaT", "rho", "c1", "c2"))%>
 <%@endif%>
 <%=pscnSegmentationTracks(fit)%>
+<%@if name="LEVEL_DENSITIES"%>
+<%=levelDensities(fit, fields=c("tcn", "dh", "c1", "c2"))%>
+<%@endif%>
 <%@if name="C1C2"%>
 <%=pscnSegmentationTransitions(fit)%>
 <%@endif%>
@@ -239,10 +246,15 @@ fitT <- extractChromosome(fit, chromosome=chr);
 \label{sec:Chromosome<%=chr%>Results}
 <%reportHeaderUpdate(fit)%>
 <%=summaryOfAnnotationAndGenotypeCalls(fitT)%>
-<%@if name="DENSITIES"%>
+<%@if name="SIGNAL_DENSITIES"%>
 <%=signalDensities(fitT, fields=c("CT", "betaT", "rho", "c1", "c2"))%>
 <%@endif%>
 <%=pscnSegmentationTracks(fitT)%>
+<%---
+<%@if name="LEVEL_DENSITIES"%>
+<%=levelDensities(fitT, fields=c("tcn", "dh", "c1", "c2"))%>
+<%@endif%>
+---%>
 <%@if name="C1C2"%>
 <%=pscnSegmentationTransitions(fitT)%>
 <%@endif%>

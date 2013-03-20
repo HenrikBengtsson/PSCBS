@@ -17,7 +17,7 @@
 }
 
 \usage{
-\method{findNeutralCopyNumberState}{default}(C, isAI, weights=NULL, ..., minDensity=1e-10, verbose=FALSE)
+\method{findNeutralCopyNumberState}{default}(C, isAI, weights=NULL, ..., minDensity=1e-10, flavor=c("firstPeak", "maxPeak"), verbose=FALSE)
 }
 
 \arguments{
@@ -28,6 +28,8 @@
     function.}
   \item{minDensity}{A \code{\link[base]{numeric}} value, below which density peaks are
     discarded.}
+  \item{flavor}{A \code{\link[base]{character}} string specifying how to identify the
+    mode of the AB segments.}
   \item{verbose}{If \code{\link[base:logical]{TRUE}}, extra information is output.}
 }
 

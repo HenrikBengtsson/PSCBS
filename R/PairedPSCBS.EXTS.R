@@ -40,7 +40,7 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 #   Returns a @data.frame.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seemethod "extractMinorMajorCNs".
@@ -78,7 +78,7 @@ setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
 #   Returns a @data.frame.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seemethod "extractTCNAndDHs"

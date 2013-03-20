@@ -24,7 +24,7 @@
 
  \section{Requirements}{
    This package requires external packages
-   R.utils (>= 1.19.5), utils, R.methodsS3 (>= 1.4.2), R.oo (>= 1.11.7), R.utils (>=
+   R.utils (>= 1.19.5), utils, R.methodsS3 (>= 1.4.2), R.oo (>= 1.13.0), R.utils (>=
 1.19.5), DNAcopy (>= 1.27.2), R.rsp (>= 0.8.2),
    and also suggests DNAcopy (>= 1.27.2), aroma.light (>= 1.22.0), matrixStats (>=
 0.6.2), R.cache (>= 0.6.5), Hmisc (>= 3.10-1), ggplot2 (>=
@@ -51,9 +51,7 @@
    and [3] and [4] when using CBS.
  }
 
- \author{
-  A.B. Olshen, H. Bengtsson, P. Neuvial, P.T. Spellman, R.A. Olshen, V.E. Seshan.
- }
+ \author{Henrik Bengtsson}
 
  \section{License}{
   GPL (>= 2).

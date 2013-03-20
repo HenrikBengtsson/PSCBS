@@ -25,7 +25,7 @@
 #   Returns nothing.
 # }
 # 
-# @author
+# @author "HB"
 #
 # @keyword IO
 # @keyword internal

@@ -22,7 +22,7 @@
 #  @allmethods "public"
 # }
 # 
-# @author
+# @author "HB"
 #*/###########################################################################
 setConstructorS3("AbstractCBS", function(fit=list(), sampleName=fit$sampleName, ...) {
   # Argument 'sampleName':

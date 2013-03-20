@@ -30,7 +30,7 @@
 #   Returns the weighted quantile.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally the following functions may be used:

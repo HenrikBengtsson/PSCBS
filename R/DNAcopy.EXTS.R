@@ -24,7 +24,7 @@
 #   @include "../incl/as.DNAcopy.Rex"
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   \code{\link[PSCBS:as.CBS.DNAcopy]{as.CBS()}}.

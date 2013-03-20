@@ -34,7 +34,7 @@
 #   be outliers.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally @see "DNAcopy::smooth.CNA" is utilized to identify

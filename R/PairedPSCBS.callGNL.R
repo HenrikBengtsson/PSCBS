@@ -27,7 +27,7 @@
 #   Returns a @see "PairedPSCBS" object with added calls.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally, one of the following methods are used:

@@ -22,9 +22,11 @@ labList <- list(
 
 symbolList <- list(
   CT    = "$C_{T}$",
+  tcn   = "$\\bar{C_{T}}$",
   betaN = "$\\beta_{N}$",
   betaT = "$\\beta_{T}$",
   betaTN = "$\\tilde{\\beta}_{T}$",
+  dh = "$\\bar{\\rho}$",
   rho = "$\\rho$",
   rhoN = "$\\tilde{\\rho}$",
   c1 = "$C_{1}$",

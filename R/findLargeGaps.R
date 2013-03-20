@@ -26,7 +26,7 @@
 #   \code{start}, \code{stop} and \code{length}.
 # }
 # 
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Use @see "gapsToSegments" to turn the set of identified gaps into 

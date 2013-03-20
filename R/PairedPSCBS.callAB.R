@@ -44,7 +44,7 @@
 #   or when the AB caller could not call it.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally, one of the following methods are used:
@@ -137,7 +137,7 @@ setMethodS3("callAllelicBalance", "default", function(...) {
 #   Returns a @see "PairedPSCBS" object with allelic-balance calls.
 # }
 #
-# @author
+# @author "HB"
 #
 # \section{Algorithm}{
 #  \itemize{

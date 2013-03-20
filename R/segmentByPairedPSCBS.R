@@ -117,7 +117,7 @@
 #
 # @examples "../incl/segmentByPairedPSCBS.Rex"
 #
-# @author
+# @author "HB"
 #
 # \references{
 #  [1] @include "../incl/OlshenA_etal_2011.Rd" \cr

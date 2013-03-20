@@ -51,7 +51,7 @@
 #   @see "PairedPSCBS" objects.
 # }
 # 
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass
@@ -84,7 +84,7 @@
 #   Returns a object of the same class as argument \code{x}.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass
@@ -240,7 +240,7 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
 #   Returns an @see "AbstractCBS" of the same class with one less segment.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   To merge a segment and its two flanking segments, see
@@ -291,7 +291,7 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 #   \code{length(idxs)} segments.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass
@@ -346,7 +346,7 @@ setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, 
 #   Returns an @see "AbstractCBS" of the same class with two less segment.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally @seemethod "mergeTwoSegments" is used.
@@ -405,7 +405,7 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
 #   are dropped.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally @seemethod "extractRegions" is used.

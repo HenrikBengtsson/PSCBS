@@ -21,7 +21,7 @@
 #   Returns a @see "CBS" object.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   \code{\link[PSCBS:as.DNAcopy.CBS]{as.DNAcopy()}}.
@@ -212,7 +212,7 @@ setMethodS3("subset", "CBS", function(x, chromlist=NULL, ...) {
 #  Returns a @numeric @vector of length \code{nbrOfLoci()}.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass
@@ -284,7 +284,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
 #  Returns a non-negative @numeric scale.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass

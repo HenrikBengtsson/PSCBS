@@ -35,9 +35,7 @@
 #   and [3] and [4] when using CBS.
 # }
 #
-# \author{
-#  @eval "packageDescription('PSCBS')$Author".
-# }
+# @author
 #
 # \section{License}{
 #  @eval "packageDescription('PSCBS')$License".

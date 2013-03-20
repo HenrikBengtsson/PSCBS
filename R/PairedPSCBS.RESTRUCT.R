@@ -190,7 +190,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 #   Returns a @see "PairedPSCBS" with one less segment.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   To drop regions (a connected set of segments) see \code{dropRegions()}.

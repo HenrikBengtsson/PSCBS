@@ -21,7 +21,7 @@
 #  @allmethods "public"
 # }
 # 
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @see "PairedPSCBS".
@@ -111,7 +111,7 @@ setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
 #   and K is the number of segment-specific fields.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass

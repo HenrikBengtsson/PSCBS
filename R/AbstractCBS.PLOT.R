@@ -18,7 +18,7 @@
 #   Returns nothing.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass

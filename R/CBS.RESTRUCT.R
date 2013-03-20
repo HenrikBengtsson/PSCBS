@@ -38,7 +38,7 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 #   Returns a @see "CBS" object of the same class as argument \code{x}.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   @seeclass

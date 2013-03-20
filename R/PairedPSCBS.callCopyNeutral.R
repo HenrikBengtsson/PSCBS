@@ -27,7 +27,7 @@
 #   Returns a @see "PairedPSCBS" object with copy-neutral calls.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally, one of the following methods are used:
@@ -237,7 +237,7 @@ setMethodS3("estimateDeltaCN", "PairedPSCBS", function(fit, scale=1, kappa=estim
 #
 # %% examples "../incl/callCopyNeutralByTCNofAB.PairedPSCBS.Rex"
 #
-# @author
+# @author "HB"
 #
 # @keyword internal
 #*/########################################################################### 

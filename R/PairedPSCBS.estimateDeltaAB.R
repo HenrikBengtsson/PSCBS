@@ -24,7 +24,7 @@
 #   Returns the threshold estimate as a @numeric scalar.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally, one of the following methods are used:
@@ -494,7 +494,7 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
 #  }
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Instead of calling this method explicitly, it is recommended

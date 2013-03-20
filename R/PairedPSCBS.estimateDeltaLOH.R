@@ -26,7 +26,7 @@
 #   -@Inf is returned.
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Internally, one of the following methods are used:
@@ -120,7 +120,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 #  }
 # }
 #
-# @author
+# @author "HB"
 #
 # \seealso{
 #   Instead of calling this method explicitly, it is recommended

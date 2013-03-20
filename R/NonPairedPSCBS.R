@@ -21,7 +21,7 @@
 #  @allmethods "public"
 # }
 # 
-# @author
+# @author "HB"
 #
 # \seealso{
 #   The @see "segmentByNonPairedPSCBS" method returns an object of this class.
