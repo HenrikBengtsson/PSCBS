@@ -17,6 +17,8 @@
 #     function.}
 #   \item{minDensity}{A @numeric value, below which density peaks are
 #     discarded.} 
+#   \item{flavor}{A @character string specifying how to identify the
+#     mode of the AB segments.}
 #   \item{verbose}{If @TRUE, extra information is output.}
 # }
 #
@@ -28,7 +30,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=NULL, ..., minDensity=1e-10, verbose=FALSE) {
+setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=NULL, ..., minDensity=1e-10, flavor=c("firstPeak", "maxPeak"), verbose=FALSE) {
   require("aroma.light") || throw("Package not loaded: aroma.light");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,6 +51,9 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
 
   # Argument 'minDensity':
   minDensity <- Arguments$getDouble(minDensity);
+
+  # Argument 'flavor':
+  flavor <- match.arg(flavor);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -129,7 +134,12 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
   stopifnot(length(idxs) >= 1);
 
   # Extract the first peak
-  idx <- idxs[1];
+  if (flavor == "firstPeak") {
+    idx <- idxs[1];
+  } else if (flavor == "maxPeak") {
+    idx <- idxs[which.max(fit[idxs,"density"])];
+  }
+
   neutralC <- fit[idx,"x"];
 
   verbose && cat(verbose, "Neutral copy number:");
@@ -165,6 +175,9 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
 
 ##############################################################################
 # HISTORY
+# 2013-03-19 [HB]
+# o Added argument 'flavor' to findNeutralCopyNumberState() specifying how
+#   to identify the main mode of the AB segments.
 # 2012-02-24 [HB]
 # o Moved findNeutralCopyNumberState() from aroma.light.
 # 2012-02-23 [HB]

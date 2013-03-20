@@ -359,6 +359,12 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
             label <- expression(Delta[LOH]);
             col <- "blue";
           }
+        } else if (callLabel == "NTCN") {
+          if (track == "tcn") {
+            h <- fit$params$ntcnRange;
+            label <- c(expression(Delta[-NTCN]), expression(Delta[+NTCN]));
+            col <- "purple";
+          }
         }
 
         if (!is.null(h)) {
@@ -1005,6 +1011,12 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
             h <- fit$params$deltaLowC1;
             label <- expression(Delta[LOH]);
             col <- "blue";
+          }
+        } else if (callLabel == "NTCN") {
+          if (track == "tcn") {
+            h <- fit$params$ntcnRange;
+            label <- c(expression(Delta[-NTCN]), expression(Delta[+NTCN]));
+            col <- "purple";
           }
         }
 
