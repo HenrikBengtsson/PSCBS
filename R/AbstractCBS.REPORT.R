@@ -36,7 +36,7 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("report", "AbstractCBS", function(fit, sampleName=sampleName(fit), studyName="?", ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE) {
+setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE) {
   ver <- packageVersion("R.rsp");
   if (ver < "0.9.1") {
     throw("The PSCBS report generator requires R.rsp v0.9.1 or greater: ", ver);
@@ -54,6 +54,9 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=sampleName(fit), s
   }
 
   # Argument 'studyName':
+  if (missing(studyName)) {
+    throw("Cannot generate report. Argument 'studyName' is missing.");
+  }
   studyName <- Arguments$getCharacter(studyName);
   if (is.na(studyName)) {
     throw("Cannot generate report. Argument 'studyName' is non-valid.");

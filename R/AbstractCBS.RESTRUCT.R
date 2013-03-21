@@ -255,7 +255,8 @@ setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
   # Argument 'idx':
-  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
+##  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
+  max <- nbrOfSegments(fit, splitters=TRUE, ...) - 1L;
   idx <- Arguments$getIndex(idx, max=max);
 
   mergeTwoSegments(fit, left=idx, ...);
@@ -298,21 +299,25 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 # }
 #*/###########################################################################  
 setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, ...) {
-  # Argument 'idxs':
-  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
-  idxs <- Arguments$getIndices(idxs, max=max);
-
   # Assert that there is only one chromosome
   chrs <- getChromosomes(fit);
   if (length(chrs) > 1) {
     throw("dropChangePoints() only support single-chromosome data: ", hpaste(chrs));
   }
 
+  # Argument 'idxs':
+##  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
+  max <- nbrOfSegments(fit, splitters=TRUE, ...) - 1L;
+  idxs <- Arguments$getIndices(idxs, max=max);
+
+
   # Drop change points one by one
   idxs <- unique(idxs);
   idxs <- sort(idxs, decreasing=TRUE);
-  for (idx in idxs) {
-    fit <- dropChangePoint(fit, idx=idx, update=update, ...);
+  for (ii in seq_along(idxs)) {
+    idx <- idxs[ii];
+    updateI <- update && (ii == length(idxs));
+    fit <- dropChangePoint(fit, idx=idx, update=updateI, ...);
   }
 
   # Update segment statistics?
@@ -546,6 +551,12 @@ setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-03-21 [HB]
+# o SPEEDUP: Made dropChangePoints() faster by only updating the segment
+#   statistics/means at the very end.
+# o BUG FIX: dropChangePoint[s]() for AbstractCBS would not allow to
+#   drop the change points at the very end, if segmentation where done
+#   with known segments/gaps and/or empty segments.
 # 2012-09-13
 # o Now renameChromosomes() also adjusts 'knownSegments'.
 # o Added shiftTCN().

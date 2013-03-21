@@ -21,7 +21,7 @@
 }
 
 \usage{
-\method{report}{AbstractCBS}(fit, sampleName=sampleName(fit), studyName="?", ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE)
+\method{report}{AbstractCBS}(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE)
 }
 
 \arguments{

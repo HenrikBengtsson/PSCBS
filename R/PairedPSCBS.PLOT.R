@@ -351,24 +351,24 @@ setMethodS3("plotTracks", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,
           if (track == "dh") {
             h <- fit$params$deltaAB;
             label <- expression(Delta[AB]);
-            col <- "orange";
+            colT <- "orange";
           }
         } else if (callLabel == "LOH") {
           if (regexpr("c1", track) != -1L) {
             h <- fit$params$deltaLowC1;
             label <- expression(Delta[LOH]);
-            col <- "blue";
+            colT <- "blue";
           }
         } else if (callLabel == "NTCN") {
           if (track == "tcn") {
             h <- fit$params$ntcnRange;
             label <- c(expression(Delta[-NTCN]), expression(Delta[+NTCN]));
-            col <- "purple";
+            colT <- "purple";
           }
         }
 
         if (!is.null(h)) {
-          abline(h=h, lty=4, lwd=2, col=col);
+          abline(h=h, lty=4, lwd=2, col=colT);
           for (ss in 1:2) {
             side <- c(2,4)[ss];
             adj <- c(1.2,-0.2)[ss];
@@ -1004,24 +1004,24 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(x, chromosomes=
           if (track == "dh") {
             h <- fit$params$deltaAB;
             label <- expression(Delta[AB]);
-            col <- "orange";
+            colT <- "orange";
           }
         } else if (callLabel == "LOH") {
           if (regexpr("c1", track) != -1L) {
             h <- fit$params$deltaLowC1;
             label <- expression(Delta[LOH]);
-            col <- "blue";
+            colT <- "blue";
           }
         } else if (callLabel == "NTCN") {
           if (track == "tcn") {
             h <- fit$params$ntcnRange;
             label <- c(expression(Delta[-NTCN]), expression(Delta[+NTCN]));
-            col <- "purple";
+            colT <- "purple";
           }
         }
 
         if (!is.null(h)) {
-          abline(h=h, lty=4, lwd=2, col=col);
+          abline(h=h, lty=4, lwd=2, col=colT);
           for (ss in 1:2) {
             side <- c(2,4)[ss];
             adj <- c(1.2,-0.2)[ss];

@@ -147,7 +147,8 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 
 
   # (c) Turn into one big segment by dropping all change points
-  nCPs <- nbrOfChangePoints(fitNTCN, ignoreGaps=TRUE);
+##  nCPs <- nbrOfChangePoints(fitNTCN, ignoreGaps=TRUE);
+  nCPs <- nbrOfSegments(fitNTCN, splitters=TRUE) - 1L;
   if (nCPs > 1) {
     verbose && enter(verbose, "Dropping all change points");
     fitNTCN <- dropChangePoints(fitNTCN, idxs=nCPs:1, ignoreGaps=TRUE, update=TRUE, verbose=less(verbose, 5));
