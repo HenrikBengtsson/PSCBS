@@ -21,8 +21,6 @@
 #   \item{rspTags}{Optional @character @vector of tags for further specifying
 #      which RSP report to generate.}
 #   \item{rootPath}{The root directory where to write the report.}
-#   \item{force}{If @TRUE, RSP template files are copied to the reports/
-#      directory, regardless if they already exists there or not.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
@@ -38,7 +36,14 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filenames=c(rsp="*", "PSCBS.bib", "bioinformatics-journals-abbr.bib", "natbib.bst"), force=FALSE, verbose=FALSE) {
+setMethodS3("report", "AbstractCBS", function(fit, sampleName=sampleName(fit), studyName="?", ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE) {
+  ver <- packageVersion("R.rsp");
+  if (ver < "0.9.1") {
+    throw("The PSCBS report generator requires R.rsp v0.9.1 or greater: ", ver);
+  }
+  require("R.rsp") || throw("Package not loaded: R.rsp");
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -49,9 +54,6 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   }
 
   # Argument 'studyName':
-  if (missing(studyName)) {
-    throw("Cannot generate report. Argument 'studyName' is missing.");
-  }
   studyName <- Arguments$getCharacter(studyName);
   if (is.na(studyName)) {
     throw("Cannot generate report. Argument 'studyName' is non-valid.");
@@ -67,13 +69,10 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   # Argument 'rootPath':
   rootPath <- Arguments$getWritablePath(rootPath);
 
-  # Argument '.filenames':
-  if (!is.null(.filenames)) {
-    .filenames <- Arguments$getCharacters(.filenames, useNames=TRUE);
+  # Argument '.filename':
+  if (!is.null(.filename)) {
+    .filename <- Arguments$getCharacter(.filename, useNames=TRUE);
   }
-
-  # Argument 'force':
-  force <- Arguments$getLogical(force);
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -117,9 +116,9 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Copy report files
+  # Linking to report files
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Copy report files");
+  verbose && enter(verbose, "Linking to report files");
 
   # Directory where all report templates lives
   srcPath <- "templates";
@@ -132,61 +131,93 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   srcPath <- Arguments$getReadablePath(srcPath);
   verbose && cat(verbose, "Source path: ", srcPath);
 
-  filenames <- .filenames;
+  filename <- .filename;
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Create file links to the main RSP report template
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "Main RSP template");
 
   # Construct the filename of the main RSP file to compile, iff missing.
-  idx <- which(filenames == "*");
-  if (length(idx) > 0) {
+  if (filename == "*") {
     className <- class(fit)[1];
     fullname <- paste(c(className, rspTags), collapse=",");
-    rsp <- sprintf("%s,report.tex.rsp", fullname);
-    filenames[idx] <- rsp;
+    filename <- sprintf("%s,report.tex.rsp", fullname);
   }
 
-  # Include files that are listed in the optional '.install_extras' file.
-  extras <- file.path(srcPath, ".install_extras");
-  if (isFile(extras)) {
-    extras <- readLines(extras, warn=FALSE);
-    extras <- extras[sapply(file.path(srcPath, extras), FUN=isFile)];
-    filenames <- c(filenames, extras);
-  }
-
-  verbose && cat(verbose, "Template files:");
-  verbose && print(verbose, filenames);
-
-  # Sanity check
-  stopifnot(is.element("rsp", names(filenames)));
-
-  # Make sure 'rsp' is first
-  idx <- which(names(filenames) == "rsp");
-  filename <- c(filenames[idx], filenames[-idx]);
-
-  # Drop duplicated filenames
-  filenames <- filenames[!duplicated(filenames)];
-
-  rspFilename <- filenames["rsp"];
-  rspPathname <- file.path(srcPath, rspFilename);
-  verbose && cat(verbose, "RSP template file: ", rspPathname);
+  rspPathname <- file.path(srcPath, filename);
+  verbose && cat(verbose, "RSP report template: ", rspPathname);
   rspPathname <- Arguments$getReadablePathname(rspPathname);
 
-  destFilenames <- filenames;
-  destFilenames["rsp"] <- sprintf("%s,%s", sampleName, rspFilename);
-
-  for (kk in seq(along=filenames)) {
-    filename <- filenames[kk];
-    destFilename <- destFilenames[kk];
-    verbose && enter(verbose, sprintf("File #%d ('%s') of %d", kk, filename, length(filenames)));
-    srcPathname <- Arguments$getReadablePathname(filename, path=srcPath);
-    pathname <- filePath(rspArgs$reportPath, destFilename);
-    verbose && cat(verbose, "Source: ", srcPathname);
-    verbose && cat(verbose, "Destination: ", pathname);
-    if (force || !isFile(pathname)) {
-      copyFile(srcPathname, pathname, overwrite=force, ...);
-      # Sanity check
-      stopifnot(isFile(pathname));
-    }
-    verbose && exit(verbose);
+  destFilename <- sprintf("%s,%s", sampleName, filename);
+  destPathname <- filePath(rspArgs$reportPath, destFilename);
+  target <- rspPathname;
+  link <- destPathname;
+  if (!isFile(link)) {
+    createLink(link=link, target=target);
   }
+  # Sanity check
+  stopifnot(isFile(link));
+
+  verbose && exit(verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Create file links to all LaTeX include files
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "All LaTeX files");
+
+  files <- list.files(path=srcPath, pattern="[.](bib|bst|cls|sty|tex)$", full.names=TRUE, recursive=FALSE);
+  files <- files[file_test("-f", files)];
+  if (length(files) > 0L) {
+    verbose && cat(verbose, "Number of such files found: ", length(files));
+    verbose && print(verbose, files);
+
+    for (kk in seq_along(files)) {
+      target <- files[kk];
+      link <- filePath(rspArgs$reportPath, basename(files[kk]));
+      if (!isFile(link)) {
+        createLink(link=link, target=target);
+      }
+      # Sanity check
+      stopifnot(isFile(link));
+    }
+  } else {
+    verbose && cat(verbose, "No such files found.");
+  }
+
+  verbose && exit(verbose);
+
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Create file links to all 'incl.*' subdirectories
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  verbose && enter(verbose, "All 'incl.*' subdirectories");
+
+  dirs <- list.files(srcPath, pattern="^incl", full.names=TRUE, recursive=FALSE);
+  dirs <- dirs[file_test("-d", dirs)];
+
+  if (length(dirs) > 0L) {
+    verbose && cat(verbose, "Number of such directories found: ", length(dirs));
+    verbose && print(verbose, dirs);
+
+    for (kk in seq_along(dirs)) {
+      target <- dirs[kk];
+      link <- filePath(rspArgs$reportPath, basename(dirs[kk]));
+      if (!isDirectory(link)) {
+        createLink(link=link, target=target);
+      }
+      # Sanity check
+      stopifnot(isDirectory(link));
+    }
+  } else {
+    verbose && cat(verbose, "No such directories found.");
+  }
+
+  verbose && exit(verbose);
+
 
   verbose && exit(verbose);
 
@@ -195,20 +226,13 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   # Build reports
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Processing RSP template");
-  opwd <- setwd(rspArgs$reportPath);
-  on.exit({
-    if (!is.null(opwd)) setwd(opwd);
-  }, add=TRUE);
-  rspArgs$reportPath <- ".";
   rspArgs$figPath <- "figures/";
 
-  filename <- destFilenames["rsp"];
-  pdfPathname <- R.rsp::rsp(filename, ..., verbose=verbose);
+  args <- c(list(rspArgs=rspArgs), rspArgs);
+  pdfPathname <- R.rsp::rfile(destPathname, workdir=rspArgs$reportPath, args=args, envir=envir, verbose=verbose);
   pdfPathname <- getAbsolutePath(pdfPathname);
   verbose && exit(verbose);
 
-  setwd(opwd);
-  opwd <- NULL;
   pdfPathname <- getRelativePath(pdfPathname);
   verbose && cat(verbose, "Final report: ", pdfPathname);
 
@@ -221,8 +245,12 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
 
 ############################################################################
 # HISTORY:
+# 2013-03-21
+# o Now report() uses file links instead of copying template files.
+#   It also links to all LaTeX related files and all directories
+#   named '^incl.*'.
 # 2013-03-09
-# o Now report() also inclused files listed in the optional file
+# o Now report() also included files listed in the optional file
 #   '.install_extras' of the source RSP template directory.
 #   The same filename is used by 'R CMD build/check' for including
 #   extra vignette source files.

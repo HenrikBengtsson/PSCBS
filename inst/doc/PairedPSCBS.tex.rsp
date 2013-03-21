@@ -3,6 +3,7 @@
 
   %\VignetteIndexEntry{Paired PSCBS}
   %\VignetteKeyword{copy numbers, allele specific, parent specific, genomic aberrations}
+  %\VignetteAuthor{Henrik Bengtsson}
   %\VignetteEngine{R.rsp::rsp}
   -------------------------------------------------------------------%>
 
@@ -67,15 +68,15 @@ options(str=strOptions(strict.width="cut"));
 
 \title{Paired PSCBS}
 <% pkg <- Package("PSCBS"); %>
-\author{<%=paste(getAuthor(pkg), collapse=", ")%>}
+\author{Vignette by Henrik Bengtsson}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{Feb 1, 2013}
+\date{March 21, 2013}
 
 \begin{document}
 
 \maketitle
 \begin{abstract}
-The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a matched tumor-normal pair.  The method also calls segments with run of homozygosity (ROH), segments in allelic balance (AB), segments with loss of heterozygosity (LOH) and segments with neutral total copy number (NTCN).
+The Paired Parent-Specific Circular Binary Segmentation (Paired PSCBS) method partitions a tumor genome into segments of constant parent-specific copy numbers (PSCNs) based on SNP DNA microarray data from a matched tumor-normal pair.  The method also calls segments with run of homozygosity (ROH), segments in allelic balance (AB) and segments with loss of heterozygosity (LOH).
 Paired PSCBS was designed to work with data from any SNP microarray technology and generation, including Affymetrix and Illumina.
 
 This document shows how to use the \pkg{PSCBS} package to run Paired PSCBS on a tumor-normal pair.
@@ -92,6 +93,7 @@ The authors very much appreciate feedback on this document.}
 \tableofcontents
 
 \clearpage
+
 
 <%-------------------------------------------------------------------
   BACKGROUND
@@ -216,10 +218,13 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 \section{Calling segments}
 The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
 After the Paired PSCBS method was published, we have added methods for calling run of homozygosity (ROH) and neutral total copy number (NTCN).
+\emph{These methods should be considered under development until further notice, meaning they and their results may change without notice.}
 
 
 
-\subsection{Calling segments with run of homozygosity (ROH)}
+\subsection{Calling segments with run of homozygosity (ROH)*}
+\emph{Please note that this method is under development. This means that it may change without further notice.}
+
 A region has a run of homozygotes (ROH) if all of its SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease in heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
  However, if there are genotyping errors within an ROH region, we will obtain a non-missing DH mean level and hence also finite minor and major CNs.  In order to adjust for these faulty estimates, we test if the identified segments are ROHs or not by:
 \begin{verbatim}
@@ -287,7 +292,9 @@ threshold will be obtained resulting in a more conservative LOH caller.
 
 
 
-\subsection{Calling segments with neutral total copy number (NTCN)}
+\subsection{Calling segments with neutral total copy number (NTCN)*}
+\emph{Please note that this method is under development. This means that it may change without further notice.}
+
 The neutral total copy number (NTCN) caller tests whether the total CN level of a segment is neutral (e.g. diploid) or not.
 To call the NTCN state of all segments, do:
 \begin{verbatim}
@@ -298,13 +305,15 @@ fit <- callNTCN(fit, verbose=-10)
 
 
 \subsubsection{Tuning parameters}
-The NTCN caller identifies segments which TCN mean levels (or more precisely, which $95\%$ confidence intervals) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  The true length of half a total copy number unit is a function of the normal contamination and specified by the argument \code{delta} to \code{callNTCN()}.  The greater the normal contamination, the smaller the \code{delta} should be, such that the width of the acceptance region becomes smaller.  The argument \code{delta} can be estimated explicitly as:
+The NTCN caller identifies segments which TCN mean levels (or more precisely, which $95\%$ confidence intervals) are within a given "acceptance" region.  This acceptance region is determined by the $95\%$ confidence interval of an initial set of AB segments identified to be copy neutral and then expanded by half a TCN unit length.  
+The true length of half a total copy number unit is specified by the argument \code{delta} to \code{callNTCN()}.  Its length should be a function of the overall background signals (which includes normal contamination and more), such that the width of the acceptance region becomes smaller when the background increases.
+The background signal (\code{kappa}) and \code{delta} can be estimated explicitly as:
 \begin{verbatim}
-deltaCN <- estimateDeltaCN(fit, scale=1)
+kappa <- estimateKappa(fit)
+deltaCN <- estimateDeltaCN(fit, scale=1, kappa=kappa)
 fit <- callNTCN(fit, delta=deltaCN, verbose=-10)
 \end{verbatim}
-By decreasing the argument \code{scale} (a positive scalar), a smaller acceptance region will
-be obtained, which results in a more conservative CN caller.
+By decreasing the tuning parameter \code{scale} (a positive scalar), a smaller acceptance region will be obtained, which results in a more conservative CN caller.
 
 
 

@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.34.1 [2013-03-21]
+o Updated the report generator and its RSP templates.
+o DOCUMENTATION: Clarified in the PSCBS vignette that the NTCN
+  caller is under development, experimental.
+
+
 Version: 0.34.0 [2013-03-19]
 o CALLING: Defined a formal hypthesis test for how segments are called
   copy-neutral in TCN (NTCN), with the null hypothesis being that a 

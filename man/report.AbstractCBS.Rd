@@ -21,7 +21,7 @@
 }
 
 \usage{
-\method{report}{AbstractCBS}(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filenames=c(rsp = "*", "PSCBS.bib", "bioinformatics-journals-abbr.bib", "natbib.bst"), force=FALSE, verbose=FALSE)
+\method{report}{AbstractCBS}(fit, sampleName=sampleName(fit), studyName="?", ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE)
 }
 
 \arguments{
@@ -33,8 +33,6 @@
   \item{rspTags}{Optional \code{\link[base]{character}} \code{\link[base]{vector}} of tags for further specifying
      which RSP report to generate.}
   \item{rootPath}{The root directory where to write the report.}
-  \item{force}{If \code{\link[base:logical]{TRUE}}, RSP template files are copied to the reports/
-     directory, regardless if they already exists there or not.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 

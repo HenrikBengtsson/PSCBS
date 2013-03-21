@@ -1,11 +1,14 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Authors: Henrik Bengtsson
-% Created on: 2013-03-08
-% Last updated: See HISTORY below.
-%
-% Usage:
-%  R.rsp::rfile("PairedPSCBS.tex.rsp", workdir="reports,rsp/");
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+<%--------------------------------------------------------------------
+  This is an RSP LaTeX template for the report system of PSCBS.
+--------------------------------------------------------------------%>
+<%@meta author="Henrik Bengtsson"%>
+<%@meta date="2013-03-21"%>
+
+<%--------------------------------------------------------------------
+Include RSP templates
+--------------------------------------------------------------------%>
+<%@include file="includes/reportHeader.tex.rsp"%>
+
 <%
 library("PSCBS");
 library("R.cache");
@@ -13,29 +16,13 @@ getChecksum <- R.cache::getChecksum;
 stopifnot(exists("rspArgs", mode="list"));
 %>
 
-<%--------------------------------------------------------------------
-Include R code
---------------------------------------------------------------------%>
-<%
-<%@include file="assignIfMissing.R"%>
-%>
-
-<%--------------------------------------------------------------------
-Include RSP templates
---------------------------------------------------------------------%>
-<%@include file="reportHeader.tex.rsp"%>
-
 
 <%--------------------------------------------------------------------
 Report configuration
 --------------------------------------------------------------------%>
-<%@logical PER_CHROMOSOME="${PSCBS::reports/perChromosome}" default="TRUE"%>
 <%@logical SIGNAL_DENSITIES="${PSCBS::reports/signalDensities}" default="TRUE"%>
 <%@logical LEVEL_DENSITIES="${PSCBS::reports/levelDensities}" default="TRUE"%>
 <%@logical C1C2="${PSCBS::reports/pscnSegmentationTransitions}" default="FALSE"%>
-
-<%-- Used? --%>
-<%@logical USE_ALPHA_CHANNEL="${PSCBS::reports/useAlphaChannel}" default="TRUE"%>
 
 <%-- To implement --%>
 <%@logical PER_GENOTYPE="${PSCBS::reports/perGenotype}" default="TRUE"%>
@@ -64,27 +51,21 @@ Report configuration
 \renewcommand{\bottomfraction}{1.0} % max fraction of floats at bottom
 \renewcommand{\textfraction}{0.00}
 
-
-\newcommand{\code}[1]{\texttt{#1}\xspace}
-
-\newcommand{\TCN}{TCN\xspace}
-\newcommand{\BAF}{\BAF\xspace}
-\newcommand{\BAFN}{BAF$_{N}$\xspace}
-\newcommand{\BAFT}{BAF$_{T}$\xspace}
-\newcommand{\BAFTN}{BAF$^*_{T}$\xspace}
+<%@include file="includes/reportSetupGraphics.tex.rsp"%>
+<%@include file="includes/reportSetupMacros.tex.rsp"%>
 
 
-<% pairedPSCBSReport <- function(fit, sampleName=NULL, dataSet=NULL, studyName=NULL, chromosomes=NULL, Clim=c(0,4), Blim=c(0,1), reportPath=file.path("reports", studyName), figPath=file.path(reportPath, "figures"), ..., figForce=FALSE) { %>
+<% pairedPSCBSReport <- function(fit, sampleName=sampleName(fit), dataSet=NULL, studyName=NULL, chromosomes=NULL, Clim=c(0,4), Blim=c(0,1), reportPerChromosome=TRUE, ...) { %>
 
 <%@if name="SIGNAL_DENSITIES"%>
- <%@include file="signalDensities.tex.rsp"%>
+ <%@include file="includes/signalDensities.tex.rsp"%>
 <%@endif%>
-<%@include file="summaryOfAnnotationAndGenotypeCalls.tex.rsp"%>
-<%@include file="pscnSegmentationTracks.tex.rsp"%>
+<%@include file="includes/summaryOfAnnotationAndGenotypeCalls.tex.rsp"%>
+<%@include file="includes/pscnSegmentationTracks.tex.rsp"%>
 <%@if name="LEVEL_DENSITIES"%>
- <%@include file="levelDensities.tex.rsp"%>
+ <%@include file="includes/levelDensities.tex.rsp"%>
 <%@endif%>
-<%@include file="pscnSegmentationTransitions.tex.rsp"%>
+<%@include file="includes/pscnSegmentationTransitions.tex.rsp"%>
 
 <%
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -104,9 +85,7 @@ if (inherits(fit, "NonPairedPSCBS")) {
 }
 
 # Argument 'sampleName':
-if (is.null(sampleName)) {
-  sampleName <- sampleName(fit);
-}
+stopifnot(is.character(sampleName));
 sampleName <- Arguments$getCharacter(sampleName);
 sampleNameEscDots <- gsub(".", "_", sampleName, fixed=TRUE);
 
@@ -127,53 +106,19 @@ studyLbl <- sprintf("Study: %s\\\\", toLatex(studyName));
 if (!is.null(chromosomes)) {
   fit <- extractChromosomes(fit, chromosomes);
 }
-
-# Argument 'reportPath':
-reportPath <- Arguments$getWritablePath(reportPath);
-
-# Argument 'figPath':
-figPath <- Arguments$getWritablePath(figPath);
-
-# Argument 'figForce':
-figForce <- Arguments$getLogical(figForce);
-%>
-
-<%
-oFigPath <- setOption("devEval/args/path", figPath);
-on.exit({
-  setOption("devEval/args/path", oFigPath);
-}, add=TRUE);
-
-oPar <- setOption("devNew/args/par", list(lwd=2));
-on.exit({
-  setOption("devNew/args/par", oPar);
-}, add=TRUE);
 %>
 
 <%reportHeaderSetup(fit, sampleName=sampleName, dataSet=dataSet, studyName=studyName) %>
 <%reportHeaderUpdate(fit)%>
 
-
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-% GRAPHICS SETTINGS
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-<%
-setOption("devEval/args/force", figForce);
-%>
-\usepackage{graphicx}
-\graphicspath{{<%=figPath%>/} {../<%=figPath%>/}} 
-
 <%
 ClimX <- Clim + c(-1,1)*diff(Clim)*0.08;
 BlimX <- Blim + c(-1,1)*diff(Blim)*0.08;
-
 %>
-<%-- Setup of constants etc used in graphics --%>
-<%@include file="reportSetupGraphics.tex.rsp"%>
 
 \begin{document}
 \title{<%=fitClassLbl%> Report:\\<%=studyLbl%><%=dataSetLbl%>Sample: <%=toLatex(sampleName)%>}
-\author{Report template by Henrik Bengtsson}
+\author{Report template by <%@meta name="author"%>}
 \maketitle
 \thispagestyle{fancy}
 
@@ -235,8 +180,7 @@ fitP <- pruneByHClust(fit, h=0.25);
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 % PER CHROMOSOME SEGMENTATION
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
-<%@if name="PER_CHROMOSOME"%>
-<% if (nbrOfChromosomes(fit) > 1) { %>
+<% if (reportPerChromosome && nbrOfChromosomes(fit) > 1) { %>
 <% for (chr in getChromosomes(fit)) { %>
 <%
 fitT <- extractChromosome(fit, chromosome=chr);
@@ -259,8 +203,8 @@ fitT <- extractChromosome(fit, chromosome=chr);
 <%=pscnSegmentationTransitions(fitT)%>
 <%@endif%>
 <% } # for (chr ...) %>
-<% } # if (REPORT_PER_CHROMOSOME && nbrOfChromosomes(fit) > 1) %>
-<%@endif # PER_CHROMOSOME %>
+<% } # if (reportPerChromosome && nbrOfChromosomes(fit) > 1) %>
+
 
 <%--
 % = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
@@ -275,30 +219,31 @@ fitT <- extractChromosome(fit, chromosome=chr);
 --%>
 
 
+\clearpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % REFERENCES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
-\bibliography{bioinformatics-journals-abbr,PSCBS}
-%\bibliographystyle{plain}
-\bibliographystyle{natbib}
+<%@include file="includes/references.tex.rsp"%>
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% APPENDIX
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \appendix
 \section{Appendix}
+<%@include file="includes/sessionInfo.tex.rsp"%>
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Session information
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \clearpage
-\section*{Session information}
-<%=toLatex(sessionInfo())%>
-This report was generated via \code{report(fit)} which utilizes the R.rsp package.  The template for this report was created by Henrik Bengtsson and last updated on March 12, 2012.
 \end{document}
 
 <% } # pairedPSCBSReport() %>
 
+<%---
+<%
+message(paste(capture.output({ str(rspArgs) }), collapse="\n"));
+message(paste(capture.output({ ll() }), collapse="\n"));
+%>
+---%>
 <%=do.call("pairedPSCBSReport", args=rspArgs)%>
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

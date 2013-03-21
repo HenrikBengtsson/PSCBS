@@ -3,6 +3,7 @@
 
   %\VignetteIndexEntry{Total copy-number segmentation using CBS}
   %\VignetteKeyword{copy numbers, genomic aberrations}
+  %\VignetteAuthor{Henrik Bengtsson}
   %\VignetteEngine{R.rsp::rsp}
   -------------------------------------------------------------------%>
 
@@ -64,7 +65,7 @@ options(str=strOptions(strict.width="cut"));
 
 \title{Total copy-number segmentation using CBS}
 <% pkg <- Package("PSCBS"); %>
-\author{<%=paste(getAuthor(pkg), collapse=", ")%>}
+\author{Vignette by Henrik Bengtsson}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
 \date{May 11, 2012}
 
