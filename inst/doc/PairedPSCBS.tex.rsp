@@ -218,7 +218,7 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 \section{Calling segments}
 The calling algorithms for allelic balance (AB) and loss of heterozygosity (LOH) are based on quantile estimates of the different mean levels.  These estimates are obtained using non-parametric bootstrap techniques.  For more details, see~\citet{OlshenA_etal_2011}.
 After the Paired PSCBS method was published, we have added methods for calling run of homozygosity (ROH) and neutral total copy number (NTCN).
-\emph{These methods should be considered under development until further notice, meaning they and their results may change without notice.}
+\emph{The ROH and NTCN calling methods should be considered under development until further notice, meaning they and their results may change without notice.}
 
 
 
