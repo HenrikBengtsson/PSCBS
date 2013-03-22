@@ -199,7 +199,7 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
   })%>}}
  \end{center}
  \caption{Segments identified by CBS.
-  \textbf{Top}: The <%=signalType%> signals (black dots) with the <%=signalType%> mean levels (purple).
+  \textbf{Top}: The <%=signalType%> signals with the <%=signalType%> mean levels (purple).
  }
  \label{figTracks}
 \end{figure}

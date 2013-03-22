@@ -203,9 +203,9 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
   })%>}}
  \end{center}
  \caption{PSCN segments identified by Paired PSCBS.
-  \textbf{Top}: The TCN signals (black dots) with the TCN mean levels (purple).
-  \textbf{Middle}: The DH signals (black dots) with the DH mean levels (orange).
-  \textbf{Bottom}: The TCN signals (black dots) with the minor CN ($C_1$; blue), the major CN ($C_2$; red) and the TCN ($C=C_1+C_2$; purple) mean levels.
+  \textbf{Top}: The TCN signals with the TCN mean levels (purple).
+  \textbf{Middle}: The DH signals with the DH mean levels (orange).
+  \textbf{Bottom}: The TCN signals with the minor CN ($C_1$; blue), the major CN ($C_2$; red) and the TCN ($C=C_1+C_2$; purple) mean levels.
  }
  \label{figTracks}
 \end{figure}
