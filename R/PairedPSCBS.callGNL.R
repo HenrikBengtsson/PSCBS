@@ -45,8 +45,10 @@ setMethodS3("callGNL", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., min
 
   # Already done?
   segs <- as.data.frame(fit);
-  calls <- segs$cnCall;
-  if (!force && !is.null(calls)) {
+  if (!force && all(is.element(c("gainCall", "ntcnCall", "lossCall"), names(segs)))) {
+    # Segments are already called
+    verbose && cat(verbose, "Already called. Skipping.");
+    verbose && exit(verbose);
     return(invisible(fit));
   }
   
@@ -60,9 +62,9 @@ setMethodS3("callGNL", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., min
   if (minSize > 1) {
     segs <- as.data.frame(fit);
     ns <- segs$dhNbrOfLoci;
-    calls <- segs$cnCall;
+    calls <- segs$ntcnCall;
     calls[ns < minSize] <- NA;
-    segs$cnCall <- calls;
+    segs$ntcnCall <- calls;
     fit$output <- segs;
     rm(segs, ns, calls); # Not needed anymore
   }
@@ -75,8 +77,78 @@ setMethodS3("callGainNeutralLoss", "PairedPSCBS", function(...) {
 })
 
 
+setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, ..., minSize=1L, force=FALSE, verbose=FALSE) {
+  # Argument 'minSize':
+  minSize <- Arguments$getDouble(minSize, range=c(1,Inf)); 
 
-setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, deltaLoss=-0.5, deltaGain=+0.5, alpha=0.05, ..., force=FALSE, verbose=FALSE) {
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+  verbose && enter(verbose, "Calling gain, neutral, and loss based TCNs of AB segments");
+
+  # Already done?
+  segs <- as.data.frame(fit);
+  called <- all(is.element(c("gainCall", "ntcnCall", "lossCall"), names(segs)));
+  if (!force && called) {
+    return(invisible(fit));
+  }
+
+  verbose && enter(verbose, "Calling neutral TCNs");
+  fit <- callCopyNeutralByTCNofAB(fit, ..., verbose=verbose);
+  verbose && exit(verbose);
+
+  # The segment data
+  segs <- as.data.frame(fit);
+  tcnMean <- segs$tcnMean;
+  nbrOfSegs <- nrow(segs);
+
+  # The call thresholds and the NTCN calls
+  ntcnCall <- call <- segs$ntcnCall;
+  verbose && printf(verbose, "Number of NTCN calls: %d (%.2f%%) of %d\n", sum(call, na.rm=TRUE), 100*sum(call, na.rm=TRUE)/nbrOfSegs, nbrOfSegs);
+
+  params <- fit$params;
+
+  deltaCN <- params$deltaCN;
+  stopifnot(!is.null(deltaCN));
+  ntcnRange <- params$ntcnRange;
+  stopifnot(!is.null(ntcnRange));
+
+  # Confidence interval of the TCN|AB segments
+  range <- ntcnRange + c(+1,-1)*deltaCN;
+
+  # Mean of the TCN|AB segments
+  mu <- mean(range, na.rm=TRUE);
+
+  verbose && printf(verbose, "Mean TCN of AB segments: %g\n", mu);
+
+  verbose && enter(verbose, "Calling loss");
+  call <- !ntcnCall & (tcnMean < mu);
+  segs$lossCall <- call;
+  verbose && printf(verbose, "Number of loss calls: %d (%.2f%%) of %d\n", sum(call, na.rm=TRUE), 100*sum(call, na.rm=TRUE)/nbrOfSegs, nbrOfSegs);
+  verbose && exit(verbose);
+
+  verbose && enter(verbose, "Calling gain");
+  call <- !ntcnCalls & (tcnMean > mu);
+  segs$gainCall <- call;
+  verbose && printf(verbose, "Number of loss calls: %d (%.2f%%) of %d\n", sum(call, na.rm=TRUE), 100*sum(call, na.rm=TRUE)/nbrOfSegs, nbrOfSegs);
+  verbose && exit(verbose);
+
+  # Recording
+  fit$output <- segs;
+
+  verbose && exit(verbose);
+
+  fit;
+}) # callGNLByTCNofAB()
+
+
+
+setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, deltaGain=+0.5, alpha=0.05, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -107,12 +179,12 @@ setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, deltaLoss=-0.5, del
 
   segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
 
-  # Nothing to do?
-  if (!force && all(is.element(c("gainCall", "cnCall", "lossCall"), names(segs$cnCall)))) {
+  # Already done?
+  if (!force && all(is.element(c("gainCall", "ntcnCall", "lossCall"), names(segs)))) {
     # Segments are already called
     verbose && cat(verbose, "Already called. Skipping.");
     verbose && exit(verbose);
-    return(fit);
+    return(invisible(fit));
   }
 
   # Check that bootstrap estimates exists
@@ -164,10 +236,10 @@ setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, deltaLoss=-0.5, del
        1,    1,
        1,  Inf
   ), nrow=3, ncol=2, byrow=TRUE);
-  rownames(callRegions) <- c("loss", "cn", "gain");
+  rownames(callRegions) <- c("loss", "ntcn", "gain");
   colnames(callRegions) <- c("lower", "upper");
   callRegions["loss",] <- ci[1]+callRegions["loss",]*deltaLoss;
-  callRegions[  "cn",] <- ci   +callRegions[  "cn",]*c(deltaLoss, deltaGain);
+  callRegions["ntcn",] <- ci   +callRegions["ntcn",]*c(deltaLoss, deltaGain);
   callRegions["gain",] <- ci[2]+callRegions["gain",]*deltaGain;
 
   verbose && cat(verbose, "Call (\"acceptance\") regions:");
@@ -213,12 +285,14 @@ setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, deltaLoss=-0.5, del
   verbose && exit(verbose);
   
   fitC;
-}, protected=TRUE) # callGNLByTCNofAB()
+}, protected=TRUE) # callGNLByTCNofABv1()
 
 
 
 ##############################################################################
 # HISTORY
+# 2012-03-22 [HB]
+# o Renamed 'cnCall' to 'ntcnCall' for callGNLByTCNofAB().
 # 2012-02-26 [HB]
 # o Added internal callGNLByTCNofAB().
 # o Added callGNL().

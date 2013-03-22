@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.34.2 [2013-03-22]
+o Updated callGainNeutralLoss(), which now by default utilizes
+  callCopyNeutral().
+
+
 Version: 0.34.1 [2013-03-21]
 o Updated the report generator and its RSP templates.
 o DOCUMENTATION: Clarified in the PSCBS vignette that the NTCN
