@@ -27,10 +27,10 @@ chrsTags <- if (nbrOfChromosomes == 1) {
   \resizebox{\textwidth}{!}{%
     \includegraphics{<%={
       tags <- c(chrsTags, fitClass, gsub("[*-]", "", track), getChecksum(fit));
-      toPNG(name=sampleNameEscDots, tags=tags, width=1024, aspectRatio=0.25, par=list(mar=c(2.8,4,1,1.2)+0.1, cex=1.5), {
-        plotTracks(fit, tracks=track, lwd=5, Clim=Clim);
-#        plotTrack2(fit, panels=track, lwd=5, Clim=Clim);
-      }, force=FALSE);
+      toPNG(name=sampleNameEscDots, tags=tags, width=1024, aspectRatio=0.25, {
+        par(mar=c(1.3,4,0.7,1.2)+0.1, cex=1.5);
+        plotTracksManyChromosomes(fit, tracks=track, knownSegment=TRUE, Clim=Clim);
+      });
     }%>}%
   }%
   \\

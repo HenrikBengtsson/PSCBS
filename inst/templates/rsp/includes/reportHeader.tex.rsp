@@ -32,7 +32,8 @@ sampleNameEscDots <- gsub(".", "_", sampleName, fixed=TRUE);
  \resizebox{\headwidth}{!}{\includegraphics{<%=
    tags <- c("wg", fitClass, "tcn,c1,c2", getChecksum(fit));
    toPNG(name=sampleNameEscDots, tags=tags, width=1024, aspectRatio=0.07, {
-     plotTracks(fit, tracks="tcn,c1,c2", scatter=NULL, lwd=5, Clim=c(0,4), calls=NULL, xlab="", ylab="", oma=c(0,0,0,0), mar=c(0,0,0,0));
+     par(oma=c(0,0,0,0), mar=c(0,0,0,0));
+     plotTracks(fit, tracks="tcn,c1,c2", scatter=NULL, calls=NULL, callTresholds=FALSE, lwd=5, Clim=c(0,4), xlab="", ylab="", subplots=FALSE);
    })%>}}%
 %% \vspace{0.2ex}
 %% \hline
