@@ -43,6 +43,7 @@ setMethodS3("drawKnownSegments", "AbstractCBS", function(fit, col="#aaaaaa", ...
 
   # Workaround from the fact that extractChromosomes() does not drop
   # known segments. /HB 2013-03-21
+  chromosome <- NULL; rm(chromosome);  # To please R CMD check.
   segs <- subset(segs, chromosome %in% getChromosomes(fit));
   xStarts <- segs[,"start"];
   xEnds <- segs[,"end"];

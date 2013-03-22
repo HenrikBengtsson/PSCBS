@@ -88,6 +88,7 @@ callSegmentationOutliers.data.frame
 dropSegmentationOutliers.data.frame
  hclustCNs pruneByHClust updateMeansTogether updateMeans
 drawChangePoints drawChangePoints.AbstractCBS
+drawKnownSegments drawKnownSegments.AbstractCBS
 drawChangePoints.CBS drawChangePoints.PSCBS
  drawChangePointsC1C2 drawChangePointsC1C2.PairedPSCBS
 extractDhSegment extractDhSegment.PairedPSCBS
@@ -119,4 +120,4 @@ resegment.NonPairedPSCBS setMeanEstimators
 setMeanEstimators.AbstractCBS
 resetSegments
 getLocusData.NonPairedPSCBS getLocusData.PairedPSCBS
-
+plotTrack1  plotTrack1.PairedPSCBS
