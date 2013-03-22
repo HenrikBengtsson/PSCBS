@@ -158,6 +158,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   target <- rspPathname;
   link <- destPathname;
   if (!isFile(link)) {
+    verbose && cat(verbose, "Adding link: ", link, " -> ", target);
     createLink(link=link, target=target);
   }
   # Sanity check
@@ -181,6 +182,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
       target <- files[kk];
       link <- filePath(rspArgs$reportPath, basename(files[kk]));
       if (!isFile(link)) {
+        verbose && cat(verbose, "Adding link: ", link, " -> ", target);
         createLink(link=link, target=target);
       }
       # Sanity check
@@ -210,6 +212,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
       target <- dirs[kk];
       link <- filePath(rspArgs$reportPath, basename(dirs[kk]));
       if (!isDirectory(link)) {
+        verbose && cat(verbose, "Adding link: ", link, " -> ", target);
         createLink(link=link, target=target);
       }
       # Sanity check
