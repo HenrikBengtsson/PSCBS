@@ -61,9 +61,63 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDelta
 
 
 
+setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
+  # Extract locus data
+  data <- getLocusData(fit, ...);
+
+  nbrOfLoci <- nrow(data);
+
+  # Extract segment data
+  segs <- getSegments(fit, splitters=TRUE);
+
+  # Identify segment calls
+  callCols <- grep("Call$", colnames(segs));
+  nbrOfCalls <- length(callCols);
+
+
+  chromosome <- data$chromosome;
+  x <- data$x;
+  y <- data[,3];
+
+  # Allocate locus calls
+  naValue <- as.logical(NA);
+  callsL <- matrix(naValue, nrow=nbrOfLoci, ncol=nbrOfCalls);
+  colnames(callsL) <- colnames(segs)[callCols];
+  callsL <- as.data.frame(callsL);
+
+  # For each segment...
+  for (ss in seq(length=nrow(segs))) {
+    seg <- segs[ss,];
+    idxs <- which(chromosome == seg$chromosome & 
+                  seg$tcnStart <= x & x <= seg$tcnEnd);
+    idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
+    # Sanity check
+##    stopifnot(length(idxs) == seg$tcnNbrOfLoci);
+
+    callsSS <- seg[callCols];
+    for (cc in seq(length=nbrOfCalls)) {
+      callsL[idxs,cc] <- callsSS[,cc];
+    }
+  } # for (ss ...)
+
+  # The calls for loci that have missing annotations or observations, 
+  # should also be missing, i.e. NA.
+  nok <- (is.na(chromosome) | is.na(x) | is.na(y));
+  callsL[nok,] <- as.logical(NA);
+
+  # Sanity check
+  stopifnot(nrow(callsL) == nbrOfLoci);
+  stopifnot(ncol(callsL) == nbrOfCalls);
+
+  callsL;
+}, private=TRUE) # extractCallsByLocus()
+
+
 
 ##############################################################################
 # HISTORY
+# 2013-03-22
+# o Added extractCallsByLocus() for PairedPSCBS.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-05-29

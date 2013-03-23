@@ -249,6 +249,8 @@
 \alias{updateMeans}
 \alias{drawChangePoints}
 \alias{drawChangePoints.AbstractCBS}
+\alias{drawKnownSegments}
+\alias{drawKnownSegments.AbstractCBS}
 \alias{drawChangePoints.CBS}
 \alias{drawChangePoints.PSCBS}
 \alias{drawChangePointsC1C2}
@@ -302,6 +304,8 @@
 \alias{resetSegments}
 \alias{getLocusData.NonPairedPSCBS}
 \alias{getLocusData.PairedPSCBS}
+\alias{plotTrack1}
+\alias{plotTrack1.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

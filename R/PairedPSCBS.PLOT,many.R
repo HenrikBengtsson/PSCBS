@@ -7,12 +7,13 @@
 #
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #
-setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=if (length(chromosomes) == 1L) ".*" else NULL, callThresholds=TRUE, knownSegments=FALSE, quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,6), Blim=c(0,1), xScale=1e-6, xlabTicks=if (length(chromosomes) == 1L) "[pos]" else "[chr]", ..., subset=if (length(chromosomes) > 1L) 0.1 else NULL, add=FALSE, subplots=!add && (length(tracks) > 1L), oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=if (callLoci || length(chromosomes) == 1L) ".*" else NULL, callLoci=FALSE, callThresholds=TRUE, knownSegments=FALSE, quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,6), Blim=c(0,1), xScale=1e-6, xlabTicks=if (length(chromosomes) == 1L) "[pos]" else "[chr]", ..., subset=if (length(chromosomes) > 1L) 0.1 else NULL, add=FALSE, subplots=!add && (length(tracks) > 1L), oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Graphical styles
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   opts <- list(
     scatter = list(pch=".", col=c("#aaaaaa")),
+    callScatter = list(col=c("#aaaaaa", LOSS="blue", GAIN="red", LOH="purple")),
     smoothScatter = list(pch=".", col=c("#666666")),
     level = list(lty=1L, col=c("black", tcn="purple", c1="blue", c2="red", dh="orange")),
     callLevel = list(lty=1L, col=c("#666666")),
@@ -33,6 +34,10 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   getLevelColor <- function(track, ...) {
     getOptionValue("level", "col", track, ...);
   } # getLevelColor()
+
+  getCallScatterColor <- function(track, ...) {
+    getOptionValue("callScatter", "col", track, ...);
+  } # getCallScatterColor()
 
   getCallLevelColor <- function(track, ...) {
     getOptionValue("callLevel", "col", track, ...);
@@ -95,6 +100,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   if (!is.null(calls)) {
     calls <- sapply(calls, FUN=Arguments$getRegularExpression);
   }
+
+  # Argument 'callLoci':
+  callLoci <- Arguments$getLogical(callLoci);
 
   # Argument 'callThresholds':
   callThresholds <- Arguments$getLogical(callThresholds);
@@ -234,6 +242,14 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   xlim <- range(x, na.rm=TRUE);
   xlab <- "Genomic position";
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # For each panel of tracks, annotate loci with calls?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (!is.null(calls) && callLoci && length(callColumns) > 0L) {
+    callData <- extractCallsByLocus(fit, verbose=less(verbose,5));
+  }
+
+
   for (tt in seq(along=tracks)) {
     track <- tracks[tt];
     verbose && enter(verbose, sprintf("Track #%d ('%s') of %d", 
@@ -244,6 +260,46 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     colS <- sapply(tracksT, FUN=getScatterColor);
     colL <- sapply(tracksT, FUN=getLevelColor);
     colC <- sapply(tracksT, FUN=getCIColor);
+
+    # Color scatter plot according to calls?
+    if (!is.null(calls) && callLoci && length(callColumns) > 0L) {
+      colsT <- rep(colS[1L], times=nrow(callData));
+      for (cc in seq(along=callColumns)) {
+        callColumn <- callColumns[cc];
+        callLabel <- callLabels[cc];
+        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d", 
+                                      cc, callLabel, length(callColumns)));
+
+        verbose && cat(verbose, "Column: ", callColumn);
+
+        skip <- TRUE;
+        if (regexpr("tcn", track) != -1L) {
+          skip <- !is.element(callLabel, c("LOSS", "NTCN", "GAIN", "LOH"));
+        } else if (track == "dh") {
+          skip <- !is.element(callLabel, c("AB", "LOH"));
+        }
+        if (skip) {
+          verbose && exit(verbose);
+          next;
+        }
+
+        callsCC <- callData[[callColumn]];
+        idxs <- which(callsCC);
+        # Nothing to do?
+        if (length(idxs) == 0L) {
+          verbose && exit(verbose);
+          next;
+        }
+
+        callCol <- getCallScatterColor(callLabel);
+str(callCol);
+        colsT[idxs] <- callCol;
+      } # for (cc in ...)
+
+      colS <- colsT;
+print(table(colS))
+    } # if (!is.null(calls))
+
 
     if (track == "tcn") {
       plot(NA, xlim=xlim, ylim=Clim, xlab=xlab, ylab="TCN", axes=FALSE);
@@ -314,9 +370,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     }
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # For each panel of tracks, annotate with calls?
+    # For each panel of tracks, annotate segments with calls?
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    if (!is.null(calls)) {
+    if (!is.null(calls) && !callLoci && length(callColumns) > 0L) {
       for (cc in seq(along=callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];

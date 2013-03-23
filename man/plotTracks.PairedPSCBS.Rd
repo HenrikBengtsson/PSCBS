@@ -23,7 +23,7 @@
  }
 
  \usage{
-\method{plotTracks}{PairedPSCBS}(x, tracks=c("tcn", "dh", "tcn,c1,c2", "tcn,c1", "tcn,c2", "c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=".*", pch=".", col=NULL, cex=1, changepoints=FALSE, grid=FALSE, quantiles=c(0.05, 0.95), xlim=NULL, Clim=c(0, 6), Blim=c(0, 1), xScale=1e-06, ..., add=FALSE, subplots=!add && (length(tracks) > 1), verbose=FALSE)
+\method{plotTracks}{PairedPSCBS}(fit, ...)
 }
 
  \arguments{

@@ -133,7 +133,7 @@ setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, ..., minSize=1L, fo
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Calling gain");
-  call <- !ntcnCalls & (tcnMean > mu);
+  call <- !ntcnCall & (tcnMean > mu);
   segs$gainCall <- call;
   verbose && printf(verbose, "Number of loss calls: %d (%.2f%%) of %d\n", sum(call, na.rm=TRUE), 100*sum(call, na.rm=TRUE)/nbrOfSegs, nbrOfSegs);
   verbose && exit(verbose);

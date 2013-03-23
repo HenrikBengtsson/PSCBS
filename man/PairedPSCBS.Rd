@@ -51,6 +51,7 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
  \tab \code{\link[PSCBS:callCopyNeutral.PairedPSCBS]{callCopyNeutral}} \tab Calls segments that have a neutral total copy number.\cr
  \tab \code{callGainNeutralLoss} \tab  -\cr
  \tab \code{\link[PSCBS:callGNL.PairedPSCBS]{callGNL}} \tab Calls segments that are gained, copy neutral, or lost.\cr
+ \tab \code{callGNLByTCNofAB} \tab  -\cr
  \tab \code{\link[PSCBS:callLOH.PairedPSCBS]{callLOH}} \tab Calls segments that are in LOH.\cr
  \tab \code{callNTCN} \tab  -\cr
  \tab \code{\link[PSCBS:callROH.PairedPSCBS]{callROH}} \tab Calls segments that are in ROH.\cr
@@ -58,7 +59,7 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
  \tab \code{\link[PSCBS:estimateDeltaLOH.PairedPSCBS]{estimateDeltaLOH}} \tab Estimate a threshold for calling LOH from DH.\cr
  \tab \code{\link[PSCBS:estimateKappa.PairedPSCBS]{estimateKappa}} \tab Estimate global background in segmented copy numbers.\cr
  \tab \code{extractCNs} \tab  -\cr
- \tab \code{\link[PSCBS:plotTracks.PairedPSCBS]{plotTracks}} \tab Plots parental specific copy numbers along the genome.\cr
+ \tab \code{plotTracks1} \tab  -\cr
  \tab \code{segmentByNonPairedPSCBS} \tab  -\cr
  \tab \code{segmentByPairedPSCBS} \tab  -\cr
  \tab \code{seqOfSegmentsByDP} \tab  -\cr
