@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.34.2 [2013-03-22]
+Version: 0.34.2 [2013-03-28]
 o Updated callGainNeutralLoss(), which now by default utilizes
   callCopyNeutral().
 

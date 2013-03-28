@@ -46,7 +46,11 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 
  \section{Fields and Methods}{
   \bold{Methods:}\cr
-\emph{No methods defined}.
+\tabular{rll}{
+ \tab \code{getLocusData} \tab  -\cr
+ \tab \code{resegment} \tab  -\cr
+ \tab \code{updateMeans} \tab  -\cr
+}
 
 
  \bold{Methods inherited from PSCBS}:\cr
@@ -58,7 +62,7 @@ all.equal, append, as.data.frame, drawChangePoints, drawKnownSegments, dropChang
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
 
-
+ "public"
  }
 
  \author{Henrik Bengtsson}

@@ -2,6 +2,10 @@
 # @set class=PairedPSCBS
 # @RdocMethod callGNL
 # @aliasmethod callGainNeutralLoss
+# @alias callGNLByTCNofAB
+# @aliasmethod callGNLByTCNofAB
+# @alias callGNLByTCNofABv1
+# @aliasmethod callGNLByTCNofABv1
 #
 # @title "Calls segments that are gained, copy neutral, or lost"
 #
@@ -51,7 +55,7 @@ setMethodS3("callGNL", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., min
     verbose && exit(verbose);
     return(invisible(fit));
   }
-  
+
   if (flavor == "TCN|AB") {
     fit <- callGNLByTCNofAB(fit, ..., force=force);
   } else {
@@ -79,7 +83,7 @@ setMethodS3("callGainNeutralLoss", "PairedPSCBS", function(...) {
 
 setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, ..., minSize=1L, force=FALSE, verbose=FALSE) {
   # Argument 'minSize':
-  minSize <- Arguments$getDouble(minSize, range=c(1,Inf)); 
+  minSize <- Arguments$getDouble(minSize, range=c(1,Inf));
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
@@ -151,7 +155,7 @@ setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, ..., minSize=1L, fo
 setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, deltaGain=+0.5, alpha=0.05, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'alpha':
   disallow <- c("NA", "NaN", "Inf");
   alpha <- Arguments$getDouble(alpha, range=c(0,0.5), disallow=disallow);
@@ -283,7 +287,7 @@ setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, d
   fitC$output <- segs;
 
   verbose && exit(verbose);
-  
+
   fitC;
 }, protected=TRUE) # callGNLByTCNofABv1()
 

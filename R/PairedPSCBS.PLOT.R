@@ -1,7 +1,9 @@
 ###########################################################################/**
 # @set "class=PairedPSCBS"
 # @RdocMethod plotTracks
-# @alias plotTracks
+# @aliasmethod plotTracks1
+# @aliasmethod plotTracks2
+# @aliasmethod plotTracksManyChromosomes
 # @alias plot
 #
 # @title "Plots parental specific copy numbers along the genome"
@@ -30,7 +32,7 @@
 #      of the confidence bands to be drawn, if any.}
 #   \item{xlim}{(Optional) The genomic range to plot.}
 #   \item{Clim}{The range of copy numbers.}
-#   \item{Blim}{The range of allele B fractions (BAFs) and 
+#   \item{Blim}{The range of allele B fractions (BAFs) and
 #     decrease of heterozygosity (DHs).}
 #   \item{xScale}{The scale factor used for genomic positions.}
 #   \item{...}{Not used.}
@@ -43,20 +45,20 @@
 # \value{
 #   Returns nothing.
 # }
-# 
+#
 # @author "HB"
 #
 # @keyword IO
 # @keyword internal
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn,c1,c2", "tcn,c1", "tcn,c2", "c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=".*", pch=".", col=NULL, cex=1, changepoints=FALSE, grid=FALSE, quantiles=c(0.05,0.95), xlim=NULL, Clim=c(0,6), Blim=c(0,1), xScale=1e-6, ..., add=FALSE, subplots=!add && (length(tracks) > 1), verbose=FALSE) {
 
   # To please R CMD check
   fit <- x;
- 
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'fit':
   if (nbrOfChromosomes(fit) >= 1) {
     return(plotTracksManyChromosomes(fit, tracks=tracks, scatter=scatter, calls=calls, pch=pch, quantiles=quantiles, Clim=Clim, Blim=Blim, xScale=xScale, ..., add=add, subplots=subplots, verbose=verbose));
@@ -182,7 +184,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
 
   for (tt in seq(along=tracks)) {
     track <- tracks[tt];
-    verbose && enter(verbose, sprintf("Track #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Track #%d ('%s') of %d",
                                              tt, track, length(tracks)));
 
     if (!is.null(scatter)) {
@@ -208,7 +210,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
         drawLevels(fit, what="tcn", col="purple", xScale=xScale);
       }
     }
-  
+
     if (is.element(track, c("tcn,c1,c2", "tcn,c1", "tcn,c2", "c1,c2"))) {
       colT <- ifelse(is.null(colT), "black", colT);
       subtracks <- strsplit(track, split=",", fixed=TRUE)[[1]];
@@ -253,7 +255,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
         }
       }
     }
-  
+
     if (track == "betaN") {
       colT <- ifelse(is.null(colT), colMu, colT);
       if (add) {
@@ -263,7 +265,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
         stext(side=3, pos=1, chrTag);
       }
     }
-  
+
     if (track == "betaT") {
       colT <- ifelse(is.null(colT), colMu, colT);
       if (add) {
@@ -273,7 +275,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
         stext(side=3, pos=1, chrTag);
       }
     }
-  
+
     if (track == "betaTN") {
       colT <- ifelse(is.null(colT), colMu, colT);
       if (add) {
@@ -283,7 +285,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
         stext(side=3, pos=1, chrTag);
       }
     }
-  
+
     if (track == "dh") {
       isSnp <- (!is.na(betaTN) & !is.na(muN));
       isHet <- isSnp & (muN == 1/2);
@@ -316,7 +318,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
       for (cc in seq(along=callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
-        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d", 
+        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
                                       cc, callLabel, length(callColumns)));
 
         verbose && cat(verbose, "Column: ", callColumn);
@@ -383,7 +385,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
 
   verbose && exit(verbose);
 
-  invisible();  
+  invisible();
 }) # plotTracks()
 
 
@@ -404,7 +406,7 @@ setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "betaTN", "
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'what':
   what <- match.arg(what);
 
@@ -455,7 +457,7 @@ setMethodS3("drawConfidenceBands", "PairedPSCBS", function(fit, what=c("tcn", "d
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'what':
   what <- match.arg(what);
 
@@ -605,7 +607,7 @@ setMethodS3("arrowsDeltaC1C2", "PairedPSCBS", function(fit, length=0.05, ...) {
 setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'chrStarts':
   if (!is.null(chrStarts)) {
     chrStarts <- Arguments$getDoubles(chrStarts);
@@ -630,7 +632,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
 
   # Identify all chromosome
   chromosomes <- getChromosomes(fit);
-  
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Additional chromosome annotations
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -671,7 +673,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   for (kk in seq(along=chromosomes)) {
     chromosome <- chromosomes[kk];
     chrTag <- sprintf("Chr%02d", chromosome);
-    verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d",
                                          kk, chrTag, length(chromosomes)));
 
     # Get offset for this chromosome
@@ -758,7 +760,7 @@ setMethodS3("getChromosomeRanges", "PairedPSCBS", function(fit, ...) {
   res <- cbind(chromosome=chromosomes, res);
 
   res;
-}, protected=TRUE) # getChromosomeRanges() 
+}, protected=TRUE) # getChromosomeRanges()
 
 
 setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6, ...) {
@@ -779,7 +781,7 @@ setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6,
   names(offsets) <- c(rownames(data), NA);
 
   offsets;
-}, protected=TRUE) # getChromosomeOffsets() 
+}, protected=TRUE) # getChromosomeOffsets()
 
 
 
@@ -793,8 +795,8 @@ setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6,
 #   lines, just in case C1 is overlapping C2 and C2 is overlapping TCN.
 # 2012-09-21
 # o ROBUSTNESS: Now drawChangePointsC1C2() and arrowsC1C2() for PairedPSCBS
-#   makes sure to retrieve segments with NA splitters between chromosomes 
-#   and gaps. 
+#   makes sure to retrieve segments with NA splitters between chromosomes
+#   and gaps.
 # 2012-02-29
 # o BUG FIX: plotTracks(..., add=TRUE) for PairedPSCBS would add TCNs
 #   when BAFs and DHs where intended.
@@ -895,4 +897,4 @@ setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6,
 # 2010-09-03
 # o Added plot() for PairedPSCBS.
 # o Created.
-############################################################################ 
+############################################################################

@@ -29,6 +29,7 @@
  extractByChromosomes.AbstractCBS extractByRegion
  extractByRegion.AbstractCBS extractByRegions
  extractByRegions.AbstractCBS extractC1C2 extractCallsByLocus
+ extractCallsByLocus.PairedPSCBS
  extractCallsByLocus.CBS extractChromosome
  extractChromosome.AbstractCBS extractChromosomes
  extractChromosomes.AbstractCBS extractChromosomes.CBS
@@ -58,9 +59,9 @@
  nbrOfLoci.DNAcopy nbrOfLosses nbrOfLosses.CBS nbrOfSamples
  nbrOfSamples.DNAcopy nbrOfSegments nbrOfSegments.DNAcopy plot.CBS
  plot.PairedPSCBS plotC1C2 plotC1C2.PairedPSCBS plotDeltaC1C2
- plotDeltaC1C2.PairedPSCBS plotTracks2 plotTracks2.PairedPSCBS
- plotTracksManyChromosomes plotTracksManyChromosomes.CBS
- plotTracksManyChromosomes.PairedPSCBS pointsC1C2
+ plotDeltaC1C2.PairedPSCBS 
+ plotTracksManyChromosomes.CBS
+ pointsC1C2
  pointsC1C2.PairedPSCBS pointsDeltaC1C2 pointsDeltaC1C2.PairedPSCBS
  postsegmentTCN postsegmentTCN.PairedPSCBS print.AbstractCBS
  sampleName sampleName<- setLocusData setLocusData.AbstractCBS
@@ -95,9 +96,8 @@ extractDhSegment extractDhSegment.PairedPSCBS
 callNTCN callCopyNeutral callCopyNeutralByTCNofAB
 dropChangePoints
 calcStatsForCopyNeutralABs calcStatsForCopyNeutralABs.PairedPSCBS
-callGNLcallGNLByTCNofAB callGNLByTCNofAB.PairedPSCBS
 callGainNeutralLoss
-callGNL callGNLByTCNofAB
+callGNL
 renameChromosomes renameChromosomes.AbstractCBS
 report
 writeSegments.DNAcopy
@@ -120,4 +120,4 @@ resegment.NonPairedPSCBS setMeanEstimators
 setMeanEstimators.AbstractCBS
 resetSegments
 getLocusData.NonPairedPSCBS getLocusData.PairedPSCBS
-plotTrack1  plotTrack1.PairedPSCBS
+plotTracks plotTracks1 plotTracks2 plotTracksManyChromosomes

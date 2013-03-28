@@ -93,6 +93,7 @@
 \alias{extractByRegions.AbstractCBS}
 \alias{extractC1C2}
 \alias{extractCallsByLocus}
+\alias{extractCallsByLocus.PairedPSCBS}
 \alias{extractCallsByLocus.CBS}
 \alias{extractChromosome}
 \alias{extractChromosome.AbstractCBS}
@@ -177,11 +178,7 @@
 \alias{plotC1C2.PairedPSCBS}
 \alias{plotDeltaC1C2}
 \alias{plotDeltaC1C2.PairedPSCBS}
-\alias{plotTracks2}
-\alias{plotTracks2.PairedPSCBS}
-\alias{plotTracksManyChromosomes}
 \alias{plotTracksManyChromosomes.CBS}
-\alias{plotTracksManyChromosomes.PairedPSCBS}
 \alias{pointsC1C2}
 \alias{pointsC1C2.PairedPSCBS}
 \alias{pointsDeltaC1C2}
@@ -263,11 +260,8 @@
 \alias{dropChangePoints}
 \alias{calcStatsForCopyNeutralABs}
 \alias{calcStatsForCopyNeutralABs.PairedPSCBS}
-\alias{callGNLcallGNLByTCNofAB}
-\alias{callGNLByTCNofAB.PairedPSCBS}
 \alias{callGainNeutralLoss}
 \alias{callGNL}
-\alias{callGNLByTCNofAB}
 \alias{renameChromosomes}
 \alias{renameChromosomes.AbstractCBS}
 \alias{report}
@@ -304,8 +298,10 @@
 \alias{resetSegments}
 \alias{getLocusData.NonPairedPSCBS}
 \alias{getLocusData.PairedPSCBS}
-\alias{plotTrack1}
-\alias{plotTrack1.PairedPSCBS}
+\alias{plotTracks}
+\alias{plotTracks1}
+\alias{plotTracks2}
+\alias{plotTracksManyChromosomes}
 
 \description{
   This page contains aliases for all "non-documented" objects that

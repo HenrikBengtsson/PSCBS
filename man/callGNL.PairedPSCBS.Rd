@@ -15,6 +15,16 @@
 \alias{callGainNeutralLoss.PairedPSCBS}
 \alias{callGainNeutralLoss,PairedPSCBS-method}
 
+\alias{callGNLByTCNofAB}
+\alias{PairedPSCBS.callGNLByTCNofAB}
+\alias{callGNLByTCNofAB.PairedPSCBS}
+\alias{callGNLByTCNofAB,PairedPSCBS-method}
+
+\alias{callGNLByTCNofABv1}
+\alias{PairedPSCBS.callGNLByTCNofABv1}
+\alias{callGNLByTCNofABv1.PairedPSCBS}
+\alias{callGNLByTCNofABv1,PairedPSCBS-method}
+
 
 \title{Calls segments that are gained, copy neutral, or lost}
 
