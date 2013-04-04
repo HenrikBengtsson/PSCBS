@@ -11,6 +11,7 @@
 
 <%
 library("PSCBS");
+library("R.devices");
 fixLocations <- function(fit, ...) {
   for (key in grep("(end|start)$", colnames(fit$output))) {
     fit$output[[key]] <- as.integer(fit$output[[key]]);

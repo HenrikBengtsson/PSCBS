@@ -9,6 +9,7 @@
 
 <%
 library("PSCBS");
+library("R.devices");
 library("R.cache");
 stopifnot(exists("rspArgs", mode="list"));
 %>

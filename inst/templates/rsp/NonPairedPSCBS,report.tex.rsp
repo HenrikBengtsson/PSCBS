@@ -11,6 +11,7 @@ Include RSP templates
 
 <%
 library("PSCBS");
+library("R.devices");
 library("R.cache");
 getChecksum <- R.cache::getChecksum;
 stopifnot(exists("rspArgs", mode="list"));
