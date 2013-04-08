@@ -11,12 +11,13 @@
 #
 # \section{Requirements}{
 #   This package requires external packages
-#   @eval "hpaste(unlist(packageDescription('PSCBS')[c('Depends', 'Imports')]))",	
+#   @eval "hpaste(unlist(packageDescription('PSCBS')[c('Depends', 'Imports')]))",
 #   and also suggests @eval "packageDescription('PSCBS')$Suggests".
 # }
 #
 # \section{Installation and updates}{
 #   To install this package, use \code{install.packages("PSCBS")}.
+#   Inorder to run examples, also \code{install.packages("PSCBS.data")}.
 # }
 #
 # \section{To get started}{
@@ -24,12 +25,12 @@
 #   \enumerate{
 #     \item @see "segmentByCBS" - segments total copy-numbers, or any
 #           other unimodal genomic signals, using the CBS method [3,4].
-#     \item @see "segmentByPairedPSCBS" - segments allele-specific 
+#     \item @see "segmentByPairedPSCBS" - segments allele-specific
 #           tumor signal from a tumor with a matched normal
 #           using the Paired PSCBS method [1,2].
 #   }
 # }
-# 
+#
 # \section{How to cite}{
 #   Please use [1] and [2] to cite when using Paired PSCBS,
 #   and [3] and [4] when using CBS.
@@ -40,10 +41,10 @@
 # \section{License}{
 #  @eval "packageDescription('PSCBS')$License".
 # }
-# 
+#
 # \references{
 #  [1] @include "../incl/OlshenA_etal_2011.Rd" \cr
-#  [2] @include "../incl/BengtssonH_etal_2010.Rd" \cr 
+#  [2] @include "../incl/BengtssonH_etal_2010.Rd" \cr
 #  [3] @include "../incl/OlshenVenkatraman_2004.Rd" \cr
 #  [4] @include "../incl/VenkatramanOlshen_2007.Rd" \cr
 # }
