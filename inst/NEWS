@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.34.4 [2013-04-05]
+o Added more end-user control to plotTracks().
+
+
 Version: 0.34.3 [2013-04-04]
 o Now package builds with both R.rsp (< 0.9.1) and R.rsp (>= 0.9.1).
 

@@ -1,13 +1,28 @@
-#   \item{chromosomes}{An optional @numeric @vector specifying which 
+#   \item{chromosomes}{An optional @numeric @vector specifying which
 #     chromosomes to plot.}
 #
-#   \item{seed}{An (optional) @integer specifying the random seed to be 
+#   \item{seed}{An (optional) @integer specifying the random seed to be
 #     set before subsampling.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
 #
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #
 setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=if (callLoci || length(chromosomes) == 1L) ".*" else NULL, callLoci=FALSE, callThresholds=TRUE, knownSegments=FALSE, quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,6), Blim=c(0,1), xScale=1e-6, xlabTicks=if (length(chromosomes) == 1L) "[pos]" else "[chr]", ..., subset=if (length(chromosomes) > 1L) 0.1 else NULL, add=FALSE, subplots=!add && (length(tracks) > 1L), oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  attachGH <- function(gh, envir=parent.frame()) {
+    if (!is.list(gh)) return();
+    if (is.null(gh$track)) return();
+    if (!is.null(value <- gh$track)) assign("track", value, envir=envir);
+    if (!is.null(value <- gh$subtracks)) assign("trackT", value, envir=envir);
+    if (!is.null(value <- gh$scatter$col)) assign("colS", value, envir=envir);
+    if (!is.null(value <- gh$scatter$pch)) assign("pchT", value, envir=envir);
+    if (!is.null(value <- gh$level$col)) assign("colL", value, envir=envir);
+    if (!is.null(value <- gh$cis$col)) assign("colC", value, envir=envir);
+  } # attachGH()
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Graphical styles
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -69,7 +84,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'fit':
 
   # Argument 'chromosomes':
@@ -235,24 +250,28 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     par(oma=oma, mar=mar);
   }
 
-  gh <- fit;
-  gh$xScale <- xScale;
-
   pchT <- if (!is.null(scatter)) { pch } else { NA };
   xlim <- range(x, na.rm=TRUE);
   xlab <- "Genomic position";
+
+  # Graphical handle
+  gh <- list(fit=fit);
+  gh$xScale <- xScale;
+  gh$xlim <- xlim;
+  gh$xlab <- xlab;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # For each panel of tracks, annotate loci with calls?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(calls) && callLoci && length(callColumns) > 0L) {
     callData <- extractCallsByLocus(fit, verbose=less(verbose,5));
+    gh$callsByLocus <- callData;
   }
 
 
   for (tt in seq(along=tracks)) {
     track <- tracks[tt];
-    verbose && enter(verbose, sprintf("Track #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Track #%d ('%s') of %d",
                                              tt, track, length(tracks)));
 
     # Get graphical style parameters.
@@ -267,7 +286,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
       for (cc in seq(along=callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
-        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d", 
+        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
                                       cc, callLabel, length(callColumns)));
 
         verbose && cat(verbose, "Column: ", callColumn);
@@ -292,28 +311,35 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
         }
 
         callCol <- getCallScatterColor(callLabel);
-str(callCol);
+
         colsT[idxs] <- callCol;
       } # for (cc in ...)
 
       colS <- colsT;
-print(table(colS))
     } # if (!is.null(calls))
+
+
+    # Assign graphical-handle parameters
+    gh$track <- track;
+    gh$subtracks <- tracksT;
+    gh$scatter <- list(col=colS, pch=pchT);
+    gh$level <- list(col=colL);
+    gh$cis <- list(col=colC);
 
 
     if (track == "tcn") {
       plot(NA, xlim=xlim, ylim=Clim, xlab=xlab, ylab="TCN", axes=FALSE);
-      if (!is.null(onBegin)) onBegin(gh=gh);
+      if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
       if (!is.na(pchT)) {
         points(x, CT, pch=pchT, col=colS);
       }
       drawConfidenceBands(fit, what="tcn", quantiles=quantiles, col=colC["tcn"], xScale=xScale);
       drawLevels(fit, what="tcn", col=colL, xScale=xScale);
     }
-  
+
     if (track == "tcn,c1,c2") {
       plot(NA, xlim=xlim, ylim=Clim, xlab=xlab, ylab="C1, C2, TCN", axes=FALSE);
-      if (!is.null(onBegin)) onBegin(gh=gh);
+      if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
       if (!is.na(pchT)) {
         points(x, CT, pch=pchT, col=colS);
       }
@@ -325,38 +351,38 @@ print(table(colS))
       # In case C2 overlaps with TCN
       drawLevels(fit, what="tcn", col=colL["tcn"], lty="22", xScale=xScale);
       # In case C1 overlaps with C1
-      drawLevels(fit, what="c1", col=colL["c1"], xScale=xScale); 
+      drawLevels(fit, what="c1", col=colL["c1"], xScale=xScale);
       drawLevels(fit, what="c2", col=colL["c2"], lty="22", xScale=xScale);
       drawLevels(fit, what="tcn", col=colL["tcn"], lty="22", xScale=xScale);
     }
-  
+
     if (track == "betaN") {
       plot(NA, xlim=xlim, ylim=Blim, xlab=xlab, ylab="BAF_N", axes=FALSE);
-      if (!is.null(onBegin)) onBegin(gh=gh);
+      if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
       if (!is.na(pchT)) {
         points(x, betaN, pch=pchT, col=colS);
       }
     }
-  
+
     if (track == "betaT") {
       plot(NA, xlim=xlim, ylim=Blim, xlab=xlab, ylab="BAF_T", axes=FALSE);
-      if (!is.null(onBegin)) onBegin(gh=gh);
+      if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
       if (!is.na(pchT)) {
         points(x, betaT, pch=pchT, col=colS);
       }
     }
-  
+
     if (track == "betaTN") {
       plot(NA, xlim=xlim, ylim=Blim, xlab=xlab, ylab="BAF_TN", axes=FALSE);
-      if (!is.null(onBegin)) onBegin(gh=gh);
+      if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
       if (!is.na(pchT)) {
         points(x, betaTN, pch=pchT, col=colS);
       }
     }
-  
+
     if (track == "dh") {
       plot(NA, xlim=xlim, ylim=Blim, xlab=xlab, ylab="DH", axes=FALSE);
-      if (!is.null(onBegin)) onBegin(gh=gh);
+      if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
       if (!is.na(pchT)) {
         isSnp <- (!is.na(betaTN) & !is.na(muN));
         isHet <- isSnp & (muN == 1/2);
@@ -376,7 +402,7 @@ print(table(colS))
       for (cc in seq(along=callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
-        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d", 
+        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
                                       cc, callLabel, length(callColumns)));
 
         verbose && cat(verbose, "Column: ", callColumn);
@@ -469,6 +495,9 @@ print(table(colS))
 
 ############################################################################
 # HISTORY:
+# 2013-04-05
+# o Now plotTracks() passes more information to onBegin(gh)/onEnd(gh)
+#   hooks via the graphical handle object, cf. str(gh).
 # 2013-03-21
 # o Added argument 'knownSegments' to plotTracksManyChromosomes().
 # o Generalized plotTracksManyChromosomes() a bit such that it can be
@@ -482,8 +511,8 @@ print(table(colS))
 #   lines, just in case C1 is overlapping C2 and C2 is overlapping TCN.
 # 2012-09-21
 # o ROBUSTNESS: Now drawChangePointsC1C2() and arrowsC1C2() for PairedPSCBS
-#   makes sure to retrieve segments with NA splitters between chromosomes 
-#   and gaps. 
+#   makes sure to retrieve segments with NA splitters between chromosomes
+#   and gaps.
 # 2012-02-29
 # o BUG FIX: plotTracks(..., add=TRUE) for PairedPSCBS would add TCNs
 #   when BAFs and DHs where intended.
@@ -584,4 +613,4 @@ print(table(colS))
 # 2010-09-03
 # o Added plot() for PairedPSCBS.
 # o Created.
-############################################################################ 
+############################################################################
