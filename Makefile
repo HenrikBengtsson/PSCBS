@@ -138,6 +138,15 @@ Rd:
 	$(R_SCRIPT) -e "setwd('..'); Sys.setlocale(locale='C'); R.oo::compileRdoc('$(PKG_NAME)')"
 
 
+spell_Rd:
+	$(R_SCRIPT) -e "f <- list.files('man', pattern='[.]Rd$$', full.names=TRUE); utils::aspell(f, filter='Rd')"
+
+
+spell:
+	$(R_SCRIPT) -e "utils::aspell('DESCRIPTION', filter='dcf')"
+	$(R_SCRIPT) -e "utils::aspell('$(FILES_NEWS)')"
+
+
 # Build package vignettes
 ../$(R_OUTDIR)/vigns: install
 	$(MKDIR) ../$(R_OUTDIR)/vigns/$(shell dirname $(DIR_VIGNS))

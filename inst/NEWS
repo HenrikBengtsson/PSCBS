@@ -29,7 +29,7 @@ o SPEEDUP: Made dropChangePoints() faster by only updating the
 
 
 Version: 0.34.0 [2013-03-19]
-o CALLING: Defined a formal hypthesis test for how segments are called
+o CALLING: Defined a formal hypothesis test for how segments are called
   copy-neutral in TCN (NTCN), with the null hypothesis being that a 
   segment is NTCN.  In order for a segment to not be NTCN, its confidence
   interval has to be completely outside the null region.  This changed
@@ -173,7 +173,7 @@ o SPEEDUP: By default bootstrapTCNandDHByRegion() for PairedPSCBS no
   does it by decreasing the amount of verbose output substantially,
   which in turn speeds up the process a fair bit.
 o Now getSegments(..., splitters=TRUE) for CBS and PSCBS inserts NA
-  rows whereever there is a "gap" between segments.  A "gap" is when
+  rows wherever there is a "gap" between segments.  A "gap" is when
   two segments are not connected (zero distance).
 o ROBUSTNESS: Now append() for CBS and PSCBS drops column 'length'
   from 'knownSegments', iff it exists.
@@ -629,8 +629,8 @@ o Added dropChangePoint() for AbstractCBS, which is just a
 o Added dropRegion() and dropRegions() for AbstractPSCBS, where
   the former is a wrapper for the latter dropRegions().
 o Added updateMeans() and mergeTwoSegments() for CBS in addition
-  already available PairedCBS versions.
-o Relabelled column 'id' to 'sampleName' returned by getSegments().
+  already available PairedPSCBS versions.
+o Relabeled column 'id' to 'sampleName' returned by getSegments().
 o ROBUSTNESS: Now using getSegments() everywhere possible.
 o BUG FIX: For so called "splitter" rows, not all columns returned
   by getSegments() of CBS were missing values.
@@ -666,7 +666,7 @@ Version: 0.13.2 [2011-09-30]
 o GENERALIZATION: Now drawLevels() for PairedPSCBS allows for drawing
   segmentation results in 'betaT' space.
 o BUG FIX: plotTracks2(..., panels="dh") gave an error due to a
-  forgotten assigment.
+  forgotten assignment.
 
 
 Version: 0.13.1 [2011-09-06]
@@ -760,8 +760,8 @@ o DOCUMENTATION: The description of argument 'chromosome' for
 
 
 Version: 0.11.2 [2011-07-05]
-o BUG FIX: Output fields 'tcnNbrOfSNPs'and 'tcnNbrOfHets' were 
-  mistakenly labelled as 'tcnNbrOr...'.  Thanks Christine Ho at
+o BUG FIX: Output fields 'tcnNbrOfSNPs' and 'tcnNbrOfHets' were 
+  mistakenly labeled as 'tcnNbrOr...'.  Thanks Christine Ho at
   UC Berkeley for reporting on this.
 
 
@@ -835,12 +835,12 @@ o BUG FIX: The recent callLOH() would not store the LOH calls.
 
 Version: 0.9.48 [2011-04-10]
 o Added callLOH() for PairedPSCBS, which in turn calls 
-  auxillary methods.
+  auxiliary methods.
 o Added estimateTauLOH() for PairedPSCBS, which in turn calls 
-  auxillary methods.
+  axillary methods.
 o Now callAB(..., force=FALSE) skips the caller if
   allelic-balance calls already exist.
-o DOCUMENTATION: Update the exampe for segmentByPairedPSCBS
+o DOCUMENTATION: Update the example for segmentByPairedPSCBS
   to reflect the restructured AB and LOH callers.
 
 
@@ -869,7 +869,7 @@ o Added estimateHighDHQuantileAtAB() for PairedPSCBS.
 
 
 Version: 0.9.43 [2011-02-06]
-o BUG FIX: plotTracks2() queired non-existing argument 'tracks'.
+o BUG FIX: plotTracks2() queried non-existing argument 'tracks'.
 
 
 Version: 0.9.42 [2011-02-03]
@@ -921,7 +921,7 @@ o Now postsegmentTCN(..., force=TRUE) for PairedPSCBS also updates
 
 
 Version: 0.9.34 [2010-12-09]
-o BUG FIX: When there were multiple chromsomes processed by
+o BUG FIX: When there were multiple chromosomes processed by
   segmentByPairedPSCBS(), then the returned data object would
   contain 'betaT' identical to 'betaTN'.
 
@@ -934,7 +934,7 @@ Version: 0.9.32 [2010-12-03]
 o BUG FIX: In rare cases the bootstrap sanity checks can indeed produce
   an invalid 'range', more precisely where (range[,2] >= range[,1]) is
   not true.  This can happen if there is no variation in the bootstrap
-  estimates.  Beause of this we allow for some tolerance.
+  estimates.  Because of this we allow for some tolerance.
 
 
 Version: 0.9.31 [2010-12-02]
@@ -951,7 +951,7 @@ o Rewrote all code dealing with the identification of loci belong
 
 Version: 0.9.25 [2010-11-30]
 o BUG FIX: Argument 'flavor' of segmentByPairedPSCBS() would be ignored
-  if multiple chromsomomes were segmented.
+  if multiple chromosomes were segmented.
 o BUG FIX: extractByChromosome() for PSCBS would call it self instead
   of extractByChromosomes().
 
@@ -997,7 +997,7 @@ o Added extractByChromosomes() for PSCBS.
 o Now the default confidence intervals for plotTracks() is (0.05,0.95),
   if existing.
 o Now all call functions estimate symmetric bootstrap quantiles for
-  convenince of plotting confidence intervals.
+  convenience of plotting confidence intervals.
 o BUG FIX: callABandHighAI() for PairedPSCBS used the old DH-only
   bootstrap method.
 o BUG FIX: The statistical sanity checks of the bootstrap estimates
@@ -1021,7 +1021,7 @@ o BUG FIX: segmentByPairedPSCBS() and bootstrapTCNandDHByRegion()
 
 
 Version: 0.9.18 [2010-11-22]
-o Added argument 'calls' to plotTracks() for highlighing called regions.
+o Added argument 'calls' to plotTracks() for highlighting called regions.
 o Updated callAllelicBalanceByDH() and callExtremeAllelicImbalanceByDH()
   to utilize bootstrapTCNandDHByRegion().
 o ROBUSTNESS: Now drawConfidenceBands() of PairedPSCBS silently does
@@ -1056,7 +1056,7 @@ o Adjusted postsegmentTCN() such that the updated TCN segment boundaries
   means that postsegmentTCN() will work as expected both when signals
   where segmented with 'joinSegments' being TRUE or FALSE.
 o Updated plotTracks() for PairedPSCBS such that the TCN segmentation
-  is colored 'purple' and the DH segmentation 'orange' for TCH and DH
+  is colored 'purple' and the DH segmentation 'orange' for TCN and DH
   only tracks.
 
 
