@@ -6,11 +6,9 @@ verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
-# (note to package developers: this example data set may
-#  be replaced in a future release of the package)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS")
-data <- R.utils::loadObject(pathname)
+data("paired.chr01", package="PSCBS.data")
+data <- paired.chr01
 str(data)
 
 
@@ -63,7 +61,7 @@ fit <- callAB(fit, delta=deltaAB, verbose=verbose)
 print(fit)
 
 
-# Even if not explicitly specified, the estimated 
+# Even if not explicitly specified, the estimated
 # threshold parameter is returned by the caller
 stopifnot(fit$params$deltaAB == deltaAB)
 
@@ -81,6 +79,6 @@ fit <- callLOH(fit, delta=deltaLOH, verbose=verbose)
 print(fit)
 plotTracks(fit)
 
-# Even if not explicitly specified, the estimated 
+# Even if not explicitly specified, the estimated
 # threshold parameter is returned by the caller
 stopifnot(fit$params$deltaLOH == deltaLOH)

@@ -46,25 +46,17 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
   \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.PSCBS]{append}} \tab Appends one segmentation result to another.\cr
- \tab \code{as.data.frame} \tab  -\cr
- \tab \code{drawChangePoints} \tab  -\cr
- \tab \code{extractChromosomes} \tab  -\cr
- \tab \code{getLocusData} \tab  -\cr
- \tab \code{getLocusSignalNames} \tab  -\cr
- \tab \code{\link[PSCBS:getSegments.PSCBS]{getSegments}} \tab Gets the segments.\cr
- \tab \code{getSegmentTrackPrefixes} \tab  -\cr
- \tab \code{isSegmentSplitter} \tab  -\cr
  \tab \code{\link[PSCBS:writeSegments.PSCBS]{writeSegments}} \tab Writes the table of segments to file.\cr
 }
 
 
  \bold{Methods inherited from AbstractCBS}:\cr
-all.equal, append, as.data.frame, drawChangePoints, drawKnownSegments, dropChangePoint, dropChangePoints, dropRegion, dropRegions, extractChromosome, extractChromosomes, extractCNs, extractRegions, extractSegments, getChromosomeOffsets, getChromosomeRanges, getChromosomes, getLocusData, getLocusSignalNames, getMeanEstimators, getSampleName, getSegments, getSegmentSizes, getSegmentTrackPrefixes, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByDP, pruneByHClust, renameChromosomes, report, resegment, resetSegments, sampleCNs, sampleName, sampleName<-, save, seqOfSegmentsByDP, setLocusData, setMeanEstimators, setSampleName, setSegments, shiftTCN, tileChromosomes, updateMeans
+all.equal, append, as.data.frame, drawChangePoints, drawKnownSegments, dropChangePoint, dropChangePoints, dropRegion, dropRegions, extractCNs, extractChromosome, extractChromosomes, extractRegions, extractSegments, getChromosomeOffsets, getChromosomeRanges, getChromosomes, getLocusData, getLocusSignalNames, getMeanEstimators, getSampleName, getSegmentSizes, getSegmentTrackPrefixes, getSegments, load, mergeThreeSegments, mergeTwoSegments, nbrOfChangePoints, nbrOfChromosomes, nbrOfLoci, nbrOfSegments, plotTracks, print, pruneByDP, pruneByHClust, renameChromosomes, report, resegment, resetSegments, sampleCNs, sampleName, sampleName<-, save, seqOfSegmentsByDP, setLocusData, setMeanEstimators, setSampleName, setSegments, shiftTCN, tileChromosomes, updateMeans
 
  \bold{Methods inherited from list}:\cr
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
 
- "public"
+
  }
 
  \author{Henrik Bengtsson}

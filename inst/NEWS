@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.35.0 [2013-04-08]
+o Moved example data to the new 'PSCBS.data' package.
+
+
 Version: 0.34.4 [2013-04-05]
 o Added more end-user control to plotTracks().
 

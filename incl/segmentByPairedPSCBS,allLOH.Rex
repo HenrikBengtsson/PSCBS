@@ -18,11 +18,9 @@ verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
-# (note to package developers: this example data set may
-#  be replaced in a future release of the package)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pathname <- system.file("data-ex/PairedPSCBS,exData,chr01.Rbin", package="PSCBS")
-data <- R.utils::loadObject(pathname)
+data("paired.chr01", package="PSCBS.data")
+data <- paired.chr01
 
 # Subset data (such that all regions will be in LOH)
 data <- subset(data, x <= 125e6)
