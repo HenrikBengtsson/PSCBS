@@ -71,7 +71,7 @@ options(str=strOptions(strict.width="cut"));
 <% pkg <- Package("PSCBS"); %>
 \author{Vignette by Henrik Bengtsson}
 %% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{March 21, 2013}
+\date{April 8, 2013}
 
 \begin{document}
 
