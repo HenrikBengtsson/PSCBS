@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{NonPairedPSCBS}
+\name{NonPairedPSCBS}
 \docType{class}
 \alias{NonPairedPSCBS}
 
 
- \title{The NonPairedPSCBS class}
+\title{The NonPairedPSCBS class}
 
- \description{
-  Package:  PSCBS \cr
+\description{
+ Package:  PSCBS \cr
 \bold{Class NonPairedPSCBS}\cr
 
 \code{list}\cr
@@ -33,19 +33,19 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
 
-  A NonPairedPSCBS is an object containing the results from the
-  Non-paired PSCBS method.
- }
+ A NonPairedPSCBS is an object containing the results from the
+ Non-paired PSCBS method.
+}
 
- \usage{NonPairedPSCBS(fit=list(), ...)}
+\usage{NonPairedPSCBS(fit=list(), ...)}
 
- \arguments{
-   \item{fit}{A \code{\link[base]{list}} structure containing the Non-paired PSCBS results.}
-   \item{...}{Not used.}
- }
+\arguments{
+  \item{fit}{A \code{\link[base]{list}} structure containing the Non-paired PSCBS results.}
+  \item{...}{Not used.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \emph{No methods defined}.
 
 
@@ -59,11 +59,11 @@ all.equal, append, as.data.frame, drawChangePoints, drawKnownSegments, dropChang
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
 
 
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   The \code{\link{segmentByNonPairedPSCBS}}() method returns an object of this class.
- }
+\seealso{
+  The \code{\link{segmentByNonPairedPSCBS}}() method returns an object of this class.
+}
 \keyword{classes}

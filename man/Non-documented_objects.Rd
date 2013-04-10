@@ -31,7 +31,6 @@
 \alias{bootstrapDHByRegion}
 \alias{bootstrapDHByRegion.PairedPSCBS}
 \alias{bootstrapTCNandDHByRegion}
-\alias{bootstrapTCNandDHByRegion.PairedPSCBS}
 \alias{callAB}
 \alias{callABandHighAI}
 \alias{callABandHighAI.PairedPSCBS}

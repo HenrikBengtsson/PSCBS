@@ -1,11 +1,50 @@
-setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975), na.rm=TRUE), by=c("betaTN", "betaT"), ..., seed=NULL, .debug=FALSE, force=FALSE, verbose=FALSE) {
+###########################################################################/**
+# @set class=PairedPSCBS
+# @RdocMethod bootstrapTCNandDHByRegion
+#
+# @title "Estimate confidence intervals of TCN and DH segment levels"
+#
+# \description{
+#  @get "title" using bootstrap.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{B}{A postive @integer specifying the number of bootstrap samples.}
+#   \item{statsFcn}{A @function that estimates confidence intervals given
+#      locus-level data.}
+#   \item{by}{A @character specifying whether DH should be calculated from
+#      normalized ('betaTN') or non-normalized ('betaT') tumor BAFs.}
+#   \item{force}{If @TRUE, already existing estimates are ignored,
+#      otherwise not.}
+#   \item{seed}{(optional) A random seed.}
+#   \item{verbose}{See @see "R.utils::Verbose".}
+#   \item{.debug}{(internal) If @TRUE, additional sanity checks are
+#      performed internally..}
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns a @see "PairedPSCBS" object with copy-neutral calls.
+# }
+#
+# @author "HB"
+#
+# \seealso{
+#   Internally, one of the following methods are used:
+#   @seemethod "callCopyNeutralByTCNofAB".
+# }
+#
+#*/###########################################################################
+setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975), na.rm=TRUE), by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'B':
   B <- Arguments$getInteger(B, range=c(1,Inf));
 
@@ -110,11 +149,11 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   estList <- getMeanEstimators(fit, c("tcn", "dh"));
   avgTCN <- estList$tcn;
   avgDH <- estList$dh;
- 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get signals
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get (x,TCN,BAF) data
   chromosome <- data$chromosome;
   x <- data$x;
@@ -124,10 +163,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Classify each locus as (i) heterozygous SNP, (ii) homozygous SNP,
   # or (iii) non-polymorphic loci
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Identifying heterozygous & homozygous SNPs and non-polymorphic loci");
   nbrOfLoci <- length(muN);
   verbose && cat(verbose, "Number of loci: ", nbrOfLoci);
@@ -168,13 +207,13 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Precalculate DH signals
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Calculate DHs for heterozygous SNPs
   rho <- 2*abs(betaT - 1/2);
 
-  # DH is by definition only defined for heterozygous SNPs.  
+  # DH is by definition only defined for heterozygous SNPs.
   # For simplicity, we set it to be NA for non-heterozygous loci.
   rho[!isHet] <- NA;
 
@@ -184,7 +223,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Resample (TCN,DH) within each segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nrow(segs);
@@ -217,7 +256,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   tcnMeans <- segs[["tcnMean"]];
   dhMeans <- segs[["dhMean"]];
   isSplitter <- (is.na(chrs) && is.na(tcnIds) && is.na(dhIds));
- 
+
   # Get all segment indices except for "splitters"
   jjs <- seq(length=nbrOfSegments);
   jjs <- jjs[!isSplitter];
@@ -350,7 +389,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
     # These numbers should be preserved when the resampling
     verbose && printf(verbose, "Number of (#hets, #homs, #nonSNPs): (%d,%d,%d)\n",
                       length(idxsHet), length(idxsHom), length(idxsNonSNP));
-                                              
+
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Sanity checks
@@ -409,7 +448,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
         # Calculate bootstrap mean
         M[jj,bb,"dh"] <- avgDH(rhoBB, na.rm=TRUE);
       } # if (shouldHaveDHs)
-  
+
       # (2) Bootstrap TCNs
       if (nbrOfTCNs > 0L) {
         # (a) Resample non-DH hets SNPs
@@ -418,10 +457,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
         # (a) Resample homozygous SNPs
         idxsHomBB <- resample(idxsHom, size=nHoms, replace=TRUE);
-  
+
         # (b) Resample non-SNPs
         idxsNonSNPBB <- resample(idxsNonSNP, size=nNonSNPs, replace=TRUE);
-      
+
         # (c) Resampled TCN units
         idxsTCNBB <- c(idxsHetBB, idxsHomBB, idxsNonSNPBB);
 
@@ -452,7 +491,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   stopifnot(all(!is.nan(M)));
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Calculate (C1,C2) bootstrap statistics
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Calculating (C1,C2) from (TCN,DH) bootstraps");
@@ -466,10 +505,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   stopifnot(all(!is.nan(M)));
   verbose && exit(verbose);
 
-  
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Calculate bootstrap statistics
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Calculating (TCN,DH) bootstrap statistics");
   # Allocate JxQx4 matrix S
   naValue <- as.double(NA);
@@ -510,9 +549,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Store
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Reshape JxQx4 array to Jx(4*Q) matrix
   T <- wrap(S, map=list(1,NA), sep="_");
   colnames(T) <- gsub("(.*)_(.*)", "\\2_\\1", colnames(T));
@@ -527,9 +566,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   }
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Statistical sanity checks
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (B >= 100L) {
     verbose && enter(verbose, "Statistical sanity checks (iff B >= 100)");
 
@@ -545,16 +584,16 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
         for (kk in seq(along=fields)) {
           field <- fields[kk];
           verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)));
-          
+
           # Bootstrap statistics
           Skk <- S[,,kk, drop=FALSE];
           dim(Skk) <- dim(Skk)[-3];
-  
+
           # Sanity checks
           stopifnot(is.matrix(Skk));
-  
+
           range <- Skk[,c(1,ncol(Skk)),drop=FALSE];
-    
+
           # Segmentation means
           key <- sprintf("%sMean", field);
           segMean <- segs[[key]];
@@ -562,23 +601,23 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
           # Segmentation counts
           cfield <- sprintf("%sNbrOfLoci", ifelse(field == "tcn", "tcn", "dh"));
           counts <- segs[,cfield,drop=TRUE];
-  
+
           if (verbose) {
             for (rr in seq_len(length(segMean))) {
               verbose && printf(verbose, "Seg %3d. mean=%g, range=[%g,%g], n=%d\n", rr, segMean[rr], range[rr,1], range[rr,2], counts[rr]);
             } # for (rr ...)
           }
-  
+
           # Compare only segments with enough data points
           keep <- (counts > 1L);
           range <- range[keep,,drop=FALSE];
-          segMean <- segMean[keep];  
+          segMean <- segMean[keep];
 
           # Sanity checks
           stopifnot(all(range[,2] + tol >= range[,1], na.rm=TRUE));
           stopifnot(all(segMean + tol >= range[,1], na.rm=TRUE));
           stopifnot(all(segMean - tol <= range[,2], na.rm=TRUE));
-    
+
           verbose && exit(verbose);
         } # for (kk ...)
       }, error = function(ex) {
@@ -594,8 +633,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
     verbose && exit(verbose);
   } # if (B >= 100L)
-  
-  
+
+
   fitB <- fit;
   fitB$output <- segs;
 
@@ -608,11 +647,13 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 ##############################################################################
 # HISTORY
+# 2013-04-09
+# o Added Rdoc comments.
 # 2013-02-09
 # o BUG FIX: bootstrapTCNandDHByRegion() for PairedPSCBS did not bootstrap
 #   for all available loci when calculating total CNs statistics, iff
 #   the segment had been called run-of-homozygosity (ROH).
-#   Thanks to Oscar Rueda at the Cancer Research UK Cambridge Institute 
+#   Thanks to Oscar Rueda at the Cancer Research UK Cambridge Institute
 #   for reporting on this.
 # 2013-02-07
 # o Improved some verbose outputs of bootstrapTCNandDHByRegion().

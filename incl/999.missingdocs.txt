@@ -4,7 +4,7 @@
  as.CBS as.DNAcopy as.character.CBS as.data.frame.PSCBS bootstrapCIs
  bootstrapCIs.PairedPSCBS bootstrapDHByRegion
  bootstrapDHByRegion.PairedPSCBS bootstrapTCNandDHByRegion
- bootstrapTCNandDHByRegion.PairedPSCBS callAB callABandHighAI
+ callAB callABandHighAI
  callABandHighAI.PairedPSCBS callABandLowC1 callABandLowC1.PairedPSCBS
  callAllelicBalance callAllelicBalance.default callAllelicBalanceByDH
  callAmplifications callArms callArms.CBS
@@ -59,7 +59,7 @@
  nbrOfLoci.DNAcopy nbrOfLosses nbrOfLosses.CBS nbrOfSamples
  nbrOfSamples.DNAcopy nbrOfSegments nbrOfSegments.DNAcopy plot.CBS
  plot.PairedPSCBS plotC1C2 plotC1C2.PairedPSCBS plotDeltaC1C2
- plotDeltaC1C2.PairedPSCBS 
+ plotDeltaC1C2.PairedPSCBS
  plotTracksManyChromosomes.CBS
  pointsC1C2
  pointsC1C2.PairedPSCBS pointsDeltaC1C2 pointsDeltaC1C2.PairedPSCBS
@@ -68,7 +68,7 @@
  setSampleName setSegments setSegments.AbstractCBS signalType
  signalType.CBS signalType<- signalType<-.CBS subset.CBS
  tileChromosomes tileChromosomes.AbstractCBS tileChromosomes.CBS
- tileChromosomes.PairedPSCBS 
+ tileChromosomes.PairedPSCBS
  writeLocusData writeLocusData.CBS
  writeSegments
 extractSegments.AbstractCBS extractSegment.AbstractCBS

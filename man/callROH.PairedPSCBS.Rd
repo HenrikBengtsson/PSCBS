@@ -11,6 +11,7 @@
 \alias{callROH.PairedPSCBS}
 \alias{PairedPSCBS.callROH}
 \alias{callROH,PairedPSCBS-method}
+\alias{callROH.NonPairedPSCBS}
 
 \title{Calls segments that are in ROH}
 

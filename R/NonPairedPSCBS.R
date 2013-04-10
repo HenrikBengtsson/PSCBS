@@ -9,7 +9,7 @@
 #  A NonPairedPSCBS is an object containing the results from the
 #  Non-paired PSCBS method.
 # }
-# 
+#
 # \usage{NonPairedPSCBS(fit=list(), ...)}
 #
 # \arguments{
@@ -20,7 +20,7 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
+#
 # @author "HB"
 #
 # \seealso{
@@ -68,10 +68,15 @@ setMethodS3("getLocusData", "NonPairedPSCBS", function(fit, ..., fields=c("asis"
 }, protected=TRUE) # getLocusData()
 
 
+setMethodS3("callROH", "NonPairedPSCBS", function(fit, ...) {
+  throw(sprintf("Cannot call ROH from '%s' data.", class(fit)[1L]));
+}, private=TRUE) # callROH()
+
+
 setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'from':
   from <- match.arg(from);
 
@@ -94,32 +99,32 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
     on.exit(popState(verbose));
   }
 
- 
+
   verbose && enter(verbose, "Updating mean level estimates");
   verbose && cat(verbose, "Adjusting for:");
   verbose && print(verbose, adjustFor);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up averaging functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   avgList <- list(
     tcn = get(avgTCN, mode="function"),
     dh = get(avgDH, mode="function")
   );
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- getSegments(fit, splitters=TRUE);
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert that adjustments can be made
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.element("ab", adjustFor)) {
     if (!is.element("abCall", names(segs))) {
       adjustFor <- setdiff(adjustFor, "ab");
@@ -142,9 +147,9 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   }
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update the (TCN,DH) mean levels from locus-level data?
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (from == "loci") {
     data <- getLocusData(fit);
     chromosome <- data$chromosome;
@@ -157,10 +162,10 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
       verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
       seg <- segs[ss,];
       verbose && print(verbose, seg);
-  
+
       chr <- seg[["chromosome"]];
       chrTag <- sprintf("chr%02d", chr);
-  
+
       for (what in c("tcn", "dh")) {
         avgFUN <- avgList[[what]];
 
@@ -172,12 +177,12 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
         if (is.na(xStart) && is.na(xEnd)) {
           next;
         }
-  
+
         stopifnot(xStart <= xEnd);
-  
+
         # (b) Identify units
         units <- which(chromosome == chr & xStart <= x & x <= xEnd);
-  
+
         # (c) Adjust for missing values
         if (what == "tcn") {
           value <- CT;
@@ -186,31 +191,31 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
         }
         keep <- which(!is.na(value[units]));
         units <- units[keep];
-  
+
         # (d) Update mean
         gamma <- avgFUN(value[units]);
-  
+
         # Sanity check
         stopifnot(length(units) == 0 || !is.na(gamma));
-  
+
         # Update the segment boundaries, estimates and counts
         key <- paste(what, "Mean", sep="");
         seg[[key]] <- gamma;
       }
-  
+
       verbose && print(verbose, seg);
-  
+
       segs[ss,] <- seg;
-  
+
       verbose && exit(verbose);
     } # for (ss ...)
   } # if (from ...)
 
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Adjust segment means from various types of calls
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (length(adjustFor) > 0) {
     verbose && enter(verbose, "Adjusting segment means");
     verbose && cat(verbose, "Adjusting for:");
@@ -242,9 +247,9 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
 
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update (C1,C2) mean levels
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Update (C1,C2) per segment");
   # Append (C1,C2) estimates
   tcn <- segs$tcnMean;
@@ -271,7 +276,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
 setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -320,7 +325,7 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
   userArgs <- list(..., verbose=verbose);
 
   # (d) Merge
-  args <- formals;  
+  args <- formals;
   args2 <- append(params, userArgs);
   for (kk in seq(along=args2)) {
     value <- args2[[kk]];
@@ -353,6 +358,8 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ##############################################################################
 # HISTORY
+# 2013-04-09
+# o Added callROH() for NonPairedPSCBS that throws an exception.
 # 2013-03-08
 # o Added getLocusData() for NonPairedPSCBS.
 # 2013-01-15

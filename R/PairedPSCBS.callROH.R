@@ -1,6 +1,7 @@
 ##########################################################################/**
 # @set class=PairedPSCBS
 # @RdocMethod callROH
+# @alias callROH.NonPairedPSCBS
 #
 # @title "Calls segments that are in ROH"
 #
@@ -31,7 +32,7 @@
 #   To call allelic balance (AB) see @seemethod "callAB".
 #   To call loss of heterozygosity (LOH) see @seemethod "callLOH".
 # }
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -107,8 +108,6 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
 
   invisible(fit);
 }) # callROH()
-
-
 
 
 # This method calls ROH for a single-segment PairedPSCBS object
