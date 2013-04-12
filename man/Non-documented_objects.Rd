@@ -301,7 +301,6 @@
 \alias{plotTracks1}
 \alias{plotTracks2}
 \alias{plotTracksManyChromosomes}
-\alias{exampleData}
 
 \description{
   This page contains aliases for all "non-documented" objects that
