@@ -2,14 +2,14 @@
 Package: PSCBS
 ==============
 
-Version: 0.35.1 [2013-04-09]
+Version: 0.34.6 [2013-04-11]
+o BUG FIX: plotTracks(fit, callLoci=TRUE) would color loci incorrectly
+  if more than one chromosome are plotted.
+
+
+Version: 0.34.5 [2013-04-09]
 o ROBUSTNESS: Now callROH() gives an informative error if called
   on a NonPairedPSCBS object.
-
-
-Version: 0.35.0 [2013-04-08]
-o Moved example data to the new 'PSCBS.data' package.  This shrunk
-  the package source tarball from ~3.3 MB to ~0.5 MB.
 
 
 Version: 0.34.4 [2013-04-05]

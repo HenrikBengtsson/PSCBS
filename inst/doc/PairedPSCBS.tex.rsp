@@ -120,8 +120,7 @@ fullname <- "PairedPSCBS,exData,chr01";
 %>
 \begin{verbatim}
 <%=evalCapture({
-data("paired.chr01", package="PSCBS.data")
-data <- paired.chr01
+data <- PSCBS::exampleData("paired.chr01")
 str(data)
 })%>
 \end{verbatim}

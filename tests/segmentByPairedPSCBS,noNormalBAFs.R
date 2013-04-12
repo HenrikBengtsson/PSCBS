@@ -3,8 +3,7 @@ library("PSCBS")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-data("paired.chr01", package="PSCBS.data")
-data <- paired.chr01
+data <- PSCBS::exampleData("paired.chr01")
 str(data)
 
 # Drop single-locus outliers

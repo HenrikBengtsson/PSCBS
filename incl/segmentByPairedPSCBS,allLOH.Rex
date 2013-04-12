@@ -19,8 +19,7 @@ verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-data("paired.chr01", package="PSCBS.data")
-data <- paired.chr01
+data <- PSCBS::exampleData("paired.chr01")
 
 # Subset data (such that all regions will be in LOH)
 data <- subset(data, x <= 125e6)

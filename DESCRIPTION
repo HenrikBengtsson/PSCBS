@@ -1,10 +1,10 @@
 Package: PSCBS
-Version: 0.35.1
+Version: 0.34.6
 Depends: R.utils (>= 1.23.2)
 Imports: utils, R.methodsS3 (>= 1.4.2), R.oo (>= 1.13.0), R.utils (>= 1.23.2), DNAcopy (>= 1.27.2), R.rsp (>= 0.8.2)
 Suggests: PSCBS.data (>= 0.35.0), DNAcopy (>= 1.27.2), aroma.light (>= 1.22.0), matrixStats (>= 0.6.2), R.cache (>= 0.6.5), Hmisc (>= 3.10-1), ggplot2 (>= 0.9.3), R.devices (>= 0.2.2), R.rsp (>= 0.9.1)
 VignetteBuilder: R.rsp
-Date: 2013-04-09
+Date: 2013-04-11
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

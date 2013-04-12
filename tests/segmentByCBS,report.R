@@ -9,8 +9,7 @@ library("PSCBS")
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-data("paired.chr01", package="PSCBS.data")
-data <- paired.chr01
+data <- PSCBS::exampleData("paired.chr01")
 str(data)
 
 data <- data.frame(chromosome=data$chromosome, x=data$x, y=data$CT)

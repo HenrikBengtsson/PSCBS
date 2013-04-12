@@ -173,6 +173,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   segs <- as.data.frame(fit);
 
   # Identify available calls
+  callData <- NULL;
   if (!is.null(calls) || callThresholds) {
     verbose && enter(verbose, "Identifying calls");
 
@@ -186,13 +187,18 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
       callColumns <- allCallColumns;
       if (length(callColumns) > 0L) {
         keep <- sapply(calls, FUN=function(pattern) {
-          (regexpr(pattern, callColumns) != -1);
+          (regexpr(pattern, callColumns) != -1L);
         });
         if (is.matrix(keep)) {
           keep <- apply(keep, MARGIN=1, FUN=any);
         }
         callColumns <- callColumns[keep];
         callLabels <- allCallLabels[keep];
+
+        # Annotate individual loci by calls?
+        if (callLoci) {
+          callData <- extractCallsByLocus(fit, verbose=less(verbose,5));
+        }
       }
       verbose && cat(verbose, "Call to be annotated:");
       verbose && print(verbose, callColumns);
@@ -206,9 +212,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   # Subset of the loci?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(subset)) {
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Set and unset the random seed
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (a) Set and unset the random seed
     if (!is.null(seed)) {
       verbose && enter(verbose, "Setting (temporary) random seed");
       oldRandomSeed <- NULL;
@@ -226,12 +230,13 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
       verbose && exit(verbose);
     }
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    # Subset
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # (b) Subset
     n <- nrow(data);
     keep <- sample(n, size=subset*n);
     data <- data[keep,];
+    if (!is.null(callData)) {
+      callData <- callData[keep,];
+    }
   }
 
   # To please R CMD check
@@ -259,15 +264,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   gh$xScale <- xScale;
   gh$xlim <- xlim;
   gh$xlab <- xlab;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # For each panel of tracks, annotate loci with calls?
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (!is.null(calls) && callLoci && length(callColumns) > 0L) {
-    callData <- extractCallsByLocus(fit, verbose=less(verbose,5));
+  if (!is.null(callData)) {
     gh$callsByLocus <- callData;
   }
-
 
   for (tt in seq(along=tracks)) {
     track <- tracks[tt];
@@ -495,6 +494,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
 ############################################################################
 # HISTORY:
+# 2013-04-11
+# o BUG FIX: plotTracksManyChromosomes(..., callLoci=TRUE) would color
+#   loci incorrectly if more than one chromosome are plotted.
 # 2013-04-05
 # o Now plotTracks() passes more information to onBegin(gh)/onEnd(gh)
 #   hooks via the graphical handle object, cf. str(gh).
