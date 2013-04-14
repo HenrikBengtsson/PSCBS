@@ -7,7 +7,7 @@
 #
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #
-setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=if (callLoci || length(chromosomes) == 1L) ".*" else NULL, callLoci=FALSE, callThresholds=TRUE, knownSegments=FALSE, quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,6), Blim=c(0,1), xScale=1e-6, xlabTicks=if (length(chromosomes) == 1L) "[pos]" else "[chr]", ..., subset=if (length(chromosomes) > 1L) 0.1 else NULL, add=FALSE, subplots=!add && (length(tracks) > 1L), oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=if (callLoci || length(chromosomes) == 1L) ".*" else NULL, callLoci=FALSE, callThresholds=TRUE, boundaries=TRUE, knownSegments=FALSE, quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,6), Blim=c(0,1), xScale=1e-6, xlabTicks=if (length(chromosomes) == 1L) "[pos]" else "[chr]", ..., subset=if (length(chromosomes) > 1L) 0.1 else NULL, add=FALSE, subplots=!add && (length(tracks) > 1L), oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -121,6 +121,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
   # Argument 'callThresholds':
   callThresholds <- Arguments$getLogical(callThresholds);
+
+  # Argument 'boundaries':
+  boundaries <- Arguments$getLogical(boundaries);
 
   # Argument 'knownSegments':
   knownSegments <- Arguments$getLogical(knownSegments);
@@ -473,7 +476,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     } # if (callThresholds)
 
     drawXLabelTicks();
-    abline(v=vs, lty=1, lwd=2);
+    if (boundaries) {
+      abline(v=vs, lty=1, lwd=2);
+    }
     if (knownSegments) {
       colT <- getKnownSegmentColor();
       ltyT <- getKnownSegmentLty();
@@ -494,6 +499,8 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
 ############################################################################
 # HISTORY:
+# 2013-04-13
+# o Added argument 'boundaries' to plotTracksManyChromosomes().
 # 2013-04-11
 # o BUG FIX: plotTracksManyChromosomes(..., callLoci=TRUE) would color
 #   loci incorrectly if more than one chromosome are plotted.

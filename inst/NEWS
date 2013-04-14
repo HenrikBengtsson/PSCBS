@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.34.7 [2013-04-13]
+o Added more arguments to plotTracks().
+
+
 Version: 0.34.6 [2013-04-11]
 o BUG FIX: plotTracks(fit, callLoci=TRUE) would color loci incorrectly
   if more than one chromosome are plotted.
