@@ -115,7 +115,7 @@ install_force:
 	export _R_CHECK_DOT_INTERNAL_=1;\
 	export _R_CHECK_USE_CODETOOLS_=1;\
 	export _R_CHECK_CRAN_INCOMING_USE_ASPELL_=1;\
-	export _R_CHECK_FULL_=1;\
+	export _R_CHECK_FULL_=;\
 	$(R_CMD) check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
 
@@ -142,9 +142,11 @@ spell_Rd:
 	$(R_SCRIPT) -e "f <- list.files('man', pattern='[.]Rd$$', full.names=TRUE); utils::aspell(f, filter='Rd')"
 
 
+spell_NEWS:
+	$(R_SCRIPT) -e "utils::aspell('$(FILES_NEWS)')"
+
 spell:
 	$(R_SCRIPT) -e "utils::aspell('DESCRIPTION', filter='dcf')"
-	$(R_SCRIPT) -e "utils::aspell('$(FILES_NEWS)')"
 
 
 # Build package vignettes

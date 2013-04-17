@@ -2,8 +2,14 @@
 Package: PSCBS
 ==============
 
-Version: 0.34.7 [2013-04-13]
+Version: 0.34.7 [2013-04-17]
 o Added more arguments to plotTracks().
+o One of the system tests for segmentByPairedPSCBS() failed
+  in the case when the data was downsampled (in order to meet
+  the CRAN requirements).  The workaround is to use a fix deltaAB
+  parameter in that case.
+o BUG FIX: Internal calcStatsForCopyNeutralABs() would give an
+  error if there was exactly two AH segments.
 
 
 Version: 0.34.6 [2013-04-11]
