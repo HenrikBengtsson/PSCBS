@@ -414,8 +414,13 @@ setMethodS3("drawLevels", "PairedPSCBS", function(fit, what=c("tcn", "betaTN", "
   xScale <- Arguments$getNumeric(xScale, range=c(0,Inf));
 
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Tile chromosomes
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fitT <- tileChromosomes(fit);
+
   # Get segmentation results
-  segs <- as.data.frame(fit);
+  segs <- as.data.frame(fitT);
 
   if (what == "betaTN") {
     whatT <- "dh";
@@ -476,8 +481,13 @@ setMethodS3("drawConfidenceBands", "PairedPSCBS", function(fit, what=c("tcn", "d
   }
 
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Tile chromosomes
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fitT <- tileChromosomes(fit);
+
   # Get segmentation results
-  segs <- as.data.frame(fit);
+  segs <- as.data.frame(fitT);
 
   # Extract subset of segments
   fields <- c("start", "end");
@@ -714,7 +724,13 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
 
 
 setMethodS3("drawChangePoints", "PSCBS", function(fit, labels=FALSE, col="#666666", cex=0.5, xScale=1e-6, side=3, line=-1, xpd=TRUE, ..., verbose=FALSE) {
-  segs <- getSegments(fit, splitters=FALSE);
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Tile chromosomes
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fitT <- tileChromosomes(fit);
+  verbose && str(verbose, fitT);
+
+  segs <- getSegments(fitT, splitters=FALSE);
   xStarts <- segs[,"tcnStart"];
   xEnds <- segs[,"tcnEnd"];
 
@@ -787,6 +803,9 @@ setMethodS3("getChromosomeOffsets", "PairedPSCBS", function(fit, resolution=1e6,
 
 ############################################################################
 # HISTORY:
+# 2013-04-18
+# o Now drawLevels() and drawConfidenceBands() also works for
+#   multiple chromosomes.
 # 2013-03-18
 # o Now plotTracksManyChromosomes() draws AB and LOH call thresholds.
 # 2012-09-23

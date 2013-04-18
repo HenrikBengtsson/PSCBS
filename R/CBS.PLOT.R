@@ -120,8 +120,13 @@ setMethodS3("plot", "CBS", function(x, ...) {
 
 
 setMethodS3("drawLevels", "CBS", function(fit, col="purple", xScale=1e-6, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Tile chromosomes
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fitT <- tileChromosomes(fit);
+
   # Get segmentation results
-  segs <- as.data.frame(fit);
+  segs <- as.data.frame(fitT);
 
   # Extract subset of segments
   fields <- c("start", "end", "mean");
@@ -147,7 +152,7 @@ setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red"
   nbrOfCalls <- length(callFields);
 
   # Nothing todo?
-  if (nbrOfCalls == 0) {
+  if (nbrOfCalls == 0L) {
     return();
   }
 
@@ -156,7 +161,6 @@ setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red"
   # Tile chromosomes
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- tileChromosomes(fit);
-  verbose && str(verbose, fitT);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -232,7 +236,6 @@ setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25
   # Tile chromosomes
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- tileChromosomes(fit);
-  verbose && str(verbose, fitT);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -294,7 +297,6 @@ setMethodS3("drawChromosomes", "CBS", function(x, lty=3, xScale=1e-6, ..., byInd
   # Tile chromosomes
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- tileChromosomes(fit);
-  verbose && str(verbose, fitT);
   # Sanity check
   stopifnot(!is.null(fitT$chromosomeStats));
 
@@ -330,7 +332,6 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", 
   # Tile chromosomes
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- tileChromosomes(fit);
-  verbose && str(verbose, fitT);
   # Sanity check
   stopifnot(!is.null(fitT$chromosomeStats));
 
@@ -411,6 +412,8 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
 
 ############################################################################
 # HISTORY:
+# 2013-04-18
+# o Now drawLevels() also works for multiple chromosomes.
 # 2011-12-06
 # o Now plotTracks() for CBS always returns an invisible object.
 # 2011-12-03

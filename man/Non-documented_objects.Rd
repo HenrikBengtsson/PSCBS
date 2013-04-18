@@ -301,6 +301,7 @@
 \alias{plotTracks1}
 \alias{plotTracks2}
 \alias{plotTracksManyChromosomes}
+\alias{getSmoothLocusData}
 
 \description{
   This page contains aliases for all "non-documented" objects that

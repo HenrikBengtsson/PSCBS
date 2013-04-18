@@ -2,8 +2,10 @@
 Package: PSCBS
 ==============
 
-Version: 0.34.7 [2013-04-17]
+Version: 0.34.7 [2013-04-18]
 o Added more arguments to plotTracks().
+o Now drawLevels() and drawConfidenceBands() for CBS and PairedPSCBS
+  also works for multiple chromosomes.
 o One of the system tests for segmentByPairedPSCBS() failed
   in the case when the data was downsampled (in order to meet
   the CRAN requirements).  The workaround is to use a fix deltaAB
