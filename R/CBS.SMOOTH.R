@@ -37,6 +37,8 @@ setMethodS3("getSmoothLocusData", "CBS", function(fit, by, ...) {
   chromosomes <- getChromosomes(fit);
   data <- getLocusData(fit);
 
+  chromosome <- NULL; rm(chromosome); # To please R CMD check
+
   dataS <- NULL;
   for (kk in seq_along(chromosomes)) {
     chr <- chromosomes[kk];
