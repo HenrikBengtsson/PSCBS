@@ -30,7 +30,8 @@
   \item{delta}{(Tuning parameter) A non-negative \code{\link[base]{numeric}} threshold.}
   \item{alpha}{A \code{\link[base]{numeric}} in [0,1] specifying the upper and lower
     quantiles calculated by the bootstrap estimator.}
-  \item{...}{Additional arguments passed to the caller.}
+  \item{...}{Additional arguments passed to the bootstrap estimator
+    \code{\link[PSCBS:bootstrapTCNandDHByRegion.PairedPSCBS]{*bootstrapTCNandDHByRegion}()}.}
 }
 
 \value{

@@ -26,10 +26,9 @@
   This package requires external packages
   R.utils (>= 1.23.2), utils, R.methodsS3 (>= 1.4.2), R.oo (>= 1.13.0), R.utils (>=
 1.23.2), DNAcopy (>= 1.27.2), R.rsp (>= 0.8.2),
-  and also suggests PSCBS.data (>= 0.35.0), DNAcopy (>= 1.27.2), aroma.light (>=
-1.22.0), matrixStats (>= 0.6.2), R.cache (>= 0.6.5), Hmisc (>=
-3.10-1), ggplot2 (>= 0.9.3), R.devices (>= 0.2.2), R.rsp (>=
-0.9.1).
+  and also suggests DNAcopy (>= 1.27.2), aroma.light (>= 1.22.0), matrixStats (>=
+0.6.2), R.cache (>= 0.6.5), Hmisc (>= 3.10-1), ggplot2 (>=
+0.9.3.1), R.devices (>= 0.2.2), R.rsp (>= 0.8.2).
 }
 
 \section{Installation and updates}{

@@ -37,8 +37,8 @@
 #   LOH if it is already called to be in AB.
 #   However, regardless of of the AB call, a segment is still always
 #   tested for LOH, to check weather the LOH caller is consistent with the
-#   AB caller or not.  Thus, in order to distinguish the case where 
-#   the AB caller and LOH caller agree from when they disagree, 
+#   AB caller or not.  Thus, in order to distinguish the case where
+#   the AB caller and LOH caller agree from when they disagree,
 #   we report either (AB,LOH)=(TRUE,FALSE) or (TRUE,NA).  The former is
 #   reported when they are consistent, and the latter when they are not,
 #   or when the AB caller could not call it.
@@ -69,7 +69,7 @@ setMethodS3("callAB", "PairedPSCBS", function(fit, flavor=c("DeltaAB*"), ..., mi
   if (!force && !is.null(calls)) {
     return(invisible(fit));
   }
-  
+
   if (flavor == "DeltaAB*") {
     fit <- callAllelicBalanceByDH(fit, ...);
   } else {
@@ -130,7 +130,8 @@ setMethodS3("callAllelicBalance", "default", function(...) {
 #   \item{delta}{(Tuning parameter) A non-negative @numeric threshold.}
 #   \item{alpha}{A @numeric in [0,1] specifying the upper and lower
 #     quantiles calculated by the bootstrap estimator.}
-#   \item{...}{Additional arguments passed to the caller.}
+#   \item{...}{Additional arguments passed to the bootstrap estimator
+#     @seemethod "bootstrapTCNandDHByRegion".}
 # }
 #
 # \value{
@@ -156,7 +157,7 @@ setMethodS3("callAllelicBalance", "default", function(...) {
 setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimateDeltaAB(fit, flavor="qq(DH)"), alpha=0.05, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'delta':
   delta <- Arguments$getDouble(delta, range=c(0,Inf));
 

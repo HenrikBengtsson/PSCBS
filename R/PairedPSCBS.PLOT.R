@@ -386,12 +386,12 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
   verbose && exit(verbose);
 
   invisible();
-}) # plotTracks()
+}, private=TRUE) # plotTracks1()
 
 
 setMethodS3("plotTracks", "PairedPSCBS", function(fit, ...) {
   plotTracksManyChromosomes(fit, ...);
-}, private=TRUE)
+})
 
 setMethodS3("plot", "PairedPSCBS", function(x, ...) {
   plotTracks(x, ...);

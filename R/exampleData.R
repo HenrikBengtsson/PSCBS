@@ -21,6 +21,8 @@
 # @author "HB"
 #
 # @keyword IO
+# @keyword data
+# @keyword internal
 #*/###########################################################################
 setMethodS3("exampleData", "default", function(name=c("paired.chr01"), ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -39,7 +41,7 @@ setMethodS3("exampleData", "default", function(name=c("paired.chr01"), ...) {
   data <- loadObject(pathname);
 
   data;
-})
+}, protected=TRUE)
 
 
 ############################################################################
