@@ -181,3 +181,14 @@ test_files: ../$(R_OUTDIR)/tests/*.R
 test: ../$(R_OUTDIR)/tests/%.R
 	$(CD) ../$(R_OUTDIR)/tests;\
 	$(R_SCRIPT) -e "for (f in list.files(pattern='[.]R$$')) { source(f, echo=TRUE) }"
+
+
+
+# Run extensive CRAN submission checks
+../$(R_OUTDIR)/submit_to_cran/$(PKG_NAME),EmailToCRAN.txt: ../$(R_OUTDIR)/$(PKG_TARBALL)
+	$(MKDIR) ../$(R_OUTDIR)/submit_to_cran
+	$(CP) ../$(R_OUTDIR)/$(PKG_TARBALL) ../$(R_OUTDIR)/submit_to_cran
+	$(CD) ../$(R_OUTDIR)/submit_to_cran;\
+	$(R_SCRIPT) -e "RCmdCheckTools::testPkgsToSubmit()"
+
+submit: ../$(R_OUTDIR)/submit_to_cran/$(PKG_NAME),EmailToCRAN.txt
