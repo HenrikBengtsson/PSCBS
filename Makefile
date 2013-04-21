@@ -82,6 +82,17 @@ debug_full: debug
 	@echo dirname\(DIR_VIGNS\)=\'$(shell dirname $(DIR_VIGNS))\'
 
 
+
+# Update existing packages
+update:
+	$(R_SCRIPT) -e "update.packages(ask=FALSE)"
+
+# Install missing dependencies
+deps: DESCRIPTION
+	$(MAKE) update
+	$(R_SCRIPT) -e "x <- unlist(strsplit(read.dcf('DESCRIPTION',fields=c('Depends', 'Imports', 'Suggests')),',')); x <- gsub('([[:space:]]*|[(].*[)])', '', x); x <- unique(setdiff(x, c('R', rownames(installed.packages())))); if (length(x) > 0) install.packages(x)"
+
+
 # Build source tarball
 ../$(R_OUTDIR)/$(PKG_TARBALL): $(PKG_FILES)
 	$(MKDIR) ../$(R_OUTDIR)
@@ -115,7 +126,7 @@ install_force:
 	export _R_CHECK_DOT_INTERNAL_=1;\
 	export _R_CHECK_USE_CODETOOLS_=1;\
 	export _R_CHECK_CRAN_INCOMING_USE_ASPELL_=1;\
-	export _R_CHECK_FULL_=;\
+	export _R_CHECK_FULL_=1;\
 	$(R_CMD) check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
 
