@@ -53,7 +53,7 @@ fitList <- list()
 chrs <- getChromosomes(fit)
 for (kk in seq(along=chrs)) {
   chr <- chrs[kk]
-  fitKK <- extractByChromosome(fit, chr)
+  fitKK <- extractChromosome(fit, chr)
   if (kk %% 2 == 0) {
     fitKK <- shiftTCN(fitKK, shift=+10)
   }
@@ -82,7 +82,7 @@ for (kk in seq(length=nrow(knownSegments))) {
   seg <- knownSegments[kk,]
   start <- seg$start
   end <- seg$end
-  fitKK <- extractByChromosome(fit, seg$chromosome)
+  fitKK <- extractChromosome(fit, seg$chromosome)
   segsKK <- getSegments(fitKK)
   idxStart <- min(which(segsKK$start >= start))
   idxEnd <- max(which(segsKK$end <= end))

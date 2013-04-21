@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.34.8 [2013-04-20]
+o CLEANUP: Removed previously deprecated methods for AbstractCBS.
+
+
 Version: 0.34.7 [2013-04-18]
 o Added more arguments to plotTracks().
 o Now drawLevels() and drawConfidenceBands() for CBS and PairedPSCBS
@@ -11,7 +15,7 @@ o One of the system tests for segmentByPairedPSCBS() failed
   the CRAN requirements).  The workaround is to use a fix deltaAB
   parameter in that case.
 o BUG FIX: Internal calcStatsForCopyNeutralABs() would give an
-  error if there was exactly two AH segments.
+  error if there was exactly two AB segments.
 
 
 Version: 0.34.6 [2013-04-11]

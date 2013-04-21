@@ -59,10 +59,6 @@
 \alias{drawLevels.CBS}
 \alias{drawLevels.DNAcopy}
 \alias{drawLevels.PairedPSCBS}
-\alias{dropByRegion}
-\alias{dropByRegion.AbstractCBS}
-\alias{dropByRegions}
-\alias{dropByRegions.AbstractCBS}
 \alias{dropChangePoint}
 \alias{dropRegion}
 \alias{dropRegions}
@@ -82,14 +78,6 @@
 \alias{estimateStandardDeviation.DNAcopy}
 \alias{estimateStdDevForHeterozygousBAF}
 \alias{estimateStdDevForHeterozygousBAF.PairedPSCBS}
-\alias{extractByChromosome}
-\alias{extractByChromosome.AbstractCBS}
-\alias{extractByChromosomes}
-\alias{extractByChromosomes.AbstractCBS}
-\alias{extractByRegion}
-\alias{extractByRegion.AbstractCBS}
-\alias{extractByRegions}
-\alias{extractByRegions.AbstractCBS}
 \alias{extractC1C2}
 \alias{extractCallsByLocus}
 \alias{extractCallsByLocus.PairedPSCBS}

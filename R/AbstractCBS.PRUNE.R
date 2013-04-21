@@ -25,7 +25,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
 
   verbose && enter(verbose, "Identifying optimal sets of segments via dynamic programming");
 
@@ -59,9 +59,9 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", jj, chr, length(chromosomes)));
 
     # Subset segmentation results on this chromosome
-    fitJJ <- extractByChromosome(fit, chr);
+    fitJJ <- extractChromosome(fit, chr);
     verbose && cat(verbose, "Number of loci on chromosome: ", nbrOfLoci(fitJJ));
-    
+
     # Nothing to do and nothing to add?
     if (nbrOfLoci(fitJJ) == 0L) {
       verbose && exit(verbose);
@@ -291,14 +291,14 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   attr(segList, "modelFit") <- modelFit;
 
   verbose && exit(verbose);
-  
+
   segList;
 }, protected=TRUE) # seqOfSegmentsByDP()
 
 
 
 setMethodS3("seqOfSegmentsByDP", "matrix", function(
-### Segmentation of a multi-dimensional signal with dynamic programming. 
+### Segmentation of a multi-dimensional signal with dynamic programming.
 Y,
 ### A n*p signal to be segmented
 candidatechangepoints = c(1:(n-1)),
@@ -306,7 +306,7 @@ candidatechangepoints = c(1:(n-1)),
 kmax = n-1,
 ### Maximum number of change-points to test (default : n-1)
 threshold = 0.5,
-### Stopping criteria. Typically chosen to be in the interval 
+### Stopping criteria. Typically chosen to be in the interval
 ### (0 0.5]. The smaller the threshold, the higher the tendency to keep more
 ### breakpoints. The criteria is based on the method found in 'Picard et al
 ### (2005)', "A statistical approach for array CGH data analysis" (BMC
@@ -421,7 +421,7 @@ threshold = 0.5,
 #   Returns a pruned object of the same class.
 # }
 #
-# \examples{\dontrun{ 
+# \examples{\dontrun{
 #  # Drop two segments
 #  fitP <- pruneByDP(fit, nbrOfSegments=-2);
 # }}
@@ -446,7 +446,7 @@ setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbos
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'nbrOfSegments':
   nbrOfSegments <- Arguments$getInteger(nbrOfSegments);
   # Specifying number of change points *to drop*?
@@ -497,7 +497,7 @@ setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbos
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Rebuilding segmentation results");
-  fitDP <- resegment(fit, knownSegments=knownSegments, undoTCN=+Inf, undoDH=+Inf, verbose=less(verbose, 10)); 
+  fitDP <- resegment(fit, knownSegments=knownSegments, undoTCN=+Inf, undoDH=+Inf, verbose=less(verbose, 10));
   verbose && print(verbose, fitDP);
   verbose && exit(verbose);
 

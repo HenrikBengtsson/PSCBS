@@ -4,7 +4,7 @@
 # @alias RestructPSCBS
 #
 # \description{
-#   This page describes available methods for restructuring an 
+#   This page describes available methods for restructuring an
 #   @see "AbstractCBS" object.
 #
 #   \itemize{
@@ -47,10 +47,10 @@
 #             before returning an @see "AbstractCBS".
 #   }
 #
-#   All of the above methods are implemented for @see "CBS" and 
+#   All of the above methods are implemented for @see "CBS" and
 #   @see "PairedPSCBS" objects.
 # }
-# 
+#
 # @author "HB"
 #
 # \seealso{
@@ -58,7 +58,7 @@
 # }
 #
 # @keyword internal
-#*/###########################################################################  
+#*/###########################################################################
 
 
 ###########################################################################/**
@@ -71,7 +71,7 @@
 #   @get "title",
 #   where both holds segmentation results \emph{of the same sample}.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -89,7 +89,7 @@
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("append", "AbstractCBS", abstract=TRUE);
 
 
@@ -97,7 +97,7 @@ setMethodS3("append", "AbstractCBS", abstract=TRUE);
 setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'from' & 'to':
   from <- Arguments$getIntegers(from, disallow=c("NaN", "Inf"));
   n <- length(from);
@@ -112,7 +112,7 @@ setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
   data <- getLocusData(fit);
   segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
   knownSegments <- fit$params$knownSegments;
-  
+
   for (cc in seq(length=n)) {
     chr <- from[cc];
     chrN <- to[cc];
@@ -120,7 +120,7 @@ setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
     segs$chromosome[segs$chromosome == chr] <- chrN;
     knownSegments$chromosome[knownSegments$chromosome == chr] <- chrN;
   } # for (cc ...)
-  
+
   fit$data <- data;
   fit$output <- segs;
   fit$params$knownSegments <- knownSegments;
@@ -149,7 +149,7 @@ setMethodS3("extractSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 setMethodS3("extractSegment", "AbstractCBS", function(this, idx, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'region':
   idx <- Arguments$getIndex(idx, max=nbrOfSegments(this, splitters=TRUE));
 
@@ -206,7 +206,7 @@ setMethodS3("extractRegions", "AbstractCBS", function(this, regions, H=1, ..., v
 setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'region':
   region <- Arguments$getIndex(region, max=nbrOfSegments(this, splitters=TRUE));
 
@@ -222,10 +222,10 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
 # @title "Merge two neighboring segments"
 #
 # \description{
-#   @get "title" into one segment, which is done by dropping their 
+#   @get "title" into one segment, which is done by dropping their
 #   common change point and recalculating the segment statistics.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -245,11 +245,11 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
 # \seealso{
 #   To merge a segment and its two flanking segments, see
 #   @seemethod "mergeThreeSegments".
-#   To drop regions (a connected set of segments) 
+#   To drop regions (a connected set of segments)
 #   see @seemethod "dropRegions".
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
@@ -277,7 +277,7 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 #
 #   \emph{NOTE: This method only works if there is only one chromosome.}
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -297,7 +297,7 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, ...) {
   # Assert that there is only one chromosome
   chrs <- getChromosomes(fit);
@@ -338,7 +338,7 @@ setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, 
 # \description{
 #   @get "title" into one segment, and recalculating the segment statistics.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -357,7 +357,7 @@ setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, 
 #   Internally @seemethod "mergeTwoSegments" is used.
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
   # Argument 'middle':
   S <- nbrOfSegments(fit, splitters=TRUE);
@@ -389,7 +389,7 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
 #   @get "title" each of a certain size (number of segments).
 #   \emph{None of the statistics are recalculated}.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -417,7 +417,7 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
 #   See also @seemethod "dropChangePoint" and @seemethod "mergeTwoSegments".
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., asMissing=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -471,7 +471,7 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., asMi
 
   dropped <- extractRegions(this, regions=regions, ...);
   res <- this;
-  if (length(regions) > 0) {  
+  if (length(regions) > 0) {
     if (asMissing) {
       segs <- getSegments(res, splitters=TRUE);
       pattern <- "(chromosome|id|start|end)$";
@@ -517,40 +517,11 @@ setMethodS3("shiftTCN", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
 
 
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# DEPRECATED BEGIN
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-setMethodS3("dropByRegions", "AbstractCBS", function(fit, ...) {
-  dropRegions(fit, ...);
-}, protected=TRUE, deprecated=TRUE)
-
-setMethodS3("dropByRegion", "AbstractCBS", function(fit, ...) {
-  dropRegion(fit, ...);
-}, protected=TRUE, deprecated=TRUE)
-
-setMethodS3("extractByChromosomes", "AbstractCBS", function(fit, ...) {
-  extractChromosomes(fit, ...);
-}, protected=TRUE, deprecated=TRUE)
-
-setMethodS3("extractByChromosome", "AbstractCBS", function(fit, ...) {
-  extractChromosome(fit, ...);
-}, protected=TRUE, deprecated=TRUE)
-
-setMethodS3("extractByRegions", "AbstractCBS", function(fit, ...) {
-  extractRegions(fit, ...);
-}, protected=TRUE, deprecated=TRUE)
-
-setMethodS3("extractByRegion", "AbstractCBS", function(fit, ...) {
-  extractRegion(fit, ...);
-}, protected=TRUE, deprecated=TRUE)
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# DEPRECATED END
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 
 ############################################################################
 # HISTORY:
+# 2013-04-20 [HB]
+# o CLEANUP: Removed previously deprecated methods for AbstractCBS.
 # 2013-03-21 [HB]
 # o SPEEDUP: Made dropChangePoints() faster by only updating the segment
 #   statistics/means at the very end.
