@@ -5,7 +5,7 @@
 # @title "Prune the CBS profile by dropping change points that are too small"
 #
 # \description{
-#  @get "title", where "too small" means that the amplitude of the 
+#  @get "title", where "too small" means that the amplitude of the
 #  change points is less than a multiple of the overall standard deviation
 #  of the copy-number signals.
 # }
@@ -31,7 +31,7 @@
 #
 # \details{
 #  This method corresponds to using the \code{undo} argument when calling
-#  @see "segmentByCBS", which in turn corresponds to using the 
+#  @see "segmentByCBS", which in turn corresponds to using the
 #  \code{undo.splits="sdundo"} and \code{undo.SD} of the underlying
 #  @see "DNAcopy::segment" method.
 # }
@@ -41,7 +41,7 @@
 # @author "HB, PN"
 #
 # @keyword internal
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -61,7 +61,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
   verbose && enter(verbose, "Pruning segments by standard deviation");
 
   # Check if locus weights are available
@@ -78,7 +78,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
   fitList <- vector("list", length=nbrOfChromosomes);
   for (cc in seq(length=nbrOfChromosomes)) {
     chr <- chromosomes[cc];
-    verbose && enter(verbose, sprintf("Chromosome #%d ('Chr%s') of %d", 
+    verbose && enter(verbose, sprintf("Chromosome #%d ('Chr%s') of %d",
                                             cc, chr, length(chromosomes)));
 
     # Extract this chromosome
@@ -101,7 +101,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     # Label data points by their segment index
     segId <- rep(as.integer(NA), times=max(segRows[,2], na.rm=TRUE));
     for (rr in 1:nbrOfSegs) {
-      segRow <- unlist(segRows[rr,]);
+      segRow <- unlist(segRows[rr,], use.names=FALSE);
       idxs <- segRow[1]:segRow[2];
       segId[idxs] <- rr;
     }
@@ -134,7 +134,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     # Prune change points
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     segLengths <- segRows[,2] - segRows[,1] + 1L;
-    segLengthsP <- DNAcopy:::changepoints.sdundo(genomdat=y, 
+    segLengthsP <- DNAcopy:::changepoints.sdundo(genomdat=y,
                          lseg=segLengths, trimmed.SD=sigma, change.SD=rho);
     segLengthsP <- as.integer(segLengthsP);
     nbrOfSegsP <- length(segLengthsP);
@@ -207,7 +207,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
 
 setMethodS3("seqOfSegmentsByDP", "CBS", function(fit, by=c("y"), ...) {
   NextMethod("seqOfSegmentsByDP", by=by);
-}) 
+})
 
 
 ############################################################################

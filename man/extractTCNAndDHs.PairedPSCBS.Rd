@@ -7,34 +7,34 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
- \name{extractTCNAndDHs.PairedPSCBS}
+\name{extractTCNAndDHs.PairedPSCBS}
 \alias{extractTCNAndDHs.PairedPSCBS}
 \alias{PairedPSCBS.extractTCNAndDHs}
 \alias{extractTCNAndDHs,PairedPSCBS-method}
 
- \title{Extract TCN and DH mean levels per segment}
+\title{Extract TCN and DH mean levels per segment}
 
- \description{
-   Extract TCN and DH mean levels per segment.
- }
+\description{
+  Extract TCN and DH mean levels per segment.
+}
 
- \usage{
+\usage{
 \method{extractTCNAndDHs}{PairedPSCBS}(fit, ...)
 }
 
- \arguments{
-  \item{...}{Arguments passed to \code{getSegments()}.}
- }
+\arguments{
+ \item{...}{Arguments passed to \code{getSegments()}.}
+}
 
- \value{
-   Returns a \code{\link[base]{data.frame}}.
- }
+\value{
+  Returns a \code{\link[base]{data.frame}}.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   \code{\link[PSCBS:extractMinorMajorCNs.PairedPSCBS]{*extractMinorMajorCNs}()}.
-   For more information see \code{\link{PairedPSCBS}}.
- }
+\seealso{
+  \code{\link[PSCBS:extractMinorMajorCNs.PairedPSCBS]{*extractMinorMajorCNs}()}.
+  For more information see \code{\link{PairedPSCBS}}.
+}
 \keyword{internal}
 \keyword{methods}

@@ -297,8 +297,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
       stopifnot(!is.na(nbrOfDHs));
     }
 
-    tcnSegRowJJ <- unlist(tcnSegRows[jj,]);
-    dhSegRowJJ <- unlist(dhSegRows[jj,]);
+    tcnSegRowJJ <- unlist(tcnSegRows[jj,], use.names=FALSE);
+    dhSegRowJJ <- unlist(dhSegRows[jj,], use.names=FALSE);
 
     # Indices of all loci
     if (hasTcnLoci[jj]) {
@@ -660,6 +660,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
 ##############################################################################
 # HISTORY
+# 2013-04-23
+# o SPEEDUP: Made bootstrapTCNandDHByRegion() much faster by adding
+#   use.names=FALSE to two internal unlist() statements.
 # 2013-04-22
 # o Added argument 'probs' to bootstrapTCNandDHByRegion().
 # 2013-04-09

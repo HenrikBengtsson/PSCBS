@@ -8,7 +8,7 @@ setMethodS3("shiftTCN", "PairedPSCBS", function(fit, shift, update=TRUE, ...) {
   rm(data);
 
   if (update) {
-    fit <- updateMeans(fit, ...);  
+    fit <- updateMeans(fit, ...);
   }
 
   fit;
@@ -29,7 +29,7 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -46,7 +46,7 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 #   @seemethod "extractMinorMajorCNs".
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
   segs <- getSegments(fit, ...);
   stopifnot(!is.null(segs));
@@ -67,7 +67,7 @@ setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -84,7 +84,7 @@ setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
 #   @seemethod "extractTCNAndDHs"
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("extractMinorMajorCNs", "PairedPSCBS", function(fit, ...) {
   data <- extractTCNAndDHs(fit, ...);
 
@@ -124,14 +124,14 @@ setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
 setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
   verbose && enter(verbose, "Post-segmenting TCNs");
 
   flavor <- fit$params$flavor;
@@ -152,9 +152,9 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   avgTCN <- estList$tcn;
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the data and segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
 
   segs <- getSegments(fit);
@@ -181,9 +181,9 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   isSnp <- !is.na(muN);
   isHet <- isSnp & (muN == 1/2);
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update the TCN segments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   chromosomes <- getChromosomes(fit);
   nbrOfChromosomes <- length(chromosomes);
   verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
@@ -213,9 +213,9 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       J <- length(rowsII);
       # Nothing todo?
       if (!force && J == 1) {
-        verbose && cat(verbose, "Nothing todo. Only one DH segmentation. Skipping.");    
+        verbose && cat(verbose, "Nothing todo. Only one DH segmentation. Skipping.");
         verbose && exit(verbose);
-        next;    
+        next;
       }
 
       verbose && cat(verbose, "Rows:");
@@ -229,7 +229,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       verbose && print(verbose, cbind(tcn=tcnSegRowsII, dh=dhSegRowsII));
 
       segRowsRange <- range(c(tcnSegRowsII, dhSegRowsII), na.rm=TRUE);
-      verbose && printf(verbose, "Range [%d,%d]\n", 
+      verbose && printf(verbose, "Range [%d,%d]\n",
                                     segRowsRange[1], segRowsRange[2]);
 
       tcnSegRowsIIBefore <- tcnSegRowsII;
@@ -240,8 +240,8 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       for (jj in seq(length=J)) {
         verbose && enter(verbose, sprintf("DH segment #%d of %d", jj, J));
         seg <- segsII[jj,,drop=FALSE];
-        tcnSegRow <- unlist(tcnSegRowsII[jj,,drop=FALSE]);
-        dhSegRow <- unlist(dhSegRowsII[jj,,drop=FALSE]);
+        tcnSegRow <- unlist(tcnSegRowsII[jj,,drop=FALSE], use.names=FALSE);
+        dhSegRow <- unlist(dhSegRowsII[jj,,drop=FALSE], use.names=FALSE);
         # Sanity check
         stopifnot(all(is.na(tcnSegRow)) || (tcnSegRow[1] <= tcnSegRow[2]));
         stopifnot(all(is.na(dhSegRow)) || (dhSegRow[1] <= dhSegRow[2]));
@@ -250,7 +250,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
         idxsTCN <- tcnSegRow[1]:tcnSegRow[2];
         nbrOfTCNs <- sum(!is.na(CT[idxsTCN]));
         stopifnot(nbrOfTCNs == nbrOfTCNsBefore);
-  
+
         if (joinSegments) {
           # (a) The TCN segment should have identical (start,end) boundaries as the DH region
           xStart <- seg[["dhStart"]];
@@ -294,7 +294,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
         } else {
           throw("Not implemented yet.")  # /HB 2010-12-02
         } # if (joinSegments)
-  
+
         gamma <- avgTCN(CT[units]);
         # Sanity check
         stopifnot(length(units) == 0 || !is.na(gamma));
@@ -352,7 +352,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
     stopifnot(all(tcnSegRowsCC[,1] <= tcnSegRowsCC[,2], na.rm=TRUE));
 ####################
 if (!all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE)) {
-  
+
   aa <- tcnSegRowsCC[-nrow(tcnSegRowsCC),2];
   bb <- tcnSegRowsCC[-1,1];
   delta <- bb - aa;
@@ -459,7 +459,7 @@ print(tcnSegRowsII);
 # o Added argument 'tauTCN' to estimateMeanForDH().
 # 2011-01-27
 # o Added flavor="DHskew" to estimateTauAB().
-# o Added flavor="DH" to estimateTauAB() to estimate from DH instead 
+# o Added flavor="DH" to estimateTauAB() to estimate from DH instead
 #   of hBAF.  As argued by the equations in the comments, these two
 #   approaches gives virtually the same results.  The advantage with the
 #   DH approach is that it requires one less degree of freedom.
@@ -491,7 +491,7 @@ print(tcnSegRowsII);
 #   and that are split in two different segments.  It also did not exclude
 #   loci with missing values.
 # 2010-11-21
-# o Adjusted postsegmentTCN() such that the updated TCN segment boundaries 
+# o Adjusted postsegmentTCN() such that the updated TCN segment boundaries
 #   are the maximum of the DH segment and the support by the loci.  This
 #   means that postsegmentTCN() will work as expected both when signals
 #   where segmented with 'joinSegments' being TRUE or FALSE.
