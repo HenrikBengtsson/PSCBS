@@ -30,7 +30,7 @@
 #   @seemethod "estimateKappaByC1Density".
 # }
 #
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)"), ...) {
   # Argument 'flavor':
   flavor <- match.arg(flavor);
@@ -52,7 +52,7 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #
 # \description{
 #  @get "title" based on the location of peaks in a weighted
-#  density estimator of the minor copy number mean levels. 
+#  density estimator of the minor copy number mean levels.
 #  The global background, here called \eqn{\kappa},
 #  may have multiple origins where normal contamination is one,
 #  but not necessarily the only one.
@@ -75,7 +75,7 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 # \value{
 #   Returns the background estimate as a @numeric scalar.
 # }
-# 
+#
 # \section{Algorithm}{
 #  \itemize{
 #  \item Retrieve segment-level minor copy numbers and corresponding weights:
@@ -84,7 +84,7 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #    \item Calculate segment weights.
 #          The default (\code{typeOfWeights="dhNbrOfLoci"}) is to use
 #          weights proportional to the number of heterozygous SNPs.
-#          An alternative (\code{typeOfWeights="sqrt(dhNbrOfLoci)"}) is 
+#          An alternative (\code{typeOfWeights="sqrt(dhNbrOfLoci)"}) is
 #          to use the square root of those counts.
 #   }
 #
@@ -99,11 +99,11 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #          these two peaks.
 #   }
 #
-#  \item Estimate the normal contamination:
+#  \item Estimate the global background signal:
 #   \enumerate{
 #    \item For all segments with C1 < Delta0.5, calculate the weighted
 #          median of their C1:s.
-#    \item Let kappa be the above weighted median. 
+#    \item Let kappa be the above weighted median.
 #          This is the estimated background.
 #   }
 #  }
@@ -117,7 +117,7 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 # }
 #
 # @keyword internal
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, minDensity=0.2, ..., verbose=FALSE) {
   require("matrixStats") || throw("Package not loaded: matrixStats");
   require("aroma.light") || throw("Package not loaded: aroma.light");
@@ -142,11 +142,11 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   }
 
 
-  verbose && enter(verbose, "Estimate normal contamination");
- 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  verbose && enter(verbose, "Estimate global background (including normal contamination and more)");
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the region-level estimates
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- this$output;
   c1 <- segs$c1Mean;
   stopifnot(!is.null(c1));
@@ -170,9 +170,9 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   weights <- w / sum(w);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify subset of regions with C1=0
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Estimating threshold Delta0.5 from the empirical density of C1:s");
   verbose && cat(verbose, "adjust: ", adjust);
   verbose && cat(verbose, "minDensity: ", minDensity);
@@ -201,9 +201,9 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  # Estimate the normal contamination
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Estimate kappa
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   keep <- which(c1 < Delta0.5);
   verbose && cat(verbose, "Number of segments with C1 < Delta0.5: ", length(keep));
   kappa <- weightedMedian(c1[keep], w=weights[keep]);

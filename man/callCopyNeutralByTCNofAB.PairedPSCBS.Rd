@@ -30,7 +30,7 @@
     "acceptance" region.
     Defaults to half of the distance between two integer TCN states,
     i.e. 1/2.  This argument should be shrunken as a function of
-    the amount of the normal contaminator.}
+    the amount of the normal contamination and other background signals.}
   \item{alpha}{A \code{\link[base]{double}} in [0,0.5] specifying the significance level
     of the confidence intervals used.}
   \item{...}{Additional arguments passed to

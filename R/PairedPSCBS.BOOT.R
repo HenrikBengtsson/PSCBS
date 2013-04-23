@@ -308,14 +308,14 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     }
 
     verbose && str(verbose, idxsAll);
-    verbose && print(verbose, hpaste(idxsAll));
+    verbose && print(verbose, hpaste(idxsAll), level=-120);
     verbose && str(verbose, idxsCT);
-    verbose && print(verbose, hpaste(idxsCT));
+    verbose && print(verbose, hpaste(idxsCT), level=-120);
 
     # Keep only loci with finite TCNs
     idxsAll <- intersect(idxsAll, idxsCT);
     verbose && str(verbose, idxsAll);
-    verbose && print(verbose, hpaste(idxsAll));
+    verbose && print(verbose, hpaste(idxsAll), level=-120);
 
     # Sanity check
     if (length(idxsAll) != nbrOfTCNs) {
