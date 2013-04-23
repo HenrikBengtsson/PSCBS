@@ -409,7 +409,6 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (nbrOfTCNs > 0L) {
       # Sanity check
-        dd <<- list(idxsTCN=idxsTCN, x=x[idxsTCN], CT=CT[idxsTCN], avgTCN=avgTCN, tcnMean=tcnMeans[jj]);
       ys <- CT[idxsTCN];
       mu <- avgTCN(ys, na.rm=TRUE);
       dMu <- (mu - tcnMeans[jj]);
