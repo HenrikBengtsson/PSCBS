@@ -10,6 +10,11 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   }
 
 
+  # Nothing to do, i.e. already tiled?
+  if (isTRUE(attr(fit, "tiledChromosomes")) {
+    return(fit);
+  }
+
   verbose && enter(verbose, "Tiling chromosomes");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,6 +103,9 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
   stopifnot(nbrOfLoci(fitT) == nbrOfLoci(fit));
   stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit));
+
+  # Flag object
+  attr(fit, "tiledChromosomes") <- TRUE;
 
   verbose && exit(verbose);
 

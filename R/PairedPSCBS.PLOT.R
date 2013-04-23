@@ -631,6 +631,12 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   }
 
 
+  # Nothing to do, i.e. already tiled?
+  if (isTRUE(attr(fit, "tiledChromosomes")) {
+    return(fit);
+  }
+
+
   verbose && enter(verbose, "Tile chromosomes");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -715,6 +721,8 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   fit$params$knownSegments <- knownSegments;
 #  fitT$params$chrOffsets <- chrOffsets;
 
+  # Flag object
+  attr(fit, "tiledChromosomes") <- TRUE;
 
   verbose && exit(verbose);
 

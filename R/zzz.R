@@ -17,14 +17,12 @@
     packageStartupMessage(sprintf("%s\nNOTE: %s\n%s", hrule, msg, hrule));
   }
 
-  packageStartupMessage(getName(pkg), " v", getVersion(pkg), 
-      " (", getDate(pkg), ")", " successfully loaded. See ?", 
-      pkgname, " for help.\n", sep="");
+  startupMessage(pkg);
 }
 
 
 ############################################################################
-# HISTORY: 
+# HISTORY:
 # 2011-07-23
 # o Added a namespace to the package.
 ############################################################################

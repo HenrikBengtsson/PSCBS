@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.34.9 [2013-04-22]
+o Utilizing new startupMessage() of R.oo.
+o BUG FIX: Segment levels drawn by plotTracks() would have incorrect
+  genomic locations for chromosome 2 and beyond.  This bug was 
+  introduced in v0.34.7.
+
+
 Version: 0.34.8 [2013-04-20]
 o CLEANUP: Removed previously deprecated methods for AbstractCBS.
 
