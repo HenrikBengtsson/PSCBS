@@ -8,7 +8,7 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
   rm(data);
 
   if (update) {
-    fit <- updateMeans(fit, ...);  
+    fit <- updateMeans(fit, ...);
   }
 
   fit;
@@ -24,7 +24,7 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -43,14 +43,14 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
   # To please R CMD check
   this <- x;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'other':
   other <- Arguments$getInstanceOf(other, class(this)[1]);
   for (field in c("data", "output")) {
@@ -134,7 +134,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
     from <- c(1L, cumsum(ns)[-length(ns)]+1L);
     to <- from + (ns - 1L);
     segRows[!isSplitter,1] <- from;
-    segRows[!isSplitter,2] <- to;   
+    segRows[!isSplitter,2] <- to;
     verbose && str(verbose, segRows);
 
     # Sanity check
@@ -147,7 +147,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'idxs':
   idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit, splitters=TRUE));
 
@@ -158,7 +158,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
     on.exit(popState(verbose));
   }
 
- 
+
   verbose && enter(verbose, "Extracting subset of segments");
 
   verbose && cat(verbose, "Number of segments: ", length(idxs));
@@ -176,18 +176,18 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   # Sanity checks
   stopifnot(all(!is.na(data$chromosome) & !is.na(data$x)));
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Subset segments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Update table of segments");
   segsT <- segs[idxs,,drop=FALSE];
   verbose && str(verbose, segsT);
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Subset data accordingly
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Update locus data");
 
   segRowsT <- segRows[idxs,,drop=FALSE];
@@ -210,9 +210,9 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update 'segRows'
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Update 'segRows'");
   segRowsT <- updateSegRows(segRowsT);
   d <- segRows[idxs,] - segRowsT;
@@ -246,7 +246,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   verbose && exit(verbose);
 
   res;
-}, protected=TRUE) # extractSegments() 
+}, protected=TRUE) # extractSegments()
 
 
 
@@ -266,7 +266,7 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
   }
 
 
-  verbose && enter(verbose, "Merging to segments");
+  verbose && enter(verbose, "Merging two segments");
   verbose && printf(verbose, "Segments to be merged: %s & %s\n", left, left+1);
   verbose && cat(verbose, "Number of segments before merging: ", nbrOfSegments);
   verbose && cat(verbose, "Number of segments after merging: ", nbrOfSegments-1L);
@@ -322,7 +322,7 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
   # Update 'segRows' tables
   segRows[rows[1],2] <- segRows[rows[2],2];
   segRows <- segRows[-rows[2],];
- 
+
   # Create results object
   res <- this;
   res$output <- segs;

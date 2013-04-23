@@ -6,19 +6,19 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{CBS}
+\name{CBS}
 \docType{class}
 \alias{CBS}
 
 
- \title{The CBS class}
+\title{The CBS class}
 
- \description{
-   A CBS object holds results from the
-   Circular Binary Segmentation (CBS) method
-   for \emph{one} sample for one or more chromosomes.
+\description{
+  A CBS object holds results from the
+  Circular Binary Segmentation (CBS) method
+  for \emph{one} sample for one or more chromosomes.
 
-  Package:  PSCBS \cr
+ Package:  PSCBS \cr
 \bold{Class CBS}\cr
 
 \code{list}\cr
@@ -34,18 +34,18 @@ public abstract static class \bold{CBS}\cr
 extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 
 
- }
+}
 
- \usage{
+\usage{
 CBS(...)
 }
 
- \arguments{
-  \item{...}{Arguments passed to the constructor of \code{\link{AbstractCBS}}.}
- }
+\arguments{
+ \item{...}{Arguments passed to the constructor of \code{\link{AbstractCBS}}.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:append.CBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{as} \tab  -\cr
@@ -65,17 +65,17 @@ all.equal, append, as.data.frame, drawChangePoints, drawKnownSegments, dropChang
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
 
 
- }
+}
 
- \section{Difference to DNAcopy object}{
-   A CBS object is similar to DNAcopy objects with the major
-   difference that a CBS object holds only one sample, whereas
-   a DNAcopy object can hold more than one sample.
- }
+\section{Difference to DNAcopy object}{
+  A CBS object is similar to DNAcopy objects with the major
+  difference that a CBS object holds only one sample, whereas
+  a DNAcopy object can hold more than one sample.
+}
 
- \section{See also}{
-  The \code{\link{segmentByCBS}}() method returns an object of this class.
- }
+\section{See also}{
+ The \code{\link{segmentByCBS}}() method returns an object of this class.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

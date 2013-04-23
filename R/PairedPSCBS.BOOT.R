@@ -12,8 +12,10 @@
 #
 # \arguments{
 #   \item{B}{A postive @integer specifying the number of bootstrap samples.}
-#   \item{statsFcn}{A @function that estimates confidence intervals given
-#      locus-level data.}
+#   \item{probs}{The default quantiles to be estimated.}
+#   \item{statsFcn}{A (optional) @function that estimates confidence
+#      intervals given locus-level data.
+#      If @NULL, the @see "stats::quantile" function is used.}
 #   \item{by}{A @character specifying whether DH should be calculated from
 #      normalized ('betaTN') or non-normalized ('betaT') tumor BAFs.}
 #   \item{force}{If @TRUE, already existing estimates are ignored,
@@ -37,7 +39,7 @@
 # }
 #
 #*/###########################################################################
-setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975), na.rm=TRUE), by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
+setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
 
@@ -47,6 +49,17 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'B':
   B <- Arguments$getInteger(B, range=c(1,Inf));
+
+  # Argument 'probs':
+  probs <- Arguments$getNumerics(probs, range=c(0,1));
+  # Always estimate the default quantiles
+  probs0 <- eval(formals(bootstrapTCNandDHByRegion.PairedPSCBS)$probs);
+  probs <- unique(sort(c(probs, probs0)));
+
+  # Argument 'statsFcn':
+  if (is.null(statsFcn)) {
+    statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
+  }
 
   # Argument 'by':
   by <- match.arg(by);
@@ -647,6 +660,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, s
 
 ##############################################################################
 # HISTORY
+# 2013-04-22
+# o Added argument 'probs' to bootstrapTCNandDHByRegion().
 # 2013-04-09
 # o Added Rdoc comments.
 # 2013-02-09

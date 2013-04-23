@@ -23,7 +23,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
     from <- c(1L, cumsum(ns)[-length(ns)]+1L);
     to <- from + (ns - 1L);
     segRows[!isSplitter,1] <- from;
-    segRows[!isSplitter,2] <- to;   
+    segRows[!isSplitter,2] <- to;
     verbose && str(verbose, segRows);
 
     # Sanity check
@@ -37,7 +37,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'idxs':
   idxs <- Arguments$getIndices(idxs, max=nbrOfSegments(fit, splitters=TRUE));
 
@@ -48,7 +48,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
     on.exit(popState(verbose));
   }
 
- 
+
   verbose && enter(verbose, "Extracting subset of segments");
 
   verbose && cat(verbose, "Number of segments: ", length(idxs));
@@ -71,25 +71,25 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   # Sanity checks
   if (!params$joinSegments) {
     throw("Cannot extract subset of segments unless CNs are segmented using joinSegments=TRUE.");
-  } 
+  }
 
   if (params$flavor == "tcn,dh") {
     throw("NOT IMPLEMENTED: Extracting a subset of segments is not supported for flavor '", params$flavor, "'.");
   }
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Subset segments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Update table of segments");
   segsT <- segs[idxs,,drop=FALSE];
   verbose && str(verbose, segsT);
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Subset data accordingly
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Update locus data");
 
   segRows <- tcnSegRows;
@@ -113,9 +113,9 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update 'segRows'
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Update 'segRows'");
 
   segRows <- updateSegRows(tcnSegRows, idxs=idxs);
@@ -151,7 +151,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 
   verbose && exit(verbose);
 
-  
+
   # Create new object
   res <- fit;
   res$data <- dataT;
@@ -175,7 +175,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 # \description{
 #   @get "title" by recalculating segment statistics.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -196,7 +196,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 #   To drop regions (a connected set of segments) see \code{dropRegions()}.
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -213,7 +213,7 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
   }
 
 
-  verbose && enter(verbose, "Merging to segments");
+  verbose && enter(verbose, "Merging two segments");
   verbose && printf(verbose, "Segments to be merged: %s & %s\n", left, left+1);
   verbose && cat(verbose, "Number of segments before merging: ", nbrOfSegments);
   verbose && cat(verbose, "Number of segments after merging: ", nbrOfSegments-1L);
@@ -302,7 +302,7 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
 #   what is returned by extractSegments() for PairedPSCBS.
 # 2012-01-09
 # o ROBUSTNESS: Now extractSegments() for PairedPSCBS gives an informative
-#   error message that it is not supported if CNs were segmented using 
+#   error message that it is not supported if CNs were segmented using
 #   flavor "tcn,dh".
 # 2011-10-16
 # o Added argument 'update' to mergeTwoSegments().
@@ -323,7 +323,7 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
 # o Added argument 'tauTCN' to estimateMeanForDH().
 # 2011-01-27
 # o Added flavor="DHskew" to estimateTauAB().
-# o Added flavor="DH" to estimateTauAB() to estimate from DH instead 
+# o Added flavor="DH" to estimateTauAB() to estimate from DH instead
 #   of hBAF.  As argued by the equations in the comments, these two
 #   approaches gives virtually the same results.  The advantage with the
 #   DH approach is that it requires one less degree of freedom.
@@ -355,7 +355,7 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
 #   and that are split in two different segments.  It also did not exclude
 #   loci with missing values.
 # 2010-11-21
-# o Adjusted postsegmentTCN() such that the updated TCN segment boundaries 
+# o Adjusted postsegmentTCN() such that the updated TCN segment boundaries
 #   are the maximum of the DH segment and the support by the loci.  This
 #   means that postsegmentTCN() will work as expected both when signals
 #   where segmented with 'joinSegments' being TRUE or FALSE.

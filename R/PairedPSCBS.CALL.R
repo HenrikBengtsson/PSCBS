@@ -1,7 +1,7 @@
 setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, deltaAB=estimateDeltaAB(fit), alphaAB=0.05, deltaHighAI=0.60, alphaHighAI=0.05, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -14,8 +14,7 @@ setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, deltaAB=estimateDelt
   # Calculate DH confidence intervals, if not already done
   probs <- sort(unique(c(alphaAB, alphaHighAI)));
   probs <- sort(unique(c(probs, 1-probs)));
-  statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
 
   # Call allelic balance
   fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
@@ -32,7 +31,7 @@ setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, deltaAB=estimateDelt
 setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDeltaAB(fit), alphaAB=0.05, deltaLowC1=0.50, alphaLowC1=0.05, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -45,8 +44,7 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDelta
   # Calculate DH confidence intervals, if not already done
   probs <- sort(unique(c(alphaAB, alphaLowC1)));
   probs <- sort(unique(c(probs, 1-probs)));
-  statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
 
   # Call allelic balance
   fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
@@ -88,7 +86,7 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
   # For each segment...
   for (ss in seq(length=nrow(segs))) {
     seg <- segs[ss,];
-    idxs <- which(chromosome == seg$chromosome & 
+    idxs <- which(chromosome == seg$chromosome &
                   seg$tcnStart <= x & x <= seg$tcnEnd);
     idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
     # Sanity check
@@ -100,7 +98,7 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
     }
   } # for (ss ...)
 
-  # The calls for loci that have missing annotations or observations, 
+  # The calls for loci that have missing annotations or observations,
   # should also be missing, i.e. NA.
   nok <- (is.na(chromosome) | is.na(x) | is.na(y));
   callsL[nok,] <- as.logical(NA);

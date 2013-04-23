@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{PairedPSCBS}
+\name{PairedPSCBS}
 \docType{class}
 \alias{PairedPSCBS}
 
 
- \title{The PairedPSCBS class}
+\title{The PairedPSCBS class}
 
- \description{
-  Package:  PSCBS \cr
+\description{
+ Package:  PSCBS \cr
 \bold{Class PairedPSCBS}\cr
 
 \code{list}\cr
@@ -33,19 +33,19 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
 
 
 
-  A PairedPSCBS is an object containing the results from the
-  Paired PSCBS method.
- }
+ A PairedPSCBS is an object containing the results from the
+ Paired PSCBS method.
+}
 
- \usage{PairedPSCBS(fit=list(), ...)}
+\usage{PairedPSCBS(fit=list(), ...)}
 
- \arguments{
-   \item{fit}{A \code{\link[base]{list}} structure containing the Paired PSCBS results.}
-   \item{...}{Not used.}
- }
+\arguments{
+  \item{fit}{A \code{\link[base]{list}} structure containing the Paired PSCBS results.}
+  \item{...}{Not used.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{\link[PSCBS:callAB.PairedPSCBS]{callAB}} \tab Calls segments that are in allelic balance.\cr
  \tab \code{\link[PSCBS:callCopyNeutral.PairedPSCBS]{callCopyNeutral}} \tab Calls segments that have a neutral total copy number.\cr
@@ -59,7 +59,7 @@ extends \emph{\link[PSCBS]{PSCBS}}\cr
  \tab \code{\link[PSCBS:estimateDeltaLOH.PairedPSCBS]{estimateDeltaLOH}} \tab Estimate a threshold for calling LOH from DH.\cr
  \tab \code{\link[PSCBS:estimateKappa.PairedPSCBS]{estimateKappa}} \tab Estimate global background in segmented copy numbers.\cr
  \tab \code{extractCNs} \tab  -\cr
- \tab \code{plotTracks1} \tab  -\cr
+ \tab \code{\link[PSCBS:plotTracks.PairedPSCBS]{plotTracks}} \tab Plots parental specific copy numbers along the genome.\cr
  \tab \code{segmentByNonPairedPSCBS} \tab  -\cr
  \tab \code{segmentByPairedPSCBS} \tab  -\cr
  \tab \code{seqOfSegmentsByDP} \tab  -\cr
@@ -76,11 +76,11 @@ all.equal, append, as.data.frame, drawChangePoints, drawKnownSegments, dropChang
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
 
 
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   The \code{\link{segmentByPairedPSCBS}}() method returns an object of this class.
- }
+\seealso{
+  The \code{\link{segmentByPairedPSCBS}}() method returns an object of this class.
+}
 \keyword{classes}

@@ -10,7 +10,7 @@
 #
 #  @classhierarchy
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -32,7 +32,7 @@
 # }
 #
 # @author "HB"
-#*/###########################################################################  
+#*/###########################################################################
 setConstructorS3("CBS", function(...) {
   extend(AbstractCBS(list(data=NULL, output=NULL), ...), "CBS");
 })
@@ -83,10 +83,10 @@ setMethodS3("all.equal", "CBS", function(target, current, check.attributes=FALSE
 # }
 #
 # \value{
-#   Returns a @data.frame, where each row corresponds to 
+#   Returns a @data.frame, where each row corresponds to
 #   a unique segment.
 # }
-# 
+#
 # @author
 #
 # \seealso{
@@ -95,7 +95,7 @@ setMethodS3("all.equal", "CBS", function(target, current, check.attributes=FALSE
 # }
 #
 # @keyword internal
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("as.character", "CBS", function(x, ...) {
   # To please R CMD check
   fit <- x;
@@ -198,7 +198,7 @@ setMethodS3("getSegmentTrackPrefixes", "CBS", function(fit, ...) {
 setMethodS3("getLocusData", "CBS", function(fit, indices=NULL, addCalls=NULL, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'indices':
   if (!is.null(indices)) {
     indices <- Arguments$getIndices(indices);
@@ -320,21 +320,21 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
 setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
   verbose && enter(verbose, "Updating boundaries");
-  verbose && cat(verbose, "Number of segments: ", 
+  verbose && cat(verbose, "Number of segments: ",
                                   nbrOfSegments(fit, splitters=FALSE));
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the data and segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
   segs <- getSegments(fit, splitters=TRUE);
   segRows <- fit$segRows;
@@ -346,9 +346,9 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
   w <- data$w;
   hasWeights <- !is.null(w);
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update segments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   for (ss in seq(length=nbrOfSegments)) {
     verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
     segRow <- segRows[ss,];
@@ -421,10 +421,10 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 
-setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("asis", "mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'avg':
   avg <- match.arg(avg);
 
@@ -434,14 +434,14 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("mean", "median"), ve
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
   verbose && enter(verbose, "Updating mean level estimates");
-  verbose && cat(verbose, "Number of segments: ", 
+  verbose && cat(verbose, "Number of segments: ",
                                   nbrOfSegments(fit, splitters=FALSE));
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the data and segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
   segs <- getSegments(fit, splitters=TRUE);
   segRows <- fit$segRows;
@@ -454,9 +454,16 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("mean", "median"), ve
   hasWeights <- !is.null(w);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up averaging functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (avg == "asis") {
+    est <- fit$params$meanEstimators;
+    avg <- est$y;
+    if (is.null(avg)) avg <- "mean";
+    avg <- match.arg(avg);
+  }
+
   if (hasWeights) {
     if(avg == "mean") {
       avgFUN <- weighted.mean;
@@ -471,9 +478,9 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("mean", "median"), ve
   }
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update segments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   for (ss in seq(length=nbrOfSegments)) {
     verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
     segRow <- segRows[ss,];
@@ -540,7 +547,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("mean", "median"), ve
 setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -587,7 +594,7 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
   userArgs <- list(..., verbose=verbose);
 
   # (d) Merge
-  args <- formals;  
+  args <- formals;
   args2 <- append(params, userArgs);
   for (kk in seq(along=args2)) {
     value <- args2[[kk]];
@@ -614,7 +621,7 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
   verbose && exit(verbose);
 
   fit;
-}, protected=TRUE) # resegment() 
+}, protected=TRUE) # resegment()
 
 
 ############################################################################

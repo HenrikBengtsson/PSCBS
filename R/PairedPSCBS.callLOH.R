@@ -36,8 +36,8 @@
 #   LOH if it is already called to be in AB.
 #   However, regardless of of the AB call, a segment is still always
 #   tested for LOH, to check weather the LOH caller is consistent with the
-#   AB caller or not.  Thus, in order to distinguish the case where 
-#   the AB caller and LOH caller agree from when they disagree, 
+#   AB caller or not.  Thus, in order to distinguish the case where
+#   the AB caller and LOH caller agree from when they disagree,
 #   we report either (AB,LOH)=(TRUE,FALSE) or (TRUE,NA).  The former is
 #   reported when they are consistent, and the latter when they are not,
 #   or when the LOH caller could not call it.
@@ -69,7 +69,7 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
   if (!force && !is.null(calls)) {
     return(invisible(fit));
   }
-  
+
 
   if (flavor == "SmallC1") {
     fit <- callLowC1ByC1(fit, ..., callName="loh");
@@ -113,7 +113,7 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
 setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH(fit, flavor="minC1|nonAB"), alpha=0.05, ..., callName="lowc1", verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'delta':
   if (delta != -Inf) {
     delta <- Arguments$getDouble(delta, range=c(0,Inf));
@@ -136,8 +136,7 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
 
   # Calculate C1 confidence intervals, if not already done
   probs <- c(alpha, 1-alpha);
-  statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
 
   segs <- as.data.frame(fit);
 
@@ -179,7 +178,7 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
 setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delta=0.60, alpha=0.05, ..., callName="aiHigh", verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'delta':
   delta <- Arguments$getDouble(delta, range=c(0,Inf));
 
@@ -201,8 +200,7 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
 
   # Calculate DH confidence intervalls, if not already done
   probs <- c(alpha, 1-alpha);
-  statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-  fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
 
   segs <- as.data.frame(fit);
 
@@ -236,14 +234,14 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
   verbose && exit(verbose);
 
   fit;
-}, private=TRUE) # callExtremeAllelicImbalanceByDH() 
+}, private=TRUE) # callExtremeAllelicImbalanceByDH()
 
 
 
 ##############################################################################
 # HISTORY
 # 2012-05-30
-# o BUG FIX: callLOH(..., force=TRUE) would append multiple 'lohCall' 
+# o BUG FIX: callLOH(..., force=TRUE) would append multiple 'lohCall'
 #   columns, if called multiple times.
 # o BUG FIX: callLowC1ByC1() and callExtremeAllelicImbalanceByDH() would
 #   append multiple call columns with the same name if called multiple times.

@@ -2,8 +2,17 @@
 Package: PSCBS
 ==============
 
+Version: 0.35.0 [2013-04-22]
+o SPEEDUP: Now bootstrapTCNandDHByRegion() for PairedPSCBS always
+  estimates the default quantiles in addition to any requested ones.
+
+
 Version: 0.34.9 [2013-04-22]
 o Utilizing new startupMessage() of R.oo.
+o BUG FIX: updateMeans() would not always preserve the originally
+  specified segment-mean level estimator, if different from a
+  (sample) mean estimator, e.g. avgDH="median".  This could result
+  in for instance callAB() failing on internal sanity checks.
 o BUG FIX: Segment levels drawn by plotTracks() would have incorrect
   genomic locations for chromosome 2 and beyond.  This bug was 
   introduced in v0.34.7.

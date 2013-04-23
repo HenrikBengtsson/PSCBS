@@ -291,8 +291,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
   keys <- sprintf("tcn_%g%%", 100*c(probs[1], probs[2]));
   missing <- keys[!is.element(keys, colnames(segs))];
   if (length(missing) > 0) {
-    statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-    fit <- bootstrapTCNandDHByRegion(fit, statsFcn=statsFcn, ..., verbose=less(verbose, 50));
+    fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
     segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
 
     # Assert that they exists

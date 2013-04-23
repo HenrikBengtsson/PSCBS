@@ -19,13 +19,15 @@
 }
 
 \usage{
-\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000, statsFcn=function(x) quantile(x, probs = c(0.025, 0.05, 0.95, 0.975), na.rm = TRUE), by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...)
+\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000, probs=c(0.025, 0.05, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...)
 }
 
 \arguments{
   \item{B}{A postive \code{\link[base]{integer}} specifying the number of bootstrap samples.}
-  \item{statsFcn}{A \code{\link[base]{function}} that estimates confidence intervals given
-     locus-level data.}
+  \item{probs}{The default quantiles to be estimated.}
+  \item{statsFcn}{A (optional) \code{\link[base]{function}} that estimates confidence
+     intervals given locus-level data.
+     If \code{\link[base]{NULL}}, the \code{\link[stats]{quantile}} function is used.}
   \item{by}{A \code{\link[base]{character}} specifying whether DH should be calculated from
      normalized ('betaTN') or non-normalized ('betaT') tumor BAFs.}
   \item{force}{If \code{\link[base:logical]{TRUE}}, already existing estimates are ignored,

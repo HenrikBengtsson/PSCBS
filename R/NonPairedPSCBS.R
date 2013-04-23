@@ -73,7 +73,7 @@ setMethodS3("callROH", "NonPairedPSCBS", function(fit, ...) {
 }, private=TRUE) # callROH()
 
 
-setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("asis", "mean", "median"), avgDH=c("asis", "mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -108,6 +108,20 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up averaging functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (avgTCN == "asis" || avgDH == "asis") {
+    est <- fit$params$meanEstimators;
+    if (avgTCN == "asis") {
+      avgTCN <- est$tcn;
+      if (is.null(avgTCN)) avgTCN <- "mean";
+      avgTCN <- match.arg(avgTCN);
+    }
+    if (avgDH == "asis") {
+      avgDH <- est$dh;
+      if (is.null(avgDH)) avgDH <- "mean";
+      avgDH <- match.arg(avgDH);
+    }
+  }
+
   avgList <- list(
     tcn = get(avgTCN, mode="function"),
     dh = get(avgDH, mode="function")
