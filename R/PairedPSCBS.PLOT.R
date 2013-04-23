@@ -632,7 +632,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
 
 
   # Nothing to do, i.e. already tiled?
-  if (isTRUE(attr(fit, "tiledChromosomes")) {
+  if (isTRUE(attr(fit, "tiledChromosomes"))) {
     return(fit);
   }
 

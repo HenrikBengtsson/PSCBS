@@ -11,7 +11,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
 
   # Nothing to do, i.e. already tiled?
-  if (isTRUE(attr(fit, "tiledChromosomes")) {
+  if (isTRUE(attr(fit, "tiledChromosomes"))) {
     return(fit);
   }
 
