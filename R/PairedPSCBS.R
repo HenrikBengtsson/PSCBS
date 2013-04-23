@@ -138,6 +138,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   # Extract the segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- getSegments(fit, splitters=TRUE);
+  segRows <- list(tcn=fit$tcnSegRows, dh=fit$dhSegRows);
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
 
@@ -187,21 +188,15 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
       chrTag <- sprintf("chr%02d", chr);
 
       for (what in c("tcn", "dh")) {
-        avgFUN <- avgList[[what]];
+        segRow <- segRows[[what]][ss,];
 
-        keys <- paste(what, c("Start", "End"), sep="");
-        xStart <- seg[[keys[1]]];
-        xEnd <- seg[[keys[2]]];
-        verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
-        # Nothing todo?
-        if (is.na(xStart) && is.na(xEnd)) {
+        # (a) A splitter - nothing todo?
+        if (is.na(segRow[[1]]) && is.na(segRow[[2]])) {
           next;
         }
 
-        stopifnot(xStart <= xEnd);
-
-        # (b) Identify units
-        units <- which(chromosome == chr & xStart <= x & x <= xEnd);
+        # (b) Identify units (loci)
+        units <- segRow[[1]]:segRow[[2]];
 
         # (c) Adjust for missing values
         if (what == "tcn") {
@@ -213,6 +208,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
         units <- units[keep];
 
         # (d) Update mean
+        avgFUN <- avgList[[what]];
         gamma <- avgFUN(value[units]);
 
         # Sanity check

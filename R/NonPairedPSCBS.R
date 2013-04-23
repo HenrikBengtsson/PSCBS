@@ -132,6 +132,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # Extract the segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- getSegments(fit, splitters=TRUE);
+  segRows <- list(tcn=fit$tcnSegRows, dh=fit$dhSegRows);
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
 
@@ -181,21 +182,15 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
       chrTag <- sprintf("chr%02d", chr);
 
       for (what in c("tcn", "dh")) {
-        avgFUN <- avgList[[what]];
+        segRow <- segRows[[what]][ss,];
 
-        keys <- paste(what, c("Start", "End"), sep="");
-        xStart <- seg[[keys[1]]];
-        xEnd <- seg[[keys[2]]];
-        verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd);
-        # Nothing todo?
-        if (is.na(xStart) && is.na(xEnd)) {
+        # (a) A splitter - nothing todo?
+        if (is.na(segRow[[1]]) && is.na(segRow[[2]])) {
           next;
         }
 
-        stopifnot(xStart <= xEnd);
-
-        # (b) Identify units
-        units <- which(chromosome == chr & xStart <= x & x <= xEnd);
+        # (b) Identify units (loci)
+        units <- segRow[[1]]:segRow[[2]];
 
         # (c) Adjust for missing values
         if (what == "tcn") {
@@ -207,6 +202,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
         units <- units[keep];
 
         # (d) Update mean
+        avgFUN <- avgList[[what]];
         gamma <- avgFUN(value[units]);
 
         # Sanity check
@@ -372,6 +368,10 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
 
 ##############################################################################
 # HISTORY
+# 2013-04-23
+# o BUG FIX: updateMeans() for PairedPSCBS and NonPairedPSCBS could
+#   include a signal from a neighboring segment when averaging, iff
+#   that signal was located at the exact locus of the change point.
 # 2013-04-09
 # o Added callROH() for NonPairedPSCBS that throws an exception.
 # 2013-03-08

@@ -409,12 +409,13 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (nbrOfTCNs > 0L) {
       # Sanity check
+        dd <<- list(idxsTCN=idxsTCN, x=x[idxsTCN], CT=CT[idxsTCN], avgTCN=avgTCN, tcnMean=tcnMeans[jj]);
       ys <- CT[idxsTCN];
       mu <- avgTCN(ys, na.rm=TRUE);
       dMu <- (mu - tcnMeans[jj]);
       if (abs(dMu) > tol) {
         str(list(nbrOfTCNs=nbrOfTCNs, tcnNbrOfLoci=segJJ$tcnNbrOfLoci, mu=mu, tcnMean=tcnMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])));
-        stop("INTERNAL ERROR: Incorrect TCN mean!");
+        throw(sprintf("INTERNAL ERROR: Incorrect recalculated TCN mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, tcnMeans[jj]));
       }
     }
 
@@ -426,7 +427,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
       dMu <- (mu - dhMeans[jj]);
       if (abs(dMu) > tol) {
         str(list(nbrOfDHs=nbrOfDHs, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=dhMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])));
-        stop("INTERNAL ERROR: Incorrect DH mean!");
+        throw(sprintf("INTERNAL ERROR: Incorrect recalculated DN mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, dhMeans[jj]));
       }
     }
 

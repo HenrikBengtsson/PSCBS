@@ -7,6 +7,10 @@ o SPEEDUP: Now bootstrapTCNandDHByRegion() for PairedPSCBS always
   estimates the default quantiles in addition to any requested ones.
 o SPEEDUP: Made bootstrapTCNandDHByRegion() much faster by adding
   use.names=FALSE to two internal unlist() statements.
+o BUG FIX: updateMeans() for PairedPSCBS and NonPairedPSCBS could
+  include a signal from a neighboring segment when averaging, iff
+  that signal was located at the exact locus of the change point.
+  Thanks Ingrid Lönnstedt (WEHI) for reporting on this.
 
 
 Version: 0.34.9 [2013-04-22]
