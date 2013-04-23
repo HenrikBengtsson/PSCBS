@@ -191,7 +191,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
         segRow <- segRows[[what]][ss,];
 
         # (a) A splitter - nothing todo?
-        if (is.na(segRow[[1]]) && is.na(segRow[[2]])) {
+        if (!is.finite(segRow[[1]]) || !is.finite(segRow[[2]])) {
           next;
         }
 

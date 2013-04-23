@@ -487,7 +487,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("asis", "mean", "medi
     seg <- segs[ss,];
 
     # A splitter - nothing todo?
-    if (is.na(segRow[[1]]) && is.na(segRow[[2]])) {
+    if (!is.finite(segRow[[1]]) || !is.finite(segRow[[2]])) {
       next;
     }
 
