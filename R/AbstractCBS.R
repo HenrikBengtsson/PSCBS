@@ -9,7 +9,7 @@
 #  All CBS-style segmentation results extend this class, e.g.
 #  @see "CBS" and @see "PairedPSCBS".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -21,7 +21,7 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
+#
 # @author "HB"
 #*/###########################################################################
 setConstructorS3("AbstractCBS", function(fit=list(), sampleName=fit$sampleName, ...) {
@@ -114,7 +114,7 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 # \value{
 #   Returns what @see "R.utils::saveObject" returns.
 # }
-# 
+#
 # @author
 #
 # \seealso{
@@ -122,7 +122,7 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 #   To load an object, see @seemethod "load".
 #   @seeclass.
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("save", "AbstractCBS", function(this, ...) {
   saveObject(this, ...);
 })
@@ -146,7 +146,7 @@ setMethodS3("save", "AbstractCBS", function(this, ...) {
 # \value{
 #   Returns the loaded AbstractCBS object.
 # }
-# 
+#
 # @author
 #
 # \seealso{
@@ -154,7 +154,7 @@ setMethodS3("save", "AbstractCBS", function(this, ...) {
 #   To save an object, see @seemethod "save".
 #   @seeclass.
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("load", "AbstractCBS", function(static, ...) {
   object <- loadObject(...);
 
@@ -168,7 +168,7 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
       warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.");
     }
   }
-  
+
   # Sanity check
   if (!inherits(object, class(static)[1])) {
     throw("Loaded an object from file, but it does not inherit from ",
@@ -199,14 +199,14 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
 # \value{
 #   Returns a @character string.
 # }
-# 
+#
 # @author
 #
 # \seealso{
 #   @seemethod "setSampleName".
 #   @seeclass.
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("getSampleName", "AbstractCBS", function(fit, ...) {
   name <- fit$sampleName;
   if (is.null(name)) {
@@ -240,7 +240,7 @@ setMethodS3("sampleName", "AbstractCBS", function(fit, ...) {
 # \value{
 #   Returns (invisibly) an updated object.
 # }
-# 
+#
 # @author
 #
 # \seealso{
@@ -248,7 +248,7 @@ setMethodS3("sampleName", "AbstractCBS", function(fit, ...) {
 # }
 #
 # @keyword internal
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("setSampleName", "AbstractCBS", function(fit, name, ...) {
   # Argument 'value':
   name <- Arguments$getCharacter(name);
@@ -277,11 +277,11 @@ setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
-#  \item{splitters}{If @TRUE, "splitters" between chromosomes are 
+#  \item{splitters}{If @TRUE, "splitters" between chromosomes are
 #     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
 # }
@@ -296,7 +296,7 @@ setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("getLocusData", "AbstractCBS", abstract=TRUE);
 
 setMethodS3("setLocusData", "AbstractCBS", abstract=TRUE, protected=TRUE);
@@ -314,7 +314,7 @@ setMethodS3("getSegmentTrackPrefixes", "AbstractCBS", abstract=TRUE, protected=T
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -330,7 +330,7 @@ setMethodS3("getSegmentTrackPrefixes", "AbstractCBS", abstract=TRUE, protected=T
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
   data <- getLocusData(fit, splitters=splitters, ...);
   nrow(data);
@@ -346,12 +346,12 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
 #  \item{simplify}{If @TRUE, redundant and intermediate information is dropped.}
-#  \item{splitters}{If @TRUE, "splitters" between chromosomes are 
+#  \item{splitters}{If @TRUE, "splitters" between chromosomes are
 #     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
 # }
@@ -366,7 +366,7 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
 
 setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
@@ -381,11 +381,11 @@ setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 #   @get "title".  More precisely, it removes columns in the segmentation
 #   result table that have been added by methods after the actual
 #   segmentation method, e.g. bootstrap estimated mean level quantiles
-#   and various calls. 
+#   and various calls.
 #   It leave the basic segmentation results untouched,
 #   i.e. the partitioning and the segment means.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -401,7 +401,7 @@ setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
   segs <- fit$output;
   names <- colnames(segs);
@@ -435,7 +435,7 @@ setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -453,7 +453,7 @@ setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
 #   @seemethod "nbrOfChromosomes"
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...) {
   nrow(getSegments(this, splitters=splitters, ...));
 })
@@ -469,7 +469,7 @@ setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...)
 #   @get "title", which is defined as the number of segments minus
 #   the number of chromosomes.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -487,7 +487,7 @@ setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...)
 #   @seemethod "nbrOfChromosomes"
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ignoreGaps=FALSE, dropEmptySegments=TRUE, ...) {
   segs <- getSegments(fit, splitters=TRUE, addGaps=!ignoreGaps);
   if (dropEmptySegments) {
@@ -520,17 +520,17 @@ setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ignoreGaps=FALSE, 
 # }
 #
 # \value{
-#   Returns a @data.frame, where each row corresponds to 
+#   Returns a @data.frame, where each row corresponds to
 #   a unique segment.
 # }
-# 
+#
 # @author
 #
 # \seealso{
 #   Utilizes @seemethod "getSegments".
 #   @seeclass.
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
   getSegments(x, ...);
 }, protected=TRUE)
@@ -546,7 +546,7 @@ setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
 # \description{
 #   @get "title" in the segmentation result.
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -563,7 +563,7 @@ setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
 #   @seemethod "nbrOfChromosomes".
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
   segs <- getSegments(this, ...);
   chromosomes <- sort(unique(segs$chromosome), na.last=TRUE);
@@ -585,7 +585,7 @@ setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -602,7 +602,7 @@ setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
 #   @seemethod "getChromosomes".
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("nbrOfChromosomes", "AbstractCBS", function(this, ...) {
   length(getChromosomes(this, ...));
 })
@@ -618,7 +618,7 @@ setMethodS3("getSegmentSizes", "AbstractCBS", function(fit, by=c("length", "coun
     keys <- "nbrOfLoci";
   }
   data <- getSegments(fit, ...)[,keys];
-  
+
   if (by == "length") {
     res <- data[[2L]]-data[[1L]]+1L;
   } else if (by == "count") {
@@ -759,8 +759,41 @@ setMethodS3("getChromosomeOffsets", "AbstractCBS", function(fit, resolution=1e6,
 }, protected=TRUE) # getChromosomeOffsets()
 
 
+setMethodS3("getPloidy", "AbstractCBS", function(fit, ...) {
+  ploidy <- fit$params$ploidy;
+  if (is.null(ploidy)) ploidy <- 2L;
+  ploidy;
+}, protected=TRUE)
+
+
+
+setMethodS3("setPloidy", "AbstractCBS", function(fit, ploidy=2L, update=TRUE, ...) {
+  # Argument 'ploidy':
+  ploidy <- Arguments$getInteger(ploidy, range=c(1,Inf));
+
+  if (update) {
+    # Calculate rescaling factor
+    oldPloidy <- getPloidy(fit);
+    scale <- ploidy / oldPloidy;
+
+    # Nothing todo?
+    if (scale != 1) {
+      fit <- adjustPloidyScale(fit, scale=scale, ...);
+    }
+  }
+
+  fit$params$ploidy <- ploidy;
+  invisible(fit);
+}, protected=TRUE)
+
+
+setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
+
+
 ############################################################################
 # HISTORY:
+# 2013-05-07
+# o Added set- and getPloidy() for AbstractCBS.
 # 2013-02-01
 # o Added resetSegments() for AbstractCBS, which drops extra segments
 #   columns (e.g. bootstrap statisistics and calls) except those

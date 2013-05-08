@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.35.1 [2013-05-07]
+o Now estimateDeltaCN() for PairedPSCBS adjust for the ploidy if set.
+o Added set- and getPloidy() for AbstractCBS.
+o Now tileChromosomes() no longer gives warnings on "max(i): no
+  non-missing arguments to max; returning -Inf".
+
+
 Version: 0.35.0 [2013-04-23]
 o SPEEDUP: Now bootstrapTCNandDHByRegion() for PairedPSCBS always
   estimates the default quantiles in addition to any requested ones.

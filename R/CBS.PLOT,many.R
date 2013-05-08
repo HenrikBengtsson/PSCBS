@@ -61,15 +61,21 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
     # Offset data
     idxs <- which(data$chromosome == chromosome);
-    data$x[idxs] <- offset + data$x[idxs];
+    if (length(idxs) > 0L) {
+      data$x[idxs] <- offset + data$x[idxs];
+    }
 
     # Offset segmentation
     idxs <- which(segs$chromosome == chromosome);
-    segs[idxs,segFields] <- offset + segs[idxs,segFields];
+    if (length(idxs) > 0L) {
+      segs[idxs,segFields] <- offset + segs[idxs,segFields];
+    }
 
     # Offset known segments
     idxs <- which(knownSegments$chromosome == chromosome);
-    knownSegments[idxs,c("start", "end")] <- offset + knownSegments[idxs,c("start", "end")];
+    if (length(idxs) > 0L) {
+      knownSegments[idxs,c("start", "end")] <- offset + knownSegments[idxs,c("start", "end")];
+    }
 
     verbose && exit(verbose);
   } # for (kk ...)
@@ -114,7 +120,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 
-setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", Clim=c(0,6), xScale=1e-6, xlab="Genomic position", Clab="TCN", ..., boundaries=TRUE, levels=TRUE, subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, mar=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", Clim=c(0,3*getPloidy(x)), xScale=1e-6, xlab="Genomic position", Clab="TCN", ..., boundaries=TRUE, levels=TRUE, subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, mar=NULL, verbose=FALSE) {
   # To please R CMD check
   fit <- x;
 
@@ -215,6 +221,9 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
 
 ############################################################################
 # HISTORY:
+# 2013-05-07
+# o Now tileChromosomes() no longer gives warnings on "max(i): no
+#   non-missing arguments to max; returning -Inf".
 # 2011-12-06
 # o Now plotTracks() for CBS always returns an invisible object.
 # 2011-12-03

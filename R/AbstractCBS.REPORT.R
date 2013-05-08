@@ -14,7 +14,7 @@
 #
 # \arguments{
 #   \item{fit}{An @see "AbstractCBS" object.}
-#   \item{sampleName}{A @character string specifying the name of the 
+#   \item{sampleName}{A @character string specifying the name of the
 #      sample segmented.}
 #   \item{studyName}{A @character string specifying the name of study/project.}
 #   \item{...}{Optional arguments passed to the RSP template.}
@@ -100,7 +100,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
     sampleName = sampleName,
     studyName = studyName,
     dataSet = NULL,
-    Clim = c(0,4),
+    Clim = c(0,2*getPloidy(fit)),
     Blim = c(0,1),
     figForce = FALSE
   );
@@ -264,7 +264,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
 # o Added argument 'force' to report() for AbstractCBS.  This will
 #   copy the RSP template files again, although they are already in
 #   reports/ output directory.
-# o Now report(fit, ..., rspTags) for AbstractCBS looks for the RSP 
+# o Now report(fit, ..., rspTags) for AbstractCBS looks for the RSP
 #   template named <className>(,<rspTags>),report.tex.rsp, where
 #   className is class(fit)[1] and  argument 'rspTags' is an optional
 #   comma-separated character string/vector.

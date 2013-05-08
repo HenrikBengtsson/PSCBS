@@ -15,7 +15,7 @@
 #   \item{flavor}{A @character string specifying which type of
 #    estimator to use.}
 #   \item{...}{Additional arguments passed to the estimator.}
-#   \item{max}{(Optional) The maxium estimate allowed. If greater than 
+#   \item{max}{(Optional) The maxium estimate allowed. If greater than
 #    this value, the estimate will be truncated.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -33,11 +33,11 @@
 #   @seemethod "estimateDeltaLOHByMinC1ForNonAB".
 # }
 #
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|nonAB"), ..., max=Inf, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'flavor':
   flavor <- match.arg(flavor);
 
@@ -91,7 +91,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 #
 # \arguments{
 #   \item{midpoint}{A @numeric scalar in [0,1] specifying the relative
-#    position of the midpoint between the estimated locations of 
+#    position of the midpoint between the estimated locations of
 #    C1=0 and C1=1 mean parameters.}
 #   \item{maxC}{Maximum total copy number of a segment in order to
 #    be included in the initial set of segments.}
@@ -128,13 +128,13 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 # }
 #
 # @keyword internal
-#*/###########################################################################  
-setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpoint=1/2, maxC=3, ..., verbose=FALSE) {
+#*/###########################################################################
+setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpoint=1/2, maxC=3*(getPloidy(this)/2), ..., verbose=FALSE) {
   require("matrixStats") || throw("Package not loaded: matrixStats");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'midpoint':
   midpoint <- Arguments$getDouble(midpoint, range=c(0,1));
 

@@ -1,11 +1,11 @@
-setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", pch=".", col=NULL, cex=1, lwd=2, changepoints=FALSE, grid=FALSE, quantiles=c(0.05,0.95), xlim=NULL, Clim=c(0,6), Blim=c(0,1), xScale=1e-6, ..., add=FALSE, subplots=!add && (length(panels) > 1), verbose=FALSE) {
+setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", pch=".", col=NULL, cex=1, lwd=2, changepoints=FALSE, grid=FALSE, quantiles=c(0.05,0.95), xlim=NULL, Clim=c(0,3*getPloidy(x)), Blim=c(0,1), xScale=1e-6, ..., add=FALSE, subplots=!add && (length(panels) > 1), verbose=FALSE) {
 
   # To please R CMD check
   fit <- x;
- 
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'fit':
   if (nbrOfChromosomes(fit) > 1) {
     throw("Multiple chromosomes detected. Not yet implemented.");
@@ -134,7 +134,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   for (pp in seq(length=nbrOfPanels)) {
     panel <- panels[pp];
-    verbose && enter(verbose, sprintf("Panel #%d ('%s') of %d", 
+    verbose && enter(verbose, sprintf("Panel #%d ('%s') of %d",
                                              pp, panel, length(panels)));
 
 
@@ -146,18 +146,18 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
       tracks <- strsplit(panel, split=",", fixed=TRUE)[[1]];
       tracks <- gsub("[-*]", "", tracks);
-  
+
       # Defaults
       ylim <- Clim;
       ylab <- paste(toupper(tracks), collapse=", ");
-  
+
       if (any(is.element(c("betaN", "betaT", "betaTN", "dh"), tracks))) {
         ylim <- Blim;
       }
-  
+
       verbose && cat(verbose, "ylim:");
       verbose && print(verbose, ylim);
-  
+
       plot(NA, xlim=xlim, ylim=ylim, ylab=ylab);
 
       # Geometrical annotations
@@ -166,7 +166,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
         abline(h=seq(from=0, to=ylim[2], by=2), lty=3, col="gray");
         abline(h=0, lty=1, col="black");
       }
-  
+
       verbose && exit(verbose);
     }
 
@@ -185,7 +185,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
     for (tt in seq(length=nbrOfTracks)) {
       track <- tracks[tt];
-      verbose && enter(verbose, sprintf("Scatter track #%d ('%s') of %d", 
+      verbose && enter(verbose, sprintf("Scatter track #%d ('%s') of %d",
                                                 tt, track, nbrOfTracks));
       track <- gsub("[-*]", "", track);
 
@@ -255,7 +255,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
     for (tt in seq(length=nbrOfTracks)) {
       track <- tracks[tt];
-      verbose && enter(verbose, sprintf("Level track #%d ('%s') of %d", 
+      verbose && enter(verbose, sprintf("Level track #%d ('%s') of %d",
                                                  tt, track, nbrOfTracks));
 
       if (track == "tcn") {
@@ -274,8 +274,8 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
       # Nothing to do?
       if (track != "betaTN") {
-        drawConfidenceBands(fit, what=track, quantiles=quantiles, 
-    
+        drawConfidenceBands(fit, what=track, quantiles=quantiles,
+
                         col=colT, xScale=xScale);
       }
       drawLevels(fit, what=track, col=colT, lwd=lwd, xScale=xScale);
@@ -283,7 +283,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
       verbose && exit(verbose);
     } # for (tt ...)
 
-  
+
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Draw change points?
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -303,7 +303,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
       for (cc in seq(along=callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
-        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d", 
+        verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
                                       cc, callLabel, length(callColumns)));
 
         verbose && cat(verbose, "Column: ", callColumn);
@@ -335,7 +335,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
   verbose && exit(verbose);
 
-  invisible();  
+  invisible();
 }, protected=TRUE) # plotTracks2()
 
 
@@ -350,4 +350,4 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 # 2011-01-19
 # o Added plotTracks2().  Completely rewritten plotTracks().
 # o Created.
-############################################################################ 
+############################################################################

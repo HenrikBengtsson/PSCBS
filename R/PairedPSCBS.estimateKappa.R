@@ -171,11 +171,17 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Identify subset of regions with C1=0
+  # Identify subset of regions with C1=0 and C1=1
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Estimating threshold Delta0.5 from the empirical density of C1:s");
   verbose && cat(verbose, "adjust: ", adjust);
   verbose && cat(verbose, "minDensity: ", minDensity);
+  ploidy <- getPloidy(this);
+  verbose && cat(verbose, "ploidy: ", ploidy);
+  if (ploidy != 2) {
+    minDensity <- (2/ploidy)*minDensity;
+    verbose && cat(verbose, "minDensity (adjusted for ploidy): ", minDensity);
+  }
 
   d <- density(c1, weights=weights, adjust=adjust, from=0, na.rm=FALSE);
   fit <- findPeaksAndValleys(d);
@@ -208,6 +214,8 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   verbose && cat(verbose, "Number of segments with C1 < Delta0.5: ", length(keep));
   kappa <- weightedMedian(c1[keep], w=weights[keep]);
 
+  # Adjust for ploidy
+  kappa <- (2/ploidy)*kappa;
   verbose && cat(verbose, "Estimate of kappa: ", kappa);
 
   verbose && exit(verbose);
@@ -220,6 +228,8 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
 
 #############################################################################
 # HISTORY:
+# 2013-05-07
+# o Now estimateKappaByC1Density() adjusts for ploidy, iff set.
 # 2013-03-05
 # o Added argument 'typeOfWeights' to estimateKappaByC1Density() for
 #   PairedPSCBS, making it possible to specify what type of weights the

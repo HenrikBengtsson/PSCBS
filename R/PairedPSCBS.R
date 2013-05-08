@@ -371,6 +371,41 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 }, protected=TRUE) # resegment()
 
 
+setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # (a) Update locus-level data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data <- getLocusData(fit);
+  names <- c("CT");
+  for (ff in names) {
+    data[[ff]] <- scale * data[[ff]];
+  }
+  fit$data <- data;  ##  fit <- setLocusData(fit, data);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # (b) Update segment-level data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  segs <- getSegments(fit);
+  names <- grep("^(tcn|c1|c2)(Mean|_.*%)$", names(segs), value=TRUE);
+  for (ff in names) {
+    segs[[ff]] <- scale * segs[[ff]];
+  }
+  fit$output <- segs; ## fit <- setSegments(fit, sets);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # (c) Update parameter estimates
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  params <- fit$params;
+  fields <- c("copyNeutralStats", "deltaCN", "ntcnRange", "deltaLowC1");
+  params[fields] <- NULL;
+  fit$params <- params;
+
+  fit;
+}, protected=TRUE) # adjustPloidyScale()
+
+
 ##############################################################################
 # HISTORY
 # 2013-03-08

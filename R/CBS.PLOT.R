@@ -41,9 +41,10 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
   # Argument 'Clim':
   if (identical(Clim, "auto")) {
     signalType <- getSignalType(fit);
+    ploidy <- getPloidy(fit);
     Clim <- switch(signalType,
-      "log2ratio" = c(-3,3),
-      "ratio"     = c(0,6),
+      "log2ratio" = c(-2,2) + c(-1,1)*ploidy/2,
+      "ratio"     = c(0,3*ploidy),
       NULL
     );
   }
@@ -255,7 +256,7 @@ setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25
     isCalled <- dataT[[field]];
     idxs <- which(isCalled);
 
-    if (length(idxs) == 0) {
+    if (length(idxs) == 0L) {
       next;
     }
 
