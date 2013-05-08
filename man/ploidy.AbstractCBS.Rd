@@ -35,7 +35,7 @@
 }
 
 \usage{
-  \method{ploidy}{AbstractCBS}(fit)
+  \method{ploidy}{AbstractCBS}(fit, ...)
   \method{ploidy}{AbstractCBS}(fit) <- value
 }
 
