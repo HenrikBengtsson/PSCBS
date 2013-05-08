@@ -6,35 +6,35 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{nbrOfSegments.AbstractCBS}
+\name{nbrOfSegments.AbstractCBS}
 \alias{nbrOfSegments.AbstractCBS}
 \alias{AbstractCBS.nbrOfSegments}
 \alias{nbrOfSegments,AbstractCBS-method}
 
- \title{Gets the number of segments}
+\title{Gets the number of segments}
 
- \description{
-   Gets the number of segments.
- }
+\description{
+  Gets the number of segments.
+}
 
- \usage{
+\usage{
 \method{nbrOfSegments}{AbstractCBS}(this, splitters=FALSE, ...)
 }
 
- \arguments{
-  \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.}
- }
+\arguments{
+ \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getSegments.AbstractCBS]{*getSegments}()}.}
+}
 
- \value{
-   Returns an \code{\link[base]{integer}}.
- }
+\value{
+  Returns an \code{\link[base]{integer}}.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   \code{\link[PSCBS:nbrOfChangePoints.AbstractCBS]{*nbrOfChangePoints}()}
-   \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{*nbrOfChromosomes}()}
-   For more information see \code{\link{AbstractCBS}}.
- }
+\seealso{
+  \code{\link[PSCBS:nbrOfChangePoints.AbstractCBS]{*nbrOfChangePoints}()}
+  \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{*nbrOfChromosomes}()}
+  For more information see \code{\link{AbstractCBS}}.
+}
 \keyword{internal}
 \keyword{methods}

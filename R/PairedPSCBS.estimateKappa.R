@@ -176,7 +176,7 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   verbose && enter(verbose, "Estimating threshold Delta0.5 from the empirical density of C1:s");
   verbose && cat(verbose, "adjust: ", adjust);
   verbose && cat(verbose, "minDensity: ", minDensity);
-  ploidy <- getPloidy(this);
+  ploidy <- ploidy(this);
   verbose && cat(verbose, "ploidy: ", ploidy);
   if (ploidy != 2) {
     minDensity <- (2/ploidy)*minDensity;

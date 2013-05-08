@@ -759,13 +759,61 @@ setMethodS3("getChromosomeOffsets", "AbstractCBS", function(fit, resolution=1e6,
 }, protected=TRUE) # getChromosomeOffsets()
 
 
-setMethodS3("getPloidy", "AbstractCBS", function(fit, ...) {
+
+###########################################################################/**
+# @RdocMethod ploidy
+# @aliasmethod ploidy<-
+# @aliasmethod setPloidy
+# @aliasmethod adjustPloidyScale
+# @alias adjustPloidyScale.PairedPSCBS
+# @alias adjustPloidyScale
+# @alias ploidy
+# @alias ploidy<-
+# @alias setPloidy
+#
+# @title "Gets and sets ploidy"
+#
+# \description{
+#  @get "title".
+# }
+#
+# \usage{
+#   \method{ploidy}{AbstractCBS}(fit, ...)
+#   \method{ploidy}{AbstractCBS}(fit) <- value
+# }
+#
+# \arguments{
+#   \item{fit}{An @see "AbstractCBS" object.}
+#   \item{value}{An @integer (in \eqn{1,2,\ldots}) specifying the genome ploidy .}
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns (invisibly) an updated object.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass.
+# }
+#
+# @keyword internal
+#*/###########################################################################
+setMethodS3("ploidy", "AbstractCBS", function(fit, ...) {
   ploidy <- fit$params$ploidy;
   if (is.null(ploidy)) ploidy <- 2L;
   ploidy;
-}, protected=TRUE)
+})
 
+setMethodS3("ploidy<-", "AbstractCBS", function(fit, value) {
+  fit <- setPloidy(fit, ploidy=value, update=TRUE);
+  invisible(fit);
+})
 
+"ploidy<-" <- function(fit, value) {
+  UseMethod("ploidy<-");
+}
 
 setMethodS3("setPloidy", "AbstractCBS", function(fit, ploidy=2L, update=TRUE, ...) {
   # Argument 'ploidy':
@@ -773,7 +821,7 @@ setMethodS3("setPloidy", "AbstractCBS", function(fit, ploidy=2L, update=TRUE, ..
 
   if (update) {
     # Calculate rescaling factor
-    oldPloidy <- getPloidy(fit);
+    oldPloidy <- ploidy(fit);
     scale <- ploidy / oldPloidy;
 
     # Nothing todo?
@@ -793,7 +841,7 @@ setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
 ############################################################################
 # HISTORY:
 # 2013-05-07
-# o Added set- and getPloidy() for AbstractCBS.
+# o Added ploidy() and ploidy()<- for AbstractCBS.
 # 2013-02-01
 # o Added resetSegments() for AbstractCBS, which drops extra segments
 #   columns (e.g. bootstrap statisistics and calls) except those

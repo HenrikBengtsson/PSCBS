@@ -6,36 +6,36 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{getLocusData.AbstractCBS}
+\name{getLocusData.AbstractCBS}
 \alias{getLocusData.AbstractCBS}
 \alias{AbstractCBS.getLocusData}
 \alias{getLocusData,AbstractCBS-method}
 
- \title{Gets the locus-level data}
+\title{Gets the locus-level data}
 
- \description{
-   Gets the locus-level data.
- }
+\description{
+  Gets the locus-level data.
+}
 
- \usage{
+\usage{
 \method{getLocusData}{AbstractCBS}(...)
 }
 
- \arguments{
-  \item{splitters}{If \code{\link[base:logical]{TRUE}}, "splitters" between chromosomes are
-     preserved, otherwise dropped.}
-  \item{...}{Not used.}
- }
+\arguments{
+ \item{splitters}{If \code{\link[base:logical]{TRUE}}, "splitters" between chromosomes are
+    preserved, otherwise dropped.}
+ \item{...}{Not used.}
+}
 
- \value{
-   Returns a JxL \code{\link[base]{data.frame}}, where J in the number of loci,
-   and L is the number of locus-specific fields.
- }
+\value{
+  Returns a JxL \code{\link[base]{data.frame}}, where J in the number of loci,
+  and L is the number of locus-specific fields.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   For more information see \code{\link{AbstractCBS}}.
- }
+\seealso{
+  For more information see \code{\link{AbstractCBS}}.
+}
 \keyword{internal}
 \keyword{methods}

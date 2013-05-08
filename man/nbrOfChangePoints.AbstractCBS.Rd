@@ -6,36 +6,36 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{nbrOfChangePoints.AbstractCBS}
+\name{nbrOfChangePoints.AbstractCBS}
 \alias{nbrOfChangePoints.AbstractCBS}
 \alias{AbstractCBS.nbrOfChangePoints}
 \alias{nbrOfChangePoints,AbstractCBS-method}
 
- \title{Gets the number of change points}
+\title{Gets the number of change points}
 
- \description{
-   Gets the number of change points, which is defined as the number of segments minus
-   the number of chromosomes.
- }
+\description{
+  Gets the number of change points, which is defined as the number of segments minus
+  the number of chromosomes.
+}
 
- \usage{
+\usage{
 \method{nbrOfChangePoints}{AbstractCBS}(fit, ignoreGaps=FALSE, dropEmptySegments=TRUE, ...)
 }
 
- \arguments{
-  \item{...}{Not used.}
- }
+\arguments{
+ \item{...}{Not used.}
+}
 
- \value{
-   Returns an \code{\link[base]{integer}}.
- }
+\value{
+  Returns an \code{\link[base]{integer}}.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{*nbrOfSegments}()}
-   \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{*nbrOfChromosomes}()}
-   For more information see \code{\link{AbstractCBS}}.
- }
+\seealso{
+  \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{*nbrOfSegments}()}
+  \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{*nbrOfChromosomes}()}
+  For more information see \code{\link{AbstractCBS}}.
+}
 \keyword{internal}
 \keyword{methods}

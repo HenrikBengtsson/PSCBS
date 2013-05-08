@@ -6,15 +6,15 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{AbstractCBS}
+\name{AbstractCBS}
 \docType{class}
 \alias{AbstractCBS}
 
 
- \title{The AbstractCBS class}
+\title{The AbstractCBS class}
 
- \description{
-  Package:  PSCBS \cr
+\description{
+ Package:  PSCBS \cr
 \bold{Class AbstractCBS}\cr
 
 \code{list}\cr
@@ -29,23 +29,24 @@ extends list\cr
 
 
 
-  All CBS-style segmentation results extend this class, e.g.
-  \code{\link{CBS}} and \code{\link{PairedPSCBS}}.
- }
+ All CBS-style segmentation results extend this class, e.g.
+ \code{\link{CBS}} and \code{\link{PairedPSCBS}}.
+}
 
- \usage{
+\usage{
 AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
 }
 
- \arguments{
-   \item{fit}{A \code{\link[base]{list}} structure containing the segmentation results.}
-   \item{sampleName}{A \code{\link[base]{character}} string.}
-   \item{...}{Not used.}
- }
+\arguments{
+  \item{fit}{A \code{\link[base]{list}} structure containing the segmentation results.}
+  \item{sampleName}{A \code{\link[base]{character}} string.}
+  \item{...}{Not used.}
+}
 
- \section{Fields and Methods}{
-  \bold{Methods:}\cr
+\section{Fields and Methods}{
+ \bold{Methods:}\cr
 \tabular{rll}{
+ \tab \code{adjustPloidyScale} \tab  -\cr
  \tab \code{\link[PSCBS:append.AbstractCBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{extractCNs} \tab  -\cr
  \tab \code{\link[PSCBS:getChromosomes.AbstractCBS]{getChromosomes}} \tab Gets the set of chromosomes.\cr
@@ -58,6 +59,8 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
  \tab \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{nbrOfChromosomes}} \tab Gets the number of chromosomes.\cr
  \tab \code{\link[PSCBS:nbrOfLoci.AbstractCBS]{nbrOfLoci}} \tab Gets the number of loci.\cr
  \tab \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{nbrOfSegments}} \tab Gets the number of segments.\cr
+ \tab \code{\link[PSCBS:ploidy.AbstractCBS]{ploidy}} \tab Gets and sets ploidy.\cr
+ \tab \code{ploidy<-} \tab  -\cr
  \tab \code{\link[PSCBS:plotTracks.AbstractCBS]{plotTracks}} \tab Plots the segmentation result along the genome.\cr
  \tab \code{sampleCNs} \tab  -\cr
  \tab \code{\link[PSCBS:save.AbstractCBS]{save}} \tab Saves an AbstractCBS object to file.\cr
@@ -68,7 +71,7 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
 all.equal, as.data.frame, attachLocally, callHooks, relist, within
 
 
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 \keyword{classes}

@@ -387,9 +387,17 @@ setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
   # (b) Update segment-level data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- getSegments(fit);
+
+  # Adjust segment levels
   names <- grep("^(tcn|c1|c2)(Mean|_.*%)$", names(segs), value=TRUE);
   for (ff in names) {
     segs[[ff]] <- scale * segs[[ff]];
+  }
+
+  # Clear segment calls
+  names <- c("lohCall", "ntcnCall");
+  for (ff in names) {
+    segs[[ff]] <- NULL;
   }
   fit$output <- segs; ## fit <- setSegments(fit, sets);
 

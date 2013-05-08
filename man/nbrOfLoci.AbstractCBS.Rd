@@ -6,33 +6,33 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{nbrOfLoci.AbstractCBS}
+\name{nbrOfLoci.AbstractCBS}
 \alias{nbrOfLoci.AbstractCBS}
 \alias{AbstractCBS.nbrOfLoci}
 \alias{nbrOfLoci,AbstractCBS-method}
 
- \title{Gets the number of loci}
+\title{Gets the number of loci}
 
- \description{
-   Gets the number of loci.
- }
+\description{
+  Gets the number of loci.
+}
 
- \usage{
+\usage{
 \method{nbrOfLoci}{AbstractCBS}(fit, splitters=FALSE, ...)
 }
 
- \arguments{
-  \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getLocusData.AbstractCBS]{*getLocusData}()}.}
- }
+\arguments{
+ \item{splitters, ...}{Arguments passed to \code{\link[PSCBS:getLocusData.AbstractCBS]{*getLocusData}()}.}
+}
 
- \value{
-   Returns an \code{\link[base]{integer}}.
- }
+\value{
+  Returns an \code{\link[base]{integer}}.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   For more information see \code{\link{AbstractCBS}}.
- }
+\seealso{
+  For more information see \code{\link{AbstractCBS}}.
+}
 \keyword{internal}
 \keyword{methods}

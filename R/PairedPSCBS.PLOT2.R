@@ -1,4 +1,4 @@
-setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", pch=".", col=NULL, cex=1, lwd=2, changepoints=FALSE, grid=FALSE, quantiles=c(0.05,0.95), xlim=NULL, Clim=c(0,3*getPloidy(x)), Blim=c(0,1), xScale=1e-6, ..., add=FALSE, subplots=!add && (length(panels) > 1), verbose=FALSE) {
+setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", pch=".", col=NULL, cex=1, lwd=2, changepoints=FALSE, grid=FALSE, quantiles=c(0.05,0.95), xlim=NULL, Clim=c(0,3*ploidy(x)), Blim=c(0,1), xScale=1e-6, ..., add=FALSE, subplots=!add && (length(panels) > 1), verbose=FALSE) {
 
   # To please R CMD check
   fit <- x;

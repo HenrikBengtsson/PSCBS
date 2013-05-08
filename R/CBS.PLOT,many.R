@@ -120,7 +120,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 
-setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", Clim=c(0,3*getPloidy(x)), xScale=1e-6, xlab="Genomic position", Clab="TCN", ..., boundaries=TRUE, levels=TRUE, subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, mar=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", Clim=c(0,3*ploidy(x)), xScale=1e-6, xlab="Genomic position", Clab="TCN", ..., boundaries=TRUE, levels=TRUE, subset=NULL, byIndex=FALSE, add=FALSE, onBegin=NULL, onEnd=NULL, mar=NULL, verbose=FALSE) {
   # To please R CMD check
   fit <- x;
 

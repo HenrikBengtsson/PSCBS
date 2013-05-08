@@ -100,7 +100,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
     sampleName = sampleName,
     studyName = studyName,
     dataSet = NULL,
-    Clim = c(0,2*getPloidy(fit)),
+    Clim = c(0,2*ploidy(fit)),
     Blim = c(0,1),
     figForce = FALSE
   );

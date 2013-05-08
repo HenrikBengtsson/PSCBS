@@ -6,34 +6,34 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{nbrOfChromosomes.AbstractCBS}
+\name{nbrOfChromosomes.AbstractCBS}
 \alias{nbrOfChromosomes.AbstractCBS}
 \alias{AbstractCBS.nbrOfChromosomes}
 \alias{nbrOfChromosomes,AbstractCBS-method}
 
- \title{Gets the number of chromosomes}
+\title{Gets the number of chromosomes}
 
- \description{
-   Gets the number of chromosomes.
- }
+\description{
+  Gets the number of chromosomes.
+}
 
- \usage{
+\usage{
 \method{nbrOfChromosomes}{AbstractCBS}(this, ...)
 }
 
- \arguments{
-  \item{...}{Arguments passed to \code{\link[PSCBS:getChromosomes.AbstractCBS]{*getChromosomes}()}.}
- }
+\arguments{
+ \item{...}{Arguments passed to \code{\link[PSCBS:getChromosomes.AbstractCBS]{*getChromosomes}()}.}
+}
 
- \value{
-   Returns an \code{\link[base]{integer}}.
- }
+\value{
+  Returns an \code{\link[base]{integer}}.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   \code{\link[PSCBS:getChromosomes.AbstractCBS]{*getChromosomes}()}.
-   For more information see \code{\link{AbstractCBS}}.
- }
+\seealso{
+  \code{\link[PSCBS:getChromosomes.AbstractCBS]{*getChromosomes}()}.
+  For more information see \code{\link{AbstractCBS}}.
+}
 \keyword{internal}
 \keyword{methods}

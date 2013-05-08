@@ -6,19 +6,19 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{AbstractCBS$load}
+\name{AbstractCBS$load}
 \alias{AbstractCBS$load}
 \alias{load.AbstractCBS}
 \alias{AbstractCBS.load}
 \alias{load,AbstractCBS-method}
 
- \title{Loads an AbstractCBS object from file}
+\title{Loads an AbstractCBS object from file}
 
- \description{
-  Loads an AbstractCBS object from file and assert that it is of the requested class.
- }
+\description{
+ Loads an AbstractCBS object from file and assert that it is of the requested class.
+}
 
- \usage{
+\usage{
 ## Static method (use this):
 ## AbstractCBS$load(...)
 
@@ -26,20 +26,20 @@
 \method{load}{AbstractCBS}(static, ...)
 }
 
- \arguments{
-   \item{...}{Additional arguments passed to \code{\link[R.utils]{loadObject}}.}
- }
+\arguments{
+  \item{...}{Additional arguments passed to \code{\link[R.utils]{loadObject}}.}
+}
 
- \value{
-   Returns the loaded AbstractCBS object.
- }
+\value{
+  Returns the loaded AbstractCBS object.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   Internally \code{\link[R.utils]{loadObject}} is used.
-   To save an object, see \code{\link[PSCBS:save.AbstractCBS]{*save}()}.
-   For more information see \code{\link{AbstractCBS}}..
- }
+\seealso{
+  Internally \code{\link[R.utils]{loadObject}} is used.
+  To save an object, see \code{\link[PSCBS:save.AbstractCBS]{*save}()}.
+  For more information see \code{\link{AbstractCBS}}..
+}
 \keyword{internal}
 \keyword{methods}

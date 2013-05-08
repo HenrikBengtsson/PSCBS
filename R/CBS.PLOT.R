@@ -41,7 +41,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
   # Argument 'Clim':
   if (identical(Clim, "auto")) {
     signalType <- getSignalType(fit);
-    ploidy <- getPloidy(fit);
+    ploidy <- ploidy(fit);
     Clim <- switch(signalType,
       "log2ratio" = c(-2,2) + c(-1,1)*ploidy/2,
       "ratio"     = c(0,3*ploidy),

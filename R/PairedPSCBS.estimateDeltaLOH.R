@@ -129,7 +129,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpoint=1/2, maxC=3*(getPloidy(this)/2), ..., verbose=FALSE) {
+setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, midpoint=1/2, maxC=3*(ploidy(this)/2), ..., verbose=FALSE) {
   require("matrixStats") || throw("Package not loaded: matrixStats");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

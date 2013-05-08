@@ -4,7 +4,7 @@ Package: PSCBS
 
 Version: 0.35.1 [2013-05-07]
 o Now estimateDeltaCN() for PairedPSCBS adjust for the ploidy if set.
-o Added set- and getPloidy() for AbstractCBS.
+o Added ploidy() and ploidy()<- for AbstractCBS.
 o Now tileChromosomes() no longer gives warnings on "max(i): no
   non-missing arguments to max; returning -Inf".
 
