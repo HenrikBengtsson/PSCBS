@@ -19,7 +19,8 @@
 }
 
 \usage{
-\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000, probs=c(0.025, 0.05, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...)
+\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000L, probs=c(0.025, 0.05, 0.95, 0.975), statsFcn=NULL,
+  by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...)
 }
 
 \arguments{

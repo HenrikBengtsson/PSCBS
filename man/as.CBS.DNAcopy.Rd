@@ -19,7 +19,7 @@
 }
 
 \usage{
-\method{as.CBS}{DNAcopy}(fit, sample=1, ...)
+\method{as.CBS}{DNAcopy}(fit, sample=1L, ...)
 }
 
 \arguments{

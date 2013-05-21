@@ -23,7 +23,8 @@
 }
 
 \usage{
-\method{estimateKappaByC1Density}{PairedPSCBS}(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, minDensity=0.2, ..., verbose=FALSE)
+\method{estimateKappaByC1Density}{PairedPSCBS}(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"),
+  adjust=1, minDensity=0.2, ..., verbose=FALSE)
 }
 
 \arguments{

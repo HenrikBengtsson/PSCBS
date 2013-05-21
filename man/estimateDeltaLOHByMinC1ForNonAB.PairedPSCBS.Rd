@@ -19,7 +19,8 @@
 }
 
 \usage{
-\method{estimateDeltaLOHByMinC1ForNonAB}{PairedPSCBS}(this, midpoint=1/2, maxC=3 * (ploidy(this)/2), ..., verbose=FALSE)
+\method{estimateDeltaLOHByMinC1ForNonAB}{PairedPSCBS}(this, midpoint=1/2, maxC=3 * (ploidy(this)/2), ...,
+  verbose=FALSE)
 }
 
 \arguments{

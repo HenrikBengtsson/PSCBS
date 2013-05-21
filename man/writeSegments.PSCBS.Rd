@@ -19,7 +19,9 @@
  }
 
  \usage{
-\method{writeSegments}{PSCBS}(fit, name=getSampleName(fit), tags=NULL, ext="tsv", path=NULL, addHeader=TRUE, createdBy=NULL, sep="	", nbrOfDecimals=4, splitters=FALSE, overwrite=FALSE, skip=FALSE, ...)
+\method{writeSegments}{PSCBS}(fit, name=getSampleName(fit), tags=NULL, ext="tsv", path=NULL,
+  addHeader=TRUE, createdBy=NULL, sep="\t", nbrOfDecimals=4L, splitters=FALSE,
+  overwrite=FALSE, skip=FALSE, ...)
 }
 
  \arguments{

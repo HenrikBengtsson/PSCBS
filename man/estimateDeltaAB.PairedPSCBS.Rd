@@ -19,7 +19,8 @@
 }
 
 \usage{
-\method{estimateDeltaAB}{PairedPSCBS}(this, scale=NULL, flavor=c("qq(DH)", "q(DH)", "mad(hBAF)", "median(DH)"), ..., max=Inf, verbose=FALSE)
+\method{estimateDeltaAB}{PairedPSCBS}(this, scale=NULL, flavor=c("qq(DH)", "q(DH)", "mad(hBAF)", "median(DH)"),
+  ..., max=Inf, verbose=FALSE)
 }
 
 \arguments{

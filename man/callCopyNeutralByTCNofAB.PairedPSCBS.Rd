@@ -20,7 +20,8 @@
 }
 
 \usage{
-\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, delta=estimateDeltaCN(fit), alpha=0.05, ..., force=FALSE, verbose=FALSE)
+\method{callCopyNeutralByTCNofAB}{PairedPSCBS}(fit, delta=estimateDeltaCN(fit), alpha=0.05, ..., force=FALSE,
+  verbose=FALSE)
 }
 
 \arguments{

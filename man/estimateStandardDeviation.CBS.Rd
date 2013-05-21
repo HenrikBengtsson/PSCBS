@@ -19,7 +19,8 @@
 }
 
 \usage{
-\method{estimateStandardDeviation}{CBS}(fit, chromosomes=NULL, method=c("diff", "res", "abs", "DNAcopy"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...)
+\method{estimateStandardDeviation}{CBS}(fit, chromosomes=NULL, method=c("diff", "res", "abs",
+  "DNAcopy"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...)
 }
 
 \arguments{

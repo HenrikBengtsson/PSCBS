@@ -19,7 +19,8 @@
 }
 
 \usage{
-\method{hclustCNs}{AbstractCBS}(fit, size=NULL, distMethod="euclidean", hclustMethod="ward", ..., verbose=FALSE)
+\method{hclustCNs}{AbstractCBS}(fit, size=NULL, distMethod="euclidean", hclustMethod="ward", ...,
+  verbose=FALSE)
 }
 
 \arguments{

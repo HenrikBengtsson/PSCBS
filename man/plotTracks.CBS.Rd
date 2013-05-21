@@ -20,7 +20,8 @@
 }
 
 \usage{
-\method{plotTracks}{CBS}(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", cex=1, grid=FALSE, Clim="auto", xScale=1e-06, Clab="auto", ..., byIndex=FALSE, mar=NULL, add=FALSE)
+\method{plotTracks}{CBS}(x, scatter=TRUE, pch=20, col="gray", meanCol="purple", cex=1, grid=FALSE,
+  Clim="auto", xScale=1e-06, Clab="auto", ..., byIndex=FALSE, mar=NULL, add=FALSE)
 }
 
 \arguments{

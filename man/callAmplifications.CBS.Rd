@@ -18,7 +18,8 @@
 }
 
 \usage{
-\method{callAmplifications}{CBS}(fit, adjust=1, maxLength=2e+07, method=c("ucsf-exp"), ..., verbose=FALSE)
+\method{callAmplifications}{CBS}(fit, adjust=1, maxLength=2e+07, method=c("ucsf-exp"), ...,
+  verbose=FALSE)
 }
 
 \arguments{

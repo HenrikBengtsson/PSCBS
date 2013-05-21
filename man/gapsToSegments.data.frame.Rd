@@ -19,7 +19,7 @@
  }
 
  \usage{
-\method{gapsToSegments}{data.frame}(gaps, resolution=1, minLength=0, dropGaps=FALSE, ...)
+\method{gapsToSegments}{data.frame}(gaps, resolution=1L, minLength=0L, dropGaps=FALSE, ...)
 }
 
  \arguments{

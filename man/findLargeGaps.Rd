@@ -18,7 +18,7 @@
  }
 
  \usage{
-\method{findLargeGaps}{default}(chromosome=NULL, x, minLength, resolution=1, ...)
+\method{findLargeGaps}{default}(chromosome=NULL, x, minLength, resolution=1L, ...)
 }
 
  \arguments{

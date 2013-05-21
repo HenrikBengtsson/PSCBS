@@ -21,7 +21,8 @@
 }
 
 \usage{
-\method{callAllelicBalanceByDH}{PairedPSCBS}(fit, delta=estimateDeltaAB(fit, flavor = "qq(DH)"), alpha=0.05, ..., verbose=FALSE)
+\method{callAllelicBalanceByDH}{PairedPSCBS}(fit, delta=estimateDeltaAB(fit, flavor = "qq(DH)"), alpha=0.05,
+  ..., verbose=FALSE)
 }
 
 \arguments{

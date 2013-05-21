@@ -25,7 +25,8 @@
  }
 
  \usage{
-\method{segmentByCBS}{default}(y, chromosome=0, x=NULL, index=seq(along = y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE)
+\method{segmentByCBS}{default}(y, chromosome=0L, x=NULL, index=seq(along = y), w=NULL, undo=0, ...,
+  joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE)
 }
 
  \arguments{

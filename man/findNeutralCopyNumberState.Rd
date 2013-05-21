@@ -17,7 +17,8 @@
 }
 
 \usage{
-\method{findNeutralCopyNumberState}{default}(C, isAI, weights=NULL, ..., minDensity=1e-10, flavor=c("firstPeak", "maxPeak"), verbose=FALSE)
+\method{findNeutralCopyNumberState}{default}(C, isAI, weights=NULL, ..., minDensity=1e-10,
+  flavor=c("firstPeak", "maxPeak"), verbose=FALSE)
 }
 
 \arguments{

@@ -23,7 +23,8 @@
  }
 
  \usage{
-\method{segmentByNonPairedPSCBS}{default}(CT, betaT, ..., flavor=c("tcn", "tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tauA=NA, tauB=1 - tauA, verbose=FALSE)
+\method{segmentByNonPairedPSCBS}{default}(CT, betaT, ..., flavor=c("tcn", "tcn&dh", "tcn,dh",
+  "sqrt(tcn),dh", "sqrt(tcn)&dh"), tauA=NA, tauB=1 - tauA, verbose=FALSE)
 }
 
  \arguments{

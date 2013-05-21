@@ -18,7 +18,8 @@
  }
 
  \usage{
-\method{callSegmentationOutliers}{default}(y, chromosome=0, x=NULL, method="DNAcopy::smooth.CNA", ..., verbose=FALSE)
+\method{callSegmentationOutliers}{default}(y, chromosome=0, x=NULL, method="DNAcopy::smooth.CNA", ...,
+  verbose=FALSE)
 }
 
  \arguments{
