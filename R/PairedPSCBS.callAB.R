@@ -84,7 +84,8 @@ setMethodS3("callAB", "PairedPSCBS", function(fit, flavor=c("DeltaAB*"), ..., mi
     calls[ns < minSize] <- NA;
     segs$abCall <- calls;
     fit$output <- segs;
-    rm(segs, ns, calls); # Not needed anymore
+    # Not needed anymore
+    segs <- calls <- NULL;
   }
 
   # Don't call a segment AB if it already called LOH?

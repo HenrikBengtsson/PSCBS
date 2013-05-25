@@ -64,7 +64,8 @@ setMethodS3("callCopyNeutral", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), 
     calls[ns < minSize] <- NA;
     segs$ntcnCall <- calls;
     fit$output <- segs;
-    rm(segs, ns, calls); # Not needed anymore
+    # Not needed anymore
+    segs <- calls <- NULL;
   }
 
   return(invisible(fit));

@@ -16,7 +16,7 @@
 #   \item{...}{Further argumants to be passed to the density estimation
 #     function.}
 #   \item{minDensity}{A @numeric value, below which density peaks are
-#     discarded.} 
+#     discarded.}
 #   \item{flavor}{A @character string specifying how to identify the
 #     mode of the AB segments.}
 #   \item{verbose}{If @TRUE, extra information is output.}
@@ -35,7 +35,7 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'C':
   C <- Arguments$getNumerics(C);
   nbrOfLoci <- length(C);
@@ -107,13 +107,15 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
     weights <- weights / sum(weights);
   }
   y <- C[idxs];
-  rm(idxs); # Not needed anymore
+  idxs <- NULL; # Not needed anymore
 
-  verbose && cat(verbose, "Data points:");
-  df <- data.frame(C=y, weights=weights);
-  verbose && print(verbose, head(df));
-  verbose && str(verbose, df);
-  rm(df);
+  if (verbose) {
+    cat(verbose, "Data points:");
+    df <- data.frame(C=y, weights=weights);
+    print(verbose, head(df));
+    str(verbose, df);
+    df <- NULL; # Not needed anymore
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

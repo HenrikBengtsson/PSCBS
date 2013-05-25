@@ -87,7 +87,8 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
     calls[ns < minSize] <- NA;
     segs$lohCall <- calls;
     fit$output <- segs;
-    rm(segs, ns, calls); # Not needed anymore
+    # Not needed anymore
+    segs <- calls <- NULL;
   }
 
   # Don't call a segment LOH if it already called AB?

@@ -216,7 +216,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   stopifnot(length(isHet) == nbrOfLoci);
 
   # Not needed anymore
-  rm(muN);
+  muN <- NULL;
   verbose && exit(verbose);
 
 
@@ -232,8 +232,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
   data$rho <- rho;
 
-  rm(betaT); # Not needed anymore
-
+  # Not needed anymore
+  betaT <- NULL;
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

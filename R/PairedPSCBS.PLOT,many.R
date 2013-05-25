@@ -107,7 +107,8 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
       scatterT <- strsplit(scatter, split=",", fixed=TRUE);
       tracksT <- strsplit(tracks, split=",", fixed=TRUE);
       stopifnot(all(is.element(scatterT, tracksT)));
-      rm(scatterT, tracksT);
+      # Not needed anymore
+      scatterT <- tracksT <- NULL;
     }
   }
 
@@ -244,7 +245,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
   # To please R CMD check
   CT <- muN <- betaT <- betaN <- betaTN <- NULL;
-  rm(CT, muN, betaT, betaN, betaTN);
+  rm(list=c("CT", "muN", "betaT", "betaN", "betaTN"));
   attachLocally(data);
   x <- xScale * x;
   vs <- xScale * fit$chromosomeStats[,1:2,drop=FALSE];

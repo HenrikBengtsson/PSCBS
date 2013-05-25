@@ -104,12 +104,13 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
         fitListJJ <- append(fitListJJ, list(fitKK));
       }
 
+      fitKK <- NULL; # Not needed anymore
       verbose && exit(verbose);
     } # for (kk ...)
 
     # Append
     fitList <- append(fitList, fitListJJ);
-    rm(fitListJJ);
+    fitListJJ <- NULL; # Not needed anymore
 
     verbose && exit(verbose);
   } # for (jj ...)
@@ -131,7 +132,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   # Sanity check
 ##  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit)); # Not true anymore
   verbose && exit(verbose);
-  rm(fitList);
+  fitList <- NULL; # Not needed anymore
 
   segsT <- getSegments(fitT);
   verbose && print(verbose, tail(segsT));
@@ -140,7 +141,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   fit <- fitT;
 
   # Not needed anymore
-  rm(knownSegments, fitT);
+  fitT <- knownSegments <- NULL;
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

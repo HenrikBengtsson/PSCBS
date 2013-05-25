@@ -78,7 +78,8 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
       scatterT <- strsplit(scatter, split=",", fixed=TRUE);
       tracksT <- strsplit(tracks, split=",", fixed=TRUE);
       stopifnot(all(is.element(scatterT, tracksT)));
-      rm(scatterT, tracksT);
+      # Not needed anymore
+      scatterT <- tracksT <- NULL;
     }
   }
 
@@ -671,7 +672,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
     chrEnds <- chrStarts + chrLength;
 
     # Not needed anymore
-    rm(x, idxs);
+    x <- idxs <- NULL;
   } # if (is.null(chrStarts))
 
   verbose && cat(verbose, "Chromosome starts:");
@@ -762,7 +763,7 @@ setMethodS3("drawChangePoints", "PSCBS", function(fit, labels=FALSE, col="#66666
 
 setMethodS3("getChromosomeRanges", "PairedPSCBS", function(fit, ...) {
   # To please R CMD check, cf. subset()
-  chromosome <- NULL; rm(chromosome);
+  chromosome <- NULL; rm(list="chromosome");
 
   segs <- getSegments(fit, splitter=FALSE);
   chromosomes <- sort(unique(segs$chromosome));

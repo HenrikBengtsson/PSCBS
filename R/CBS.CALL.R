@@ -2,7 +2,7 @@
 # @set "class=CBS"
 # @RdocMethod callGainsAndLosses
 #
-# @title "Calls gains and losses" 
+# @title "Calls gains and losses"
 #
 # \description{
 #  @get "title".
@@ -12,7 +12,7 @@
 #
 # \arguments{
 #  \item{adjust}{A positive scale factor adjusting the sensitivity of the
-#    caller, where a value less (greater) than 1.0 makes the caller 
+#    caller, where a value less (greater) than 1.0 makes the caller
 #    less (more) sensitive.}
 #  \item{method}{A @character string specifying the calling algorithm to use.}
 #  \item{...}{Additional/optional arguments used to override the default
@@ -38,11 +38,11 @@
 #   @include "../incl/segmentByCBS.Rex"
 #   @include "../incl/segmentByCBS,calls.Rex"
 # }
-# 
+#
 # @author "HB"
 #
 # \references{
-#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration
 #       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
@@ -52,12 +52,12 @@
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad", "ucsf-dmad"), ..., verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'adjust':
   adjust <- Arguments$getDouble(adjust, range=c(0, Inf));
 
@@ -110,11 +110,11 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 
     # Estimate the whole-genome standard deviation of the TCNs
     if (method == "ucsf-mad") {
-      sigma <- estimateStandardDeviation(fit, chromosomes=chromosomes, 
+      sigma <- estimateStandardDeviation(fit, chromosomes=chromosomes,
                                          method="res", estimator="mad");
       sigmaKey <- "sigmaMAD";
     } else if (method == "ucsf-dmad") {
-      sigma <- estimateStandardDeviation(fit, chromosomes=chromosomes, 
+      sigma <- estimateStandardDeviation(fit, chromosomes=chromosomes,
                                          method="diff", estimator="mad");
       sigmaKey <- "sigmaDelta";
     } else {
@@ -174,9 +174,9 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   stopifnot(length(gainCalls) == nbrOfRows);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update 'DNAcopy' object
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (a) segmentation table
   segs <- getSegments(fit, splitters=TRUE);
   segs$lossCall <- lossCalls;
@@ -194,9 +194,9 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Return the updated 'CBS' object.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fit;
 }, private=TRUE) # callGainsAndLosses()
 
@@ -207,7 +207,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 ###########################################################################/**
 # @RdocMethod callAmplifications
 #
-# @title "Calls (focal) amplifications" 
+# @title "Calls (focal) amplifications"
 #
 # \description{
 #  @get "title".
@@ -217,7 +217,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 #
 # \arguments{
 #  \item{adjust}{A positive scale factor adjusting the sensitivity of the
-#    caller, where a value less (greater) than 1.0 makes the caller 
+#    caller, where a value less (greater) than 1.0 makes the caller
 #    less (more) sensitive.}
 #  \item{maxLength}{A @double scalar specifying the maximum length of a segment
 #    in order for it to be considered a focal amplification.}
@@ -228,7 +228,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 # }
 #
 # \value{
-#  Returns a @see "PSCBS::CBS" object where @logical column 
+#  Returns a @see "PSCBS::CBS" object where @logical column
 #  'amplificationCall' has been appended to the segmentation table.
 # }
 #
@@ -240,7 +240,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 # @author
 #
 # \references{
-#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration
 #       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
@@ -250,12 +250,12 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e6, method=c("ucsf-exp"), ..., verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'adjust':
   adjust <- Arguments$getDouble(adjust, range=c(0, Inf));
 
@@ -288,9 +288,9 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   verbose && cat(verbose, "Call method: ", method);
 
   if (method == "ucsf-exp") {
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Call arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Default arguments
     args <- list(
       minLevel = 0.0,
@@ -323,28 +323,28 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     verbose && str(verbose, segs);
 
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Rule #1: Only consider segments that are short enough
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # The lengths (in bp) of the segments
     start <- segs$start;
     end <- segs$end;
     length <- end - start; ## + 1L;
     keep1 <- (length <= maxLength);
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Rule #2: Only consider segments that have a mean level
     #          that is large enough.
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # The mean levels of the segments
     mu <- segs$mean;
     keep2 <- (mu >= minLevel);
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Rule #3: Only consider segments that have a mean level
-    #          that is much larger than either of the 
+    #          that is much larger than either of the
     #          flanking segments.
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # The mean levels of the flanking segments
     muL <- c(NA, mu[-nbrOfSegments]);
     muR <- c(mu[-1], NA);
@@ -383,9 +383,9 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   stopifnot(length(calls) == nbrOfSegments);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update 'DNAcopy' object
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (a) segmentation table
   segs <- getSegments(fit, splitters=TRUE);
   segs$amplificationCall <- calls;
@@ -402,9 +402,9 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 
   verbose && exit(verbose);
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Return the updated 'CBS' object.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fit;
 }, private=TRUE) # callAmplifications()
 
@@ -413,7 +413,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 ###########################################################################/**
 # @RdocMethod callOutliers
 #
-# @title "Calls outliers" 
+# @title "Calls outliers"
 #
 # \description{
 #  @get "title".
@@ -423,7 +423,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 #
 # \arguments{
 #  \item{adjust}{A positive scale factor adjusting the sensitivity of the
-#    caller, where a value less (greater) than 1.0 makes the caller 
+#    caller, where a value less (greater) than 1.0 makes the caller
 #    less (more) sensitive.}
 #  \item{method}{A @character string specifying the calling algorithm to use.}
 #  \item{...}{Additional/optional arguments used to override the default
@@ -438,8 +438,8 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 #
 # \section{The UCSF caller}{
 #   If \code{method == "ucsf-mad"}, then loci are called using [1];
-#  "Finally, to identify single technical or biological outliers such 
-#   as high level amplifications, the presence of the outliers within 
+#  "Finally, to identify single technical or biological outliers such
+#   as high level amplifications, the presence of the outliers within
 #   a segment was allowed by assigning the original observed log2ratio
 #   to the clones for which the observed values were more than four
 #   tumor-specific MAD away from the smoothed values." [1; Suppl. Mat.]
@@ -448,7 +448,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 # @author "HB"
 #
 # \references{
-#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration
 #       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
@@ -458,12 +458,12 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"), ...) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'adjust':
   adjust <- Arguments$getDouble(adjust, range=c(0, Inf));
 
@@ -481,9 +481,9 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
   negOutlierCall <- posOutlierCall <- rep(naValue, times=nbrOfLoci);
 
   if (method == "ucsf-mad") {
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Call arguments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Default arguments
     args <- list(
       scale = 4.0
@@ -527,7 +527,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
       seg <- segs[ss,];
 
       # Identify loci in current segment
-      idxs <- which(seg$chromosome == chromosome & 
+      idxs <- which(seg$chromosome == chromosome &
                     seg$start <= x & x <= seg$end);
 
       # Sanity check
@@ -571,9 +571,9 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
   stopifnot(length(posOutlierCall) == nbrOfLoci);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update 'DNAcopy' object
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (a) segmentation table
   data <- getLocusData(fit);
   data$negOutlierCall <- negOutlierCall;
@@ -589,9 +589,9 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
   fit$params <- allParams;
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Return the updated 'CBS' object.
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fit;
 }, private=TRUE) # callOutliers()
 
@@ -624,7 +624,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   # For each segment...
   for (ss in seq(length=nrow(segs))) {
     seg <- segs[ss,];
-    idxs <- which(chromosome == seg$chromosome & 
+    idxs <- which(chromosome == seg$chromosome &
                   seg$start <= x & x <= seg$end);
     idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
     # Sanity check
@@ -636,7 +636,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
     }
   } # for (ss ...)
 
-  # The calls for loci that have missing annotations or observations, 
+  # The calls for loci that have missing annotations or observations,
   # should also be missing, i.e. NA.
   nok <- (is.na(chromosome) | is.na(x) | is.na(y));
   callsL[nok,] <- as.logical(NA);
@@ -662,10 +662,10 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{regions}{An optional @data.frame with columns "chromosome", 
+#  \item{regions}{An optional @data.frame with columns "chromosome",
 #     "start", and "end" specifying the regions of interest to calculate
 #     statistics for.  If @NULL, all of the genome is used.}
-#  \item{shrinkRegions}{If @TRUE, regions are shrunk to the support of 
+#  \item{shrinkRegions}{If @TRUE, regions are shrunk to the support of
 #     the data.}
 #  \item{...}{Not used.}
 #  \item{verbose}{@see "R.utils::Verbose".}
@@ -673,7 +673,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #
 # \value{
 #  Returns a CxK @data.frame, where C is the number of regions that
-#  meet the criteria setup by argument \code{regions} 
+#  meet the criteria setup by argument \code{regions}
 #  and (K-4)/2 is the number of call types.
 #  The first column is the chromosome index, the second and the third
 #  are the first and last position, and the fourth the length
@@ -685,19 +685,19 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 # }
 #
 # \details{
-#   The estimators implemented here are based solely on the 
-#   segmentation results, which is very fast.  
+#   The estimators implemented here are based solely on the
+#   segmentation results, which is very fast.
 #   In the original proposal by Fridlyand et al. [1], the authors
 #   estimates the parameters by converting segment-level calls back
-#   to locus-level calls and there do the calculations.  
-#   The difference between the two approaches should be minor, 
+#   to locus-level calls and there do the calculations.
+#   The difference between the two approaches should be minor,
 #   particularly for large density arrays.
 # }
 #
 # @author "HB"
 #
 # \references{
-#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration
 #       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
@@ -705,15 +705,15 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegions=TRUE, ..., verbose=FALSE) {
   # To please R CMD check, cf. subset()
-  chromosome <- NULL; rm(chromosome);
+  chromosome <- NULL; rm(list="chromosome");
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'regions':
   if (is.null(regions)) {
     # Get chromosome lengths
@@ -759,7 +759,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     }
 
     verbose && enter(verbose, sprintf("Region #%d of %d", rr, nrow(regions)));
-    
+
     # Select regions that (at least) overlapping with the region
     segsRR <- subset(segs, chromosome == chrRR & start <= endRR & end >= startRR);
 
@@ -892,7 +892,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
 # @author "HB"
 #
 # \references{
-#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration 
+#   [1] Fridlyand et al. \emph{Breast tumor copy number aberration
 #       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
 # }
 #
@@ -901,8 +901,8 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("getFractionOfGenomeLost", "CBS", function(fit, ...) {
   stats <- getCallStatistics(fit, ...);
   mean(stats$lossFraction, na.rm=TRUE);
@@ -920,11 +920,11 @@ setMethodS3("getFractionOfGenomeAltered", "CBS", function(fit, ...) {
 # Shortcuts
 setMethodS3("getFGL", "CBS", function(fit, ...) {
   getFractionOfGenomeLost(fit, ...);
-}, protected=TRUE)  
+}, protected=TRUE)
 
 setMethodS3("getFGG", "CBS", function(fit, ...) {
   getFractionOfGenomeGained(fit, ...);
-}, protected=TRUE)  
+}, protected=TRUE)
 
 setMethodS3("getFGA", "CBS", function(fit, ...) {
   getFractionOfGenomeAltered(fit, ...);
@@ -1001,11 +1001,11 @@ setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
 
 setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   # To please/trick R CMD check
-  chromosome <- x <- NULL; rm(chromosome, x);
+  chromosome <- x <- NULL; rm(list=c("chromosome", "x"));
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'genomeData':
   genomeData <- as.data.frame(genomeData);
 
@@ -1078,7 +1078,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   callStats <- rbind(callStatsP, callStatsQ);
 
   # Not needed anymore
-  rm(regions, callStatsP, callStatsQ);
+  regions <- callStatsP <- callStatsQ <- NULL;
 
   # Reorder
   o <- order(callStats$chromosome, callStats$start);
@@ -1091,7 +1091,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
 setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'minFraction':
   minFraction <- Arguments$getDouble(minFraction, range=c(0,1));
 
@@ -1119,13 +1119,13 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
 
 ###########################################################################/**
 # @RdocMethod mergeNonCalledSegments
-# 
+#
 # @title "Merge neighboring segments that are not called"
 #
 # \description{
 #   @get "title"
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -1134,7 +1134,7 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
 # }
 #
 # \value{
-#   Returns an object of the same class 
+#   Returns an object of the same class
 #   with the same of fewer number of segments.
 # }
 #
@@ -1144,19 +1144,19 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
   verbose && enter(verbose, "Merging neighboring segments that are not called");
 
   # Identify call columns
@@ -1224,7 +1224,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 # o Added "ucsf-dmad" to argument 'method' for callGainsAndLosses() of CBS.
 # 2011-12-12
 # o Now extractCallsByLocus() for CBS passes arguments
-#   '...' to getLocusData(). 
+#   '...' to getLocusData().
 # 2011-10-23
 # o BUG FIX: getCallStatisticsByArms() for CBS would thrown a error if
 #   argument 'genomeData' did not contain exactly the same chromosomes
@@ -1250,7 +1250,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 # o DOCUMENTATION: Added more help pages.
 # 2011-10-02
 # o DOCUMENTATION: Added an Rdoc help page for getFractionOfGenomeLost(),
-#   getFractionOfGenomeGained(), getFractionOfGenomeAltered(), getFGL(), 
+#   getFractionOfGenomeGained(), getFractionOfGenomeAltered(), getFGL(),
 #   getFGG() and getFGA().
 # 2011-09-05
 # o Added getCallStatistics() for CBS.

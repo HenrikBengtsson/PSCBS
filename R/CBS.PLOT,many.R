@@ -168,7 +168,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
 
   # To please R CMD check
   CT <- y <- muN <- betaT <- betaN <- betaTN <- NULL;
-  rm(CT, muN, betaT, betaN, betaTN);
+  rm(list=c("CT", "muN", "betaT", "betaN", "betaTN"));
   attachLocally(data);
   x <- xScale * x;
   chrStats <- fitT$chromosomeStats;

@@ -156,7 +156,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
     require("aroma.light") || throw("Package not loaded: aroma.light");
     mBAF <- abs(betaT - 1/2);
     fitT <- findPeaksAndValleys(mBAF);
-    type <- NULL; rm(type); # To please 'R CMD check'.
+    type <- NULL; rm(list="type"); # To please 'R CMD check'.
     fitT <- subset(fitT, type == "peak");
     o <- order(fitT$density, decreasing=TRUE);
     fitT <- fitT[o,];
@@ -185,7 +185,8 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   muNx[isHomA] <-   0;
   muNx[isHet]  <- 1/2;
   muNx[isHomB] <-   1;
-  rm(isHomA, isHomB, isHom, isHet); # Not needed anymore
+  # Not needed anymore
+  isHomA <- isHomB <- isHom <- isHet <- NULL;
 
   verbose && cat(verbose, "Inferred germline genotypes (via tumor):");
   verbose && str(verbose, muNx);
@@ -212,19 +213,22 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   class(data) <- gsub("PairedPSCNData", "NonPairedPSCNData", class(data), fixed=TRUE);
 #  class(data) <- c("NonPairedPSCNData", class(data));
   fit$data <- data;
-  rm(data);
+  # Not needed anymore
+  data <- NULL;
 
   segs <- fit$output;
   class(segs) <- gsub("PairedPSCNSegments", "NonPairedPSCNSegments", class(segs), fixed=TRUE);
 #  class(segs) <- c("NonPairedPSCNSegments", class(segs));
   fit$output <- segs;
-  rm(segs);
+  # Not needed anymore
+  segs <- NULL;
 
   params <- fit$params;
   params$tauA <- tauA;
   params$tauB <- tauB;
   fit$params <- params;
-  rm(params);
+  # Not needed anymore
+  params <- NULL;
 
 #  class(fit) <- gsub("PairedPSCBS", "NonPairedPSCBS", class(fit), fixed=TRUE);
   class(fit) <- c("NonPairedPSCBS", class(fit));

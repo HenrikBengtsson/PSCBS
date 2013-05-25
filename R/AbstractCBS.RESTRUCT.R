@@ -364,13 +364,13 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
   middle <- Arguments$getIndex(middle, range=c(2L, S));
 
   # Assert that the three segments are on the same chromosome
-  idxs <- middle + c(-1L, 0, +1L);
+  idxs <- middle + c(-1L, 0L, +1L);
   fitT <- extractSegments(fit, idxs);
   chrs <- getChromosomes(fitT);
-  if (length(chrs) != 1) {
+  if (length(chrs) != 1L) {
     throw("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle);
   }
-  rm(fitT);
+  fitT <- NULL; # Not needed anymore
 
   fit <- mergeTwoSegments(fit, left=middle, ...);
   fit <- mergeTwoSegments(fit, left=middle-1L, ...);

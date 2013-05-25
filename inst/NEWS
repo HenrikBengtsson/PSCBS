@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.35.3 [2013-05-25]
+o Minor speedup by replacing all rm(x) with x <- NULL, cf. R-devel
+  thread 'Assigning NULL to large variables is much faster than rm() -
+  any reason why I should still use rm()?' on May 25, 2013.
+
+
 Version: 0.35.2 [2013-05-20]
 o CRAN POLICY: Now all Rd \usage{} lines are at most 90 characters long.
 

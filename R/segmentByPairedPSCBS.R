@@ -146,7 +146,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   require("aroma.light") || throw("Package not loaded: aroma.light");
 
   # To please R CMD check
-  index <- NULL; rm(index);
+  index <- NULL; rm(list="index");
 
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
@@ -320,7 +320,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     if (any(is.na(betaTN[keep]))) {
       throw("Internal error: normalizeTumorBoost() introduced missing values.");
     }
-    rm(keep);
+    # Not needed anymore
+    keep <- NULL;
     verbose && exit(verbose);
   } else {
     betaTN <- betaT;
@@ -336,7 +337,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     data$betaN <- betaN;
   }
   verbose && str(verbose, data);
-  rm(chromosome, x, CT, betaT, betaTN, betaN, muN); # Not needed anymore
+  # Not needed anymore
+  chromosome <- x <- CT <- betaT <- betaTN <- betaN <- muN <- NULL;
 
   # Sanity check
   stopifnot(nrow(data) == nbrOfLoci);
@@ -356,7 +358,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     nbrOfLoci <- nrow(data);
     verbose && exit(verbose);
   }
-  rm(ok); # Not needed anymore
+  ok <- NULL; # Not needed anymore
 
   # Sanity check
   stopifnot(nrow(data) == nbrOfLoci);
@@ -374,7 +376,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
       nbrOfLoci <- nrow(data);
       verbose && exit(verbose);
     }
-    rm(ok); # Not needed anymore
+    ok <- NULL; # Not needed anymore
 
     # Sanity check
     stopifnot(nrow(data) == nbrOfLoci);
@@ -393,7 +395,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   if (any(o != seq(along=o))) {
     data <- data[o,,drop=FALSE];
   }
-  rm(o); # Not needed anymore
+  o <- NULL; # Not needed anymore
   verbose && str(verbose, data);
   verbose && exit(verbose);
 
@@ -442,7 +444,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
       dataKK <- subset(data, chromosome == chromosomeKK);
       verbose && str(verbose, dataKK);
       fields <- attachLocally(dataKK, fields=c("CT", "betaT", "betaTN", "betaN", "muN", "chromosome", "x"));
-      rm(dataKK); # Not needed anymore
+      dataKK <- NULL; # Not needed anymore
 
       knownSegmentsKK <- NULL;
       if (!is.null(knownSegments)) {
@@ -481,15 +483,13 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
       fitList[[chrTag]] <- fit;
 
-      # Not needed anymore
-      rm(fit);
+      fit <- NULL; # Not needed anymore
       verbose && exit(verbose);
     } # for (kk ...)
 
     verbose && enter(verbose, "Merging (independently) segmented chromosome");
     fit <- Reduce(append, fitList);
-    # Not needed anymore
-    rm(fitList);
+    fitList <- NULL; # Not needed anymore
     verbose && str(verbose, fit);
     verbose && exit(verbose);
 
@@ -587,7 +587,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   verbose && cat(verbose, "Normalized DHs:");
   verbose && str(verbose, rho);
   data$rho <- rho;
-  rm(rho); # Not needed anymore
+  rho <- NULL; # Not needed anymore
   verbose && exit(verbose);
 
 
@@ -640,7 +640,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
   tcnSegments <- fit$output;
   tcnSegRows <- fit$segRows;
-  rm(fit);
+  fit <- NULL; # Not needed anymore
 
   # Sanity checks
   stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE));
@@ -663,7 +663,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   names <- sprintf("tcn%s", capitalize(names));
   names <- gsub("tcnChromosome", "chromosome", names, fixed=TRUE);
   names(tcnSegments) <- names;
-  rm(names);
   verbose && print(verbose, tcnSegments);
 
   nbrOfSegs <- nrow(tcnSegments);
@@ -759,7 +758,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     keys <- c("tcnId", "dhId", colnames(tcnSegments));
     keys <- c(keys, setdiff(colnames(segs), keys));
     segs <- segs[,keys];
-    rm(keys);
 
     verbose && exit(verbose);
   } else {
@@ -886,7 +884,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
       # Not needed anymore
       rm(list=fields);
-      rm(fit);
+      fit <- NULL;
       verbose && exit(verbose);
 
       # Drop dummy columns
@@ -898,7 +896,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
       # Adding 'dh' prefix to column names
       names <- sprintf("dh%s", capitalize(names));
       names(dhSegments) <- names;
-      rm(names);
 
       # Special case: If there where not enough data to segment DH...
       if (nrow(dhSegments) == 0) {
@@ -1094,7 +1091,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
         (is.na(CT[dhSegRowJJ[2]]) && (dhSegRowJJ[2] <= tcnSegRowJJ[2] + 1L))
       );
     } # for (jj ...)
-    rm(CT, tcnSegRows, dhSegRows);  # Clean up
+    # Not needed anymore
+    CT <- tcnSegRows <- dhSegRows <- NULL;
   }
 
   verbose && print(verbose, head(as.data.frame(fit)));

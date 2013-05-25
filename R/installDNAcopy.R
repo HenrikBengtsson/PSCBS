@@ -6,12 +6,12 @@
 # @synopsis
 #
 # \description{
-#   @get "title", if missing.  
+#   @get "title", if missing.
 # }
 #
 # \arguments{
 #   \item{...}{Arguments passed to the install function.}
-#   \item{force}{If @FALSE and the \pkg{DNAcopy} package is already 
+#   \item{force}{If @FALSE and the \pkg{DNAcopy} package is already
 #     installed, then it will not be re-install.
 #     If @TRUE, it will be installed.}
 # }
@@ -21,7 +21,7 @@
 # }
 #
 # \details{
-#   This function is will download and call the \code{biocLite()} 
+#   This function is will download and call the \code{biocLite()}
 #   installation function from the Bioconductor Project website.
 #   This function will also make sure that \pkg{DNAcopy} is loaded so
 #   that it is reported by @see "utils::sessionInfo".
@@ -43,7 +43,7 @@ setMethodS3("installDNAcopy", "default", function(..., force=FALSE) {
 
   # If not, install it...
   # To please R CMD check
-  biocLite <- NULL; rm(biocLite);
+  biocLite <- NULL; rm(list="biocLite");
   source("http://www.bioconductor.org/biocLite.R");
   biocLite("DNAcopy", ...);
 

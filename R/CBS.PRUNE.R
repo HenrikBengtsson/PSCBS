@@ -67,7 +67,8 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
   # Check if locus weights are available
   data <- getLocusData(fit);
   hasWeights <- !is.null(data$w);
-  rm(data);
+  # Not needed anymore
+  data <- NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Prune chromosome by chromosome
@@ -125,7 +126,8 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
       segRows[rr,1] <- startStop[1];
       segRows[rr,2] <- startStop[2];
     }
-    rm(segId, startStop);
+    # Not needed anymore
+    segId <- startStop <- NULL;
 
     # Sanity check
     stopifnot(max(segRows[,2]) <= length(y));
@@ -158,7 +160,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     endRow <- cumsum(segLengthsP);
     n <- length(endRow);
     segRowsP <- data.frame(startRow=c(1L, endRow[-n]+1L), endRow=endRow);
-    rm(segLengthsP, n, endRow);
+
 
     # Expand to units with also missing values
     segRowsP[,1] <- units[segRowsP[,1]];

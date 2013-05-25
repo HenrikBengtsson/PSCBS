@@ -5,7 +5,8 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
   data <- getLocusData(fit);
   data$y <- data$y + shift;
   fit$data <- data;
-  rm(data);
+  # Not needed anymore
+  data <- NULL;
 
   if (update) {
     fit <- updateMeans(fit, ...);

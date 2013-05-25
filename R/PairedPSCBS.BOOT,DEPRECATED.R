@@ -86,7 +86,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
   rho <- rho[keep];
 
   # Not needed anymore
-  rm(beta, muN, isHet, keep);
+  beta <- muN <- isHet <- keep <- NULL;
 
   # Sanity checks
   stopifnot(all(is.finite(chromosome)));
@@ -170,7 +170,7 @@ setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=
   } # for (jj ...)
 
   # Not needed anymore
-  rm(x, rho);
+  x <- rho <- NULL;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Calculate bootstrap statistics

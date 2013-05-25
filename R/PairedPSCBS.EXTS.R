@@ -5,7 +5,8 @@ setMethodS3("shiftTCN", "PairedPSCBS", function(fit, shift, update=TRUE, ...) {
   data <- getLocusData(fit);
   data$CT <- data$CT + shift;
   fit$data <- data;
-  rm(data);
+  # Not needed anymore
+  data <- NULL;
 
   if (update) {
     fit <- updateMeans(fit, ...);
@@ -340,7 +341,8 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       segsCC[rowsII,] <- segsII;
       tcnSegRowsCC[rowsII,] <- tcnSegRowsII;
 
-      rm(rowsII, segsII);
+      # Not needed anymore
+      rowsII <- segsII <- NULL;
       verbose && exit(verbose);
     } # for (ii ...)
 
@@ -377,7 +379,8 @@ print(tcnSegRowsII);
     segs[rows,] <- segsCC;
     tcnSegRows[rows,] <- tcnSegRowsCC;
 
-    rm(rows, segsCC);
+    # Not needed anymore
+    rows <- segsCC <- NULL;
     verbose && exit(verbose);
   } # for (cc ...)
 

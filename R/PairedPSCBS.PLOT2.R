@@ -18,7 +18,6 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   knownPanels <- c("tcn", "tcn,c1,c2", "tcn,c1", "tcn,c2", "c1,c2", "c1", "c2", "dh", "betaN", "betaT", "betaTN");
   panels <- match.arg(panels, choices=knownPanels, several.ok=TRUE);
   panels <- panelsOrg;
-  rm(panelsOrg);
 
   # Argument 'calls':
   if (!is.null(calls)) {

@@ -12,7 +12,7 @@
 #
 # \arguments{
 #   \item{fit}{A @see "DNAcopy" object (of the \pkg{DNAcopy} package.)}
-#   \item{sample}{An index specifying which sample to extract, 
+#   \item{sample}{An index specifying which sample to extract,
 #     if more than one exists.}
 #   \item{...}{Not used.}
 # }
@@ -29,7 +29,7 @@
 # }
 #
 # @keyword internal
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -59,7 +59,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   # Setup the 'output' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   output <- fit$output;
-  ID <- NULL; rm(ID); # To please R CMD check
+  ID <- NULL; rm(list="ID"); # To please R CMD check
   output <- subset(output, ID == sampleName);
   rownames <- rownames(output);
 
@@ -119,7 +119,7 @@ setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'chromosomes':
   disallow <- c("NaN", "Inf");
   chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow);
@@ -135,7 +135,7 @@ setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locus data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  chromosome <- NULL; rm(chromosome); # To please R CMD check
+  chromosome <- NULL; rm(list="chromosome"); # To please R CMD check
   data <- getLocusData(this);
   class <- class(data);
   class(data) <- "data.frame";
@@ -196,7 +196,7 @@ setMethodS3("subset", "CBS", function(x, chromlist=NULL, ...) {
 # @set "class=CBS"
 # @RdocMethod extractSegmentMeansByLocus
 #
-# @title "Extracts segments means at each locus" 
+# @title "Extracts segments means at each locus"
 #
 # \description{
 #  @get "title".
@@ -218,8 +218,8 @@ setMethodS3("subset", "CBS", function(x, chromlist=NULL, ...) {
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
   data <- getLocusData(fit, ...);
   chromosome <- data$chromosome;
@@ -237,7 +237,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
   yS <- y;
   for (ss in seq(length=nbrOfSegments)) {
     seg <- segs[ss,];
-    idxs <- which(seg$chromosome == chromosome & 
+    idxs <- which(seg$chromosome == chromosome &
                   seg$start <= x & x <= seg$end);
     idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
 
@@ -269,7 +269,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{chromosomes}{An optional @vector specifying the subset of 
+#  \item{chromosomes}{An optional @vector specifying the subset of
 #    chromosomes used for the estimate.  If @NULL, all chromosomes are used.}
 #  \item{method}{A @character string specifying the method used.}
 #  \item{estimator}{A @character string or a @function specifying the
@@ -290,16 +290,16 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
 #   @seeclass
 # }
 #
-# @keyword internal 
-#*/###########################################################################  
+# @keyword internal
+#*/###########################################################################
 setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, method=c("diff", "res", "abs", "DNAcopy"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'chromosomes':
   if (!is.null(chromosomes)) {
   }
- 
+
   # Argument 'method':
   method <- match.arg(method);
 
@@ -310,7 +310,7 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
   # Argument 'weights':
   if (!is.null(weights)) {
     nbrOfLoci <- nbrOfLoci(fit);
-    weights <- Arguments$getNumerics(weights, range=c(0,Inf), 
+    weights <- Arguments$getNumerics(weights, range=c(0,Inf),
                                      length=rep(nbrOfLoci, times=2));
   }
 
@@ -395,7 +395,7 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
 
 setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
   # To please R CMD check, cf. subset()
-  chromosome <- NULL; rm(chromosome);
+  chromosome <- NULL; rm(list="chromosome");
 
   segs <- getSegments(fit, splitter=FALSE);
   chromosomes <- sort(unique(segs$chromosome));
@@ -452,7 +452,7 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
 # o BUG FIX: The object returned by as.CBS() of DNAcopy did not have the
 #   correct class hierarchy.
 # 2011-10-06
-# o Now getChromosomeRanges() of CBS returns a data.frame instead of 
+# o Now getChromosomeRanges() of CBS returns a data.frame instead of
 #   a matrix, and first column is now 'chromosome'.
 # 2011-09-05
 # o Added getChromosomeRanges() for CBS.

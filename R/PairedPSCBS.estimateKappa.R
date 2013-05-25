@@ -186,7 +186,7 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   d <- density(c1, weights=weights, adjust=adjust, from=0, na.rm=FALSE);
   fit <- findPeaksAndValleys(d);
 
-  type <- NULL; rm(type); # To please R CMD check
+  type <- NULL; rm(list="type"); # To please R CMD check
   fit <- subset(fit, type == "peak");
   stopifnot(nrow(fit) >= 2);
 

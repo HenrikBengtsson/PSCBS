@@ -276,7 +276,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     data$w <- w;
   }
   verbose && str(verbose, data);
-  rm(chrom, x, index, y, w); # Not needed anymore
+  # Not needed anymore
+  chrom <- x <- index <- y <- w <- NULL;
   verbose && exit(verbose);
 
 
@@ -291,7 +292,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     data <- data[ok,,drop=FALSE];
     verbose && exit(verbose);
   }
-  rm(ok); # Not needed anymore
+  ok <- NULL; # Not needed anymore
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -306,7 +307,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   if (any(o != seq(along=o))) {
     data <- data[o,,drop=FALSE];
   }
-  rm(o); # Not needed anymore
+  o <- NULL; # Not needed anymore
   verbose && str(verbose, data);
   verbose && exit(verbose);
 
@@ -331,7 +332,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       dataKK <- subset(data, chrom == chromosomeKK);
       verbose && str(verbose, dataKK);
       fields <- attachLocally(dataKK, fields=c("y", "chrom", "x", "index"));
-      rm(dataKK); # Not needed anymore
+      dataKK <- NULL; # Not needed anymore
 
       knownSegmentsKK <- NULL;
       if (!is.null(knownSegments)) {
@@ -369,14 +370,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       fitList[[chrTag]] <- fit;
 
       # Not needed anymore
-      rm(fit);
+      fit <- NULL;
       verbose && exit(verbose);
     } # for (kk ...)
 
     verbose && enter(verbose, "Merging (independently) segmented chromosome");
     fit <- Reduce(append, fitList);
     # Not needed anymore
-    rm(fitList);
+    fitList <- NULL;
 
     # Update parameters that otherwise may be incorrect
     fit$params$seed <- seed;
@@ -466,7 +467,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
         verbose && str(verbose, dataJJ);
         fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
-        rm(dataJJ); # Not needed anymore
+        dataJJ <- NULL; # Not needed anymore
 
         nbrOfLoci <- length(y);
 
@@ -511,7 +512,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       fitList[[segTag]] <- fit;
 
       # Not needed anymore
-      rm(fit);
+      fit <- NULL;
       verbose && exit(verbose);
     } # for (jj ...)
 
@@ -520,7 +521,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     appendT <- function(...) append(..., addSplit=FALSE);
     fit <- Reduce(appendT, fitList);
     # Not needed anymore
-    rm(fitList);
+    fitList <- NULL;
 
     # Update parameters that otherwise may be incorrect
     fit$params$seed <- seed;
@@ -637,7 +638,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   names(cnData)[3] <- sampleName;
   verbose && str(verbose, cnData);
   verbose && exit(verbose);
-#  rm(sampleName);  # Not needed anymore
 
   # Sanity check
   # (because all loci with unknown locations have already been dropped)
@@ -833,7 +833,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Store weights
   fit$data$w <- data$w;
 
-  rm(data);
+  # Not needed anymore
+  data <- NULL;
 
   verbose && exit(verbose);
 

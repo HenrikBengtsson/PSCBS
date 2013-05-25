@@ -7,7 +7,7 @@
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
@@ -26,14 +26,14 @@
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("append", "PSCBS", function(x, other, addSplit=TRUE, ...) {
   # To please R CMD check
   this <- x;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'other':
   other <- Arguments$getInstanceOf(other, "PSCBS");
   for (field in c("data", "output")) {
@@ -95,7 +95,7 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'chromosomes':
   disallow <- c("NaN", "Inf");
   chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow);
@@ -111,7 +111,7 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locus data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  chromosome <- NULL; rm(chromosome); # To please R CMD check
+  chromosome <- NULL; rm(list="chromosome"); # To please R CMD check
   res$data <- subset(res$data, chromosome %in% chromosomes);
 
 
