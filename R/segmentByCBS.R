@@ -11,7 +11,7 @@
 #  @get "title" of the \pkg{DNAcopy} package.
 #  This is a convenient low-level wrapper for the \code{DNAcopy::segment()}
 #  method.  It is intended to be applied to a sample at the time.
-#  For more details on the Circular Binary Segmentation (CBS) method 
+#  For more details on the Circular Binary Segmentation (CBS) method
 #  see [1,2].
 # }
 #
@@ -44,10 +44,10 @@
 #     is in the middle of multiple loci with the same position.
 #     The latter is what \code{DNAcopy::segment()} returns.
 #   }
-#   \item{knownSegments}{Optional @data.frame specifying 
+#   \item{knownSegments}{Optional @data.frame specifying
 #     \emph{non-overlapping} known segments.  These segments must
 #     not share loci.  See @see "findLargeGaps" and @see "gapsToSegments".}
-#   \item{seed}{An (optional) @integer specifying the random seed to be 
+#   \item{seed}{An (optional) @integer specifying the random seed to be
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
@@ -56,7 +56,7 @@
 # \value{
 #   Returns a @see "CBS" object.
 # }
-# 
+#
 # \details{
 #   Internally @see "DNAcopy::segment" of \pkg{DNAcopy} is used to
 #   segment the signals.
@@ -66,7 +66,7 @@
 # \section{Reproducibility}{
 #   The \code{DNAcopy::segment()} implementation of CBS uses approximation
 #   through random sampling for some estimates.  Because of this,
-#   repeated calls using the same signals may result in slightly 
+#   repeated calls using the same signals may result in slightly
 #   different results, unless the random seed is set/fixed.
 # }
 #
@@ -76,7 +76,7 @@
 #   are preserved and keep in the result.
 #
 #   Likewise, genomic positions may contain missing values.
-#   However, if they do, such loci are silently excluded before 
+#   However, if they do, such loci are silently excluded before
 #   performing the segmentation, and are not kept in the results.
 #   The mapping between the input locus-level data and ditto of
 #   the result can be inferred from the \code{index} column of
@@ -104,12 +104,12 @@
 #   with a matched normal, see @see "segmentByPairedPSCBS".
 # }
 # @keyword IO
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # DNAcopy::getbdry() is slow for now default settings.  Below we 
+  # DNAcopy::getbdry() is slow for now default settings.  Below we
   # implement a memoized version of this function.
   getbdry2 <- function(eta, nperm, alpha, tol=0.01, verbose=FALSE) {
     require("R.cache") || throw("Package not loaded: R.cache");
@@ -235,7 +235,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   if (!is.null(seed)) {
     seed <- Arguments$getInteger(seed);
   }
- 
+
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -349,7 +349,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                 undo=undo,
                 joinSegments=joinSegments,
                 knownSegments=knownSegmentsKK,
-                ..., 
+                ...,
                 seed=NULL,
                 verbose=verbose);
 
@@ -365,7 +365,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
       verbose && print(verbose, head(as.data.frame(fit)));
       verbose && print(verbose, tail(as.data.frame(fit)));
-      
+
       fitList[[chrTag]] <- fit;
 
       # Not needed anymore
@@ -391,14 +391,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       verbose && print(verbose, head(segs));
       verbose && print(verbose, tail(segs));
     }
-   
+
     verbose && exit(verbose);
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Return results
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     return(fit);
-  } # if (nbrOfChromosomes > 1) 
+  } # if (nbrOfChromosomes > 1)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -452,7 +452,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     for (jj in seq(length=nbrOfSegments)) {
       seg <- knownSegments[jj,];
       chromosomeJJ <- seg$chromosome;
-      xStart <- seg$start;      
+      xStart <- seg$start;
       xEnd <- seg$end;
       segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
       verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments));
@@ -470,7 +470,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
         nbrOfLoci <- length(y);
 
-        # Empty segment? 
+        # Empty segment?
         # [AD HOC. Should be done by segmentCBS(). /HB 2011-10-21]
         if(nbrOfLoci == 0) {
           fit <- splitter;
@@ -485,11 +485,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                     undo=undo,
                     joinSegments=joinSegments,
                     knownSegments=seg,
-                    ..., 
+                    ...,
                     seed=NULL,
                     verbose=verbose);
         }
-  
+
         # Sanity checks
         stopifnot(nrow(fit$data) == nbrOfLoci);
         stopifnot(all.equal(fit$data$y, y));
@@ -540,7 +540,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     segs <- getSegments(fit);
     stopifnot(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE));
     stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-    stopifnot(all(diff(segs$end) > 0, na.rm=TRUE)); 
+    stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
 
     # Sanity check
 #    if (nrow(fit$data) != length(y)) {
@@ -551,7 +551,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 #    stopifnot(all(fit$data$x == data$x));
 #    stopifnot(all(fit$data$index == data$index));
 #    stopifnot(all.equal(fit$data$y, data$y));
-   
+
     verbose && exit(verbose);
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -577,11 +577,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   if (nbrOfSegments == 1) {
     seg <- knownSegments[1,];
     chromosomeJJ <- seg$chromosome;
-    xStart <- seg$start;      
+    xStart <- seg$start;
     xEnd <- seg$end;
     segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
     verbose && printf(verbose, "Extracting segment '%s'", segTag);
-  
+
     # Extract subset of data and parameters for this segment
     data <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
     verbose && str(verbose, data);
@@ -614,14 +614,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && cat(verbose, "Formals:");
   verbose && str(verbose, formals);
   verbose && exit(verbose);
- 
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up arguments to pass to segmentation function
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Setting up method arguments");
 
-  verbose && enter(verbose, "Setting up ", pkgName, " data structure"); 
+  verbose && enter(verbose, "Setting up ", pkgName, " data structure");
 
   sampleName <- "y";  # This is going to be the name of the data field
 
@@ -702,7 +702,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && str(verbose, args);
 
   verbose && exit(verbose);
- 
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Calling segmentation function
@@ -732,7 +732,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # function is not masked in the search() path.
     t <- system.time({
       fit <- do.call(methodName, args);
-    }); 
+    });
     # Drop the 'call' (because it will be huge due to the do.call() call)
     fit$call <- NULL;
   });
@@ -885,7 +885,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   colnames(segs) <- names;
   fit$output <- segs;
 
-  
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Join segments?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -899,7 +899,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     } else {
       range <- NULL;
     }
-   
+
     fit <- joinSegments(fit, range=range, verbose=verbose);
 
     # Sanity checks
@@ -912,12 +912,12 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && cat(verbose, "Results object:");
   verbose && str(verbose, fit);
 
-  verbose && exit(verbose); 
+  verbose && exit(verbose);
 
 
   verbose && exit(verbose);
-  
-  fit; 
+
+  fit;
 }) # segmentByCBS()
 
 
@@ -946,7 +946,7 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 ############################################################################
 # HISTORY:
 # 2012-09-20
-# o BUG FIX: segmentByCBS(... knownSegments) could return segments for 
+# o BUG FIX: segmentByCBS(... knownSegments) could return segments for
 #   chromosome 0 even though it did not exist in the input data.
 # 2012-09-13
 # o SPEEDUP: Now segmentByCBS(..., undo=+Inf) returns much faster, which
@@ -976,7 +976,7 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 #   chromosome boundaries given as -Inf and +Inf.
 # 2011-11-15
 # o Now more segmentation parameters are stored in the CBS object.
-# o SPEEDUP: Now segmentByCBS() will use memoization to retrieve 
+# o SPEEDUP: Now segmentByCBS() will use memoization to retrieve
 #   so called "sequential boundaries for early stopping", iff any of
 #   the DNAcopy::segment() arguments 'alpha', 'nperm' and 'eta' are
 #   specified.  See also DNAcopy::getbdry().
@@ -1004,10 +1004,10 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 #   should not make a difference, i.e. it should give identical results.
 # 2011-06-14
 # o GENERALIZATION: Added argument 'columnNamesFlavor' to segmentByCBS().
-# o CONVENTION: Changed the column names of returned data frames. 
+# o CONVENTION: Changed the column names of returned data frames.
 #   They now follow the camelCase naming convention and are shorter.
 # 2011-05-31
-# o Now explicitly using DNAcopy::nnn() to call DNAcopy functions. 
+# o Now explicitly using DNAcopy::nnn() to call DNAcopy functions.
 # 2011-04-07
 # o ROBUSTNESS: Added 'segRows' field validation in segmentByCBS().
 # 2010-12-01

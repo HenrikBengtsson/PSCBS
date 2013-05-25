@@ -24,9 +24,9 @@
 #        in [0,1] (due to noise, values may be slightly outside as well)
 #        or @NA for non-polymorphic loci.}
 #   \item{...}{Additional arguments passed to @see "segmentByPairedPSCBS".}
-#   \item{flavor}{A @character specifying what type of segmentation and 
+#   \item{flavor}{A @character specifying what type of segmentation and
 #     calling algorithm to be used.}
-#   \item{tauA, tauB}{Lower and upper thresholds for calling SNPs 
+#   \item{tauA, tauB}{Lower and upper thresholds for calling SNPs
 #     heterozygous based on the tumor allele B fractions (\code{betaT}).
 #     If @NA, then they are estimates from data.
 #   }
@@ -36,7 +36,7 @@
 # \value{
 #   Returns the segmentation results as a @see "NonPairedPSCBS" object.
 # }
-# 
+#
 # \details{
 #   Internally @see "segmentByPairedPSCBS" is used for segmentation.
 #   This segmentation method does \emph{not} support weights.
@@ -45,7 +45,7 @@
 # \section{Reproducibility}{
 #   The "DNAcopy::segment" implementation of CBS uses approximation
 #   through random sampling for some estimates.  Because of this,
-#   repeated calls using the same signals may result in slightly 
+#   repeated calls using the same signals may result in slightly
 #   different results, unless the random seed is set/fixed.
 # }
 #
@@ -95,7 +95,7 @@
 # }
 #
 # @keyword IO
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavor=c("tcn", "tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh"), tauA=NA, tauB=1-tauA, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -144,7 +144,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   isSnp <- !is.na(betaT);
   nbrOfSnps <- sum(isSnp);
   verbose && cat(verbose, "Number of SNPs: ", nbrOfSnps);
- 
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call tumor "genotypes"
@@ -162,7 +162,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
     fitT <- fitT[o,];
     fitT <- fitT[1,];
     z <- mBAF[mBAF >= fitT$x] - fitT$x;
-    q <- quantile(z, probs=0.95, na.rm=TRUE, names=FALSE); 
+    q <- quantile(z, probs=0.95, na.rm=TRUE, names=FALSE);
     qU <- fitT$x+q;
     verbose && cat(verbose, "Upper quantile: ", qU);
     qL <- fitT$x - q;
@@ -173,7 +173,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
 
   verbose && cat(verbose, "Homozygous treshholds:");
   verbose && print(verbose, c(tauA, tauB));
- 
+
   isHomA <- isSnp & (betaT <= tauA);
   isHomB <- isSnp & (betaT >= tauB);
   isHom <- (isHomA | isHomB);
@@ -248,7 +248,7 @@ setMethodS3("segmentByNonPairedPSCBS", "data.frame", function(CT, ...) {
   data <- CT;
 
 
-  segmentByNonPairedPSCBS(CT=data$CT, betaT=data$betaT, 
+  segmentByNonPairedPSCBS(CT=data$CT, betaT=data$betaT,
                           chromosome=data$chromosome, x=data$x, ...);
 })
 
