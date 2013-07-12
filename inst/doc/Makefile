@@ -25,7 +25,6 @@ clean:
 	$(RM) dummy.Rnw
 	$(RM) index.html.rsp
 	$(RM) *.rsp.R
-#       # LaTeX related files
 	$(RM) *.tex *.aux *.bbl *.blg *.log *.out *.sty *.toc
 	$(RM) -r figures/
 	$(RM) Makefile
