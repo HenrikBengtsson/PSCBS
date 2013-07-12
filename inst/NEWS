@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.35.4 [2013-07-11]
+o Updated the Makefile for the vignettes and added .Rinstignore such
+  that auxillary (bib and bst) LaTeX files are not installed but
+  part of the build so they are available to R CMD check, which
+  is recently needed by R devel.
+o Bumped up package dependencies.
+
+  
 Version: 0.35.3 [2013-05-25]
 o Minor speedup by replacing all rm(x) with x <- NULL, cf. R-devel
   thread 'Assigning NULL to large variables is much faster than rm() -
@@ -210,7 +218,7 @@ o Updated deprecated ggplot2 functions in the RSP reports.
 
 
 Version: 0.29.6 [2012-11-01]
-o Bumped the package dependencies.
+o Bumped up package dependencies.
 o CRAN POLICY: Made the examples run faster for R CMD check.
 
 
