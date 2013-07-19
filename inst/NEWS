@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.35.5 [2013-07-19]
+o ROBUSTNESS: Added a sanity check on the estimates of (tauA, tauB)
+  when they are estimated from data in segmentByNonPairedPSCBS().
+
+
 Version: 0.35.4 [2013-07-11]
 o Updated the Makefile for the vignettes and added .Rinstignore such
   that auxillary (bib and bst) LaTeX files are not installed but
@@ -9,7 +14,7 @@ o Updated the Makefile for the vignettes and added .Rinstignore such
   is recently needed by R devel.
 o Bumped up package dependencies.
 
-  
+
 Version: 0.35.3 [2013-05-25]
 o Minor speedup by replacing all rm(x) with x <- NULL, cf. R-devel
   thread 'Assigning NULL to large variables is much faster than rm() -

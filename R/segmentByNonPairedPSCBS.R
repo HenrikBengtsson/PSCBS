@@ -169,6 +169,14 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
     verbose && cat(verbose, "Symmetric lower quantile: ", qL);
     tauA <- 1/2-qL;
     tauB <- 1/2+qL;
+    verbose && cat(verbose, "(tauA, tauB) estimates: (%g,%g)", tauA, tauB);
+
+    # Sanity check on (tauA, tauB) estimates
+    if (tauB < tauA) {
+      throw("Failed to estimate (tauA, tauB). The estimate 'tauA' is greater than 'tauB', which it should not: ", tauA, " > ", tauB);
+    }
+    tauA <- Arguments$getDouble(tauA, range=c(-0.5, +0.5));
+    tauB <- Arguments$getDouble(tauB, range=c(+0.5, +1.5));
   }
 
   verbose && cat(verbose, "Homozygous treshholds:");
@@ -266,6 +274,9 @@ setMethodS3("segmentByNonPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-07-19
+# o ROBUSTNESS: Added a sanity check on the estimates of (tauA, tauB)
+#   when they are estimated from data in segmentByNonPairedPSCBS().
 # 2012-11-05
 # o DOCUMENTATION FIX: example(segmentByNonPairedPSCBS) was for the
 #   paired case.
