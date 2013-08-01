@@ -1,11 +1,11 @@
-<%-------------------------------------------------------------------
+<%@meta language="R-vignette" content="--------------------------------
   DIRECTIVES FOR R:
 
   %\VignetteIndexEntry{Paired PSCBS}
   %\VignetteAuthor{Henrik Bengtsson}
   %\VignetteKeyword{copy numbers, allele specific, parent specific, genomic aberrations}
   %\VignetteEngine{R.rsp::rsp}
-  -------------------------------------------------------------------%>
+  ------------------------------------------------------------------"%>
 
 <% t0 <- Sys.time() %>
 
