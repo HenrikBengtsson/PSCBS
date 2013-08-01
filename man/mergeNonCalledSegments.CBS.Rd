@@ -6,36 +6,36 @@
 % by the Rdoc compiler part of the R.oo package.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
- \name{mergeNonCalledSegments.CBS}
+\name{mergeNonCalledSegments.CBS}
 \alias{mergeNonCalledSegments.CBS}
 \alias{CBS.mergeNonCalledSegments}
 \alias{mergeNonCalledSegments,CBS-method}
 
- \title{Merge neighboring segments that are not called}
+\title{Merge neighboring segments that are not called}
 
- \description{
-   Merge neighboring segments that are not called
- }
+\description{
+  Merge neighboring segments that are not called
+}
 
- \usage{
+\usage{
 \method{mergeNonCalledSegments}{CBS}(fit, ..., verbose=FALSE)
 }
 
- \arguments{
-  \item{...}{Not used.}
-  \item{verbose}{\code{\link[R.utils]{Verbose}}.}
- }
+\arguments{
+ \item{...}{Not used.}
+ \item{verbose}{\code{\link[R.utils]{Verbose}}.}
+}
 
- \value{
-   Returns an object of the same class
-   with the same of fewer number of segments.
- }
+\value{
+  Returns an object of the same class
+  with the same of fewer number of segments.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   For more information see \code{\link{CBS}}.
- }
+\seealso{
+  For more information see \code{\link{CBS}}.
+}
 
 
 \keyword{internal}

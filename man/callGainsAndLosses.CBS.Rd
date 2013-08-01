@@ -7,47 +7,47 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
- \name{callGainsAndLosses.CBS}
+\name{callGainsAndLosses.CBS}
 \alias{callGainsAndLosses.CBS}
 \alias{CBS.callGainsAndLosses}
 \alias{callGainsAndLosses,CBS-method}
 
- \title{Calls gains and losses}
+\title{Calls gains and losses}
 
- \description{
-  Calls gains and losses.
- }
+\description{
+ Calls gains and losses.
+}
 
- \usage{
+\usage{
 \method{callGainsAndLosses}{CBS}(fit, adjust=1, method=c("ucsf-mad", "ucsf-dmad"), ..., verbose=FALSE)
 }
 
- \arguments{
-  \item{adjust}{A positive scale factor adjusting the sensitivity of the
-    caller, where a value less (greater) than 1.0 makes the caller
-    less (more) sensitive.}
-  \item{method}{A \code{\link[base]{character}} string specifying the calling algorithm to use.}
-  \item{...}{Additional/optional arguments used to override the default
-    parameters used by the caller.}
- }
+\arguments{
+ \item{adjust}{A positive scale factor adjusting the sensitivity of the
+   caller, where a value less (greater) than 1.0 makes the caller
+   less (more) sensitive.}
+ \item{method}{A \code{\link[base]{character}} string specifying the calling algorithm to use.}
+ \item{...}{Additional/optional arguments used to override the default
+   parameters used by the caller.}
+}
 
- \value{
-  Returns a \code{\link[PSCBS]{CBS}} object where \code{\link[base]{logical}} columns
-  'lossCall' and 'gainCall' have been appended to the segmentation table.
- }
+\value{
+ Returns a \code{\link[PSCBS]{CBS}} object where \code{\link[base]{logical}} columns
+ 'lossCall' and 'gainCall' have been appended to the segmentation table.
+}
 
- \section{The UCSF caller}{
-   If \code{method == "ucsf-mad"}, then segments are called using [1], i.e.
-   a segment is called gained or lost if its segment level is
-   at least two standard deviations away from the median segment level
-   on Chr1-22, where standard deviation is estimated using MAD.
-   Then same is done for \code{method == "ucsf-dmad"} with the difference
-   that the standard deviation is estimated using a robust first order
-   variance estimator.
- }
+\section{The UCSF caller}{
+  If \code{method == "ucsf-mad"}, then segments are called using [1], i.e.
+  a segment is called gained or lost if its segment level is
+  at least two standard deviations away from the median segment level
+  on Chr1-22, where standard deviation is estimated using MAD.
+  Then same is done for \code{method == "ucsf-dmad"} with the difference
+  that the standard deviation is estimated using a robust first order
+  variance estimator.
+}
 
- \examples{
-  
+\examples{
+ 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulating copy-number data
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,7 +75,7 @@ print(fit)
 plotTracks(fit)
 
 
-  
+ 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # CALLS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -88,20 +88,20 @@ fitC <- callAmplifications(fitC)
 # Call outliers by loci
 fitC <- callOutliers(fitC)
 
- }
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \references{
-   [1] Fridlyand et al. \emph{Breast tumor copy number aberration
-       phenotypes and genomic instability}, BMC Cancer, 2006. \cr
- }
+\references{
+  [1] Fridlyand et al. \emph{Breast tumor copy number aberration
+      phenotypes and genomic instability}, BMC Cancer, 2006. \cr
+}
 
- \seealso{
-   \code{\link[PSCBS:callAmplifications.CBS]{*callAmplifications}()}.
-   \code{\link[PSCBS:callOutliers.CBS]{*callOutliers}()}.
-   For more information see \code{\link{CBS}}.
- }
+\seealso{
+  \code{\link[PSCBS:callAmplifications.CBS]{*callAmplifications}()}.
+  \code{\link[PSCBS:callOutliers.CBS]{*callOutliers}()}.
+  For more information see \code{\link{CBS}}.
+}
 
 
 \keyword{internal}

@@ -7,33 +7,33 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
- \name{plotTracks.AbstractCBS}
+\name{plotTracks.AbstractCBS}
 \alias{plotTracks.AbstractCBS}
 \alias{AbstractCBS.plotTracks}
 \alias{plotTracks,AbstractCBS-method}
 
- \title{Plots the segmentation result along the genome}
+\title{Plots the segmentation result along the genome}
 
- \description{
-   Plots the segmentation result along the genome.
- }
+\description{
+  Plots the segmentation result along the genome.
+}
 
- \usage{
+\usage{
 \method{plotTracks}{AbstractCBS}(...)
 }
 
- \arguments{
-  \item{...}{...}
- }
+\arguments{
+ \item{...}{...}
+}
 
- \value{
-   Returns nothing.
- }
+\value{
+  Returns nothing.
+}
 
- \author{Henrik Bengtsson}
+\author{Henrik Bengtsson}
 
- \seealso{
-   For more information see \code{\link{AbstractCBS}}.
- }
+\seealso{
+  For more information see \code{\link{AbstractCBS}}.
+}
 \keyword{internal}
 \keyword{methods}
