@@ -81,8 +81,7 @@ options(str=strOptions(strict.width="cut"));
 
 \title{<%@meta name="title"%>}
 \author{<%@meta name="author"%>}
-\date{<%=format(as.Date(getDate(PSCBS)), format="%B %d, %Y")%>}
-\title{Paired PSCBS}
+\date{<%=format(as.Date(getDate(Package("PSCBS"))), format="%B %d, %Y")%>}
 
 \begin{document}
 
