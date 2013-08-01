@@ -2,8 +2,8 @@
   DIRECTIVES FOR R:
 
   %\VignetteIndexEntry{Paired PSCBS}
-  %\VignetteKeyword{copy numbers, allele specific, parent specific, genomic aberrations}
   %\VignetteAuthor{Henrik Bengtsson}
+  %\VignetteKeyword{copy numbers, allele specific, parent specific, genomic aberrations}
   %\VignetteEngine{R.rsp::rsp}
   -------------------------------------------------------------------%>
 
@@ -34,8 +34,20 @@ options(str=strOptions(strict.width="cut"));
 \usepackage{graphicx}
 \graphicspath{{figures/}}
 
-\usepackage{hyperref} % \url{}
-\hypersetup{hidelinks}
+<%-------------------------------------------------------------------
+  Assign PDF metadata
+  -------------------------------------------------------------------%>
+% PDF metadata
+\usepackage{hyperref}
+% Ideally \hypersetup{hidelinks}, but for backward compatibility:
+\hypersetup{pdfborder={0 0 0}}
+\hypersetup{
+  pdfauthor={<%@meta name="author"%>},
+  pdftitle={<%@meta name="title"%>},
+  pdfsubject={},
+  pdfkeywords={<%@meta name="keywords"%>},
+  pdfproducer={R.rsp v<%=R.rsp$version%> by <%=R.rsp$author%>}
+}
 
 % Page margins
 \addtolength{\oddsidemargin}{-0.5in}	
@@ -67,11 +79,10 @@ options(str=strOptions(strict.width="cut"));
 \newenvironment{escapeRspVerbatim}{\vspace{-\parskip}\begin{alltt}}{\end{alltt}}
 
 
+\title{<%@meta name="title"%>}
+\author{<%@meta name="author"%>}
+\date{<%=format(as.Date(getDate(PSCBS)), format="%B %d, %Y")%>}
 \title{Paired PSCBS}
-<% pkg <- Package("PSCBS"); %>
-\author{Vignette by Henrik Bengtsson}
-%% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{April 8, 2013}
 
 \begin{document}
 
@@ -83,7 +94,7 @@ Paired PSCBS was designed to work with data from any SNP microarray technology a
 This document shows how to use the \pkg{PSCBS} package to run Paired PSCBS on a tumor-normal pair.
 \end{abstract}
 
-\keywords{copy numbers, allele specific, parent specific, genomic aberrations}
+\keywords{<%@meta name="keywords"%>}
 
 \begin{center}
 \emph{This vignette is distributed as part of the \pkg{PSCBS} package, which is available on CRAN (\url{http://cran.r-project.org/}).
@@ -391,7 +402,7 @@ By default, the reports are written to directory \code{reports/<studyName>/} und
 \section*{Appendix}
 \subsection*{Session information}
 <%=toLatex(sessionInfo())%>
-This report was automatically generated using \code{rsp()} of the R.rsp package.
+This report was automatically generated using \code{rfile()} of the R.rsp package.
 Total processing time after RSP-to-R translation was <%=dt <- round(Sys.time()-t0, digits=2)%> <%=attr(dt, "units")%>.
 
 \end{document}

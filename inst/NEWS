@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.35.6 [2013-08-01]
+o Updated the vignettes to utilize the new R.rsp features.
+
+
 Version: 0.35.5 [2013-07-19]
 o ROBUSTNESS: Added a sanity check on the estimates of (tauA, tauB)
   when they are estimated from data in segmentByNonPairedPSCBS().

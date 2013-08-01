@@ -26,9 +26,9 @@
 #   \item{...}{Additional arguments passed to @see "segmentByPairedPSCBS".}
 #   \item{flavor}{A @character specifying what type of segmentation and
 #     calling algorithm to be used.}
-#   \item{tauA, tauB}{Lower and upper thresholds for calling SNPs
-#     heterozygous based on the tumor allele B fractions (\code{betaT}).
-#     If @NA, then they are estimates from data.
+#   \item{tauA, tauB}{Lower and upper thresholds (\code{tauA < tauB} for
+#     calling SNPs  heterozygous based on the tumor allele B fractions
+#     (\code{betaT}).  If @NA, then they are estimates from data.
 #   }
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -118,11 +118,13 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
 
   # Argument 'tauA' & 'tauB':
   if (!is.na(tauA) && !is.na(tauB)) {
-    tauA <- Arguments$getDouble(tauA, range=c(-0.5, +0.5));
-    tauB <- Arguments$getDouble(tauB, range=c(+0.5, +1.5));
+    tauA <- Arguments$getDouble(tauA);
+    tauB <- Arguments$getDouble(tauB);
     if (tauB < tauA) {
       throw("Argument 'tauA' must be smaller than 'tauB': ", tauA, " > ", tauB);
     }
+    tauA <- Arguments$getDouble(tauA, range=c(-0.5, +0.5));
+    tauB <- Arguments$getDouble(tauB, range=c(+0.5, +1.5));
   }
 
   # Argument 'verbose':
