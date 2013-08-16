@@ -89,14 +89,24 @@ setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
 setMethodS3("extractMinorMajorCNs", "PairedPSCBS", function(fit, ...) {
   data <- extractTCNAndDHs(fit, ...);
 
-  gamma <- data[,1];
-  rho <- data[,2];
+  gamma <- data[,1L];
+  rho <- data[,2L];
   C1 <- 1/2*(1-rho)*gamma;
   C2 <- gamma - C1;
 
-  data[,1] <- C1;
-  data[,2] <- C2;
+  data[,1L] <- C1;
+  data[,2L] <- C2;
   colnames(data)[1:2] <- c("C1", "C2");
+
+  # Swap (C1,C2)?
+  segs <- getSegments(fit, ...);
+  flipped <- segs$c1c2Swap;
+  if (!is.null(flipped)) {
+    idxs <- which(flipped);
+    if (length(idxs) > 0L) {
+      data[idxs,1:2] <- data[idxs,2:1];
+    }
+  }
 
   data;
 }, protected=TRUE)
@@ -430,6 +440,9 @@ print(tcnSegRowsII);
 
 ############################################################################
 # HISTORY:
+# 2013-08-15
+# o Made extractMinorMajorCNs() for PairedPSCBS acknowledge the
+#   'c1c2Swap' field.
 # 2013-01-15
 # o Now postsegmentTCN() uses the params$avgTCN estimator, iff given.
 # 2012-09-21

@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.36.0 [2013-08-15]
+o Made extractMinorMajorCNs() for PairedPSCBS acknowledge additional
+  fields related to (C1,C2).
+
+
 Version: 0.35.6 [2013-08-01]
 o Updated the vignettes to utilize the new R.rsp features.
 
