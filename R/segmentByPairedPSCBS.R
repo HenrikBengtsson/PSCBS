@@ -142,7 +142,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # gets a namespace, we do the following workaround. /HB 2011-07-14
   capitalize <- R.utils::capitalize;
 
-  require("R.utils") || throw("Package not loaded: R.utils");
   require("aroma.light") || throw("Package not loaded: aroma.light");
 
   # To please R CMD check

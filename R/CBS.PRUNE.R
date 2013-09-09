@@ -44,6 +44,13 @@
 #*/###########################################################################
 setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  ns <- getNamespace("DNAcopy");
+  DNAcopy_changepoints.sdundo <- get("changepoints.sdundo", mode="function", envir=ns);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'rho':
@@ -136,7 +143,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     # Prune change points
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     segLengths <- segRows[,2] - segRows[,1] + 1L;
-    segLengthsP <- DNAcopy:::changepoints.sdundo(genomdat=y,
+    segLengthsP <- DNAcopy_changepoints.sdundo(genomdat=y,
                          lseg=segLengths, trimmed.SD=sigma, change.SD=rho);
     segLengthsP <- as.integer(segLengthsP);
     nbrOfSegsP <- length(segLengthsP);
