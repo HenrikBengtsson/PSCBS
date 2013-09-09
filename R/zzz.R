@@ -12,7 +12,7 @@
     loadPackage <- base::library;
     loadPackage("DNAcopy");
   } else {
-    msg <- "The Bioconductor package 'DNAcopy' is not installed. Please see http://www.bioconductor.org/ on how to install it, or try calling installDNAcopy().";
+    msg <- "The Bioconductor package 'DNAcopy' is not installed. Please see http://www.bioconductor.org/ on how to install it, or try calling PSCBS::installDNAcopy().";
     hrule <- paste(rep("*", times=getOption("width", 80L)-1L), collapse="");
     packageStartupMessage(sprintf("%s\nNOTE: %s\n%s", hrule, msg, hrule));
   }

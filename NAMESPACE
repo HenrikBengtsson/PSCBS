@@ -8,12 +8,14 @@ import("R.oo")
 # importFrom(R.utils, cat)
 import("R.utils")
 
+import("DNAcopy")
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Object that must exported explicitly
-# export(.conflicts.OK) 
+# export(.conflicts.OK)
 
 # Export all public methods, that is, those without a preceeding dot
 # in their names.

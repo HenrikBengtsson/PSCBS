@@ -35,9 +35,12 @@ setMethodS3("installDNAcopy", "default", function(..., force=FALSE) {
   # Argument 'force':
   force <- Arguments$getLogical(force);
 
+  # Package to be installed
+  pkgName <- "DNAcopy";
+
   # Is DNAcopy already available?
-  if (!force && isPackageInstalled("DNAcopy")) {
-    library("DNAcopy");
+  if (!force && isPackageInstalled(pkgName)) {
+    library(pkgName, character.only=TRUE);
     return(invisible());
   }
 
@@ -45,10 +48,10 @@ setMethodS3("installDNAcopy", "default", function(..., force=FALSE) {
   # To please R CMD check
   biocLite <- NULL; rm(list="biocLite");
   source("http://www.bioconductor.org/biocLite.R");
-  biocLite("DNAcopy", ...);
+  biocLite(pkgName, ...);
 
   # ...and load it
-  library("DNAcopy");
+  library(pkgName, character.only=TRUE);
 
   return(invisible());
 }) # installDNAcopy()
@@ -56,6 +59,8 @@ setMethodS3("installDNAcopy", "default", function(..., force=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2013-09-10
+# o Now 'R CMD check' no longer complaints about DNAcopy.
 # 2011-05-31
 # o Created.
 ############################################################################
