@@ -126,7 +126,7 @@ setMethodS3("extractCNs", "PairedPSCBS", function(fit, splitters=TRUE, ...) {
 setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
   xy <- extractC1C2(..., splitters=TRUE, addGaps=TRUE);
   X <- xy[,1:2,drop=FALSE];
-  dX <- matrixStats::colDiffs(X);
+  dX <- colDiffs(X);
   dX;
 }, protected=TRUE)
 

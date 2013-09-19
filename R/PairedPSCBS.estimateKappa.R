@@ -119,7 +119,6 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 # @keyword internal
 #*/###########################################################################
 setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, minDensity=0.2, ..., verbose=FALSE) {
-  require("matrixStats") || throw("Package not loaded: matrixStats");
   require("aroma.light") || throw("Package not loaded: aroma.light");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -9,15 +9,8 @@
 #   You should expect the API to be changing over time.
 # }
 #
-# \section{Requirements}{
-#   This package requires external packages
-#   @eval "hpaste(unlist(packageDescription('PSCBS')[c('Depends', 'Imports')]))",
-#   and also suggests @eval "packageDescription('PSCBS')$Suggests".
-# }
-#
 # \section{Installation and updates}{
 #   To install this package, use \code{install.packages("PSCBS")}.
-#   Inorder to run examples, also \code{install.packages("PSCBS.data")}.
 # }
 #
 # \section{To get started}{

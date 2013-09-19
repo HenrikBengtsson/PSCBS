@@ -60,13 +60,6 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
   }
   delta <- as.double(NA);
 
-
-  # testROH() uses matrixStats::rowMins(), iff calculating genotype
-  # confidence scores.  It is cheaper to load 'matrixStats' once,
-  # instead in every call to testROH().
-  require("matrixStats") || throw("Package not loaded: matrixStats");
-
-
   # For each segment...
   for (ss in seq(length=nbrOfSegments)) {
     verbose && enter(verbose, sprintf("Segment #%d of %d", ss, nbrOfSegments));

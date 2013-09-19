@@ -10,6 +10,13 @@ import("R.utils")
 
 import("DNAcopy")
 
+importFrom("utils", "capture.output")
+
+importFrom("matrixStats", "rowAlls")
+importFrom("matrixStats", "weightedMedian")
+importFrom("matrixStats", "rowMins")
+importFrom("matrixStats", "colDiffs")
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS

@@ -468,7 +468,6 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("asis", "mean", "medi
     if(avg == "mean") {
       avgFUN <- weighted.mean;
     } else if(avg == "median") {
-      require("matrixStats") || throw("Package not loaded: matrixStats");
       avgFUN <- weightedMedian;
     } else {
       throw("Value of argument 'avg' is not supported with weights: ", avg);

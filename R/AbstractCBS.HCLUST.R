@@ -69,9 +69,18 @@ setMethodS3("updateMeansTogether", "AbstractCBS", abstract=TRUE, private=TRUE);
 # @keyword internal
 #*/###########################################################################
 setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euclidean", hclustMethod="ward", ..., verbose=FALSE) {
+  # WORKAROUND: For R v2.15.3 and before, we need to attach the 'methods'
+  # package, otherwise we get 'Error in rowAlls(ok) : could not find function
+  # "loadMethod"' below.  This seems to be a bug in R.  It's not enough
+  # to import 'methods'.  /HB 2013-09-18
+  if (getRversion() < "3.0.0") {
+    pkg <- "methods";
+    require(pkg, character.only=TRUE) || throw("Package not loaded: ", pkg)
+  }
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -87,7 +96,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 
   # Drop also segments with no data points
   ok <- !is.na(C);
-  ok <- matrixStats::rowAlls(ok);
+  ok <- rowAlls(ok);
   C <- C[ok,,drop=FALSE];
   verbose && str(verbose, C);
   verbose && exit(verbose);
@@ -136,7 +145,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 #   Returns a pruned object of the same class.
 # }
 #
-# \examples{\dontrun{ 
+# \examples{\dontrun{
 #  fitP <- pruneByHClust(fit, h=0.25);
 # }}
 #
@@ -147,7 +156,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, update=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
@@ -161,7 +170,7 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
   verbose && str(verbose, c(list(size=size, distMethod=distMethod, hclustMethod=hclustMethod), list(...)));
 
   verbose && enter(verbose, "Clustering");
-  h <- hclustCNs(fit, size=size, distMethod=distMethod, 
+  h <- hclustCNs(fit, size=size, distMethod=distMethod,
                  hclustMethod=hclustMethod, ..., verbose=less(verbose,5));
   verbose && print(verbose, h);
   verbose && exit(verbose);
@@ -198,21 +207,21 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
       idxs <- idxList[[ii]];
       verbose && cat(verbose, "Segments in cluster:");
       verbose && str(verbose, idxs);
-  
+
       # Indices to segments to merge
       leftsII <- idxs[which(diff(idxs) == 1)];
       verbose && cat(verbose, "Left indices of neighboring segments:");
       verbose && str(verbose, leftsII);
-  
+
       lefts <- c(lefts, leftsII);
       verbose && exit(verbose);
     } # for (ii ...)
-  
+
     lefts <- sort(unique(lefts));
     verbose && cat(verbose, "Left indices of segments to be merged:");
     verbose && str(verbose, lefts);
     verbose && exit(verbose);
-  
+
     verbose && enter(verbose, "Merging segments");
     lefts <- rev(lefts);
     for (ii in seq(along=lefts)) {
@@ -236,11 +245,15 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
 ############################################################################
 # HISTORY:
+# 2013-09-18
+# o WORKAROUND: For R v2.15.3 and before, we need to attach the 'methods'
+#   package, otherwise we get 'Error in rowAlls(ok) : could not find
+#   function "loadMethod"' below.  This seems to be a bug in R.
 # 2013-02-05
 # o Now pruneByHClust() drops any existing segment calls and quantile
 #   mean-level estimates.
 # 2011-12-06
-# o Now pruneByHClust(..., update=TRUE) for AbstractCBS updates the 
+# o Now pruneByHClust(..., update=TRUE) for AbstractCBS updates the
 #   mean levels of the merged segments at the end.
 # 2011-11-28
 # o Added abstract updateMeansTogether() for AbstractCBS.

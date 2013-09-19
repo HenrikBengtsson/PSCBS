@@ -10,11 +10,11 @@
 # }
 #
 # \arguments{
-#   \item{x}{a @numeric @vector containing the values whose weighted 
+#   \item{x}{a @numeric @vector containing the values whose weighted
 #            quantile is to be computed.}
-#   \item{w}{a numeric @vector of weights the same length as 
+#   \item{w}{a numeric @vector of weights the same length as
 #            \code{x} giving the weights to use for each element of \code{x}.
-#            Negative weights are treated as zero weights. 
+#            Negative weights are treated as zero weights.
 #            Default value is equal weight to all values.}
 #   \item{probs}{a @numeric @vector of quantiles in [0,1] to be retrieved.}
 #   \item{na.rm}{a @logical value indicating whether @NA values in
@@ -43,7 +43,7 @@
 # @keyword univar
 # @keyword robust
 # @keyword internal
-#*/############################################################################ 
+#*/############################################################################
 setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 0.75, 1), na.rm=TRUE, method=c("wtd.quantile"), ...) {
   # Argument 'x':
   x <- Arguments$getNumerics(x);
@@ -56,7 +56,7 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
     w <- Arguments$getNumerics(w, range=c(0,Inf), length=rep(length(x), times=2L));
   }
 
-  naValue <- NA; 
+  naValue <- NA;
   storage.mode(naValue) <- storage.mode(x);
 
   # Argument 'na.rm':
