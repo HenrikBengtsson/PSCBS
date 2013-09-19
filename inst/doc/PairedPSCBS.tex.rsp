@@ -12,6 +12,7 @@
 <%
 library("PSCBS");
 library("R.devices");
+R.rsp <- R.oo::Package("R.rsp");
 fixLocations <- function(fit, ...) {
   for (key in grep("(End|Start)$", colnames(fit$output))) {
     fit$output[[key]] <- as.integer(fit$output[[key]]);
@@ -81,7 +82,7 @@ options(str=strOptions(strict.width="cut"));
 
 \title{<%@meta name="title"%>}
 \author{<%@meta name="author"%>}
-\date{<%=format(as.Date(getDate(Package("PSCBS"))), format="%B %d, %Y")%>}
+\date{<%=format(as.Date(PSCBS$date), format="%B %d, %Y")%>}
 
 \begin{document}
 
