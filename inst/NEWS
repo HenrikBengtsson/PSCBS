@@ -2,7 +2,11 @@
 Package: PSCBS
 ==============
 
-Version: 0.36.2 [2013-09-16]
+Version: 0.36.2 [2013-09-18]
+o DOCUMENTATION: Added vignette 'Total copy-number segmentation using CBS'.
+o ROBUSTNESS: Now package declares S3 methods in the NAMESPACE.
+o ROBUSTNESS: Package vignettes no longer assumes that the 'R.rsp'
+  package is attached.
 o Bumped up package dependencies.
 
 

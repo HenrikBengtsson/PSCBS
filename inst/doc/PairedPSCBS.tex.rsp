@@ -11,6 +11,7 @@
 
 <%
 library("PSCBS");
+PSCBS <- R.oo::Package("PSCBS");
 library("R.devices");
 R.rsp <- R.oo::Package("R.rsp");
 fixLocations <- function(fit, ...) {

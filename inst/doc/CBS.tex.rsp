@@ -1,17 +1,19 @@
-<%-------------------------------------------------------------------
+<%@meta language="R-vignette" content="--------------------------------
   DIRECTIVES FOR R:
 
   %\VignetteIndexEntry{Total copy-number segmentation using CBS}
   %\VignetteKeyword{copy numbers, genomic aberrations}
   %\VignetteAuthor{Henrik Bengtsson}
   %\VignetteEngine{R.rsp::rsp}
-  -------------------------------------------------------------------%>
+  ------------------------------------------------------------------"%>
 
 <% t0 <- Sys.time() %>
 
 <%
 library("PSCBS");
+PSCBS <- R.oo::Package("PSCBS");
 library("R.devices");
+R.rsp <- R.oo::Package("R.rsp");
 fixLocations <- function(fit, ...) {
   for (key in grep("(end|start)$", colnames(fit$output))) {
     fit$output[[key]] <- as.integer(fit$output[[key]]);
@@ -36,8 +38,20 @@ options(str=strOptions(strict.width="cut"));
 \usepackage{graphicx}
 \graphicspath{{figures/}}
 
-\usepackage{hyperref} % \url{}
-\hypersetup{hidelinks}
+<%-------------------------------------------------------------------
+  Assign PDF metadata
+  -------------------------------------------------------------------%>
+% PDF metadata
+\usepackage{hyperref}
+% Ideally \hypersetup{hidelinks}, but for backward compatibility:
+\hypersetup{pdfborder={0 0 0}}
+\hypersetup{
+  pdfauthor={<%@meta name="author"%>},
+  pdftitle={<%@meta name="title"%>},
+  pdfsubject={},
+  pdfkeywords={<%@meta name="keywords"%>},
+  pdfproducer={R.rsp v<%=R.rsp$version%> by <%=R.rsp$author%>}
+}
 
 % Page margins
 \addtolength{\oddsidemargin}{-0.5in}	
@@ -64,11 +78,9 @@ options(str=strOptions(strict.width="cut"));
 \newenvironment{escapeRspVerbatim}{\vspace{-\parskip}\begin{alltt}}{\end{alltt}}
 
 
-\title{Total copy-number segmentation using CBS}
-<% pkg <- Package("PSCBS"); %>
-\author{Vignette by Henrik Bengtsson}
-%% \date{<%=format(as.Date(getDate(pkg)), format="%B %d, %Y")%>}
-\date{May 11, 2012}
+\title{<%@meta name="title"%>}
+\author{<%@meta name="author"%>}
+\date{<%=format(as.Date(PSCBS$date), format="%B %d, %Y")%>}
 
 \begin{document}
 
@@ -80,7 +92,7 @@ CBS was designed to work with data from any DNA microarray technology and genera
 This document shows how to use the \pkg{PSCBS} package to run CBS on a tumor sample.
 \end{abstract}
 
-\keywords{copy numbers, genomic aberrations}
+\keywords{<%@meta name="keywords"%>}
 
 \begin{center}
 \emph{This vignette is distributed as part of the \pkg{PSCBS} package, which is available on CRAN (\url{http://cran.r-project.org/}).
@@ -117,7 +129,7 @@ fullname <- "PairedPSCBS,exData,chr01";
 \begin{verbatim}
 <%=evalCapture({
 data <- PSCBS::exampleData("paired.chr01")
-data <- paired.chr01[,c("chromosome", "x", "CT")]
+data <- data[,c("chromosome", "x", "CT")]
 colnames(data)[3] <- "y"
 str(data)
 })%>
@@ -277,7 +289,7 @@ By default, the reports are written to directory \code{reports/<studyName>/} und
 \section*{Appendix}
 \subsection*{Session information}
 <%=toLatex(sessionInfo())%>
-This report was automatically generated using \code{rsp()} of the R.rsp package.
+This report was automatically generated using \code{rfile()} of the R.rsp package.
 Total processing time after RSP-to-R translation was <%=dt <- round(Sys.time()-t0, digits=2)%> <%=attr(dt, "units")%>.
 
 \end{document}
