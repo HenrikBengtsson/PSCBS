@@ -8,6 +8,7 @@ o ROBUSTNESS: Now package imports 'matrixStats' (previously suggested).
 o ROBUSTNESS: Now package declares S3 methods in the NAMESPACE.
 o ROBUSTNESS: Package vignettes no longer assumes that the 'R.rsp'
   package is attached.
+o ROBUSTNESS: Forgot to import R.methodsS3::appendVarArgs().
 o WORKAROUND: For R (< 3.0.0), hclustCNs() for AbstractCBS would generate
   'Error in rowAlls(ok) : could not find function "loadMethod"'. This
   seems to be a bug in R (< 3.0.0), which we can avoid by attach the
