@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.37.0 [2013-09-20]
+Version: 0.37.0 [2013-09-21]
 o CLEANUP: Package no longer attaches 'R.utils', only imports it.
 o BUG FIX/WORKAROUND: For now, package attaches the 'utils' package.
   This is needed due to what appears to be a bug in how 'R.oo'

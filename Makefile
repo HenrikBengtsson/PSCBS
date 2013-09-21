@@ -136,7 +136,7 @@ install_force:
 ../$(R_CHECK_OUTDIR)/.check.complete: ../$(R_OUTDIR)/$(PKG_TARBALL)
 	$(CD) ../$(R_OUTDIR);\
 	$(RM) -r $(PKG_NAME).Rcheck;\
-	export _R_CHECK_CRAN_INCOMING_=0;\
+	export _R_CHECK_CRAN_INCOMING_=1;\
 	export _R_CHECK_DOT_INTERNAL_=1;\
 	export _R_CHECK_USE_CODETOOLS_=1;\
 	export _R_CHECK_CRAN_INCOMING_USE_ASPELL_=1;\
