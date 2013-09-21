@@ -3,7 +3,12 @@ Package: PSCBS
 ==============
 
 Version: 0.37.0 [2013-09-20]
-o Package no longer attaches 'R.utils', only imports it.
+o CLEANUP: Package no longer attaches 'R.utils', only imports it.
+o BUG FIX/WORKAROUND: For now, package attaches the 'utils' package.
+  This is needed due to what appears to be a bug in how 'R.oo'
+  finalizes Object:s assuming 'utils' is attached, which may not be
+  the case (unless 'R.oo' itself is attached).
+o ROBUSTNESS: Now package imports only what is needed from 'DNAcopy'.
 o BUG FIX: callGNL() for PairedPSCBS used non-defined 'verbose' object.
 
 

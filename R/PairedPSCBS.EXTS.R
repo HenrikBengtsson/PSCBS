@@ -433,7 +433,7 @@ print(tcnSegRowsII);
   verbose && exit(verbose);
 
   fitS;
-}, private=TRUE) # postsegmentTCN()
+}, protected=TRUE) # postsegmentTCN()
 
 
 
