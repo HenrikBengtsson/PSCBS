@@ -30,7 +30,7 @@
 #   \item{undo}{A non-negative @numeric.  If greater than zero, then
 #       arguments \code{undo.splits="sdundo"} and \code{undo.SD=undo}
 #       are passed to \code{DNAcopy::segment()}.
-#       In the special case when \code{undo} is @+Inf, the segmentation
+#       In the special case when \code{undo} is +@Inf, the segmentation
 #       result will not contain any changepoints (in addition to what
 #       is specified by argument \code{knownSegments}).}
 #   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
@@ -101,7 +101,9 @@
 #
 # \seealso{
 #   To segment allele-specific tumor copy-number signals from a tumor
-#   with a matched normal, see @see "segmentByPairedPSCBS".
+#   \emph{with} a matched normal, see @see "segmentByPairedPSCBS".
+#   For the same \emph{without} a matched normal,
+#   see @see "segmentByNonPairedPSCBS".
 # }
 # @keyword IO
 #*/###########################################################################

@@ -69,12 +69,10 @@
 #   If so, an informative error is thrown.
 # }
 #
-# \section{Paired PSCBS with only genotypes}{
+# \section{Non-Paired PSCBS with known genotypes}{
 #   If allele B fractions for the matched normal (\code{betaN}) are
 #   not available, but genotypes (\code{muN}) are, then it is possible
-#   to run a version of Paired PSCBS where TumorBoost normalization
-#   of the tumor allele B fractions is skipped.  In order for this
-#   to work, argument \code{tbn} must be set to @FALSE.
+#   to run Paired PSCBS.   See @see "segmentByPairedPSCBS" for details.
 # }
 #
 # @examples "../incl/segmentByNonPairedPSCBS.Rex"

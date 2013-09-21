@@ -42,7 +42,7 @@
   \item{undo}{A non-negative \code{\link[base]{numeric}}.  If greater than zero, then
       arguments \code{undo.splits="sdundo"} and \code{undo.SD=undo}
       are passed to \code{DNAcopy::segment()}.
-      In the special case when \code{undo} is @+Inf, the segmentation
+      In the special case when \code{undo} is +\code{\link[base:is.finite]{Inf}}, the segmentation
       result will not contain any changepoints (in addition to what
       is specified by argument \code{knownSegments}).}
   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
@@ -232,7 +232,9 @@ stopifnot(all.equal(getSegments(fitWG), getSegments(fit)))
 
 \seealso{
   To segment allele-specific tumor copy-number signals from a tumor
-  with a matched normal, see \code{\link{segmentByPairedPSCBS}}().
+  \emph{with} a matched normal, see \code{\link{segmentByPairedPSCBS}}().
+  For the same \emph{without} a matched normal,
+  see \code{\link{segmentByNonPairedPSCBS}}().
 }
 
 \keyword{IO}

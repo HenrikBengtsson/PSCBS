@@ -32,14 +32,18 @@
     \item \code{\link{segmentByCBS}}() - segments total copy-numbers, or any
           other unimodal genomic signals, using the CBS method [3,4].
     \item \code{\link{segmentByPairedPSCBS}}() - segments allele-specific
-          tumor signal from a tumor with a matched normal
+          tumor signal from a tumor \emph{with} a matched normal
           using the Paired PSCBS method [1,2].
+    \item \code{\link{segmentByNonPairedPSCBS}}() - segments allele-specific
+          tumor signal from a tumor \emph{without} a matched normal
+          using the Non-Paired PSCBS method adopted from [1,2].
   }
 }
 
 \section{How to cite}{
   Please use [1] and [2] to cite when using Paired PSCBS,
   and [3] and [4] when using CBS.
+  When using Non-Paired PSCBS, please cite [1] and [2] as well.
 }
 
 \author{Henrik Bengtsson}

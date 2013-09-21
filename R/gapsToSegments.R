@@ -35,7 +35,6 @@
 # }
 #
 # @keyword IO
-# @keyword internal
 #*/###########################################################################
 setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLength=0L, dropGaps=FALSE, ...) {
   # To please R CMD check

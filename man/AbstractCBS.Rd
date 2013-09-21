@@ -74,4 +74,7 @@ all.equal, as.data.frame, attachLocally, callHooks, relist, within
 }
 
 \author{Henrik Bengtsson}
+
+
 \keyword{classes}
+\keyword{internal}

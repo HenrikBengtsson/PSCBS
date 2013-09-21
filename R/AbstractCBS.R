@@ -23,6 +23,8 @@
 # }
 #
 # @author "HB"
+#
+# @keyword internal
 #*/###########################################################################
 setConstructorS3("AbstractCBS", function(fit=list(), sampleName=fit$sampleName, ...) {
   # Argument 'sampleName':

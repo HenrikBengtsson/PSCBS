@@ -130,6 +130,9 @@
 #   used for TumorBoost normalization, and @see "segmentByCBS" is used
 #   to segment TCN and DH separately.
 #
+#   To segment tumor total copy numbers and allele B fractions
+#   \emph{without} a matched normal, see @see "segmentByNonPairedPSCBS".
+#
 #   To segment total copy-numbers, or any other unimodal signals,
 #   see @see "segmentByCBS".
 # }

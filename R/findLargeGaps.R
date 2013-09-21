@@ -11,7 +11,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{chromosome}{(Optional) An @integer @vector of length J of 
+#   \item{chromosome}{(Optional) An @integer @vector of length J of
 #     chromosome indices.}
 #   \item{x}{A @numeric @vector of J of genomic locations.}
 #   \item{minLength}{A positive @numeric scalar specifying the minimum
@@ -25,24 +25,23 @@
 #   Returns @data.frame with columns \code{chromosome} (if given),
 #   \code{start}, \code{stop} and \code{length}.
 # }
-# 
+#
 # @author "HB"
 #
 # \seealso{
-#   Use @see "gapsToSegments" to turn the set of identified gaps into 
+#   Use @see "gapsToSegments" to turn the set of identified gaps into
 #   the complementary set of segments such that they can be passed
-#   to @see "segmentByCBS" and @see "segmentByPairedPSCBS" via
-#   argument \code{knownSegments}.
+#   to @see "segmentByCBS", @see "segmentByPairedPSCBS" and
+#   @see "segmentByNonPairedPSCBS" via argument \code{knownSegments}.
 # }
 #
 # @keyword IO
-# @keyword internal
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, resolution=1L, ...) {
   # Argument 'x':
   x <- Arguments$getNumerics(x);
   nbrOfLoci <- length(x);
-  
+
   # Argument 'chromosome':
   if (!is.null(chromosome)) {
     disallow <- c("Inf");
@@ -72,7 +71,7 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
 
     return(gaps);
   }
-  
+
   x <- x[is.finite(x)];
   x <- sort(x);
   dx <- diff(x);

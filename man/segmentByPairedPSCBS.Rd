@@ -226,6 +226,9 @@ stopifnot(fit$params$deltaLOH == deltaLOH)
   used for TumorBoost normalization, and \code{\link{segmentByCBS}}() is used
   to segment TCN and DH separately.
 
+  To segment tumor total copy numbers and allele B fractions
+  \emph{without} a matched normal, see \code{\link{segmentByNonPairedPSCBS}}().
+
   To segment total copy-numbers, or any other unimodal signals,
   see \code{\link{segmentByCBS}}().
 }
