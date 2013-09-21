@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.37.0 [2013-09-20]
+o Package no longer attaches 'R.utils', only imports it.
+o BUG FIX: callGNL() for PairedPSCBS used non-defined 'verbose' object.
+
+
 Version: 0.36.2 [2013-09-18]
 o DOCUMENTATION: Added vignette 'Total copy-number segmentation using CBS'.
 o ROBUSTNESS: Now package imports 'matrixStats' (previously suggested).

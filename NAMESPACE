@@ -4,10 +4,18 @@
 importFrom("R.methodsS3", "setMethodS3")
 importFrom("R.methodsS3", "throw")
 importFrom("R.methodsS3", "appendVarArgs")
-import("R.oo")
 
-# importFrom(R.utils, cat)
+importFrom("R.oo", "setConstructorS3")
+importFrom("R.oo", "extend")
+importFrom("R.oo", "load")
+importFrom("R.oo", "save")
+importFrom("R.oo", "attachLocally")
+importFrom("R.oo", "Package")
+importFrom("R.oo", "startupMessage")
+importFrom("R.oo", "getPosition")
+
 import("R.utils")
+# importFrom(R.utils, cat)
 
 import("DNAcopy")
 
@@ -29,6 +37,7 @@ importFrom("matrixStats", "colDiffs")
 # in their names.
 exportPattern("^[^\\.]")
 
+export("load") # Re-export from R.oo
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # S3 methods

@@ -14,7 +14,7 @@
 # that is in LOH.  It is unlikely to happen when processing
 # whole-genome data.
 #############################################################
-verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
+verbose <- R.utils::Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data

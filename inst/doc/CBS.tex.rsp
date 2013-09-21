@@ -11,8 +11,9 @@
 
 <%
 library("PSCBS");
-PSCBS <- R.oo::Package("PSCBS");
 library("R.devices");
+evalCapture <- R.utils::evalCapture;
+PSCBS <- R.oo::Package("PSCBS");
 R.rsp <- R.oo::Package("R.rsp");
 fixLocations <- function(fit, ...) {
   for (key in grep("(end|start)$", colnames(fit$output))) {

@@ -40,6 +40,9 @@
 #
 #*/###########################################################################
 setMethodS3("callGNL", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., minSize=1, force=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'flavor':
   flavor <- match.arg(flavor);
 
@@ -51,8 +54,6 @@ setMethodS3("callGNL", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., min
   segs <- as.data.frame(fit);
   if (!force && all(is.element(c("gainCall", "ntcnCall", "lossCall"), names(segs)))) {
     # Segments are already called
-    verbose && cat(verbose, "Already called. Skipping.");
-    verbose && exit(verbose);
     return(invisible(fit));
   }
 
@@ -296,6 +297,8 @@ setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, d
 
 ##############################################################################
 # HISTORY
+# 2013-09-20 [HB]
+# o BUG FIX: callGNL() for PairedPSCBS used non-defined 'verbose' object.
 # 2012-03-22 [HB]
 # o Renamed 'cnCall' to 'ntcnCall' for callGNLByTCNofAB().
 # 2012-02-26 [HB]

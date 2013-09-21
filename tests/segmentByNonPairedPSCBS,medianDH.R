@@ -2,7 +2,6 @@ library("PSCBS")
 
 # Just to pass CRAN's timing constraints for 'R CMD check'
 PSCBS:::.prememoize()
-verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
@@ -34,7 +33,7 @@ R.oo::attachLocally(dataS)
 fit <- segmentByNonPairedPSCBS(CT, betaT=betaT,
                             chromosome=chromosome, x=x,
                             avgDH="median",
-                            seed=0xBEEF, verbose=verbose)
+                            seed=0xBEEF, verbose=-10)
 print(fit)
 
 
@@ -43,7 +42,7 @@ print(fit)
 # (used by the AB caller, which, if skipped here,
 #  will do it automatically)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- bootstrapTCNandDHByRegion(fit, B=100, verbose=verbose)
+fit <- bootstrapTCNandDHByRegion(fit, B=100, verbose=-10)
 print(fit)
 
 
@@ -53,10 +52,10 @@ print(fit)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Explicitly estimate the threshold in DH for calling AB
 # (which be done by default by the caller, if skipped here)
-deltaAB <- estimateDeltaAB(fit, flavor="qq(DH)", verbose=verbose)
+deltaAB <- estimateDeltaAB(fit, flavor="qq(DH)", verbose=-10)
 print(deltaAB)
 
-fit <- callAB(fit, delta=deltaAB, verbose=verbose)
+fit <- callAB(fit, delta=deltaAB, verbose=-10)
 print(fit)
 
 
@@ -71,10 +70,10 @@ stopifnot(fit$params$deltaAB == deltaAB)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Explicitly estimate the threshold in C1 for calling LOH
 # (which be done by default by the caller, if skipped here)
-deltaLOH <- estimateDeltaLOH(fit, flavor="minC1|nonAB", verbose=verbose)
+deltaLOH <- estimateDeltaLOH(fit, flavor="minC1|nonAB", verbose=-10)
 print(deltaLOH)
 
-fit <- callLOH(fit, delta=deltaLOH, verbose=verbose)
+fit <- callLOH(fit, delta=deltaLOH, verbose=-10)
 print(fit)
 plotTracks(fit)
 

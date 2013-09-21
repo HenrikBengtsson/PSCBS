@@ -125,11 +125,12 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 #*/###########################################################################
 setMethodS3("save", "AbstractCBS", function(this, ...) {
   saveObject(this, ...);
-})
+}, createGeneric=FALSE)
 
 
 ###########################################################################/**
 # @RdocMethod load
+# @alias load
 #
 # @title "Loads an AbstractCBS object from file"
 #
@@ -176,7 +177,7 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
   }
 
   object;
-}, static=TRUE)
+}, static=TRUE, createGeneric=FALSE)
 
 
 

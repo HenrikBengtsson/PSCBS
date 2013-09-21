@@ -1,4 +1,4 @@
-verbose <- Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
+verbose <- R.utils::Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data

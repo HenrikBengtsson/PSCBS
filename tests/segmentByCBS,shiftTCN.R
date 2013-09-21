@@ -33,7 +33,7 @@ for (chr in 1:2) {
 data <- Reduce(rbind, data)
 
 
-subplots(7, ncol=1)
+R.utils::subplots(7, ncol=1)
 par(mar=c(1.7,1,0.2,1)+0.1)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +73,7 @@ gaps <- findLargeGaps(data, minLength=40e5)
 knownSegments <- gapsToSegments(gaps, dropGaps=TRUE)
 fit <- segmentByCBS(data, knownSegments=knownSegments)
 
-subplots(2, ncol=1)
+R.utils::subplots(2, ncol=1)
 plotTracks(fit, Clim=Clim)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
@@ -103,7 +103,7 @@ abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 segList <- seqOfSegmentsByDP(fit);
 K <- length(segList);
-subplots(K, ncol=2, byrow=FALSE);
+R.utils::subplots(K, ncol=2, byrow=FALSE);
 par(mar=c(2,1,1,1));
 for (kk in 1:K) {
   knownSegments <- segList[[kk]];

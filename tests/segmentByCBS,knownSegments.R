@@ -19,7 +19,7 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-subplots(7, ncol=1)
+R.utils::subplots(7, ncol=1)
 par(mar=c(1.7,1,0.2,1)+0.1);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

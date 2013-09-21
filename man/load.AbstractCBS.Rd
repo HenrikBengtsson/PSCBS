@@ -11,6 +11,7 @@
 \alias{load.AbstractCBS}
 \alias{AbstractCBS.load}
 \alias{load,AbstractCBS-method}
+\alias{load}
 
 \title{Loads an AbstractCBS object from file}
 

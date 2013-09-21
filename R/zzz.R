@@ -3,6 +3,7 @@
 .conflicts.OK <- TRUE
 
 
+
 .onAttach <- function(libname, pkgname) {
   pkg <- Package(pkgname);
 
