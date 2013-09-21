@@ -21,7 +21,7 @@ o ROBUSTNESS: Package vignettes no longer assumes that the 'R.rsp'
 o ROBUSTNESS: Forgot to import R.methodsS3::appendVarArgs().
 o WORKAROUND: For R (< 3.0.0), hclustCNs() for AbstractCBS would generate
   'Error in rowAlls(ok) : could not find function "loadMethod"'. This
-  seems to be a bug in R (< 3.0.0), which we can avoid by attach the
+  seems to be a bug in R (< 3.0.0), which we can avoid by attaching the
   'methods' package in hclustCNs().
 o Bumped up package dependencies.
 
