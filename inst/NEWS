@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.37.1 [2013-09-24]
+o CLEANUP: Minor adjustments to some of the internal workarounds
+  for older versions of 'matrixStats' and 'aroma.light'.
+o BUG FIX: One of the system tests assumed 'R.utils' was attached.
+
+
 Version: 0.37.0 [2013-09-21]
 o CLEANUP: Package no longer attaches 'R.utils', only imports it.
 o BUG FIX/WORKAROUND: For now, package attaches the 'utils' package.

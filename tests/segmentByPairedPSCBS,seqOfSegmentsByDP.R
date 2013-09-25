@@ -1,4 +1,6 @@
 library("PSCBS")
+subplots <- R.utils::subplots
+stext <- R.utils::stext
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
@@ -48,7 +50,7 @@ knownSegments <- tileChromosomes(fit)$params$knownSegments;
 segList <- seqOfSegmentsByDP(fit, verbose=-10);
 K <- length(segList);
 ks <- seq(from=1, to=K, length.out=min(5,K));
-R.utils::subplots(length(ks), ncol=1, byrow=TRUE);
+subplots(length(ks), ncol=1, byrow=TRUE);
 par(mar=c(2,1,1,1));
 for (kk in ks) {
   knownSegmentsKK <- segList[[kk]];

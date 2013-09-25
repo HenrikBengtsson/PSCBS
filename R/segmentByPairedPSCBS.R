@@ -297,9 +297,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   if (is.null(muN)) {
     verbose && enter(verbose, "Calling genotypes from normal allele B fractions");
     verbose && str(verbose, betaN);
-    if (packageVersion("aroma.light") < "1.31.5") {
-      require("aroma.light") || throw("Package not loaded: aroma.light");
-    }
+    require("aroma.light") || throw("Package not loaded: aroma.light");
     muN <- aroma.light::callNaiveGenotypes(betaN, censorAt=c(0,1));
     verbose && cat(verbose, "Called genotypes:");
     verbose && str(verbose, muN);

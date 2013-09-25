@@ -1,4 +1,5 @@
 library("PSCBS")
+subplots <- R.utils::subplots
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulating copy-number data
@@ -19,7 +20,7 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-R.utils::subplots(7, ncol=1)
+subplots(7, ncol=1)
 par(mar=c(1.7,1,0.2,1)+0.1);
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
