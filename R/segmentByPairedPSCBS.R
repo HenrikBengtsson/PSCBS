@@ -312,13 +312,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (tbn) {
     verbose && enter(verbose, "Normalizing betaT using betaN (TumorBoost)");
+    require("aroma.light") || throw("Package not loaded: aroma.light");
     # Workaround for older versions of aroma.light::normalizeTumorBoost()
     # assuming that the R.utils package is attached. /HB 2013-09-20
     if (packageVersion("aroma.light") < "1.31.5") {
       pkg <- "R.utils";
       require(pkg, character.only=TRUE) || throw("Package not loaded: ", pkg);
     }
-    betaTN <- normalizeTumorBoost(betaT=betaT, betaN=betaN, muN=muN, preserveScale=TRUE);
+    betaTN <- aroma.light::normalizeTumorBoost(betaT=betaT, betaN=betaN, muN=muN, preserveScale=TRUE);
     verbose && cat(verbose, "Normalized BAFs:");
     verbose && str(verbose, betaTN);
 
