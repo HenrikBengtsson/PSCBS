@@ -25,10 +25,12 @@ importFrom("DNAcopy", "getbdry")
 
 importFrom("utils", "capture.output")
 
-importFrom("matrixStats", "rowAlls")
-importFrom("matrixStats", "weightedMedian")
-importFrom("matrixStats", "rowMins")
+importFrom("matrixStats", "binMeans")
 importFrom("matrixStats", "colDiffs")
+importFrom("matrixStats", "rowAlls")
+importFrom("matrixStats", "rowAnys")
+importFrom("matrixStats", "rowMins")
+importFrom("matrixStats", "weightedMedian")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

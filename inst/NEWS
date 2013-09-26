@@ -2,9 +2,12 @@
 Package: PSCBS
 ==============
 
-Version: 0.37.1 [2013-09-25]
+Version: 0.37.1 [2013-09-26]
 o CLEANUP: Minor adjustments to some of the internal workarounds
   for older versions of 'matrixStats' and 'aroma.light'.
+o BUG FIX: Forgot to import several functions from 'matrixStats'.
+  These went undetected because 'aroma.light' (< 1.31.6) attached
+  the 'matrixStats' in the past.
 o BUG FIX: segmentByPairedPSCBS() assumed 'aroma.light' was attached.
 o BUG FIX: One of the system tests assumed 'R.utils' was attached.
 
