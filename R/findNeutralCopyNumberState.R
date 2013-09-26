@@ -31,7 +31,9 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=NULL, ..., minDensity=1e-10, flavor=c("firstPeak", "maxPeak"), verbose=FALSE) {
-  require("aroma.light") || throw("Package not loaded: aroma.light");
+  # This will load the 'aroma.light' namespace, if not already done.
+  findPeaksAndValleys <- aroma.light::findPeaksAndValleys;
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -177,6 +179,9 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
 
 ##############################################################################
 # HISTORY
+# 2013-09-26 [HB]
+# o CLEANUP: Now findNeutralCopyNumberState() no longer attached
+#   'aroma.light', but only loads its namespace.
 # 2013-03-19 [HB]
 # o Added argument 'flavor' to findNeutralCopyNumberState() specifying how
 #   to identify the main mode of the AB segments.

@@ -119,7 +119,9 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 # @keyword internal
 #*/###########################################################################
 setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, minDensity=0.2, ..., verbose=FALSE) {
-  require("aroma.light") || throw("Package not loaded: aroma.light");
+  # This will load the 'aroma.light' namespace, if not already done.
+  findPeaksAndValleys <- aroma.light::findPeaksAndValleys;
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -227,6 +229,9 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
 
 #############################################################################
 # HISTORY:
+# 2013-09-26 [HB]
+# o CLEANUP: Now estimateKappaByC1Density() no longer attached
+#   'aroma.light', but only loads its namespace.
 # 2013-05-07
 # o Now estimateKappaByC1Density() adjusts for ploidy, iff set.
 # 2013-03-05

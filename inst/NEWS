@@ -3,11 +3,15 @@ Package: PSCBS
 ==============
 
 Version: 0.37.1 [2013-09-26]
+o CLEANUP: Now package avoids attaching suggested packages such as
+  'R.cache', 'aroma.light', and 'Hmisc' by only importing the set of
+  functions needed via '::'.  This way those packages are only loaded.
+  Packages that still need to be attached are done so "quietly".
 o CLEANUP: Minor adjustments to some of the internal workarounds
   for older versions of 'matrixStats' and 'aroma.light'.
 o BUG FIX: Forgot to import several functions from 'matrixStats'.
-  These went undetected because 'aroma.light' (< 1.31.6) attached
-  the 'matrixStats' in the past.
+  These went undetected because 'aroma.light' (<= 1.31.5) attaches
+  the 'matrixStats'.
 o BUG FIX: segmentByPairedPSCBS() assumed 'aroma.light' was attached.
 o BUG FIX: One of the system tests assumed 'R.utils' was attached.
 

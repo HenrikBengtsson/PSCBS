@@ -37,11 +37,11 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE) {
+  require("R.rsp", quietly=TRUE) || throw("Package not loaded: R.rsp");
   ver <- packageVersion("R.rsp");
   if (ver < "0.9.1") {
     throw("The PSCBS report generator requires R.rsp v0.9.1 or greater: ", ver);
   }
-  require("R.rsp") || throw("Package not loaded: R.rsp");
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

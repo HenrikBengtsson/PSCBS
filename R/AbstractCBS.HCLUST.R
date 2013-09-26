@@ -74,7 +74,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
   # "loadMethod"' below. /HB 2013-09-18
   if (packageVersion("matrixStats") < "0.8.11") {
     pkg <- "methods";
-    require(pkg, character.only=TRUE) || throw("Package not loaded: ", pkg)
+    require(pkg, character.only=TRUE, quietly=TRUE) || throw("Package not loaded: ", pkg)
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

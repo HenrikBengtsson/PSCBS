@@ -74,8 +74,8 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
   # Argument 'method':
   method <- match.arg(method);
   if (method == "wtd.quantile") {
-    # We use wtd.quantile() of the Hmisc package
-    require("Hmisc") || throw("Package not loaded: Hmisc");
+    # This will load 'Hmisc', if not already done
+    wtd.quantile <- Hmisc::wtd.quantile;
   }
 
 
@@ -119,6 +119,9 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
 
 ############################################################################
 # HISTORY:
+# 2013-09-26 [HB]
+# o CLEANUP: Now weightedQuantile(..., method=="wtd.quantile") no longer
+#   attaches 'Hmisc', but only loads its namespace.
 # 2012-08-30
 # o Updated Rdoc cross reference for matrixStats to point to matrixStats.
 # 2011-04-08

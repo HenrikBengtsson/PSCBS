@@ -36,7 +36,6 @@ setConstructorS3("PairedPSCBS", function(fit=list(), ...) {
   extend(PSCBS(fit=fit, ...), "PairedPSCBS");
 })
 
-
 setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "full")) {
   # Argument 'fields':
   fields <- match.arg(fields);
@@ -50,9 +49,6 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
 
     # Genotype calls
     if (!is.element("muN", names)) {
-      if (packageVersion("aroma.light") < "1.31.5") {
-        require("aroma.light") || throw("Package not loaded: aroma.light");
-      }
       data$muN <- aroma.light::callNaiveGenotypes(data$betaN);
     }
     data$isHet <- (data$muN == 1/2);
@@ -64,10 +60,11 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
     # TumorBoost BAFs
     if (!is.element("betaTN", names)) {
       # Workaround for older versions of aroma.light::normalizeTumorBoost()
-      # assuming that the R.utils package is attached. /HB 2013-09-20
-      if (packageVersion("aroma.light") < "1.31.5") {
+      # assuming that the 'R.utils' package is attached. /HB 2013-09-20
+      ver <- packageVersion("aroma.light");
+      if (ver < "1.30.5" || (ver >= "1.31.0" && ver < "1.31.5")) {
         pkg <- "R.utils";
-        require(pkg, character.only=TRUE) || throw("Package not loaded: ", pkg);
+        require(pkg, character.only=TRUE, quietly=TRUE) || throw("Package not loaded: ", pkg);
       }
       data$betaTN <- aroma.light::normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
     }

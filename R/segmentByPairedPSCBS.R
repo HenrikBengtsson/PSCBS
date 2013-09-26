@@ -297,7 +297,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   if (is.null(muN)) {
     verbose && enter(verbose, "Calling genotypes from normal allele B fractions");
     verbose && str(verbose, betaN);
-    require("aroma.light") || throw("Package not loaded: aroma.light");
     muN <- aroma.light::callNaiveGenotypes(betaN, censorAt=c(0,1));
     verbose && cat(verbose, "Called genotypes:");
     verbose && str(verbose, muN);
@@ -312,12 +311,12 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (tbn) {
     verbose && enter(verbose, "Normalizing betaT using betaN (TumorBoost)");
-    require("aroma.light") || throw("Package not loaded: aroma.light");
     # Workaround for older versions of aroma.light::normalizeTumorBoost()
-    # assuming that the R.utils package is attached. /HB 2013-09-20
-    if (packageVersion("aroma.light") < "1.31.5") {
+    # assuming that the 'R.utils' package is attached. /HB 2013-09-20
+    ver <- packageVersion("aroma.light");
+    if (ver < "1.30.5" || (ver >= "1.31.0" && ver < "1.31.5")) {
       pkg <- "R.utils";
-      require(pkg, character.only=TRUE) || throw("Package not loaded: ", pkg);
+      require(pkg, character.only=TRUE, quietly=TRUE) || throw("Package not loaded: ", pkg);
     }
     betaTN <- aroma.light::normalizeTumorBoost(betaT=betaT, betaN=betaN, muN=muN, preserveScale=TRUE);
     verbose && cat(verbose, "Normalized BAFs:");

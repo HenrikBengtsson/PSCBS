@@ -114,7 +114,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # DNAcopy::getbdry() is slow for now default settings.  Below we
   # implement a memoized version of this function.
   getbdry2 <- function(eta, nperm, alpha, tol=0.01, verbose=FALSE) {
-    require("R.cache") || throw("Package not loaded: R.cache");
+    # This will load 'R.cache', if not already loaded.
+    loadCache <- R.cache::loadCache;
+    saveCache <- R.cache::saveCache;
 
     key <- list(method="segmentByCBS",
                 eta=eta, nperm=as.integer(nperm), alpha=alpha, tol=tol,
@@ -606,8 +608,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && cat(verbose, "Method: ", methodName);
   verbose && cat(verbose, "Package: ", pkgDetails);
 
-  # We need to load package
-  require(pkgName, character.only=TRUE) || throw("Package not loaded: ", pkgName);
+  # We need to attach the 'DNAcopy' package
+  require(pkgName, character.only=TRUE, quietly=TRUE) || throw("Package not loaded: ", pkgName);
 
   # Get the fit function for the segmentation method
 #  fitFcn <- getExportedValue(pkgName, methodName);
@@ -948,6 +950,9 @@ setMethodS3("segmentByCBS", "CBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2013-09-26
+# o CLEANUP: Now segmentByCBS() no longer attaches 'R.cache' in its
+#   internal getbdry2() function, but only loads its namespace.
 # 2012-09-20
 # o BUG FIX: segmentByCBS(... knownSegments) could return segments for
 #   chromosome 0 even though it did not exist in the input data.
