@@ -4,7 +4,20 @@
 # on R CMD check but not having to create these memoized files.
 .prememoize <- function() {
   if (!interactive()) {
-    # This will load 'R.cache', if not already loaded.
+    ## WORKAROUND: Until 'R.utils' no longer attaches itself in some
+    ## of its functions internally, we have to attach it here to avoid
+    ## 'R CMD check' example test error:
+    ##   > PSCBS:::.prememoize()
+    ##   Loading required package: R.utils
+    ##   Loading required package: R.oo
+    ##   Loading required package: R.methodsS3
+    ##   Error in attachNamespace(ns, pos = pos, deps) :
+    ##     namespace is already attached
+    ## /HB 2013-09-26
+    pkg <- "R.utils";
+    require(pkg, character.only=TRUE, quietly=TRUE) || throw("Package not attached: ", pkg);
+
+    # This will load 'R.cache', if not already done.
     getCachePath <- R.cache::getCachePath;
 
     path <- "PSCBS/segmentByCBS/sbdry"
