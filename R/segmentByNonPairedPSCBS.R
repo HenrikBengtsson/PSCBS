@@ -154,7 +154,8 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
 
   if (is.na(tauA) && is.na(tauB)) {
     mBAF <- abs(betaT - 1/2);
-    fitT <- aroma.light::findPeaksAndValleys(mBAF);
+    findPeaksAndValleys <- .useAromaLight("findPeaksAndValleys");
+    fitT <- findPeaksAndValleys(mBAF);
     type <- NULL; rm(list="type"); # To please 'R CMD check'.
     fitT <- subset(fitT, type == "peak");
     o <- order(fitT$density, decreasing=TRUE);

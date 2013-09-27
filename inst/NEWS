@@ -4,6 +4,8 @@ Package: PSCBS
 
 Version: 0.37.2 [2013-09-27]
 o SPEEDUP: Now utilizing 'matrixStats' functions in more places.
+o ROBUSTNESS: Further improved how aroma.light is handled for
+  backward compatibility.
 o Bumped up package dependencies.
 
 

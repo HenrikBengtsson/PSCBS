@@ -12,9 +12,9 @@ importFrom("R.oo", "save")
 importFrom("R.oo", "attachLocally")
 importFrom("R.oo", "Package")
 importFrom("R.oo", "startupMessage")
-importFrom("R.oo", "getPosition")
 
 import("R.utils")
+# importFrom(R.utils, isPackageInstalled)
 # importFrom(R.utils, cat)
 
 ## import("DNAcopy")

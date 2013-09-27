@@ -49,7 +49,8 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
 
     # Genotype calls
     if (!is.element("muN", names)) {
-      data$muN <- aroma.light::callNaiveGenotypes(data$betaN);
+      callNaiveGenotypes <- .useAromaLight("callNaiveGenotypes");
+      data$muN <- callNaiveGenotypes(data$betaN);
     }
     data$isHet <- (data$muN == 1/2);
 
@@ -59,14 +60,8 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
 
     # TumorBoost BAFs
     if (!is.element("betaTN", names)) {
-      # Workaround for older versions of aroma.light::normalizeTumorBoost()
-      # assuming that the 'R.utils' package is attached. /HB 2013-09-20
-      ver <- packageVersion("aroma.light");
-      if (ver < "1.30.5" || (ver >= "1.31.0" && ver < "1.31.5")) {
-        pkg <- "R.utils";
-        require(pkg, character.only=TRUE, quietly=TRUE) || throw("Package not loaded: ", pkg);
-      }
-      data$betaTN <- aroma.light::normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
+      normalizeTumorBoost <- .useAromaLight("normalizeTumorBoost");
+      data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
     }
     data$rhoN <- 2*abs(data$betaTN-1/2);
     data$c1N <- 1/2*(1-data$rhoN)*data$CT;
