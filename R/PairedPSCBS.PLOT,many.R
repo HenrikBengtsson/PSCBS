@@ -194,7 +194,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
           (regexpr(pattern, callColumns) != -1L);
         });
         if (is.matrix(keep)) {
-          keep <- apply(keep, MARGIN=1, FUN=any);
+          keep <- rowAnys(keep);
         }
         callColumns <- callColumns[keep];
         callLabels <- allCallLabels[keep];

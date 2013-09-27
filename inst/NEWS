@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.37.2 [2013-09-27]
+o SPEEDUP: Now utilizing 'matrixStats' functions in more places.
+o Bumped up package dependencies.
+
+
 Version: 0.37.1 [2013-09-26]
 o CLEANUP: Now package avoids attaching suggested packages such as
   'R.cache', 'aroma.light', and 'Hmisc' by only importing the set of

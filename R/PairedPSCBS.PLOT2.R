@@ -85,7 +85,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
         (regexpr(pattern, callColumns) != -1);
       });
       if (is.matrix(keep)) {
-        keep <- apply(keep, MARGIN=1, FUN=any);
+        keep <- rowAnys(keep);
       }
       callColumns <- callColumns[keep];
       callLabels <- gsub(pattern, "", callColumns);

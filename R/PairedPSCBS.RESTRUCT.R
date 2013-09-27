@@ -240,17 +240,17 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
 
   # Starts
   idxs <- grep("Start$", fields);
-  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=min, na.rm=TRUE);
+  segT[,idxs] <- colMins(segsT[,idxs,drop=FALSE], na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Ends
   idxs <- grep("End$", fields);
-  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=max, na.rm=TRUE);
+  segT[,idxs] <- colMaxs(segsT[,idxs,drop=FALSE], na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Counts
   idxs <- grep("NbrOf", fields);
-  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=sum);
+  segT[,idxs] <- colSums(segsT[,idxs,drop=FALSE]);
   idxsUsed <- c(idxsUsed, idxs);
 
   # "Invalidate" remaining entries

@@ -299,17 +299,17 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
 
   # Starts
   idxs <- grep("(S|s)tart$", fields);
-  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=min, na.rm=TRUE);
+  segT[,idxs] <- colMins(segsT[,idxs,drop=FALSE], na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Ends
   idxs <- grep("(E|e)nd$", fields);
-  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=max, na.rm=TRUE);
+  segT[,idxs] <- colMaxs(segsT[,idxs,drop=FALSE], na.rm=TRUE);
   idxsUsed <- c(idxsUsed, idxs);
 
   # Counts
   idxs <- grep("(N|n)brOf", fields);
-  segT[,idxs] <- apply(segsT[,idxs,drop=FALSE], MARGIN=2, FUN=sum);
+  segT[,idxs] <- colSums(segsT[,idxs,drop=FALSE]);
   idxsUsed <- c(idxsUsed, idxs);
 
   # "Invalidate" remaining entries

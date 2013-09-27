@@ -25,12 +25,16 @@ importFrom("DNAcopy", "getbdry")
 
 importFrom("utils", "capture.output")
 
+importFrom("matrixStats", "anyMissing")
 importFrom("matrixStats", "binMeans")
 importFrom("matrixStats", "colDiffs")
+importFrom("matrixStats", "colMins")
+importFrom("matrixStats", "colMaxs")
 importFrom("matrixStats", "rowAlls")
 importFrom("matrixStats", "rowAnys")
 importFrom("matrixStats", "rowMins")
 importFrom("matrixStats", "weightedMedian")
+
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

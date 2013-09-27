@@ -148,7 +148,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
         (regexpr(pattern, callColumns) != -1);
       });
       if (is.matrix(keep)) {
-        keep <- apply(keep, MARGIN=1, FUN=any);
+        keep <- rowAnys(keep);
       }
       callColumns <- callColumns[keep];
       callLabels <- gsub(pattern, "", callColumns);
