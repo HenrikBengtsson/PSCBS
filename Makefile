@@ -53,7 +53,7 @@ R_CHECK_FULL = $(shell $(R_SCRIPT) -e "cat(Sys.getenv('R_CHECK_FULL', ''))")
 R_CHECK_OPTS = --as-cran --timings
 R_CRAN_OUTDIR := $(R_OUTDIR)/$(PKG_NAME)_$(PKG_VERSION).CRAN
 
-HAS_ASPELL := $(shell $(R_SCRIPT) -e "cat(!is.na(utils:::aspell_find_program('aspell')))")
+HAS_ASPELL := $(shell $(R_SCRIPT) -e "cat(Sys.getenv('HAS_ASPELL', !is.na(utils:::aspell_find_program('aspell'))))")
 
 all: build install check
 
@@ -105,12 +105,12 @@ debug_full: debug
 
 # Update existing packages
 update:
-	$(R_SCRIPT) -e "update.packages(ask=FALSE); source('http://bioconductor.org/biocLite.R'); biocLite(ask=FALSE);"
+	$(R_SCRIPT) -e "try(update.packages(ask=FALSE)); source('http://bioconductor.org/biocLite.R'); biocLite(ask=FALSE);"
 
 # Install missing dependencies
 deps: DESCRIPTION
 	$(MAKE) update
-	$(R_SCRIPT) -e "x <- unlist(strsplit(read.dcf('DESCRIPTION',fields=c('Depends', 'Imports', 'Suggests')),',')); x <- gsub('([[:space:]]*|[(].*[)])', '', x); libs <- .libPaths()[file.access(.libPaths(), mode=2) == 0]; x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); if (length(x) > 0) { install.packages(x); x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); source('http://bioconductor.org/biocLite.R'); biocLite(x); }"
+	$(R_SCRIPT) -e "x <- unlist(strsplit(read.dcf('DESCRIPTION',fields=c('Depends', 'Imports', 'Suggests')),',')); x <- gsub('([[:space:]]*|[(].*[)])', '', x); libs <- .libPaths()[file.access(.libPaths(), mode=2) == 0]; x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); if (length(x) > 0) { try(install.packages(x)); x <- unique(setdiff(x, c('R', rownames(installed.packages(lib.loc=libs))))); source('http://bioconductor.org/biocLite.R'); biocLite(x); }"
 
 setup:	update deps
 	$(R_SCRIPT) -e "source('http://aroma-project.org/hbLite.R'); hbLite('R.oo')"
