@@ -1,5 +1,3 @@
-# Just to pass CRAN's timing constraints for 'R CMD check'
-PSCBS:::.prememoize()
 verbose <- R.utils::Arguments$getVerbose(-10*interactive(), timestamp=TRUE)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
