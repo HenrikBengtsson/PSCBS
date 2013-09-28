@@ -1,7 +1,5 @@
 library("PSCBS")
 
-# Just to pass CRAN's timing constraints for 'R CMD check'
-PSCBS:::.prememoize()
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data

@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.38.0 [2013-09-27]
+o SPEEDUP: 'R CMD check' is now significantly faster due to
+  copying of pre-generated calculatations ("memoization").
+  For instance, the the same segmentation tests are roughly
+  40% faster with this version compared to v0.37.2.
+o Now PSCBS imports 'R.cache' (used to only suggest it).
+
+
 Version: 0.37.2 [2013-09-27]
 o SPEEDUP: Now utilizing 'matrixStats' functions in more places.
 o ROBUSTNESS: Further improved how aroma.light is handled for

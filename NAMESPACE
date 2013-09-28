@@ -14,8 +14,14 @@ importFrom("R.oo", "Package")
 importFrom("R.oo", "startupMessage")
 
 import("R.utils")
+# importFrom(R.utils, getAbsolutePath)
+# importFrom(R.utils, copyDirectory)
 # importFrom(R.utils, isPackageInstalled)
 # importFrom(R.utils, cat)
+
+importFrom("R.cache", "getCachePath")
+importFrom("R.cache", "loadCache")
+importFrom("R.cache", "saveCache")
 
 ## import("DNAcopy")
 importFrom("DNAcopy", "smooth.CNA")

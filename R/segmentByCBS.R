@@ -114,9 +114,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # DNAcopy::getbdry() is slow for now default settings.  Below we
   # implement a memoized version of this function.
   getbdry2 <- function(eta, nperm, alpha, tol=0.01, verbose=FALSE) {
-    # This will load 'R.cache', if not already loaded.
-    loadCache <- R.cache::loadCache;
-    saveCache <- R.cache::saveCache;
+    # Explictly setup cache root here, since it's only done by 'R.cache'
+    # if that package is attached.  Here we only load it. /HB 2013-09-27
+    .setupCacheRootPath();
 
     key <- list(method="segmentByCBS",
                 eta=eta, nperm=as.integer(nperm), alpha=alpha, tol=tol,

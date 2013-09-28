@@ -55,6 +55,10 @@
 .onAttach <- function(libname, pkgname) {
   pkg <- Package(pkgname);
 
+  # Copy some pre-memoized CBS-parameter calculations to the 'R.cache'
+  # cache.  This speeds up the calculation for common CBS use cases.
+  .prememoize();
+
   # Inform user if DNAcopy is missing
   if (isPackageInstalled("DNAcopy")) {
     .requirePkg("DNAcopy");
