@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.38.1 [2013-10-08]
+o BUG FIX: tileChromosomes() for CBS did not set "tiledChromosomes"
+  attribute due to a typo.  This caused plotTracks() for CBS to
+  horizontally misplace the plotted segment levels.
+  Added a system tests for this for CBS and PairedPSCBS objects.
+  Thanks to Ilari Scheinin at VUMC for reporting on this.
+o Bumped up package dependencies.
+
+
 Version: 0.38.0 [2013-09-27]
 o SPEEDUP: 'R CMD check' is now significantly faster due to
   copying of pre-generated calculatations ("memoization").

@@ -1,3 +1,10 @@
+###########################################################
+# This tests:
+# - segmentByPairedPSCBS(...)
+# - segmentByPairedPSCBS(..., knownSegments)
+# - tileChromosomes()
+# - plotTracks()
+###########################################################
 library("PSCBS")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -129,3 +136,20 @@ abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 stopifnot(nbrOfSegments(fit) == nrow(knownSegments))
 
 fit4 <- fit
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Tiling multiple chromosomes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Simulate multiple chromosomes
+fit1 <- fit
+fit2 <- renameChromosomes(fit, from=1, to=2)
+fitM <- append(fit1, fit2)
+
+# Tile chromosomes
+fitT <- tileChromosomes(fitM)
+fitTb <- tileChromosomes(fitT)
+stopifnot(identical(fitTb, fitT))
+
+# Plotting multiple chromosomes
+plotTracks(fitT)

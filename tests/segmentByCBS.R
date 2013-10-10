@@ -1,3 +1,10 @@
+###########################################################
+# This tests:
+# - segmentByCBS(...)
+# - segmentByCBS(..., knownSegments)
+# - tileChromosomes()
+# - plotTracks()
+###########################################################
 library("PSCBS")
 subplots <- R.utils::subplots
 
@@ -104,3 +111,20 @@ fit6 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
 print(fit6)
 plotTracks(fit6)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Tiling multiple chromosomes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Simulate multiple chromosomes
+fit1 <- fit
+fit2 <- renameChromosomes(fit, from=1, to=2)
+fitM <- append(fit1, fit2)
+
+# Tile chromosomes
+fitT <- tileChromosomes(fitM)
+fitTb <- tileChromosomes(fitT)
+stopifnot(identical(fitTb, fitT))
+
+# Plotting multiple chromosomes
+plotTracks(fitT)

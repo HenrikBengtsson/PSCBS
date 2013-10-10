@@ -111,7 +111,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit));
 
   # Flag object
-  attr(fit, "tiledChromosomes") <- TRUE;
+  attr(fitT, "tiledChromosomes") <- TRUE;
 
   verbose && exit(verbose);
 
@@ -221,6 +221,9 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
 
 ############################################################################
 # HISTORY:
+# 2013-10-09
+# o BUG FIX: tileChromosomes() for CBS did not set "tiledChromosomes"
+#   attribute due to a typo.
 # 2013-05-07
 # o Now tileChromosomes() no longer gives warnings on "max(i): no
 #   non-missing arguments to max; returning -Inf".
