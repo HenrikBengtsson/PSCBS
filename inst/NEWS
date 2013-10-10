@@ -3,10 +3,12 @@ Package: PSCBS
 ==============
 
 Version: 0.38.1 [2013-10-08]
+o Now getSmoothLocusData() for CBS also returns column 'count' which
+  specifies the number of (finite) loci averaged over in each bin.
 o DOCUMENTATION: Vignette 'Total copy-number segmentation using CBS'
   would display the same plot as vignette 'Parent-specific copy-number
   segmentation using Paired PSCBS'.
-o DOCUMENTATION: Renamed vignette 'Paired PSCBS' to 'Parent-specific 
+o DOCUMENTATION: Renamed vignette 'Paired PSCBS' to 'Parent-specific
   copy-number segmentation using Paired PSCBS'.
 o BUG FIX: tileChromosomes() for CBS did not set "tiledChromosomes"
   attribute due to a typo.  This caused plotTracks() for CBS to

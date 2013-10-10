@@ -30,7 +30,8 @@
 
 \value{
   Returns a \code{\link[base]{data.frame}} where the
-  first two columns are 'chromosome' and 'x' (position)
+  first three columns are 'chromosome', 'x' (position),
+  and 'count' (number of loci average over for the given bin),
   and the remaining ones are the smoothed locus-level data.
 }
 
