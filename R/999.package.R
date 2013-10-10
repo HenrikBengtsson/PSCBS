@@ -16,6 +16,7 @@
 # \section{To get started}{
 #   To get started, see:
 #   \enumerate{
+#     \item Vignettes '\href{../doc/index.html}{Parent-specific copy-number segmentation using Paired PSCBS}' and '\href{../doc/index.html}{Total copy-number segmentation using CBS}'.
 #     \item @see "segmentByCBS" - segments total copy-numbers, or any
 #           other unimodal genomic signals, using the CBS method [3,4].
 #     \item @see "segmentByPairedPSCBS" - segments allele-specific

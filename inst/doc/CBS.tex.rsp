@@ -207,7 +207,7 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 \end{verbatim}
 \begin{figure}[htp]
  \begin{center}
-  \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c("tracks"), aspectRatio=0.35, {
+  \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c(class(fit)[1L], "tracks"), aspectRatio=0.35, {
     plotTracks(fit);
   })%>}}
  \end{center}
@@ -258,7 +258,7 @@ fitP <- pruneByHClust(fit, h=0.25, verbose=-10)
 \end{verbatim}
 \begin{figure}[htp]
  \begin{center}
-  \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c("pruned", "tracks"), aspectRatio=0.35, {
+  \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c(class(fitP)[1L], "pruned", "tracks"), aspectRatio=0.35, {
     plotTracks(fitP);
   })%>}}
  \end{center}
