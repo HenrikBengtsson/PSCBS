@@ -52,9 +52,16 @@
 } # .useAromaLight()
 
 
-.onAttach <- function(libname, pkgname) {
+.onLoad <- function(libname, pkgname) {
+  ns <- getNamespace(pkgname);
   pkg <- Package(pkgname);
+  # Assign '.PSCBS' object [since 'PSCBS' is a constructor/Class].
+  name <- sprintf(".%s", pkgname);
+  assign(name, pkg, envir=ns, inherits=FALSE);
+} # .onLoad()
 
+
+.onAttach <- function(libname, pkgname) {
   # Copy some pre-memoized CBS-parameter calculations to the 'R.cache'
   # cache.  This speeds up the calculation for common CBS use cases.
   .prememoize();
@@ -68,12 +75,21 @@
     packageStartupMessage(sprintf("%s\nNOTE: %s\n%s", hrule, msg, hrule));
   }
 
+  # Get '.PSCBS' object [since 'PSCBS' is a constructor/Class].
+  name <- sprintf(".%s", pkgname);
+  pkg <- get(name, envir=getNamespace(pkgname), inherits=FALSE);
   startupMessage(pkg);
 }
 
 
 ############################################################################
 # HISTORY:
+# 2013-10-13
+# o Added .onLoad() that creates Package '.PSCBS' object, which is
+#   used in .onAttach().  This is a workaround for not allocating a
+#   local Package on in .onAttach(), which then will be garbage
+#   collected and finalize():d, which in turn can generate cyclic
+#   loading of namespaces.
 # 2013-09-27
 # o Added .useAromaLight() to simplify backward compatibility.
 # o Added .requirePkg() from the R.rsp package.
