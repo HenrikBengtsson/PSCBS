@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.38.3 [2013-10-14]
+o Now the package vignettes are in vignettes/ and not in inst/doc/,
+  which will not be supported by R (>= 3.1.0).
+
+
 Version: 0.38.2 [2013-10-13]
 o BUG FIX: While attaching the package, it could cause a cyclic 
   loading of namespaces.
