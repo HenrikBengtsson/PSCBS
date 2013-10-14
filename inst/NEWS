@@ -3,12 +3,8 @@ Package: PSCBS
 ==============
 
 Version: 0.38.2 [2013-10-13]
-o ROBUSTNESS: Added .onLoad() that assigns a Package object to the
-  namespace of 'PSCBS'.  This object is in turn used in .onAttach()
-  for creating the package startup message.  Previously a local
-  Package object was created in .onAttach() for this sole purpose,
-  but since it was local it would also be garbage collected and
-  finalized, which in turn could cause cyclic loading of namespaces.
+o BUG FIX: While attaching the package, it could cause a cyclic 
+  loading of namespaces.
 
 
 Version: 0.38.1 [2013-10-08]

@@ -89,7 +89,7 @@
 #   used in .onAttach().  This is a workaround for not allocating a
 #   local Package on in .onAttach(), which then will be garbage
 #   collected and finalize():d, which in turn can generate cyclic
-#   loading of namespaces.
+#   loading of namespaces in R.oo (< 1.16.0).
 # 2013-09-27
 # o Added .useAromaLight() to simplify backward compatibility.
 # o Added .requirePkg() from the R.rsp package.
