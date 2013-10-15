@@ -86,10 +86,11 @@ importFrom("DNAcopy", "segment")
 importFrom("DNAcopy", "getbdry")
 importFrom("R.utils", "subplots")
 if (packageVersion("R.utils") < "1.27.5") {
-##  importFrom("R.utils", "cat.default")
-##  importFrom("R.utils", "getOption.default")
-##  importFrom("R.utils", "inherits.default")
+  importFrom("R.utils", "cat.default")
+  importFrom("R.utils", "getOption.default")
+  importFrom("R.utils", "inherits.default")
 }
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
