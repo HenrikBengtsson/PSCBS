@@ -59,8 +59,19 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'add':
+  add <- Arguments$getLogical(add);
+
+  # Argument 'Clim' & 'Blim':
+  if (!add) {
+    Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+    Blim <- Arguments$getNumerics(Blim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+  }
+
   # Argument 'fit':
-  if (nbrOfChromosomes(fit) >= 1) {
+  if (nbrOfChromosomes(fit) >= 1L) {
     return(plotTracksManyChromosomes(fit, tracks=tracks, scatter=scatter, calls=calls, pch=pch, quantiles=quantiles, Clim=Clim, Blim=Blim, xScale=xScale, ..., add=add, subplots=subplots, verbose=verbose));
   }
 
@@ -101,9 +112,6 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
 
   # Argument 'xScale':
   xScale <- Arguments$getNumeric(xScale, range=c(0,Inf));
-
-  # Argument 'add':
-  add <- Arguments$getLogical(add);
 
   # Argument 'subplots':
   subplots <- Arguments$getLogical(subplots);
@@ -522,6 +530,10 @@ setMethodS3("drawConfidenceBands", "PairedPSCBS", function(fit, what=c("tcn", "d
 
 
 setMethodS3("plotC1C2", "PairedPSCBS", function(fit, ..., xlab=expression(C[1]), ylab=expression(C[2]), Clim=c(0,2*ploidy(fit))) {
+  # Argument 'Clim':
+  Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+
   plot(NA, xlim=Clim, ylim=Clim, xlab=xlab, ylab=ylab);
   abline(a=0, b=1, lty=3);
   pointsC1C2(fit, ...);
@@ -571,6 +583,10 @@ setMethodS3("drawChangePointsC1C2", "PairedPSCBS", function(fit, col="#00000033"
 
 
 setMethodS3("plotDeltaC1C2", "PairedPSCBS", function(fit, ..., xlab=expression(Delta*C[1]), ylab=expression(Delta*C[2]), Clim=c(-1,1)*ploidy(fit)) {
+  # Argument 'Clim':
+  Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+
   plot(NA, xlim=Clim, ylim=Clim, xlab=xlab, ylab=ylab);
   abline(h=0, lty=3);
   abline(v=0, lty=3);

@@ -41,6 +41,12 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   # Argument 'add':
   add <- Arguments$getLogical(add);
 
+  # Argument 'Clim':
+  if (!add) {
+    Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+  }
+
   # Argument 'subplots':
   subplots <- Arguments$getLogical(subplots);
 

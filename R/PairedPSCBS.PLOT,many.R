@@ -129,6 +129,17 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   # Argument 'knownSegments':
   knownSegments <- Arguments$getLogical(knownSegments);
 
+  # Argument 'add':
+  add <- Arguments$getLogical(add);
+
+  # Argument 'Clim' & 'Blim':
+  if (!add) {
+    Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+    Blim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+  }
+
   # Argument 'xScale':
   xScale <- Arguments$getNumeric(xScale, range=c(0,Inf));
 

@@ -129,6 +129,15 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'fit':
 
+  # Argument 'add':
+  add <- Arguments$getLogical(add);
+
+  # Argument 'Clim':
+  if (!add) {
+    Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
+  }
+
   # Argument 'xScale':
   xScale <- Arguments$getNumeric(xScale, range=c(0,Inf));
 
@@ -221,6 +230,9 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
 
 ############################################################################
 # HISTORY:
+# 2013-10-14
+# o Now plotTracksManyChromosomes() for CBS gives a more informative
+#   error if 'Clim' is invalid.
 # 2013-10-09
 # o BUG FIX: tileChromosomes() for CBS did not set "tiledChromosomes"
 #   attribute due to a typo.

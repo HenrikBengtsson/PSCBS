@@ -38,6 +38,9 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'add':
+  add <- Arguments$getLogical(add);
+
   # Argument 'Clim':
   if (identical(Clim, "auto")) {
     signalType <- getSignalType(fit);
@@ -47,6 +50,16 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
       "ratio"     = c(0,3*ploidy),
       NULL
     );
+##  NOTE: Don't understand why, but with this 'R CMD build' gives:
+##    "Error: processing vignette 'CBS.tex.rsp' failed with diagnostics:
+##     Failed to infer argument 'Clim' due to an unknown signalType(): NA"
+##  /HB 2013-10-14
+##  if (!add && is.null(Clim)) {
+##    throw("Failed to infer argument 'Clim' due to an unknown signalType(): ", signalType);
+##  }
+  } else if (!add) {
+    Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+                                        disallow=c("Inf", "NA", "NaN"));
   }
 
   if (identical(Clab, "auto")) {
@@ -59,7 +72,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
   }
 
   # Argument 'fit':
-  if (nbrOfChromosomes(fit) > 1) {
+  if (nbrOfChromosomes(fit) > 1L) {
     res <- plotTracksManyChromosomes(fit, scatter=scatter, pch=pch, Clim=Clim, xScale=xScale, Clab=Clab, ..., byIndex=byIndex, mar=mar, add=add);
     return(invisible(res));
   }
@@ -414,6 +427,10 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
 
 ############################################################################
 # HISTORY:
+# 2013-10-14
+# o Now plotTracks() for CBS gives a more informative error if 'Clim'
+#   is invalid or "auto" and could not be inferred due to an unknown
+#   or unset signal type.
 # 2013-04-18
 # o Now drawLevels() also works for multiple chromosomes.
 # 2011-12-06

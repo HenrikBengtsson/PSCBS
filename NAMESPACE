@@ -2,34 +2,26 @@
 # IMPORTS
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 importFrom("R.methodsS3", "setMethodS3")
-importFrom("R.methodsS3", "throw")
-importFrom("R.methodsS3", "appendVarArgs")
-
+importFrom("R.methodsS3", "getMethodS3")
 importFrom("R.oo", "setConstructorS3")
-importFrom("R.oo", "extend")
-importFrom("R.oo", "load")
-importFrom("R.oo", "save")
-importFrom("R.oo", "attachLocally")
+importFrom("R.methodsS3", "throw")
+
+
+## Importing Object classes
 importFrom("R.oo", "Package")
+importFrom("R.utils", "Arguments")
+importFrom("R.utils", "GenericSummary")
+
+
+## Importing generics
+importFrom("R.oo", "load") ## Multi-sources: R.oo, base
+importFrom("R.oo", "save") ## Multi-sources: R.oo, base
+
+
+## Importing functions
+importFrom("R.oo", "extend")
+importFrom("R.oo", "attachLocally")
 importFrom("R.oo", "startupMessage")
-
-import("R.utils")
-# importFrom(R.utils, getAbsolutePath)
-# importFrom(R.utils, copyDirectory)
-# importFrom(R.utils, isPackageInstalled)
-# importFrom(R.utils, cat)
-
-importFrom("R.cache", "getCachePath")
-importFrom("R.cache", "loadCache")
-importFrom("R.cache", "saveCache")
-
-## import("DNAcopy")
-importFrom("DNAcopy", "smooth.CNA")
-importFrom("DNAcopy", "CNA")
-importFrom("DNAcopy", "segment")
-importFrom("DNAcopy", "getbdry")
-
-importFrom("utils", "capture.output")
 
 importFrom("matrixStats", "anyMissing")
 importFrom("matrixStats", "binMeans")
@@ -41,7 +33,63 @@ importFrom("matrixStats", "rowAnys")
 importFrom("matrixStats", "rowMins")
 importFrom("matrixStats", "weightedMedian")
 
+importFrom("utils", "capture.output")
+importFrom("utils", "file_test")
+importFrom("utils", "getFromNamespace")
+importFrom("utils", "head")
+importFrom("utils", "packageVersion")
+importFrom("utils", "str")
+importFrom("utils", "tail")
+importFrom("utils", "write.table")
 
+importFrom("R.cache", "getCachePath")
+importFrom("R.cache", "loadCache")
+importFrom("R.cache", "saveCache")
+
+importFrom("DNAcopy", "segments.summary")
+
+importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
+importFrom("R.utils", "copyDirectory")
+importFrom("R.utils", "createLink")
+importFrom("R.utils", "enter")
+importFrom("R.utils", "exit")
+importFrom("R.utils", "filePath")
+importFrom("R.utils", "getAbsolutePath")
+importFrom("R.utils", "getOption") ## Multi-sources: R.utils, base
+importFrom("R.utils", "getRelativePath")
+importFrom("R.utils", "hpaste")
+importFrom("R.utils", "inherits") ## Multi-sources: R.utils, base
+importFrom("R.utils", "insert")
+importFrom("R.utils", "isDirectory")
+importFrom("R.utils", "isFile")
+importFrom("R.utils", "isPackageInstalled")
+importFrom("R.utils", "isZero")
+importFrom("R.utils", "less")
+importFrom("R.utils", "loadObject")
+importFrom("R.utils", "more")
+importFrom("R.utils", "popState")
+importFrom("R.utils", "popTemporaryFile")
+importFrom("R.utils", "printf")
+importFrom("R.utils", "pushState")
+importFrom("R.utils", "pushTemporaryFile")
+importFrom("R.utils", "resample")
+importFrom("R.utils", "saveObject")
+importFrom("R.utils", "stext")
+importFrom("R.utils", "toCamelCase")
+importFrom("R.utils", "wrap")
+
+
+## Manual imports
+importFrom("DNAcopy", "smooth.CNA")
+importFrom("DNAcopy", "CNA")
+importFrom("DNAcopy", "segment")
+importFrom("DNAcopy", "getbdry")
+importFrom("R.utils", "subplots")
+if (packageVersion("R.utils") < "1.27.5") {
+##  importFrom("R.utils", "cat.default")
+##  importFrom("R.utils", "getOption.default")
+##  importFrom("R.utils", "inherits.default")
+}
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
@@ -58,6 +106,9 @@ export("load") # Re-export from R.oo
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # S3 methods
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# From 006.fixVarArgs.R
+S3method("append", "default")
+
 # AbstractCBS
 S3method("adjustPloidyScale", "AbstractCBS")
 S3method("all.equal", "AbstractCBS")

@@ -3,12 +3,21 @@ Package: PSCBS
 ==============
 
 Version: 0.38.3 [2013-10-14]
+o Now plotTracks() for CBS and PSCBS gives a more informative error if
+  'Clim' or 'Blim' is invalid.  If using "auto" (only for CBS) and the
+  limits could not be inferred due to an unknown or unset signal type,
+  an informative error message reports on this as well.
 o Now the package vignettes are in vignettes/ and not in inst/doc/,
   which will not be supported by R (>= 3.1.0).
+o ROBUSTNESS: The overriding of append() to become a generic
+  function does now call base::append() in the default, instead
+  of copy the latter.  All this will eventually be removed,
+  when proper support for c, [, [[ etc. has been added everywhere.
+o CLEANUP: Now explicitly importing only what is needed in NAMESPACE.
 
 
 Version: 0.38.2 [2013-10-13]
-o BUG FIX: While attaching the package, it could cause a cyclic 
+o BUG FIX: While attaching the package, it could cause a cyclic
   loading of namespaces.
 
 
