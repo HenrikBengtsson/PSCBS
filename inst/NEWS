@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.38.4 [2013-10-15]
+o CLEANUP: Removed a few unnecessary NAMESPACE imports.
+o Bumped up package dependencies.
+
+
 Version: 0.38.3 [2013-10-14]
 o Now plotTracks() for CBS and PSCBS gives a more informative error if
   'Clim' or 'Blim' is invalid.  If using "auto" (only for CBS) and the

@@ -55,10 +55,8 @@ importFrom("R.utils", "enter")
 importFrom("R.utils", "exit")
 importFrom("R.utils", "filePath")
 importFrom("R.utils", "getAbsolutePath")
-importFrom("R.utils", "getOption") ## Multi-sources: R.utils, base
 importFrom("R.utils", "getRelativePath")
 importFrom("R.utils", "hpaste")
-importFrom("R.utils", "inherits") ## Multi-sources: R.utils, base
 importFrom("R.utils", "insert")
 importFrom("R.utils", "isDirectory")
 importFrom("R.utils", "isFile")
@@ -87,8 +85,6 @@ importFrom("DNAcopy", "getbdry")
 importFrom("R.utils", "subplots")
 if (packageVersion("R.utils") < "1.27.5") {
   importFrom("R.utils", "cat.default")
-  importFrom("R.utils", "getOption.default")
-  importFrom("R.utils", "inherits.default")
 }
 
 
