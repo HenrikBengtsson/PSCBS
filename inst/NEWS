@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.38.5 [2013-10-18]
+o BUG FIX: The CBS and Paired PSCBS report templates assumed that
+  the 'R.utils' package is attached.
+
+
 Version: 0.38.4 [2013-10-15]
 o CLEANUP: Removed a few unnecessary NAMESPACE imports.
 o Bumped up package dependencies.

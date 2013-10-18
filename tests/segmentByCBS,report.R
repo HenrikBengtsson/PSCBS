@@ -3,7 +3,7 @@
 # 'colorspace', 'dichromat', 'munsell', 'reshape2' and 'scales'.
 
 # Only run this test in full testing mode
-if (Sys.getenv("_R_CHECK_FULL_") != "" && packageVersion("R.rsp") >= "0.9.1") {
+if (Sys.getenv("_R_CHECK_FULL_") != "") {
 library("PSCBS")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

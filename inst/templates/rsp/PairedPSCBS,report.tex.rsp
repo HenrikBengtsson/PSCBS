@@ -11,6 +11,7 @@
 library("PSCBS");
 library("R.devices");
 library("R.cache");
+library("R.utils"); # setOption()
 stopifnot(exists("rspArgs", mode="list"));
 %>
 
@@ -645,16 +646,18 @@ assign("renamePDF", function() {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
-# 2012-11-03
-# o Replaced deprecated ggplot2 functions.
-# 2012-09-16
-# o Added easy report configuration at the very top.
-# 2012-05-30
-# o Removed ggplot2 warnings on missing values.
-# 2012-02-28
-# o Now it is possible to turn off usage of the alpha channel in
-#   plots, e.g. setOption("PSCBS::report/useAlphaChannel", FALSE).
-#   This is useful for if the alpha channel is not supported.
+% 2013-10-18
+% o BUG FIX: Report template assumed that R.utils was attached.
+% 2012-11-03
+% o Replaced deprecated ggplot2 functions.
+% 2012-09-16
+% o Added easy report configuration at the very top.
+% 2012-05-30
+% o Removed ggplot2 warnings on missing values.
+% 2012-02-28
+% o Now it is possible to turn off usage of the alpha channel in
+%   plots, e.g. setOption("PSCBS::report/useAlphaChannel", FALSE).
+%   This is useful for if the alpha channel is not supported.
 % 2012-02-27
 % o First successful run with real data.
 % o Now all of the report uses a PairedPSCBS object.
