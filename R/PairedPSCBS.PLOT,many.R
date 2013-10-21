@@ -136,7 +136,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   if (!add) {
     Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
                                         disallow=c("Inf", "NA", "NaN"));
-    Blim <- Arguments$getNumerics(Clim, length=c(2L,2L),
+    Blim <- Arguments$getNumerics(Blim, length=c(2L,2L),
                                         disallow=c("Inf", "NA", "NaN"));
   }
 
@@ -511,6 +511,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
 ############################################################################
 # HISTORY:
+# 2013-10-20
+# o BUG FIX: plotTracksManyChromosomes() for PairedPSCBS would use
+#   Blim=Clim, regardless of what argument 'Blim' was.
 # 2013-04-13
 # o Added argument 'boundaries' to plotTracksManyChromosomes().
 # 2013-04-11
