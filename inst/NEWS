@@ -2,7 +2,8 @@
 Package: PSCBS
 ==============
 
-Version: 0.39.0 [2013-10-20]
+Version: 0.39.0 [2013-10-21]
+o Now bootstrapping also provides standard deviation summarizes.
 o More internal updates on bootstrapping.
 
 

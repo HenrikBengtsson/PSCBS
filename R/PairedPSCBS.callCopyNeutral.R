@@ -160,8 +160,8 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Bootstrap the identified copy-neutral states");
-  fitNTCN <- bootstrapTCNandDHByRegion(fitNTCN, force=TRUE, ...,
-                                     verbose=less(verbose, 50));
+  fitNTCN <- bootstrapTCNandDHByRegion(fitNTCN, what="segment", force=TRUE,
+                                           ..., verbose=less(verbose, 50));
   segsNTCN <- getSegments(fitNTCN, simplified=FALSE);
   names <- colnames(segsNTCN);
   excl <- grep("(^chromosome|Id|Start|End|Call)$", names);
@@ -390,6 +390,9 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
 ##############################################################################
 # HISTORY
+# 2013-10-21 [HB]
+# o ROBUSTNESS: Now calcStatsForCopyNeutralABs() only bootstraps the
+#   segments of the subsetted copy-neutral segments.
 # 2013-04-17 [HB]
 # o BUG FIX: Internal calcStatsForCopyNeutralABs() would give an error
 #   if there was exactly two AH segments.

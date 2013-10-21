@@ -18,6 +18,7 @@
 #      If @NULL, the @see "stats::quantile" function is used.}
 #   \item{by}{A @character specifying whether DH should be calculated from
 #      normalized ('betaTN') or non-normalized ('betaT') tumor BAFs.}
+#   \item{what}{A @character @vector specifying what to bootstrap.}
 #   \item{force}{If @TRUE, already existing estimates are ignored,
 #      otherwise not.}
 #   \item{seed}{(optional) A random seed.}
@@ -39,7 +40,7 @@
 # }
 #
 #*/###########################################################################
-setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
+setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), what=c("segment", "changepoint"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
 
@@ -244,6 +245,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     seed <- Arguments$getInteger(seed);
   }
 
+  # Argument 'what':
+  what <- unique(match.arg(what, several.ok=TRUE));
+
   # Argument '.debug':
   .debug <- Arguments$getLogical(.debug);
 
@@ -259,42 +263,52 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
 
 
-  verbose && enter(verbose, "Resample (TCN,DH) signals and re-estimate (TCN,DH,C1,C2) mean levels");
+  verbose && enter(verbose, "Resample (TCN,DH) signals and re-estimate summaries for ", paste(what, collapse=" & "));
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Find estimates to be done
+  # Extract existing estimates
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (is.element("segment", what)) {
+    segs <- getSegments(fit);
+  }
+  if (is.element("changepoint", what)) {
+    cps <- getChangePoints(fit);
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Already done?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   stats <- statsFcn(1);
   stopifnot(!is.null(names(stats)));
   nbrOfStats <- length(stats);
   statsNames <- names(stats);
 
-  # Extract existing estimates
-  segs <- getSegments(fit);
-  cps <- getChangePoints(fit);
+  if (is.element("segment", what)) {
+    tcnStatsNames <- sprintf("tcn_%s", names(stats));
+    dhStatsNames <- sprintf("dh_%s", names(stats));
+    c1StatsNames <- sprintf("c1_%s", names(stats));
+    c2StatsNames <- sprintf("c2_%s", names(stats));
+    allStatsNames <- c(tcnStatsNames, dhStatsNames, c1StatsNames, c2StatsNames);
+    isDone <- is.element(allStatsNames, names(segs));
+    names(isDone) <- allStatsNames;
+    verbose && cat(verbose, "Already done?");
+    verbose && print(verbose, isDone);
 
-  # Already done?
-  tcnStatsNames <- sprintf("tcn_%s", names(stats));
-  dhStatsNames <- sprintf("dh_%s", names(stats));
-  c1StatsNames <- sprintf("c1_%s", names(stats));
-  c2StatsNames <- sprintf("c2_%s", names(stats));
-  allStatsNames <- c(tcnStatsNames, dhStatsNames, c1StatsNames, c2StatsNames);
-  isDone <- is.element(allStatsNames, names(segs));
-  names(isDone) <- allStatsNames;
-  verbose && cat(verbose, "Already done?");
-  verbose && print(verbose, isDone);
+    # Not needed anymore
+    allStatsNames <- tcnStatsNames <- dhStatsNames <-
+                     c1StatsNames <- c2StatsNames <- NULL;
 
-  # Not needed anymore
-  allStatsNames <- tcnStatsNames <- dhStatsNames <-
-                   c1StatsNames <- c2StatsNames <- NULL;
-
-  if (!force && all(isDone)) {
-    verbose && cat(verbose, "Already done. Skipping.");
-    verbose && exit(verbose);
-    return(fit);
+    if (!force && all(isDone)) {
+      verbose && cat(verbose, "Already done. Skipping.");
+      verbose && exit(verbose);
+      return(fit);
+    }
   }
 
 
+  # The object to be returned
+  fitB <- fit;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Bootstrap (TCN,DH,C1,C2) segment mean levels
@@ -305,26 +319,25 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Summarizing segment (TCN,DH,C1,C2) mean levels
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  segs <- summarizeSamples(boot$segments, statsFcn=statsFcn, stats=segs, what="segment", verbose=verbose);
-
+  if (is.element("segment", what)) {
+    segs <- summarizeSamples(boot$segments, statsFcn=statsFcn, stats=segs, what="segment", verbose=verbose);
+    # Record statistics
+    fitB$output <- segs;
+  }
+  segs <- NULL; # Not needed anymore
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Summarizing change point (alpha, radius, manhattan, d1, d2) data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, stats=cps, what="changepoint", verbose=verbose);
-
-
-  boot <- NULL; # Not needed anymore
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Record statistics
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  fitB <- fit;
-  fitB$output <- segs;
-  fitB$changepoints <- cps;
+  if (is.element("changepoint", what)) {
+    cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, stats=cps, what="changepoint", verbose=verbose);
+    # Record statistics
+    fitB$changepoints <- cps;
+  }
+  cps <- NULL; # Not needed anymore
 
   # Not needed anymore
-  fit <- segs <- cps <- NULL;
+  fit <- boot <- NULL;
 
   verbose && exit(verbose);
 
@@ -761,7 +774,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     verbose && exit(verbose);
   } # for (jj ...)
 
-  verbose && cat(verbose, "Bootstrap mean levels");
+  verbose && cat(verbose, "Bootstrapped segment mean levels");
   verbose && str(verbose, M);
 
   # Sanity check
@@ -772,12 +785,13 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # Add (C1,C2) bootstrap mean levels
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Calculating (C1,C2) mean levels from (TCN,DH) mean levels");
-  C1 <- (1-M[,,"dh"]) * M[,,"tcn"] / 2;
-  C2 <- M[,,"tcn"] - C1;
+  C1 <- (1-M[,,"dh", drop=FALSE]) * M[,,"tcn", drop=FALSE] / 2;
+  C2 <- M[,,"tcn", drop=FALSE] - C1;
   M[,,"c1"] <- C1;
   M[,,"c2"] <- C2;
   verbose && str(verbose, M);
   # Sanity check
+  stopifnot(dim(M)[1L] == nbrOfSegments);
   stopifnot(all(!is.nan(M)));
   # Not needed anymore
   C1 <- C2 <- NULL;
@@ -789,28 +803,37 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Calculating polar (alpha,radius,manhattan) for change points");
   C <- M[,,c("c1","c2"), drop=FALSE];
-  D <- C[-nbrOfSegments,,] - C[-1L,,];
-  verbose && str(verbose, D);
+
+  # Calculate difference
+  # (will be empty if nbrOfSegments == 1, but that's ok/intended)
+  D <- C[-nbrOfSegments,,, drop=FALSE] - C[-1L,,, drop=FALSE];
   # Sanity check
+  stopifnot(dim(D)[1L] == nbrOfSegments-1L);
   stopifnot(all(!is.nan(D)));
   C <- NULL; # Not needed anymore
 
-  # Compile array
+  # Allocate array
   dimnames <- dimnames(D);
   dimnames[[3L]] <- c("alpha", "radius", "manhattan", "d1", "d2");
   dim <- dim(D);
   dim[3L] <- length(dimnames[[3L]]);
   P <- array(NA_real_, dim=dim, dimnames=dimnames);
+  stopifnot(dim(P)[1L] == nbrOfSegments-1L);
 
-  P[,,"alpha"] <- atan2(D[,,2], D[,,1]); # Changepoint angles in (0,2*pi)
-  P[,,"radius"] <- sqrt(D[,,2]^2 + D[,,1]^2);
-  P[,,"manhattan"] <- abs(D[,,2]) + abs(D[,,1]);
-  P[,,"d1"] <- D[,,1];
-  P[,,"d2"] <- D[,,2];
+  if (nbrOfSegments >= 2L) {
+    verbose && str(verbose, D);
+    P[,,"alpha"] <- atan2(D[,,2], D[,,1]); # Changepoint angles in (0,2*pi)
+    P[,,"radius"] <- sqrt(D[,,2]^2 + D[,,1]^2);
+    P[,,"manhattan"] <- abs(D[,,2]) + abs(D[,,1]);
+    P[,,"d1"] <- D[,,1];
+    P[,,"d2"] <- D[,,2];
+  }
   alpha <- D <- NULL; # Not needed anymore
+  verbose && cat(verbose, "Bootstrapped change points");
   verbose && str(verbose, P);
 
   # Sanity check
+  stopifnot(dim(P)[1L] == nbrOfSegments-1L);
   stopifnot(all(!is.nan(P)));
   verbose && exit(verbose);
 
@@ -824,6 +847,11 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
 ##############################################################################
 # HISTORY
+# 2013-10-21
+# o Added argument 'what' to bootstrapTCNandDHByRegion().
+# o BUG FIX: The new bootstrapSegmentsAndChangepoints() would give
+#   "Error in D[, , 2] : incorrect number of dimensions" if bootstrapping
+#   was done on a single change point (==two segments).
 # 2013-10-20
 # o Now utilizing new getChangePoints().
 # o Now calculating change-point angles in (0,2*pi) using atan2().
