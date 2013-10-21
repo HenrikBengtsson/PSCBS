@@ -311,11 +311,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Summarizing change point (alpha, radius, manhattan, d1, d2) data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (FALSE) {
-    cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, stats=cps, what="changepoint", verbose=verbose);
-  } else {
-    cps <- NULL;
-  }
+  cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, stats=cps, what="changepoint", verbose=verbose);
+
 
   boot <- NULL; # Not needed anymore
 
@@ -327,7 +324,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   fitB$changepoints <- cps;
 
   # Not needed anymore
-  fit <- segs <- NULL;
+  fit <- segs <- cps <- NULL;
 
   verbose && exit(verbose);
 
