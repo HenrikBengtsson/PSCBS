@@ -118,4 +118,5 @@ resetSegments
 getLocusData.NonPairedPSCBS getLocusData.PairedPSCBS
 plotTracks plotTracks1 plotTracks2 plotTracksManyChromosomes
 getSmoothLocusData
-
+bootstrapSegmentsAndChangepoints
+bootstrapSegmentsAndChangepoints.PairedPSCBS

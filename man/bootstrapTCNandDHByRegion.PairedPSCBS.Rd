@@ -36,12 +36,12 @@
   \item{seed}{(optional) A random seed.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
   \item{.debug}{(internal) If \code{\link[base:logical]{TRUE}}, additional sanity checks are
-     performed internally..}
+     performed internally.}
   \item{...}{Not used.}
 }
 
 \value{
-  Returns a \code{\link{PairedPSCBS}} object with copy-neutral calls.
+  Returns a \code{\link{PairedPSCBS}} object.
 }
 
 \author{Henrik Bengtsson}

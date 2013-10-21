@@ -23,12 +23,12 @@
 #   \item{seed}{(optional) A random seed.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #   \item{.debug}{(internal) If @TRUE, additional sanity checks are
-#      performed internally..}
+#      performed internally.}
 #   \item{...}{Not used.}
 # }
 #
 # \value{
-#   Returns a @see "PairedPSCBS" object with copy-neutral calls.
+#   Returns a @see "PairedPSCBS" object.
 # }
 #
 # @author "HB"
@@ -45,6 +45,179 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Local functions
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  summarizeSamples <- function(X, statsFcn, stats=NULL, what=c("segment", "changepoint"), ..., verbose=FALSE) {
+    # Argument 'X':
+    stopifnot(is.array(X));
+    dim <- dim(X);
+    stopifnot(length(dim) == 3L);
+
+    # Argument 'statsFcn':
+    stopifnot(is.function(statsFcn));
+    statsT <- statsFcn(1);
+    stopifnot(!is.null(names(statsT)));
+    nbrOfStats <- length(statsT);
+    statsNames <- names(statsT);
+    statsT <- NULL; # Not needed anymore
+
+    # Argument 'stats':
+    if (!is.null(stats)) {
+      stopifnot(is.data.frame(stats));
+    }
+
+    # Argument 'what':
+    what <- match.arg(what);
+    whatC <- capitalize(what);
+
+    # Argument 'verbose':
+    verbose <- Arguments$getVerbose(verbose);
+    if (verbose) {
+      pushState(verbose);
+      on.exit(popState(verbose));
+    }
+
+
+    dimnames <- dimnames(X);
+    fields <- dimnames[[3L]];
+
+    verbose && enterf(verbose, "Summarizing bootstrapped %s (%s) data", what, paste(sQuote(fields), collapse=", "));
+
+    # Allocate JxQx4 matrix S
+    dim[2L] <- nbrOfStats;
+    dimnames[[2L]] <- statsNames;
+    S <- array(NA_real_, dim=dim, dimnames=dimnames);
+    verbose && str(verbose, S);
+
+    for (kk in seq(along=fields)) {
+      field <- fields[kk];
+      verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)));
+
+      Xkk <- X[,,kk,drop=FALSE];  # An JxB matrix
+      dim(Xkk) <- dim(Xkk)[-3L];
+      # Sanity check
+      stopifnot(is.matrix(Xkk));
+      stopifnot(nrow(Xkk) == dim(X)[1L]);
+      stopifnot(ncol(Xkk) == B);
+
+      for (jj in seq(length=dim(X)[1L])) {
+        verbose && enter(verbose, sprintf("%s #%d of %d", whatC, jj, dim(X)[1L]));
+
+        Xkkjj <- Xkk[jj,,drop=TRUE]; # A vector of length B
+
+        S[jj,,kk] <- statsFcn(Xkkjj);
+
+        verbose && exit(verbose);
+      } # for (jj ...)
+
+      Xkk <- NULL; # Not needed anymore
+
+      verbose && exit(verbose);
+    } # for (jj ...)
+
+    # Not needed anymore
+    X <- NULL;
+
+    verbose && cat(verbose, "Bootstrap statistics");
+    verbose && str(verbose, S);
+
+    # Reshape JxQx4 array to Jx(4*Q) matrix
+    T <- wrap(S, map=list(1,NA), sep="_");
+    colnames(T) <- gsub("(.*)_(.*)", "\\2_\\1", colnames(T));
+
+    # Append as new columns to the changepoint table
+    stats <- cbind(stats, T);
+
+    # Drop previously estimated values
+    dups <- duplicated(colnames(stats), fromLast=TRUE);
+    if (any(dups)) {
+      stats <- stats[,!dups, drop=FALSE];
+    }
+
+    # Not needed anymore
+    T <- dups <- NULL;
+
+
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    # Statistical sanity checks
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    if (what == "segment" && B >= 100L) {
+      verbose && enter(verbose, "Statistical sanity checks (iff B >= 100)");
+
+      stopifnot(is.array(S));
+
+      # Find extreme quantiles
+      probs <- dimnames(S)[[2L]];
+      probs <- grep("%", probs, fixed=TRUE, value=TRUE);
+      S <- S[,probs,,drop=FALSE];
+      probs <- gsub("%", "", probs, fixed=TRUE);
+      probs <- as.double(probs) / 100;
+
+      # Is it possible to check?
+      if (any(probs < 0.10) && any(probs > 0.90)) {
+        tryCatch({
+          fields <- dimnames(S)[[3L]];
+          for (kk in seq(along=fields)) {
+            field <- fields[kk];
+            verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)));
+
+            # Bootstrap statistics
+            Skk <- S[,,kk, drop=FALSE];
+            dim(Skk) <- dim(Skk)[-3L];
+
+            # Sanity checks
+            stopifnot(is.matrix(Skk));
+
+            range <- Skk[,c(1L,ncol(Skk)),drop=FALSE];
+
+            # Segmentation means
+            key <- sprintf("%sMean", field);
+            segMean <- segs[[key]];
+
+            # Segmentation counts
+            cfield <- sprintf("%sNbrOfLoci", ifelse(field == "tcn", "tcn", "dh"));
+            counts <- segs[,cfield,drop=TRUE];
+
+            if (verbose) {
+              for (rr in seq_len(length(segMean))) {
+                printf(verbose, "Seg %3d. mean=%g, range=[%g,%g], n=%d\n", rr, segMean[rr], range[rr,1L], range[rr,2L], counts[rr]);
+              } # for (rr ...)
+            }
+
+            # Compare only segments with enough data points
+            keep <- (counts > 1L);
+            range <- range[keep,,drop=FALSE];
+            segMean <- segMean[keep];
+
+            # Sanity checks
+            stopifnot(all(range[,2L] + tol >= range[,1L], na.rm=TRUE));
+            stopifnot(all(segMean + tol >= range[,1L], na.rm=TRUE));
+            stopifnot(all(segMean - tol <= range[,2L], na.rm=TRUE));
+
+            verbose && exit(verbose);
+          } # for (kk ...)
+        }, error = function(ex) {
+          # If an error, display the data, then throw the exception
+          verbose && cat(verbose, "Tolerance (option 'PSCBS/sanityChecks/tolerance'): ", tol);
+          verbose && print(verbose, segs);
+          throw(ex);
+        })
+      } else {
+        verbose && cat(verbose, "Skipping. Not enough quantiles: ",
+                                 paste(dimnames(S)[[2L]], collapse=", "));
+      }
+
+      verbose && exit(verbose);
+    } # if (B >= 100L)
+
+
+    verbose && exit(verbose);
+
+    stats;
+  } # summarizeSamples()
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'B':
@@ -58,7 +231,12 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
   # Argument 'statsFcn':
   if (is.null(statsFcn)) {
-    statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
+    statsFcn <- function(x) {
+      x <- x[!is.na(x)];
+      sd <- sd(x, na.rm=FALSE);
+      qs <- quantile(x, probs=probs, na.rm=FALSE);
+      c(sd=sd, qs);
+    } # statsFcn()
   }
 
   # Argument 'by':
@@ -84,7 +262,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
 
 
-  verbose && enter(verbose, "Resample (TCN,DH) signals and re-estimate mean levels");
+  verbose && enter(verbose, "Resample (TCN,DH) signals and re-estimate (TCN,DH,C1,C2) mean levels");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Set the random seed
@@ -123,7 +301,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   if (!params$joinSegments) {
     throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.");
   }
-  if (regexpr(",", params$flavor, fixed=TRUE) != -1) {
+  if (regexpr(",", params$flavor, fixed=TRUE) != -1L) {
     throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor));
   }
   # Sanity check (same as above, but just in case)
@@ -151,6 +329,10 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   verbose && cat(verbose, "Already done?");
   verbose && print(verbose, isDone);
 
+  # Not needed anymore
+  allStatsNames <- tcnStatsNames <- dhStatsNames <-
+                   c1StatsNames <- c2StatsNames <- NULL;
+
   if (!force && all(isDone)) {
     verbose && cat(verbose, "Already done. Skipping.");
     verbose && exit(verbose);
@@ -158,10 +340,137 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   }
 
 
-  # Get mean estimators
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Bootstrap (TCN,DH,C1,C2) segment mean levels
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  boot <- bootstrapSegmentsAndChangepoints(fit, B=B, by=by, seed=seed,
+                          force=force, .debug=.debug, verbose=verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Summarizing segment (TCN,DH,C1,C2) mean levels
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  segs <- summarizeSamples(boot$segments, statsFcn=statsFcn, stats=segs, what="segment", verbose=verbose);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Summarizing change point (alpha, radius, manhattan) data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, what="changepoint", verbose=verbose);
+
+  boot <- NULL; # Not needed anymore
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Record statistics
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  fitB <- fit;
+  fitB$output <- segs;
+  fitB$changepoints <- cps;
+
+  # Not needed anymore
+  fit <- segs <- NULL;
+
+  verbose && exit(verbose);
+
+  fitB;
+}, private=TRUE) # bootstrapTCNandDHByRegion()
+
+
+
+
+
+
+setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1000L, by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
+  # Settings for sanity checks
+  tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'B':
+  B <- Arguments$getInteger(B, range=c(1,Inf));
+
+  # Argument 'by':
+  by <- match.arg(by);
+
+  # Argument 'seed':
+  if (!is.null(seed)) {
+    seed <- Arguments$getInteger(seed);
+  }
+
+  # Argument '.debug':
+  .debug <- Arguments$getLogical(.debug);
+
+  # Argument 'force':
+  force <- Arguments$getLogical(force);
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+
+
+  verbose && enter(verbose, "Bootstrapping (TCN,DH,C1,C2) segment mean levels");
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Set the random seed
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (!is.null(seed)) {
+    verbose && enter(verbose, "Setting (temporary) random seed");
+    oldRandomSeed <- NULL;
+    if (exists(".Random.seed", mode="integer")) {
+      oldRandomSeed <- get(".Random.seed", mode="integer");
+    }
+    on.exit({
+      if (!is.null(oldRandomSeed)) {
+        .Random.seed <<- oldRandomSeed;
+      }
+    }, add=TRUE);
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
+    verbose && cat(verbose, "Seed: ", seed);
+    set.seed(seed);
+    verbose && exit(verbose);
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Extract data and estimates
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  data <- getLocusData(fit);
+  tcnSegRows <- fit$tcnSegRows;
+  dhSegRows <- fit$dhSegRows;
+  segs <- getSegments(fit);
+  params <- fit$params;
+
+  # Sanity checks
+  stopifnot(all(!is.na(data$chromosome) & !is.na(data$x)));
+
+  # Sanity checks
+  if (!params$joinSegments) {
+    throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.");
+  }
+  if (regexpr(",", params$flavor, fixed=TRUE) != -1L) {
+    throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor));
+  }
+  # Sanity check (same as above, but just in case)
+  stopifnot(all(segs$tcnStart == segs$dhStart, na.rm=TRUE));
+  stopifnot(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE));
+
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Find estimators
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Get mean estimators used
   estList <- getMeanEstimators(fit, c("tcn", "dh"));
   avgTCN <- estList$tcn;
   avgDH <- estList$dh;
+  estList <- NULL; # Not needed anymore
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -194,7 +503,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   verbose && cat(verbose, "Number of non-SNPs: ", nbrOfNonSNPs);
 
   # Sanity checks
-  stopifnot(length(intersect(snps, nonSNPs)) == 0);
+  stopifnot(length(intersect(snps, nonSNPs)) == 0L);
 
   # Heterozygous SNPs
   isHet <- isSNP & (muN == 1/2);
@@ -208,7 +517,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
                                       nbrOfHoms, 100*nbrOfHoms/nbrOfSNPs);
 
   # Sanity checks
-  stopifnot(length(intersect(hets, homs)) == 0);
+  stopifnot(length(intersect(hets, homs)) == 0L);
   stopifnot(nbrOfHets + nbrOfHoms == nbrOfSNPs);
 
   # Sanity checks
@@ -242,10 +551,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   nbrOfSegments <- nrow(segs);
 
   # Allocate JxBx4 matrix M of bootstrap means
-  naValue <- as.double(NA);
-  dim <- c(nbrOfSegments, B, 4);
+  dim <- c(nbrOfSegments, B, 4L);
   dimnames <- list(NULL, NULL, c("tcn", "dh", "c1", "c2"));
-  M <- array(naValue, dim=dim, dimnames=dimnames);
+  M <- array(NA_real_, dim=dim, dimnames=dimnames);
   verbose && str(verbose, M);
 
   # Identify all loci with non-missing signals
@@ -259,8 +567,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     segs[[key]] <- counts;
   }
 
-  hasTcnLoci <- (is.finite(tcnSegRows[,1]) & is.finite(tcnSegRows[,2]));
-  hasDhLoci <- (is.finite(dhSegRows[,1]) & is.finite(dhSegRows[,2]));
+  hasTcnLoci <- (is.finite(tcnSegRows[,1L]) & is.finite(tcnSegRows[,2L]));
+  hasDhLoci <- (is.finite(dhSegRows[,1L]) & is.finite(dhSegRows[,2L]));
 
   # Identify "splitter" segments which have no data
   chrs <- segs[["chromosome"]];
@@ -268,7 +576,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   dhIds <- segs[["dhId"]];
   tcnMeans <- segs[["tcnMean"]];
   dhMeans <- segs[["dhMean"]];
-  isSplitter <- (is.na(chrs) && is.na(tcnIds) && is.na(dhIds));
+  isSplitter <- (is.na(chrs) & is.na(tcnIds) & is.na(dhIds));
 
   # Get all segment indices except for "splitters"
   jjs <- seq(length=nbrOfSegments);
@@ -302,9 +610,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
     # Indices of all loci
     if (hasTcnLoci[jj]) {
-      idxsAll <- tcnSegRowJJ[1]:tcnSegRowJJ[2];
+      idxsAll <- tcnSegRowJJ[1L]:tcnSegRowJJ[2L];
     } else {
-      idxsAll <- integer(0);
+      idxsAll <- 0L;
     }
 
     verbose && str(verbose, idxsAll);
@@ -330,12 +638,12 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     verbose && enter(verbose, "Identify loci used to bootstrap DH means");
 
     if (hasDhLoci[jj]) {
-      idxsDH <- dhSegRowJJ[1]:dhSegRowJJ[2];
+      idxsDH <- dhSegRowJJ[1L]:dhSegRowJJ[2L];
       idxsDH <- intersect(idxsDH, hets);
       # Drop missing values
       idxsDH <- intersect(idxsDH, idxsRho);
     } else {
-      idxsDH <- integer(0);
+      idxsDH <- 0L;
     }
 
     verbose && cat(verbose, "Heterozygous SNPs to resample for DH:");
@@ -392,7 +700,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     # Sanity check
     if (.debug) {
       stopifnot(length(idxsHet) + length(idxsHom) + length(idxsNonSNP) == nbrOfTCNs);
-      stopifnot(length(intersect(idxsDH, idxsHetNonDH)) == 0);
+      stopifnot(length(intersect(idxsDH, idxsHetNonDH)) == 0L);
       stopifnot(length(idxsTCN) == nbrOfTCNs);
     }
 
@@ -497,7 +805,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     verbose && exit(verbose);
   } # for (jj ...)
 
-  verbose && cat(verbose, "Bootstrap means");
+  verbose && cat(verbose, "Bootstrap mean levels");
   verbose && str(verbose, M);
 
   # Sanity check
@@ -505,161 +813,71 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Calculate (C1,C2) bootstrap statistics
+  # Add (C1,C2) bootstrap mean levels
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Calculating (C1,C2) from (TCN,DH) bootstraps");
+  verbose && enter(verbose, "Calculating (C1,C2) mean levels from (TCN,DH) mean levels");
   C1 <- (1-M[,,"dh"]) * M[,,"tcn"] / 2;
   C2 <- M[,,"tcn"] - C1;
   M[,,"c1"] <- C1;
   M[,,"c2"] <- C2;
   verbose && str(verbose, M);
-
   # Sanity check
   stopifnot(all(!is.nan(M)));
+  # Not needed anymore
+  C1 <- C2 <- NULL;
   verbose && exit(verbose);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Calculate bootstrap statistics
+  # Bootstrap polar (alpha,radius,manhattan) for change points
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Calculating (TCN,DH) bootstrap statistics");
-  # Allocate JxQx4 matrix S
-  naValue <- as.double(NA);
-  dim <- dim(M);
-  dimnames <- dimnames(M);
-  dim[2] <- nbrOfStats;
-  dimnames[[2]] <- statsNames;
-  S <- array(naValue, dim=dim, dimnames=dimnames);
-  verbose && str(verbose, S);
+  verbose && enter(verbose, "Calculating polar (alpha,radius,manhattan) for change points");
+  dM <- M[-nbrOfSegments,,,drop=FALSE] - M[-1L,,,drop=FALSE];
+  verbose && str(verbose, dM);
+  # Sanity check
+  stopifnot(all(!is.nan(dM)));
 
-  fields <- dimnames(M)[[3]];
-  for (kk in seq(along=fields)) {
-    field <- fields[kk];
-    verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)));
+  # Compile array
+  dimnames <- dimnames(dM);
+  dimnames[[3L]] <- c("alpha", "radius", "manhattan", "dc1", "dc2");
+  dim <- dim(dM);
+  dim[3L] <- length(dimnames[[3L]]);
+  P <- array(NA_real_, dim=dim, dimnames=dimnames);
 
-    Mkk <- M[,,kk,drop=FALSE];  # An JxB matrix
-    dim(Mkk) <- dim(Mkk)[-3];
-    # Sanity check
-    stopifnot(is.matrix(Mkk));
-    stopifnot(nrow(Mkk) == nbrOfSegments);
-    stopifnot(ncol(Mkk) == B);
+  alpha <- atan(dM[,,"c2"]/dM[,,"c1"]);
+  isNeg <- (!is.na(alpha) & (sign(alpha) < 0));
+  alpha[isNeg] <- alpha[isNeg] + pi;
+  P[,,"alpha"] <- alpha;
+  P[,,"radius"] <- sqrt(dM[,,"c2"]^2 + dM[,,"c1"]^2);
+  P[,,"manhattan"] <- abs(dM[,,"c2"]) + abs(dM[,,"c1"]);
+  P[,,"dc1"] <- dM[,,"c1"];
+  P[,,"dc2"] <- dM[,,"c2"];
 
-    for (jj in seq(length=nbrOfSegments)) {
-      verbose && enter(verbose, sprintf("Segment #%d of %d", jj, nbrOfSegments));
+  verbose && str(verbose, P);
 
-      Mkkjj <- Mkk[jj,,drop=TRUE]; # A vector of length B
-
-      S[jj,,kk] <- statsFcn(Mkkjj);
-
-      verbose && exit(verbose);
-    } # for (jj ...)
-
-    verbose && exit(verbose);
-  } # for (jj ...)
+  # Sanity check
+  stopifnot(all(!is.nan(P)));
+  Pt <- P[,,c("alpha", "radius", "manhattan")];
+  stopifnot(all(is.na(Pt) | Pt > 0));
+  Pt <- NULL; # Not needed anymore
   verbose && exit(verbose);
-  verbose && cat(verbose, "Bootstrap statistics");
-  verbose && str(verbose, S);
 
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Store
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Reshape JxQx4 array to Jx(4*Q) matrix
-  T <- wrap(S, map=list(1,NA), sep="_");
-  colnames(T) <- gsub("(.*)_(.*)", "\\2_\\1", colnames(T));
-
-  # Append
-  segs <- cbind(segs, T);
-
-  # Drop previously estimated values
-  dups <- duplicated(colnames(segs), fromLast=TRUE);
-  if (any(dups)) {
-    segs <- segs[,!dups, drop=FALSE];
-  }
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Statistical sanity checks
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (B >= 100L) {
-    verbose && enter(verbose, "Statistical sanity checks (iff B >= 100)");
-
-    # Find extreme quantiles
-    probs <- dimnames(S)[[2]];
-    probs <- gsub("%", "", probs, fixed=TRUE);
-    probs <- as.double(probs) / 100;
-
-    # Is it possible to check?
-    if (any(probs < 0.10) && any(probs > 0.90)) {
-      tryCatch({
-        fields <- dimnames(S)[[3]];
-        for (kk in seq(along=fields)) {
-          field <- fields[kk];
-          verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)));
-
-          # Bootstrap statistics
-          Skk <- S[,,kk, drop=FALSE];
-          dim(Skk) <- dim(Skk)[-3];
-
-          # Sanity checks
-          stopifnot(is.matrix(Skk));
-
-          range <- Skk[,c(1,ncol(Skk)),drop=FALSE];
-
-          # Segmentation means
-          key <- sprintf("%sMean", field);
-          segMean <- segs[[key]];
-
-          # Segmentation counts
-          cfield <- sprintf("%sNbrOfLoci", ifelse(field == "tcn", "tcn", "dh"));
-          counts <- segs[,cfield,drop=TRUE];
-
-          if (verbose) {
-            for (rr in seq_len(length(segMean))) {
-              verbose && printf(verbose, "Seg %3d. mean=%g, range=[%g,%g], n=%d\n", rr, segMean[rr], range[rr,1], range[rr,2], counts[rr]);
-            } # for (rr ...)
-          }
-
-          # Compare only segments with enough data points
-          keep <- (counts > 1L);
-          range <- range[keep,,drop=FALSE];
-          segMean <- segMean[keep];
-
-          # Sanity checks
-          stopifnot(all(range[,2] + tol >= range[,1], na.rm=TRUE));
-          stopifnot(all(segMean + tol >= range[,1], na.rm=TRUE));
-          stopifnot(all(segMean - tol <= range[,2], na.rm=TRUE));
-
-          verbose && exit(verbose);
-        } # for (kk ...)
-      }, error = function(ex) {
-        # If an error, display the data, then throw the exception
-        verbose && cat(verbose, "Tolerance (option 'PSCBS/sanityChecks/tolerance'): ", tol);
-        verbose && print(verbose, segs);
-        throw(ex);
-      })
-    } else {
-      verbose && cat(verbose, "Skipping. Not enough quantiles: ",
-                               paste(dimnames(S)[[2]], collapse=", "));
-    }
-
-    verbose && exit(verbose);
-  } # if (B >= 100L)
-
-
-  fitB <- fit;
-  fitB$output <- segs;
 
   verbose && exit(verbose);
 
-  fitB;
-}, private=TRUE) # bootstrapTCNandDHByRegion()
+  list(segments=M, changepoints=P);
+}, private=TRUE) # bootstrapSegmentsAndChangepoints()
 
 
 
 ##############################################################################
 # HISTORY
+# 2013-10-20
+# o Added bootstrapSegmentsAndChangepoints(), which was extract from
+#   internal code of bootstrapTCNandDHByRegion().  The latter now utilizes
+#   the former.
+# o BUG FIX: bootstrapTCNandDHByRegion() did not identify segment
+#   "splitters" as intended.  This has had no impact on the results.
 # 2013-04-23
 # o SPEEDUP: Made bootstrapTCNandDHByRegion() much faster by adding
 #   use.names=FALSE to two internal unlist() statements.

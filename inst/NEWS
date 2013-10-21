@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.39.0 [2013-10-20]
+o In addition to quantiles, the default bootstrap summaries of
+  bootstrapTCNandDHByRegion() for PairedPSCBS now also includes the
+  standard deviation of the segment means.
+
+
 Version: 0.38.5 [2013-10-18]
 o BUG FIX: The CBS and Paired PSCBS report templates assumed that
   the 'R.utils' package is attached.

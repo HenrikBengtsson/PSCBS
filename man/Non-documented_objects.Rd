@@ -290,6 +290,8 @@
 \alias{plotTracks2}
 \alias{plotTracksManyChromosomes}
 \alias{getSmoothLocusData}
+\alias{bootstrapSegmentsAndChangepoints}
+\alias{bootstrapSegmentsAndChangepoints.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
