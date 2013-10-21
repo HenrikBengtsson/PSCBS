@@ -49,6 +49,7 @@ importFrom("R.cache", "saveCache")
 importFrom("DNAcopy", "segments.summary")
 
 importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
+importFrom("R.utils", "capitalize")
 importFrom("R.utils", "copyDirectory")
 importFrom("R.utils", "createLink")
 importFrom("R.utils", "enter")
@@ -265,6 +266,7 @@ S3method("testROH", "numeric")
 # PairedPSCBS
 S3method("adjustPloidyScale", "PairedPSCBS")
 S3method("bootstrapDHByRegion", "PairedPSCBS")
+S3method("bootstrapSegmentsAndChangepoints", "PairedPSCBS")
 S3method("calcStatsForCopyNeutralABs", "PairedPSCBS")
 S3method("callAB", "PairedPSCBS")
 S3method("callAllelicBalanceByDH", "PairedPSCBS")

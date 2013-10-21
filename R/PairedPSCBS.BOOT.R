@@ -81,7 +81,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     dimnames <- dimnames(X);
     fields <- dimnames[[3L]];
 
-    verbose && enterf(verbose, "Summarizing bootstrapped %s (%s) data", what, paste(sQuote(fields), collapse=", "));
+    verbose && enter(verbose, sprintf("Summarizing bootstrapped %s (%s) data", what, paste(sQuote(fields), collapse=", ")));
 
     # Allocate JxQx4 matrix S
     dim[2L] <- nbrOfStats;
