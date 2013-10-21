@@ -193,6 +193,10 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
 
 
 setMethodS3("getChangePoints", "PSCBS", function(fit, ...) {
+  # Already available?
+  cps <- fit$changepoints;
+  if (!is.null(cps)) return(cps);
+
   segs <- getSegments(fit, splitters=TRUE);
   tcn <- segs[["tcnMean"]];
   dh <- segs[["dhMean"]];

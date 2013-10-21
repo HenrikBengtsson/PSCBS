@@ -317,6 +317,10 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
 
 
 setMethodS3("getChangePoints", "CBS", function(fit, ...) {
+  # Already available?
+  cps <- fit$changepoints;
+  if (!is.null(cps)) return(cps);
+
   segs <- getSegments(fit, splitters=TRUE);
   tcn <- segs[["tcnMean"]];
   n <- length(tcn);

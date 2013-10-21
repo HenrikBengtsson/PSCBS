@@ -292,6 +292,10 @@
 \alias{getSmoothLocusData}
 \alias{bootstrapSegmentsAndChangepoints}
 \alias{bootstrapSegmentsAndChangepoints.PairedPSCBS}
+\alias{getChangePoints}
+\alias{getChangePoints.AbstractCBS}
+\alias{getChangePoints.CBS}
+\alias{getChangePoints.PSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

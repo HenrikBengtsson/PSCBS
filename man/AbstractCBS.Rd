@@ -49,6 +49,7 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
  \tab \code{adjustPloidyScale} \tab  -\cr
  \tab \code{\link[PSCBS:append.AbstractCBS]{append}} \tab Appends one segmentation result to another.\cr
  \tab \code{extractCNs} \tab  -\cr
+ \tab \code{getChangePoints} \tab  -\cr
  \tab \code{\link[PSCBS:getChromosomes.AbstractCBS]{getChromosomes}} \tab Gets the set of chromosomes.\cr
  \tab \code{\link[PSCBS:getLocusData.AbstractCBS]{getLocusData}} \tab Gets the locus-level data.\cr
  \tab \code{getSegmentSizes} \tab  -\cr
