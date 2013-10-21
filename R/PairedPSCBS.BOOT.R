@@ -83,10 +83,6 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
     verbose && enter(verbose, sprintf("Summarizing bootstrapped %s (%s) data", what, paste(sQuote(fields), collapse=", ")));
 
-    # Drop the original observation
-    X <- X[,-1L,,drop=FALSE];
-    dim <- dim(X);
-
     # Allocate JxQxF matrix S
     dim[2L] <- nbrOfStats;
     dimnames[[2L]] <- statsNames;
@@ -237,13 +233,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
   # Argument 'statsFcn':
   if (is.null(statsFcn)) {
-#    statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
-    statsFcn <- function(x) {
-      x <- x[!is.na(x)];
-      sd <- sd(x, na.rm=FALSE);
-      qs <- quantile(x, probs=probs, na.rm=FALSE);
-      c(sd=sd, qs);
-    } # statsFcn()
+    statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
   }
 
   # Argument 'by':
@@ -316,12 +306,6 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- summarizeSamples(boot$segments, statsFcn=statsFcn, stats=segs, what="segment", verbose=verbose);
 
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Summarizing change point (alpha, radius, manhattan) data
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, what="changepoint", verbose=verbose);
-
   boot <- NULL; # Not needed anymore
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -329,7 +313,6 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitB <- fit;
   fitB$output <- segs;
-  fitB$changepoints <- cps;
 
   # Not needed anymore
   fit <- segs <- NULL;
@@ -514,9 +497,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nrow(segs);
 
-  # Allocate Jx(B+1)x4 matrix M of bootstrap means
-  # (reserving first "b" for the original data)
-  dim <- c(nbrOfSegments, B+1L, 4L);
+  # Allocate JxBx4 matrix M of bootstrap means
+  dim <- c(nbrOfSegments, B, 4L);
   dimnames <- list(NULL, NULL, c("tcn", "dh", "c1", "c2"));
   M <- array(NA_real_, dim=dim, dimnames=dimnames);
   verbose && str(verbose, M);
@@ -542,10 +524,6 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   tcnMeans <- segs[["tcnMean"]];
   dhMeans <- segs[["dhMean"]];
   isSplitter <- (is.na(chrs) & is.na(tcnIds) & is.na(dhIds));
-
-  # Record the original data
-  M[,1L,"tcn"] <- tcnMeans;
-  M[,1L,"dh"] <- dhMeans;
 
   # Get all segment indices except for "splitters"
   jjs <- seq(length=nbrOfSegments);
@@ -725,8 +703,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     # Defaults
     idxsDHBB <- NULL;
 
-    # Bootstrap B times (reserving first column for the original data)
-    for (bb in seq(from=2L, to=B+1L, by=1L)) {
+    # Bootstrap B times
+    for (bb in seq(length=B)) {
       # (1) Bootstrap DHs
       if (shouldHaveDHs) {
         # (a) Resample heterozygous SNPs (=> resampled DH units)
@@ -838,10 +816,10 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 ##############################################################################
 # HISTORY
 # 2013-10-20
-# o Now calculating change-point angles using atan2().
+# o Now calculating change-point angles in (0,2*pi) using atan2().
 # o Added bootstrapSegmentsAndChangepoints(), which was extract from
-#   internal code of bootstrapTCNandDHByRegion().  The latter now utilizes
-#   the former.
+#   internal code of bootstrapTCNandDHByRegion().  The latter now
+#   utilizes the former.
 # o BUG FIX: bootstrapTCNandDHByRegion() did not identify segment
 #   "splitters" as intended.  This has had no impact on the results.
 # 2013-04-23

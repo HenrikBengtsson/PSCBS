@@ -3,6 +3,7 @@ Package: PSCBS
 ==============
 
 Version: 0.38.6 [2013-10-20]
+o Internal restructuring on how bootstrapping of segment means is done.
 o BUG FIX: plotTracks() for PairedPSCBS would use argument 'Clim'
   for 'Blim' as well, regardless of what argument 'Blim' is.  This
   bug was introduced in v0.38.3.
