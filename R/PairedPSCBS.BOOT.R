@@ -148,10 +148,15 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
       # Find extreme quantiles
       probs <- dimnames(S)[[2L]];
+      verbose && printf(verbose, "Available summaries: %s\n", paste(probs, collapse=", "));
       probs <- grep("%", probs, fixed=TRUE, value=TRUE);
       S <- S[,probs,,drop=FALSE];
       probs <- gsub("%", "", probs, fixed=TRUE);
       probs <- as.double(probs) / 100;
+      verbose && printf(verbose, "Available quantiles: %s\n", paste(probs, collapse=", "));
+      verbose && str(verbose, S);
+      # Sanity check
+      stopifnot(all(is.finite(probs)));
 
       # Is it possible to check?
       if (any(probs < 0.10) && any(probs > 0.90)) {
@@ -231,6 +236,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
   # Argument 'statsFcn':
   if (is.null(statsFcn)) {
+#    statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
     statsFcn <- function(x) {
       x <- x[!is.na(x)];
       sd <- sd(x, na.rm=FALSE);
@@ -265,58 +271,15 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   verbose && enter(verbose, "Resample (TCN,DH) signals and re-estimate (TCN,DH,C1,C2) mean levels");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Set the random seed
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (!is.null(seed)) {
-    verbose && enter(verbose, "Setting (temporary) random seed");
-    oldRandomSeed <- NULL;
-    if (exists(".Random.seed", mode="integer")) {
-      oldRandomSeed <- get(".Random.seed", mode="integer");
-    }
-    on.exit({
-      if (!is.null(oldRandomSeed)) {
-        .Random.seed <<- oldRandomSeed;
-      }
-    }, add=TRUE);
-    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
-    verbose && cat(verbose, "Seed: ", seed);
-    set.seed(seed);
-    verbose && exit(verbose);
-  }
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Extract data and estimates
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- getLocusData(fit);
-  tcnSegRows <- fit$tcnSegRows;
-  dhSegRows <- fit$dhSegRows;
-  segs <- getSegments(fit);
-  params <- fit$params;
-
-  # Sanity checks
-  stopifnot(all(!is.na(data$chromosome) & !is.na(data$x)));
-
-  # Sanity checks
-  if (!params$joinSegments) {
-    throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.");
-  }
-  if (regexpr(",", params$flavor, fixed=TRUE) != -1L) {
-    throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor));
-  }
-  # Sanity check (same as above, but just in case)
-  stopifnot(all(segs$tcnStart == segs$dhStart, na.rm=TRUE));
-  stopifnot(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE));
-
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find estimates to be done
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   stats <- statsFcn(1);
   stopifnot(!is.null(names(stats)));
   nbrOfStats <- length(stats);
   statsNames <- names(stats);
+
+  # Extract existing estimates
+  segs <- getSegments(fit);
 
   # Already done?
   tcnStatsNames <- sprintf("tcn_%s", names(stats));
