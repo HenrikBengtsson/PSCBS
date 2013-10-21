@@ -9,7 +9,7 @@
 #  A PSCBS is an object containing results from parent-specific copy-number
 #  (PSCN) segmentation.
 # }
-# 
+#
 # \usage{PSCBS(fit=list(), ...)}
 #
 # \arguments{
@@ -20,7 +20,7 @@
 # \section{Fields and Methods}{
 #  @allmethods "public"
 # }
-# 
+#
 # @author "HB"
 #
 # \seealso{
@@ -88,7 +88,7 @@ setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
   isSplitter;
 }, protected=TRUE)
 
- 
+
 ###########################################################################/**
 # @RdocMethod getSegments
 #
@@ -97,11 +97,11 @@ setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
 # \description{
 #   @get "title".
 # }
-# 
+#
 # @synopsis
 #
 # \arguments{
-#  \item{simplify}{If @TRUE, redundant and intermediate information is dropped.}#  \item{splitters}{If @TRUE, "splitters" between chromosomes are 
+#  \item{simplify}{If @TRUE, redundant and intermediate information is dropped.}#  \item{splitters}{If @TRUE, "splitters" between chromosomes are
 #     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
 # }
@@ -116,7 +116,7 @@ setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
 # \seealso{
 #   @seeclass
 # }
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE, addGaps=FALSE, ...) {
   # Argument 'splitters':
   splitters <- Arguments$getLogical(splitters);
@@ -188,12 +188,38 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
   }
 
   segs;
-}, private=TRUE) 
+}, private=TRUE)
+
+
+
+setMethodS3("getChangePoints", "PSCBS", function(fit, ...) {
+  segs <- getSegments(fit, splitters=TRUE);
+  tcn <- segs[["tcnMean"]];
+  dh <- segs[["dhMean"]];
+  C1 <- (1-dh) * tcn / 2;
+  C2 <- tcn - C1;
+  n <- length(tcn);
+
+  # Calculate observed (alpha, radius, manhattan, dc1, dc2) data
+  D1 <- C1[-n] - C1[-1L];
+  D2 <- C2[-n] - C2[-1L];
+  cps <- data.frame(
+    alpha = atan2(D2, D1), # Changepoint angles in (0,2*pi)
+    radius = sqrt(D2^2 + D1^2),
+    manhattan = abs(D2) + abs(D1),
+    d1 = D1,
+    d2 = D2
+  );
+
+  cps;
+}, private=TRUE) # getChangePoints()
 
 
 
 ############################################################################
 # HISTORY:
+# 2013-10-20
+# o Added getChangePoints() for PSCBS.
 # 2012-09-21
 # o Now getSegments(..., splitters=TRUE) for CBS and PSCBS inserts NA
 #   rows whereever there is a "gap" between segments.  A "gap" is when

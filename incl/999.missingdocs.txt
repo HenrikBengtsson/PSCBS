@@ -120,3 +120,5 @@ plotTracks plotTracks1 plotTracks2 plotTracksManyChromosomes
 getSmoothLocusData
 bootstrapSegmentsAndChangepoints
 bootstrapSegmentsAndChangepoints.PairedPSCBS
+getChangePoints getChangePoints.AbstractCBS
+getChangePoints.CBS getChangePoints.PSCBS

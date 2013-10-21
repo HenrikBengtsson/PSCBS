@@ -374,6 +374,9 @@ setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
 
 setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
+setMethodS3("getChangePoints", "AbstractCBS", abstract=TRUE);
+
+
 
 ###########################################################################/**
 # @RdocMethod resetSegments
@@ -843,6 +846,8 @@ setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2013-10-20
+# o Added abstract getChangePoints().
 # 2013-05-07
 # o Added ploidy() and ploidy()<- for AbstractCBS.
 # 2013-02-01

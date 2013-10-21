@@ -271,6 +271,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
   # Extract existing estimates
   segs <- getSegments(fit);
+  cps <- getChangePoints(fit);
 
   # Already done?
   tcnStatsNames <- sprintf("tcn_%s", names(stats));
@@ -306,6 +307,16 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- summarizeSamples(boot$segments, statsFcn=statsFcn, stats=segs, what="segment", verbose=verbose);
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Summarizing change point (alpha, radius, manhattan, d1, d2) data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (FALSE) {
+    cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, stats=cps, what="changepoint", verbose=verbose);
+  } else {
+    cps <- NULL;
+  }
+
   boot <- NULL; # Not needed anymore
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -313,6 +324,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitB <- fit;
   fitB$output <- segs;
+  fitB$changepoints <- cps;
 
   # Not needed anymore
   fit <- segs <- NULL;
@@ -788,7 +800,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
   # Compile array
   dimnames <- dimnames(D);
-  dimnames[[3L]] <- c("alpha", "radius", "manhattan", "dc1", "dc2");
+  dimnames[[3L]] <- c("alpha", "radius", "manhattan", "d1", "d2");
   dim <- dim(D);
   dim[3L] <- length(dimnames[[3L]]);
   P <- array(NA_real_, dim=dim, dimnames=dimnames);
@@ -796,8 +808,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   P[,,"alpha"] <- atan2(D[,,2], D[,,1]); # Changepoint angles in (0,2*pi)
   P[,,"radius"] <- sqrt(D[,,2]^2 + D[,,1]^2);
   P[,,"manhattan"] <- abs(D[,,2]) + abs(D[,,1]);
-  P[,,"dc1"] <- D[,,1];
-  P[,,"dc2"] <- D[,,2];
+  P[,,"d1"] <- D[,,1];
+  P[,,"d2"] <- D[,,2];
   alpha <- D <- NULL; # Not needed anymore
   verbose && str(verbose, P);
 
@@ -816,6 +828,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 ##############################################################################
 # HISTORY
 # 2013-10-20
+# o Now utilizing new getChangePoints().
 # o Now calculating change-point angles in (0,2*pi) using atan2().
 # o Added bootstrapSegmentsAndChangepoints(), which was extract from
 #   internal code of bootstrapTCNandDHByRegion().  The latter now
