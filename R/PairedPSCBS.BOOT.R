@@ -83,7 +83,11 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
     verbose && enter(verbose, sprintf("Summarizing bootstrapped %s (%s) data", what, paste(sQuote(fields), collapse=", ")));
 
-    # Allocate JxQx4 matrix S
+    # Drop the original observation
+    X <- X[,-1L,,drop=FALSE];
+    dim <- dim(X);
+
+    # Allocate JxQxF matrix S
     dim[2L] <- nbrOfStats;
     dimnames[[2L]] <- statsNames;
     S <- array(NA_real_, dim=dim, dimnames=dimnames);
@@ -102,11 +106,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 
       for (jj in seq(length=dim(X)[1L])) {
         verbose && enter(verbose, sprintf("%s #%d of %d", whatC, jj, dim(X)[1L]));
-
         Xkkjj <- Xkk[jj,,drop=TRUE]; # A vector of length B
-
         S[jj,,kk] <- statsFcn(Xkkjj);
-
         verbose && exit(verbose);
       } # for (jj ...)
 
@@ -310,7 +311,6 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   boot <- bootstrapSegmentsAndChangepoints(fit, B=B, by=by, seed=seed,
                           force=force, .debug=.debug, verbose=verbose);
 
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Summarizing segment (TCN,DH,C1,C2) mean levels
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -340,10 +340,11 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
 }, private=TRUE) # bootstrapTCNandDHByRegion()
 
 
-
-
-
-
+# \value{
+#   Returns a named @list containing two @arrays of bootstrap samples.
+#   These arrays also contains the original observation as the first
+#   element before the actual bootstrap samples.
+# }
 setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1000L, by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
@@ -513,8 +514,9 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nrow(segs);
 
-  # Allocate JxBx4 matrix M of bootstrap means
-  dim <- c(nbrOfSegments, B, 4L);
+  # Allocate Jx(B+1)x4 matrix M of bootstrap means
+  # (reserving first "b" for the original data)
+  dim <- c(nbrOfSegments, B+1L, 4L);
   dimnames <- list(NULL, NULL, c("tcn", "dh", "c1", "c2"));
   M <- array(NA_real_, dim=dim, dimnames=dimnames);
   verbose && str(verbose, M);
@@ -540,6 +542,10 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   tcnMeans <- segs[["tcnMean"]];
   dhMeans <- segs[["dhMean"]];
   isSplitter <- (is.na(chrs) & is.na(tcnIds) & is.na(dhIds));
+
+  # Record the original data
+  M[,1L,"tcn"] <- tcnMeans;
+  M[,1L,"dh"] <- dhMeans;
 
   # Get all segment indices except for "splitters"
   jjs <- seq(length=nbrOfSegments);
@@ -719,8 +725,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     # Defaults
     idxsDHBB <- NULL;
 
-    # Bootstrap B times
-    for (bb in seq(length=B)) {
+    # Bootstrap B times (reserving first column for the original data)
+    for (bb in seq(from=2L, to=B+1L, by=1L)) {
       # (1) Bootstrap DHs
       if (shouldHaveDHs) {
         # (a) Resample heterozygous SNPs (=> resampled DH units)
@@ -795,34 +801,30 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # Bootstrap polar (alpha,radius,manhattan) for change points
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Calculating polar (alpha,radius,manhattan) for change points");
-  dM <- M[-nbrOfSegments,,,drop=FALSE] - M[-1L,,,drop=FALSE];
-  verbose && str(verbose, dM);
+  C <- M[,,c("c1","c2"), drop=FALSE];
+  D <- C[-nbrOfSegments,,] - C[-1L,,];
+  verbose && str(verbose, D);
   # Sanity check
-  stopifnot(all(!is.nan(dM)));
+  stopifnot(all(!is.nan(D)));
+  C <- NULL; # Not needed anymore
 
   # Compile array
-  dimnames <- dimnames(dM);
+  dimnames <- dimnames(D);
   dimnames[[3L]] <- c("alpha", "radius", "manhattan", "dc1", "dc2");
-  dim <- dim(dM);
+  dim <- dim(D);
   dim[3L] <- length(dimnames[[3L]]);
   P <- array(NA_real_, dim=dim, dimnames=dimnames);
 
-  alpha <- atan(dM[,,"c2"]/dM[,,"c1"]);
-  isNeg <- (!is.na(alpha) & (sign(alpha) < 0));
-  alpha[isNeg] <- alpha[isNeg] + pi;
-  P[,,"alpha"] <- alpha;
-  P[,,"radius"] <- sqrt(dM[,,"c2"]^2 + dM[,,"c1"]^2);
-  P[,,"manhattan"] <- abs(dM[,,"c2"]) + abs(dM[,,"c1"]);
-  P[,,"dc1"] <- dM[,,"c1"];
-  P[,,"dc2"] <- dM[,,"c2"];
-
+  P[,,"alpha"] <- atan2(D[,,2], D[,,1]); # Changepoint angles in (0,2*pi)
+  P[,,"radius"] <- sqrt(D[,,2]^2 + D[,,1]^2);
+  P[,,"manhattan"] <- abs(D[,,2]) + abs(D[,,1]);
+  P[,,"dc1"] <- D[,,1];
+  P[,,"dc2"] <- D[,,2];
+  alpha <- D <- NULL; # Not needed anymore
   verbose && str(verbose, P);
 
   # Sanity check
   stopifnot(all(!is.nan(P)));
-  Pt <- P[,,c("alpha", "radius", "manhattan")];
-  stopifnot(all(is.na(Pt) | Pt > 0));
-  Pt <- NULL; # Not needed anymore
   verbose && exit(verbose);
 
 
@@ -836,6 +838,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 ##############################################################################
 # HISTORY
 # 2013-10-20
+# o Now calculating change-point angles using atan2().
 # o Added bootstrapSegmentsAndChangepoints(), which was extract from
 #   internal code of bootstrapTCNandDHByRegion().  The latter now utilizes
 #   the former.
