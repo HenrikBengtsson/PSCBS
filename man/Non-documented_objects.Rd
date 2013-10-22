@@ -296,6 +296,12 @@
 \alias{getChangePoints.AbstractCBS}
 \alias{getChangePoints.CBS}
 \alias{getChangePoints.PSCBS}
+\alias{clearBootstrapSummaries}
+\alias{clearBootstrapSummaries.PairedPSCBS}
+\alias{findBootstrapSummaries}
+\alias{findBootstrapSummaries.PairedPSCBS}
+\alias{hasBootstrapSummaries}
+\alias{hasBootstrapSummaries.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

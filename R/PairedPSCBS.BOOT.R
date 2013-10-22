@@ -691,7 +691,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
       dMu <- (mu - tcnMeans[jj]);
       if (abs(dMu) > tol) {
         str(list(nbrOfTCNs=nbrOfTCNs, tcnNbrOfLoci=segJJ$tcnNbrOfLoci, mu=mu, tcnMean=tcnMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])));
-        throw(sprintf("INTERNAL ERROR: Incorrect recalculated TCN mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, tcnMeans[jj]));
+        throw(sprintf("INTERNAL ERROR: Incorrectly recalculated TCN mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, tcnMeans[jj]));
       }
     }
 
@@ -703,7 +703,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
       dMu <- (mu - dhMeans[jj]);
       if (abs(dMu) > tol) {
         str(list(nbrOfDHs=nbrOfDHs, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=dhMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])));
-        throw(sprintf("INTERNAL ERROR: Incorrect recalculated DN mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, dhMeans[jj]));
+        throw(sprintf("INTERNAL ERROR: Incorrectly recalculated DH mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, dhMeans[jj]));
       }
     }
 
@@ -845,9 +845,77 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
 
 
+setMethodS3("findBootstrapSummaries", "PairedPSCBS", function(fit, what=c("segment", "changepoint"), ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'what':
+  what <- match.arg(what);
+
+  if (what == "segment") {
+    data <- getSegments(fit);
+  } else if (what == "changepoint") {
+    data <- getChangePoints(fit);
+  }
+
+  grep("^[^_]+_[^_]+$", colnames(data), value=TRUE);
+}, protected=TRUE) # findBootstrapSummaries()
+
+
+setMethodS3("hasBootstrapSummaries", "PairedPSCBS", function(fit, ...) {
+  fields <- findBootstrapSummaries(fit, ...);
+  (length(fields) > 0L);
+})
+
+setMethodS3("clearBootstrapSummaries", "PairedPSCBS", function(fit, what=c("segment", "changepoint"), ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'what':
+  what <- unique(match.arg(what, several.ok=TRUE));
+
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+  verbose && enter(verbose, "Clearing bootstrap summaries");
+
+  whats <- what;
+  for (what in whats) {
+    verbose && enter(verbose, sprintf("Clearing %ss", what));
+
+    fields <- findBootstrapSummaries(fit, what=what, ...);
+    if (what == "segment") {
+      data <- getSegments(fit);
+      data <- data[,!is.element(colnames(data), fields)];
+      fit$output <- data;
+    } else if (what == "changepoint") {
+      data <- getChangePoints(fit);
+      data <- data[,!is.element(colnames(data), fields)];
+      fit$changepoints <- data;
+    }
+    # Sanity check
+    fields <- findBootstrapSummaries(fit, what=what, ...);
+    stopifnot(length(fields) == 0L);
+
+    data <- fields <- NULL; # Not needed anymoew
+
+    verbose && exit(verbose);
+  } # for (what ...)
+
+  verbose && exit(verbose);
+
+  fit;
+}, protected=TRUE) # clearBootstrapSummaries()
+
+
 ##############################################################################
 # HISTORY
 # 2013-10-21
+# o Added find-, has- and clearBootstrapSummaries().
 # o Added argument 'what' to bootstrapTCNandDHByRegion().
 # o BUG FIX: The new bootstrapSegmentsAndChangepoints() would give
 #   "Error in D[, , 2] : incorrect number of dimensions" if bootstrapping

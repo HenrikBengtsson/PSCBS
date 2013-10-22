@@ -1,29 +1,39 @@
-setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALSE) {
+setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL, append=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'FUN':
   stopifnot(is.function(FUN));
+
+  # Argument 'subset':
+  if (!is.null(subset)) {
+    subset <- Arguments$getIndices(subset, range=c(1, nbrOfSegments(fit)));
+  }
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose);
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
+  }
 
 
   verbose && enter(verbose, "Apply function region by region");
+  verbose && cat(verbose, "Segments:");
+  verbose && str(verbose, subset);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data and estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
+  segs <- getSegments(fit);
   tcnSegRows <- fit$tcnSegRows;
   dhSegRows <- fit$dhSegRows;
-  segs <- getSegments(fit);
   params <- fit$params;
+
+  segs0 <- segs;
+  data0 <- data;
 
   # Sanity checks
   if (!params$joinSegments) {
@@ -36,16 +46,22 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALS
   stopifnot(length(tcnSegRows) == length(dhSegRows));
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # For each segment...
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
 
-  # Allocate result objects
-  dataN <- outputN <- dataRowsN <- NULL;
+  # Allocate result objects?
+  if (append) {
+    dataN <- outputN <- dataRowsN <- NULL;
+  }
 
-  for (rr in seq(length=nbrOfSegments)) {
+  if (is.null(subset)) {
+    subset <- seq_len(nbrOfSegments);
+  }
+
+  for (rr in subset) {
     verbose && enter(verbose, sprintf("Segment #%d of %d", rr, nbrOfSegments));
 
     # Extract segment
@@ -80,53 +96,101 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALS
     verbose && str(verbose, dataRR, level=-20);
 
     verbose && enter(verbose, "Applying function 'FUN' to segment");
-    resRR <- FUN(kk, segRR, dataRR, ...);
+    resRR <- FUN(rr, segRR, dataRR, ...);
     verbose && cat(verbose, "Returned result:");
     verbose && str(verbose, resRR, level=-20);
     verbose && exit(verbose);
 
     # Nothing to update/store?
-    if (is.null(resRR)) {
-      verbose && cat(verbose, "Segment and its data was dropped: ", rr);
+    if (!is.list(resRR)) {
+      verbose && cat(verbose, "Nothing more to do for this segment since nothing was returned: ", rr);
       verbose && exit(verbose);
       next;
     }
 
-    # Update locus-level data?
+    # Extract return data
     dataRRN <- resRR$data;
-    dataRowsRRN <- c(1L, nrow(dataRRN));
-    if (!is.null(dataN)) {
-      dataRowsRRN <- dataRowsRRN + nrow(dataN);
-    }
-    dataN <- rbind(dataN, dataRRN);
-
-    # Update segment table?
     segRRN <- resRR$output;
-    outputN <- rbind(outputN, segRRN);
-    dataRowsN <- rbind(dataRowsN, dataRowsRRN);
+    # Sanity check
+    stopifnot(!is.null(dataRRN));
+    stopifnot(is.data.frame(dataRRN));
+    stopifnot(!is.null(segRRN));
+    stopifnot(is.data.frame(segRRN));
 
-    # Sanity checks
-    stopifnot(nrow(dataN) == max(dataRowsN, na.rm=TRUE));
-    stopifnot(nrow(outputN) == nrow(dataRowsN));
+    if (append) {
+      # Modified locus-level data
+      dataRowsRRN <- c(1L, nrow(dataRRN));
+      if (!is.null(dataN)) {
+        dataRowsRRN <- dataRowsRRN + nrow(dataN);
+      }
+      dataN <- rbind(dataN, dataRRN);
+      # Sanity checks
+      stopifnot(nrow(dataN) == max(dataRowsN, na.rm=TRUE));
+
+      # Update segment table?
+      outputN <- rbind(outputN, segRRN);
+      dataRowsN <- rbind(dataRowsN, dataRowsRRN);
+      # Sanity check
+      stopifnot(nrow(outputN) == nrow(dataRowsN));
+      # Sanity checks
+      stopifnot(nrow(dataN) == max(dataRowsN, na.rm=TRUE));
+    } else {
+      # Modified locus-level data
+      verbose && enter(verbose, "Updating locus-level data");
+      # Sanity check
+      stopifnot(dim(dataRRN) == dim(dataRR));
+      stopifnot(length(dataRowsRR) == nrow(dataRRN));
+      data[dataRowsRR,] <- dataRRN;
+      str(data[dataRowsRR,]);
+      verbose && exit(verbose);
+
+      # Modified segment data
+      verbose && enter(verbose, "Updating segment data");
+      # Sanity check
+      stopifnot(dim(segRRN) == dim(segRR));
+      segs[rr,] <- segRRN;
+      verbose && exit(verbose);
+    }
+
+    # Not needed anymore
+    dataRRN <- segRRN <- NULL;
+    dataRR <- segRR <- NULL;
+    resRR <- NULL;
 
     verbose && exit(verbose);
   } # for (rr ...)
 
-  rownames(dataRowsN) <- NULL;
-  colnames(dataRowsN) <- colnames(dataRows);
-  dataRowsN <- as.data.frame(dataRowsN);
+  if (append) {
+    if (!is.null(dataRowsN)) {
+      rownames(dataRowsN) <- NULL;
+      colnames(dataRowsN) <- colnames(dataRows);
+      dataRowsN <- as.data.frame(dataRowsN);
+      # Sanity checks
+      stopifnot(!is.null(dataN));
+      stopifnot(!is.null(outputN));
+      stopifnot(!is.null(dataRowsN));
 
-  # Sanity checks
-  stopifnot(!is.null(dataN));
-  stopifnot(!is.null(outputN));
-  stopifnot(!is.null(dataRowsN));
+      data <- dataN;
+      segs <- outputN;
 
-  # Create result
+      # Not needed anymore
+      dataN <- outputN <- NULL;
+    }
+  }
+
+  # Return result
   res <- fit; # "clone"
-  res$data <- dataN;
-  res$output <- outputN;
-  res$tcnSegRows <- dataRowsN;
-  res$dhSegRows <- dataRowsN;  # Is this really the case? /HB 2011-01-17
+  res$data <- data;
+  res$output <- segs;
+
+  # Not needed anymore
+  data <- segs <- NULL;
+
+  # Update segment-to-locus index tables
+  if (append && !is.null(dataRowsN)) {
+    res$tcnSegRows <- dataRowsN;
+    res$dhSegRows <- dataRowsN;  # Is this really the case? /HB 2011-01-17
+  }
 
   verbose && exit(verbose);
 
@@ -234,6 +298,8 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., verbose=FALS
 
 #############################################################################
 # HISTORY:
+# 2013-10-21
+# o Added argument 'subset' to applyByRegion() for PairedPSCBS.
 # 2011-06-14
 # o Updated code to recognize new column names.
 # 2011-01-27

@@ -122,3 +122,6 @@ bootstrapSegmentsAndChangepoints
 bootstrapSegmentsAndChangepoints.PairedPSCBS
 getChangePoints getChangePoints.AbstractCBS
 getChangePoints.CBS getChangePoints.PSCBS
+clearBootstrapSummaries clearBootstrapSummaries.PairedPSCBS
+findBootstrapSummaries findBootstrapSummaries.PairedPSCBS
+hasBootstrapSummaries hasBootstrapSummaries.PairedPSCBS
