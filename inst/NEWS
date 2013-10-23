@@ -2,7 +2,8 @@
 Package: PSCBS
 ==============
 
-Version: 0.39.0 [2013-10-21]
+Version: 0.39.0 [2013-10-22]
+o Added getBootstrapLocusSets() for PairedPSCBS.
 o Added argument 'subset' to applyByRegion() for PairedPSCBS.
 o Added clearBootstrapSummaries() for PairedPSCBS.
 o Now bootstrapping also provides standard deviation summarizes.

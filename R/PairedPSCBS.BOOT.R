@@ -123,7 +123,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     T <- wrap(S, map=list(1,NA), sep="_");
     colnames(T) <- gsub("(.*)_(.*)", "\\2_\\1", colnames(T));
 
-    # Append as new columns to the changepoint table
+    # Append as new columns to the summary table
     stats <- cbind(stats, T);
 
     # Drop previously estimated values
@@ -323,8 +323,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     segs <- summarizeSamples(boot$segments, statsFcn=statsFcn, stats=segs, what="segment", verbose=verbose);
     # Record statistics
     fitB$output <- segs;
+    segs <- NULL; # Not needed anymore
   }
-  segs <- NULL; # Not needed anymore
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Summarizing change point (alpha, radius, manhattan, d1, d2) data
@@ -333,8 +333,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
     cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, stats=cps, what="changepoint", verbose=verbose);
     # Record statistics
     fitB$changepoints <- cps;
+    cps <- NULL; # Not needed anymore
   }
-  cps <- NULL; # Not needed anymore
 
   # Not needed anymore
   fit <- boot <- NULL;

@@ -5,7 +5,7 @@ Imports: R.methodsS3 (>= 1.5.2), R.oo (>= 1.15.8), R.utils (>= 1.27.1), R.cache 
 Suggests: aroma.light (>= 1.30.5), Hmisc (>= 3.12-2),
   R.rsp (>= 0.9.28), R.devices (>= 2.7.2), ggplot2 (>= 0.9.3.1)
 VignetteBuilder: R.rsp
-Date: 2013-10-21
+Date: 2013-10-22
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

@@ -32,9 +32,6 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
   dhSegRows <- fit$dhSegRows;
   params <- fit$params;
 
-  segs0 <- segs;
-  data0 <- data;
-
   # Sanity checks
   if (!params$joinSegments) {
     throw("Cannot applyByRegion() unless PSCNs are segmented using joinSegments=TRUE.");
