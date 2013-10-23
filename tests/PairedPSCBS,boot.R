@@ -49,7 +49,7 @@ segsT <- getSegments(fitT)
 # Truth
 bootT <- bootstrapSegmentsAndChangepoints(fitT, B=B, seed=seed)
 bootT <- bootT$segments[1L,,,drop=FALSE]
-types <- dimnames(boot)[[3L]]
+types <- dimnames(bootT)[[3L]]
 dim(bootT) <- dim(bootT)[-1L]
 colnames(bootT) <- types
 sumsT <- apply(bootT, MARGIN=2L, FUN=quantile, probs=probs)
