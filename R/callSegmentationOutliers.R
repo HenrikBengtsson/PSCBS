@@ -12,7 +12,7 @@
 #
 # \arguments{
 #   \item{y}{A @numeric @vector of J genomic signals to be segmented.}
-#   \item{chromosome}{(Optional) An @integer scalar 
+#   \item{chromosome}{(Optional) An @integer scalar
 #       (or a @vector of length J contain a unique value).
 #       Only used for annotation purposes.}
 #   \item{x}{Optional @numeric @vector of J genomic locations.
@@ -27,7 +27,7 @@
 # \value{
 #   Returns @logical @vector of length J.
 # }
-# 
+#
 # \section{Missing and non-finite values}{
 #   Signals as well as genomic positions may contain missing
 #   values, i.e. @NAs or @NaNs.  By definition, these cannot
@@ -42,7 +42,7 @@
 # }
 #
 # @keyword IO
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=NULL, method="DNAcopy::smooth.CNA", ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -131,8 +131,13 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     yKK <- yKK[o];
     chromosomeKK <- chromosomeKK[o];
     keepKK <- keepKK[o];
-    
-    dataKK <- DNAcopy::CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE);
+
+    # Supress all warnings, in order to avoid warnings by DNAcopy::CNA()
+    # on "array has repeated maploc positions".  Ideally we should filter
+    # just those out. /HB 2013-10-22
+    suppressWarnings({
+      dataKK <- DNAcopy::CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE);
+    });
     yKKs <- DNAcopy::smooth.CNA(dataKK, ...)$y;
 
     # Sanity check

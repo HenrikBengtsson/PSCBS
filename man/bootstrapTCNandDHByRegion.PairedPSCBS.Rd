@@ -19,13 +19,16 @@
 }
 
 \usage{
-\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000L, probs=c(0.025, 0.05, 0.95, 0.975), statsFcn=NULL,
-  by=c("betaTN", "betaT"), what=c("segment", "changepoint"), force=FALSE, seed=NULL,
-  verbose=FALSE, .debug=FALSE, ...)
+\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000L, boot=NULL, probs=c(0.025, 0.05, 0.95, 0.975),
+  statsFcn=NULL, by=c("betaTN", "betaT"), what=c("segment", "changepoint"), force=FALSE,
+  seed=NULL, verbose=FALSE, .debug=FALSE, ...)
 }
 
 \arguments{
   \item{B}{A postive \code{\link[base]{integer}} specifying the number of bootstrap samples.}
+  \item{boot}{Alternatively, to generating \code{B} bootstrap samples,
+     this specifies a pre-generated set of bootstrap samples as
+     returned by \code{bootstrapSegmentsAndChangepoints()}.}
   \item{probs}{The default quantiles to be estimated.}
   \item{statsFcn}{A (optional) \code{\link[base]{function}} that estimates confidence
      intervals given locus-level data.

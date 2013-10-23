@@ -12,6 +12,9 @@
 #
 # \arguments{
 #   \item{B}{A postive @integer specifying the number of bootstrap samples.}
+#   \item{boot}{Alternatively, to generating \code{B} bootstrap samples,
+#      this specifies a pre-generated set of bootstrap samples as
+#      returned by \code{bootstrapSegmentsAndChangepoints()}.}
 #   \item{probs}{The default quantiles to be estimated.}
 #   \item{statsFcn}{A (optional) @function that estimates confidence
 #      intervals given locus-level data.
@@ -40,7 +43,7 @@
 # }
 #
 #*/###########################################################################
-setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), what=c("segment", "changepoint"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
+setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, boot=NULL, probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), what=c("segment", "changepoint"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
 
@@ -313,8 +316,12 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Bootstrap (TCN,DH,C1,C2) segment mean levels
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  boot <- bootstrapSegmentsAndChangepoints(fit, B=B, by=by, seed=seed,
-                          force=force, .debug=.debug, verbose=verbose);
+  if (is.null(boot)) {
+    boot <- bootstrapSegmentsAndChangepoints(fit, B=B, by=by, seed=seed,
+                            force=force, .debug=.debug, verbose=verbose);
+  } else {
+    B <- dim(boot$segments)[2L];
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Summarizing segment (TCN,DH,C1,C2) mean levels

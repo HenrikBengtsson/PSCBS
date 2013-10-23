@@ -48,11 +48,11 @@ segsT <- getSegments(fitT)
 
 # Truth
 bootT <- bootstrapSegmentsAndChangepoints(fitT, B=B, seed=seed)
-bootT <- bootT$segments[1L,,,drop=FALSE]
-types <- dimnames(bootT)[[3L]]
-dim(bootT) <- dim(bootT)[-1L]
-colnames(bootT) <- types
-sumsT <- apply(bootT, MARGIN=2L, FUN=quantile, probs=probs)
+bootT1 <- bootT$segments[1L,,,drop=FALSE]
+types <- dimnames(bootT1)[[3L]]
+dim(bootT1) <- dim(bootT1)[-1L]
+colnames(bootT1) <- types
+sumsT <- apply(bootT1, MARGIN=2L, FUN=quantile, probs=probs)
 print(sumsT)
 
 fitTB <- bootstrapTCNandDHByRegion(fitT, B=B, seed=seed)
@@ -64,6 +64,11 @@ print(segsTB)
 
 # Sanity check
 stopifnot(all.equal(segsTB, sumsT))
+
+# Calculate summaries using the existing bootstrap samples
+fitTBp <- bootstrapTCNandDHByRegion(fitT, .boot=bootT)
+# Sanity check
+all.equal(fitTBp, fitTB)
 
 
 # Bootstrap from scratch
@@ -78,11 +83,11 @@ dhT <- apply(dhT, MARGIN=2L, FUN=median, na.rm=TRUE)
 c1T <- (1-dhT) * tcnT / 2
 c2T <- tcnT - c1T
 bootT2 <- array(c(tcnT, dhT, c1T, c2T), dim=c(1L, 4L))
-colnames(bootT2) <- colnames(bootT)
+colnames(bootT2) <- colnames(bootT1)
 print(bootT2)
 
 # This comparison is only valid if B == 1L
 if (B == 1L) {
   # Sanity check
-  stopifnot(all.equal(bootT2, bootT))
+  stopifnot(all.equal(bootT2, bootT1))
 }
