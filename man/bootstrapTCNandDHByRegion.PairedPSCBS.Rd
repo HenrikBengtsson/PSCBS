@@ -19,9 +19,9 @@
 }
 
 \usage{
-\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000L, boot=NULL, probs=c(0.025, 0.05, 0.95, 0.975),
-  statsFcn=NULL, by=c("betaTN", "betaT"), what=c("segment", "changepoint"), force=FALSE,
-  seed=NULL, verbose=FALSE, .debug=FALSE, ...)
+\method{bootstrapTCNandDHByRegion}{PairedPSCBS}(fit, B=1000L, boot=NULL, ..., probs=c(0.025, 0.05, 0.95,
+  0.975), statsFcn=NULL, what=c("segment", "changepoint"), force=FALSE, verbose=FALSE,
+  .debug=FALSE)
 }
 
 \arguments{
@@ -29,20 +29,17 @@
   \item{boot}{Alternatively, to generating \code{B} bootstrap samples,
      this specifies a pre-generated set of bootstrap samples as
      returned by \code{bootstrapSegmentsAndChangepoints()}.}
+  \item{...}{Additional arguments passed to \code{bootstrapSegmentsAndChangepoints()}.}
   \item{probs}{The default quantiles to be estimated.}
   \item{statsFcn}{A (optional) \code{\link[base]{function}} that estimates confidence
      intervals given locus-level data.
      If \code{\link[base]{NULL}}, the \code{\link[stats]{quantile}} function is used.}
-  \item{by}{A \code{\link[base]{character}} specifying whether DH should be calculated from
-     normalized ('betaTN') or non-normalized ('betaT') tumor BAFs.}
   \item{what}{A \code{\link[base]{character}} \code{\link[base]{vector}} specifying what to bootstrap.}
   \item{force}{If \code{\link[base:logical]{TRUE}}, already existing estimates are ignored,
      otherwise not.}
-  \item{seed}{(optional) A random seed.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
   \item{.debug}{(internal) If \code{\link[base:logical]{TRUE}}, additional sanity checks are
      performed internally.}
-  \item{...}{Not used.}
 }
 
 \value{
