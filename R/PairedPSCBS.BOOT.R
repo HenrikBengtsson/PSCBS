@@ -15,20 +15,17 @@
 #   \item{boot}{Alternatively, to generating \code{B} bootstrap samples,
 #      this specifies a pre-generated set of bootstrap samples as
 #      returned by \code{bootstrapSegmentsAndChangepoints()}.}
+#   \item{...}{Additional arguments passed to \code{bootstrapSegmentsAndChangepoints()}.}
 #   \item{probs}{The default quantiles to be estimated.}
 #   \item{statsFcn}{A (optional) @function that estimates confidence
 #      intervals given locus-level data.
 #      If @NULL, the @see "stats::quantile" function is used.}
-#   \item{by}{A @character specifying whether DH should be calculated from
-#      normalized ('betaTN') or non-normalized ('betaT') tumor BAFs.}
 #   \item{what}{A @character @vector specifying what to bootstrap.}
 #   \item{force}{If @TRUE, already existing estimates are ignored,
 #      otherwise not.}
-#   \item{seed}{(optional) A random seed.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #   \item{.debug}{(internal) If @TRUE, additional sanity checks are
 #      performed internally.}
-#   \item{...}{Not used.}
 # }
 #
 # \value{
@@ -43,7 +40,7 @@
 # }
 #
 #*/###########################################################################
-setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, boot=NULL, probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, by=c("betaTN", "betaT"), what=c("segment", "changepoint"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
+setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, boot=NULL, ..., probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, what=c("segment", "changepoint"), force=FALSE, verbose=FALSE, .debug=FALSE) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
 
@@ -240,19 +237,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
     statsFcn <- function(x) quantile(x, probs=probs, na.rm=TRUE);
   }
 
-  # Argument 'by':
-  by <- match.arg(by);
-
-  # Argument 'seed':
-  if (!is.null(seed)) {
-    seed <- Arguments$getInteger(seed);
-  }
-
   # Argument 'what':
   what <- unique(match.arg(what, several.ok=TRUE));
-
-  # Argument '.debug':
-  .debug <- Arguments$getLogical(.debug);
 
   # Argument 'force':
   force <- Arguments$getLogical(force);
@@ -263,6 +249,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
     pushState(verbose);
     on.exit(popState(verbose));
   }
+
+  # Argument '.debug':
+  .debug <- Arguments$getLogical(.debug);
 
 
 
@@ -317,8 +306,8 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
   # Bootstrap (TCN,DH,C1,C2) segment mean levels
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.null(boot)) {
-    boot <- bootstrapSegmentsAndChangepoints(fit, B=B, by=by, seed=seed,
-                            force=force, .debug=.debug, verbose=verbose);
+    boot <- bootstrapSegmentsAndChangepoints(fit, B=B, ...,
+                         force=force, .debug=.debug, verbose=verbose);
   } else {
     B <- dim(boot$segments)[2L];
   }
@@ -352,12 +341,20 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
 }, private=TRUE) # bootstrapTCNandDHByRegion()
 
 
+
+
+
+#   \item{by}{A @character specifying whether DH should be calculated from
+#      normalized ('betaTN') or non-normalized ('betaT') tumor BAFs.}
+#   \item{seed}{(optional) A random seed.}
+#
+#
 # \value{
 #   Returns a named @list containing two @arrays of bootstrap samples.
 #   These arrays also contains the original observation as the first
 #   element before the actual bootstrap samples.
 # }
-setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1000L, by=c("betaTN", "betaT"), force=FALSE, seed=NULL, verbose=FALSE, .debug=FALSE, ...) {
+setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1000L, by=c("betaTN", "betaT"), seed=NULL, force=FALSE, cache=FALSE, verbose=FALSE, .debug=FALSE, ...) {
   # Settings for sanity checks
   tol <- getOption("PSCBS/sanityChecks/tolerance", 0.0005);
 
@@ -376,8 +373,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     seed <- Arguments$getInteger(seed);
   }
 
-  # Argument '.debug':
-  .debug <- Arguments$getLogical(.debug);
+  # Argument '.cache':
+  cache <- Arguments$getLogical(cache);
 
   # Argument 'force':
   force <- Arguments$getLogical(force);
@@ -389,9 +386,26 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     on.exit(popState(verbose));
   }
 
+  # Argument '.debug':
+  .debug <- Arguments$getLogical(.debug);
+
 
 
   verbose && enter(verbose, "Bootstrapping (TCN,DH,C1,C2) segment mean levels");
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Check for cached results
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  key <- list(method="bootstrapSegmentsAndChangepoints", class=class(fit)[1L],
+              fit=fit, B=B, by=by, seed=seed);
+  dirs <- c("PSCBS", "bootstrap");
+  boot <- loadCache(key=key, dirs=dirs);
+  if (!force && !is.null(boot)) {
+    verbose && cat(verbose, "Found cached results. Skipping.");
+    verbose && exit(verbose);
+    return(boot);
+  }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Set the random seed
@@ -537,10 +551,10 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   idxsRho <- which(!is.na(rho));
 
   # Vectorized pre-adjustments
-  for (key in c("tcnNbrOfLoci", "dhNbrOfLoci")) {
-    counts <- segs[[key]];
+  for (field in c("tcnNbrOfLoci", "dhNbrOfLoci")) {
+    counts <- segs[[field]];
     counts[is.na(counts)] <- 0L;
-    segs[[key]] <- counts;
+    segs[[field]] <- counts;
   }
 
   hasTcnLoci <- (is.finite(tcnSegRows[,1L]) & is.finite(tcnSegRows[,2L]));
@@ -844,10 +858,17 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   stopifnot(all(!is.nan(P)));
   verbose && exit(verbose);
 
+  boot <- list(segments=M, changepoints=P);
+
+  # Cache?
+  if (cache) {
+    saveCache(boot, key=key, dirs=dirs);
+    verbose && cat(verbose, "Saved results to cache.");
+  }
 
   verbose && exit(verbose);
 
-  list(segments=M, changepoints=P);
+  boot;
 }, private=TRUE) # bootstrapSegmentsAndChangepoints()
 
 
@@ -921,6 +942,9 @@ setMethodS3("clearBootstrapSummaries", "PairedPSCBS", function(fit, what=c("segm
 
 ##############################################################################
 # HISTORY
+# 2013-10-22
+# o SPEEDUP: Added argument 'cache' to bootstrapSegmentsAndChangepoints(),
+#   which caches the results to file if cache=TRUE.
 # 2013-10-21
 # o Added find-, has- and clearBootstrapSummaries().
 # o Added argument 'what' to bootstrapTCNandDHByRegion().
