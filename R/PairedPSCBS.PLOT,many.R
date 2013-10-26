@@ -255,9 +255,21 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   }
 
   # To please R CMD check
-  CT <- muN <- betaT <- betaN <- betaTN <- NULL;
-  rm(list=c("CT", "muN", "betaT", "betaN", "betaTN"));
+  CT <- rho <- muN <- betaT <- betaN <- betaTN <- NULL;
+  rm(list=c("CT", "rho", "muN", "betaT", "betaN", "betaTN"));
   attachLocally(data);
+
+  # BACKWARD COMPATIBILITY:
+  # If 'rho' is not available, recalculate it from tumor BAFs.
+  # NOTE: This should throw an error in the future. /HB 2013-10-25
+  if (is.null(data$rho)) {
+    isSnp <- (!is.na(betaTN) & !is.na(muN));
+    isHet <- isSnp & (muN == 1/2);
+    rho <- rep(NA_real_, length=nbrOfLoci);
+    rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
+    warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
+  }
+
   x <- xScale * x;
   vs <- xScale * fit$chromosomeStats[,1:2,drop=FALSE];
   mids <- (vs[,1]+vs[,2])/2;
@@ -398,11 +410,6 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
       plot(NA, xlim=xlim, ylim=Blim, xlab=xlab, ylab="DH", axes=FALSE);
       if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
       if (!is.na(pchT)) {
-        isSnp <- (!is.na(betaTN) & !is.na(muN));
-        isHet <- isSnp & (muN == 1/2);
-        naValue <- as.double(NA);
-        rho <- rep(naValue, length=nbrOfLoci);
-        rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
         points(x, rho, pch=pchT, col=colS);
       }
       drawConfidenceBands(fit, what="dh", quantiles=quantiles, col=colC["dh"], xScale=xScale);
@@ -511,6 +518,11 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
 ############################################################################
 # HISTORY:
+# 2013-10-25
+# o Now plotTracksManyChromosomes() uses the locus data field 'rho'
+#   when plotting DH locus-level data.  It only recalculates it from
+#   the tumor BAFs if the DH signals are not available - if so a
+#   warning is generated.
 # 2013-10-20
 # o BUG FIX: plotTracksManyChromosomes() for PairedPSCBS would use
 #   Blim=Clim, regardless of what argument 'Blim' was.

@@ -50,8 +50,14 @@ setMethodS3("getLocusData", "NonPairedPSCBS", function(fit, ..., fields=c("asis"
 
     data$isHet <- (data$muN == 1/2);
 
-    data$rho <- 2*abs(data$betaT-1/2);
-    data$rho[!data$isHet] <- NA;
+    # BACKWARD COMPATIBILITY: If 'rho' does not exists, calculate
+    # it on the fly from 'betaT'.
+    # NOTE: This should give an error in the future. /HB 2013-10-25
+    if (is.null(data$rho)) {
+      data$rho <- 2*abs(data$betaT-1/2);
+      data$rho[!data$isHet] <- NA_real_;
+      warning("Locus-level DH signals ('rho') did not exist and were calculated from tumor BAFs ('betaT')");
+    }
 
     data$c1 <- 1/2*(1-data$rho)*data$CT;
     data$c2 <- data$CT - data$c1;

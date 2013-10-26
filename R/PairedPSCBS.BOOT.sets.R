@@ -97,9 +97,6 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   params <- fit$params;
 
   # Sanity checks
-  stopifnot(all(!is.na(data$chromosome) & !is.na(data$x)));
-
-  # Sanity checks
   if (!params$joinSegments) {
     throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.");
   }
@@ -120,6 +117,13 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   CT <- data$CT;
   betaT <- data[[by]];
   muN <- data$muN;
+
+  # Not needed anymore
+  data <- NULL;
+
+  # Sanity checks
+  stopifnot(all(!is.na(chromosome) & !is.na(x)));
+
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,8 +179,6 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   # DH is by definition only defined for heterozygous SNPs.
   # For simplicity, we set it to be NA for non-heterozygous loci.
   rho[!isHet] <- NA;
-
-  data$rho <- rho;
 
   # Not needed anymore
   betaT <- NULL;

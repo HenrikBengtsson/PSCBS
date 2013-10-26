@@ -53,8 +53,14 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
       data$muN <- callNaiveGenotypes(data$betaN);
     }
     data$isHet <- (data$muN == 1/2);
-
-    data$rho <- 2*abs(data$betaT-1/2);
+    # BACKWARD COMPATIBILITY: If 'rho' does not exists, calculate
+    # it on the fly from 'betaT'.
+    # NOTE: This should give an error in the future. /HB 2013-10-25
+    if (is.null(data$rho)) {
+      data$rho <- 2*abs(data$betaT-1/2);
+      data$rho[!data$isHet] <- NA_real_;
+      warning("Locus-level DH signals ('rho') did not exist and were calculated from tumor BAFs ('betaT')");
+    }
     data$c1 <- 1/2*(1-data$rho)*data$CT;
     data$c2 <- data$CT - data$c1;
 
@@ -64,6 +70,7 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
       data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
     }
     data$rhoN <- 2*abs(data$betaTN-1/2);
+    data$rhoN[!data$isHet] <- NA_real_;
     data$c1N <- 1/2*(1-data$rhoN)*data$CT;
     data$c2N <- data$CT - data$c1N;
 
@@ -415,6 +422,9 @@ setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
 
 ##############################################################################
 # HISTORY
+# 2013-10-25
+# o BUG FIX: The 'rho' signals returned by getLocusData(..., fields="full")
+#   for PairedPSCBS would have values also for homozygote SNPs.
 # 2013-03-08
 # o Added getLocusData() for PairedPSCBS.
 # 2012-04-21

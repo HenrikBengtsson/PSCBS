@@ -75,7 +75,18 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   betaN <- data$betaN;
   betaTN <- data$betaTN;
   muN <- data$muN;
+  isSnp <- (!is.na(betaTN) & !is.na(muN));
+  isHet <- isSnp & (muN == 1/2);
   nbrOfLoci <- length(x);
+
+  # BACKWARD COMPATIBILITY:
+  # If 'rho' is not available, recalculate it from tumor BAFs.
+  # NOTE: This should throw an error in the future. /HB 2013-10-25
+  if (is.null(data$rho)) {
+    rho <- rep(NA_real_, length=nbrOfLoci);
+    rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
+    warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
+  }
 
   # Extract the segmentation
   segs <- as.data.frame(fit);
@@ -219,11 +230,6 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
         ylab <- expression(BAF[T]^"*");
         ylim <- Blim;
       } else if (track == "dh") {
-        isSnp <- (!is.na(betaTN) & !is.na(muN));
-        isHet <- isSnp & (muN == 1/2);
-        naValue <- as.double(NA);
-        rho <- rep(naValue, length=nbrOfLoci);
-        rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
         y <- rho;
         colT <- if (is.null(col)) colMu[isHet] else col;
         ylab <- "DH";
