@@ -7,7 +7,7 @@
 #
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #
-setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosomes=getChromosomes(fit), tracks=c("tcn", "dh", "tcn,c1,c2", "betaN", "betaT", "betaTN")[1:3], scatter="*", calls=if (callLoci || length(chromosomes) == 1L) ".*" else NULL, callLoci=FALSE, callThresholds=TRUE, boundaries=TRUE, knownSegments=FALSE, quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,3*ploidy(fit)), Blim=c(0,1), xScale=1e-6, xlabTicks=if (length(chromosomes) == 1L) "[pos]" else "[chr]", ..., subset=if (length(chromosomes) > 1L) 0.1 else NULL, add=FALSE, subplots=!add && (length(tracks) > 1L), oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
+setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosomes=getChromosomes(fit), tracks=NULL, scatter="*", calls=if (callLoci || length(chromosomes) == 1L) ".*" else NULL, callLoci=FALSE, callThresholds=TRUE, boundaries=TRUE, knownSegments=FALSE, quantiles=c(0.05,0.95), seed=0xBEEF, pch=".", Clim=c(0,3*ploidy(fit)), Blim=c(0,1), xScale=1e-6, xlabTicks=if (length(chromosomes) == 1L) "[pos]" else "[chr]", ..., subset=if (length(chromosomes) > 1L) 0.1 else NULL, add=FALSE, subplots=!add && (length(tracks) > 1L), oma=c(0,0,2,0), mar=c(2,5,1,3)+0.1, onBegin=NULL, onEnd=NULL, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -95,8 +95,15 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   }
 
   # Argument 'tracks':
-  tracks <- match.arg(tracks, several.ok=TRUE);
-  tracks <- unique(tracks);
+  knownTracks <- c("tcn", "dh", "tcn,c1,c2", "c1,c2", "c1", "c2",
+                   "betaN", "betaT", "betaTN");
+  defaultTracks <- knownTracks[1:3];
+  if (is.null(tracks)) {
+    tracks <- defaultTracks;
+  } else {
+    tracks <- match.arg(tracks, choices=knownTracks, several.ok=TRUE);
+    tracks <- unique(tracks);
+  }
 
   # Argument 'scatter':
   if (!is.null(scatter)) {
@@ -258,6 +265,10 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   CT <- rho <- muN <- betaT <- betaN <- betaTN <- NULL;
   rm(list=c("CT", "rho", "muN", "betaT", "betaN", "betaTN"));
   attachLocally(data);
+  # Calculate (C1,C2)
+  C1 <- 1/2*(1-rho)*CT;
+  C2 <- CT - C1;
+
 
   # BACKWARD COMPATIBILITY:
   # If 'rho' is not available, recalculate it from tumor BAFs.
@@ -363,23 +374,57 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
       drawLevels(fit, what="tcn", col=colL, xScale=xScale);
     }
 
-    if (track == "tcn,c1,c2") {
+    if (is.element(track, c("tcn,c1,c2", "c1,c2", "c1", "c2"))) {
+      tracksT <- unlist(strsplit(track, split=",", fixed=TRUE));
       plot(NA, xlim=xlim, ylim=Clim, xlab=xlab, ylab="C1, C2, TCN", axes=FALSE);
       if (!is.null(onBegin)) attachGH(onBegin(gh=gh));
+
+      # Draw scatter for TCN or C1 and C2.
       if (!is.na(pchT)) {
-        points(x, CT, pch=pchT, col=colS);
+        if (is.element("tcn", tracksT)) {
+          points(x, CT, pch=pchT, col=colS);
+        } else {
+          if (is.element("c1", tracksT)) {
+            points(x, C1, pch=pchT, col=colS);
+          }
+          if (is.element("c2", tracksT)) {
+            points(x, C2, pch=pchT, col=colS);
+          }
+        }
       }
-      drawConfidenceBands(fit, what="tcn", quantiles=quantiles, col=colC["tcn"], xScale=xScale);
-      drawConfidenceBands(fit, what="c2", quantiles=quantiles, col=colC["c2"], xScale=xScale);
-      drawConfidenceBands(fit, what="c1", quantiles=quantiles, col=colC["c1"], xScale=xScale);
-      drawLevels(fit, what="tcn", col=colL["tcn"], xScale=xScale);
-      drawLevels(fit, what="c2", col=colL["c2"], xScale=xScale);
-      # In case C2 overlaps with TCN
-      drawLevels(fit, what="tcn", col=colL["tcn"], lty="22", xScale=xScale);
-      # In case C1 overlaps with C1
-      drawLevels(fit, what="c1", col=colL["c1"], xScale=xScale);
-      drawLevels(fit, what="c2", col=colL["c2"], lty="22", xScale=xScale);
-      drawLevels(fit, what="tcn", col=colL["tcn"], lty="22", xScale=xScale);
+
+      # Draw confidence bands for TCN, C1, C2.
+      if (is.element("tcn", tracksT)) {
+        drawConfidenceBands(fit, what="tcn", quantiles=quantiles, col=colC["tcn"], xScale=xScale);
+      }
+      if (is.element("c2", tracksT)) {
+        drawConfidenceBands(fit, what="c2", quantiles=quantiles, col=colC["c2"], xScale=xScale);
+      }
+      if (is.element("c1", tracksT)) {
+        drawConfidenceBands(fit, what="c1", quantiles=quantiles, col=colC["c1"], xScale=xScale);
+      }
+
+      # Draw segment means for TCN, C1, C2.
+      if (is.element("tcn", tracksT)) {
+        drawLevels(fit, what="tcn", col=colL["tcn"], xScale=xScale);
+      }
+      if (is.element("c2", tracksT)) {
+        drawLevels(fit, what="c2", col=colL["c2"], xScale=xScale);
+      }
+      if (is.element("tcn", tracksT)) {
+        # In case C2 overlaps with TCN
+        drawLevels(fit, what="tcn", col=colL["tcn"], lty="22", xScale=xScale);
+      }
+      # In case C1 overlaps with C2
+      if (is.element("c1", tracksT)) {
+        drawLevels(fit, what="c1", col=colL["c1"], xScale=xScale);
+        if (is.element("c2", tracksT)) {
+          drawLevels(fit, what="c2", col=colL["c2"], lty="22", xScale=xScale);
+        }
+        if (is.element("tcn", tracksT)) {
+          drawLevels(fit, what="tcn", col=colL["tcn"], lty="22", xScale=xScale);
+        }
+      }
     }
 
     if (track == "betaN") {
@@ -518,6 +563,9 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
 ############################################################################
 # HISTORY:
+# 2013-10-28
+# o Now plotTracksManyChromosomes() also supports
+#   tracks=c("c1,c2", "c1", "c2").
 # 2013-10-25
 # o Now plotTracksManyChromosomes() uses the locus data field 'rho'
 #   when plotting DH locus-level data.  It only recalculates it from

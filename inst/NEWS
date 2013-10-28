@@ -2,6 +2,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.39.2 [2013-10-28]
+o Now plotTracksManyChromosomes() for PairedPSCBS also supports
+  tracks=c("c1,c2", "c1", "c2").
+
+
 Version: 0.39.1 [2013-10-25]
 o Now plotTracksManyChromosomes() uses the locus data field 'rho'
   when plotting DH locus-level data.  It only recalculates it from
