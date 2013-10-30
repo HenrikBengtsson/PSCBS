@@ -4,7 +4,7 @@ Package: PSCBS
 
 Version: 0.39.2 [2013-10-28]
 o Now plotTracksManyChromosomes() for PairedPSCBS also supports
-  tracks=c("c1,c2", "c1", "c2").
+  tracks "c1,c2", "c1" and "c2".
 
 
 Version: 0.39.1 [2013-10-25]
