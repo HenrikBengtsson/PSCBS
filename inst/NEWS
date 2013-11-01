@@ -82,7 +82,7 @@ o Bumped up package dependencies.
 
 Version: 0.38.0 [2013-09-27]
 o SPEEDUP: 'R CMD check' is now significantly faster due to
-  copying of pre-generated calculatations ("memoization").
+  copying of pre-generated calculations ("memoization").
   For instance, the the same segmentation tests are roughly
   40% faster with this version compared to v0.37.2.
 o Now PSCBS imports 'R.cache' (used to only suggest it).
@@ -153,7 +153,7 @@ o ROBUSTNESS: Added a sanity check on the estimates of (tauA, tauB)
 
 Version: 0.35.4 [2013-07-11]
 o Updated the Makefile for the vignettes and added .Rinstignore such
-  that auxillary (bib and bst) LaTeX files are not installed but
+  that auxiliary (bib and bst) LaTeX files are not installed but
   part of the build so they are available to R CMD check, which
   is recently needed by R devel.
 o Bumped up package dependencies.
