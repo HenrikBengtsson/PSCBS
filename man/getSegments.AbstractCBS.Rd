@@ -10,6 +10,10 @@
 \alias{getSegments.AbstractCBS}
 \alias{AbstractCBS.getSegments}
 \alias{getSegments,AbstractCBS-method}
+\alias{AbstractCBS.getSegments}
+\alias{getSegments.AbstractCBS}
+\alias{getSegments,AbstractCBS-method}
+
 
 \title{Gets the segments}
 

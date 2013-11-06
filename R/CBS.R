@@ -316,6 +316,7 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
 }, private=TRUE)
 
 
+
 setMethodS3("getChangePoints", "CBS", function(fit, ...) {
   # Already available?
   cps <- fit$changepoints;

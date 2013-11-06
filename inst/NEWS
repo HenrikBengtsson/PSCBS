@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.39.3 [2013-11-05]
+o Added a basic implementation of setSegments() for AbstractCBS.
+
+
 Version: 0.39.2 [2013-10-28]
 o Now plotTracksManyChromosomes() for PairedPSCBS also supports
   tracks "c1,c2", "c1" and "c2".

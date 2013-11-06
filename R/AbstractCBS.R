@@ -343,6 +343,7 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 
 ###########################################################################/**
 # @RdocMethod getSegments
+# @aliasmethod getSegments
 #
 # @title "Gets the segments"
 #
@@ -372,7 +373,20 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 #*/###########################################################################
 setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
 
-setMethodS3("setSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
+
+setMethodS3("setSegments", "AbstractCBS", function(fit, segments, ...) {
+  # Argument 'segments':
+  segments <- Arguments$getInstanceOf(segments, "data.frame");
+  nbrOfSegs <- nbrOfSegments(fit);
+  if (nrow(segments) != nbrOfSegs) {
+    throw("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs);
+  }
+
+  fit$output <- segments;
+
+  invisible(fit);
+}, protected=TRUE)
+
 
 setMethodS3("getChangePoints", "AbstractCBS", abstract=TRUE);
 
@@ -846,6 +860,8 @@ setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
 
 ############################################################################
 # HISTORY:
+# 2013-11-05
+# o Added a basic implementation of setSegments() for AbstractCBS.
 # 2013-10-20
 # o Added abstract getChangePoints().
 # 2013-05-07
