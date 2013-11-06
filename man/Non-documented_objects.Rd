@@ -176,7 +176,6 @@
 \alias{sampleName}
 \alias{sampleName<-}
 \alias{setLocusData}
-\alias{setLocusData.AbstractCBS}
 \alias{setSampleName}
 \alias{setSegments}
 \alias{signalType}

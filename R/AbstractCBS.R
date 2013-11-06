@@ -274,6 +274,8 @@ setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
 
 ###########################################################################/**
 # @RdocMethod getLocusData
+# @aliasmethod setLocusData
+# @alias setLocusData.AbstractCBS
 #
 # @title "Gets the locus-level data"
 #
@@ -302,7 +304,19 @@ setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
 #*/###########################################################################
 setMethodS3("getLocusData", "AbstractCBS", abstract=TRUE);
 
-setMethodS3("setLocusData", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("setLocusData", "AbstractCBS", function(fit, loci, ...) {
+  # Argument 'loci':
+  loci <- Arguments$getInstanceOf(loci, "data.frame");
+  nbrOfLoci <- nbrOfLoci(fit);
+  if (nrow(loci) != nbrOfLoci) {
+    throw("Cannot set locus-level data. The number of loci to be set differ from the existing number of loci: ", nrow(loci), " != ", nbrOfLoci);
+  }
+
+  fit$data <- loci;
+
+  invisible(fit);
+}, protected=TRUE)
+
 
 setMethodS3("getLocusSignalNames", "AbstractCBS", abstract=TRUE, protected=TRUE);
 
@@ -343,7 +357,8 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 
 ###########################################################################/**
 # @RdocMethod getSegments
-# @aliasmethod getSegments
+# @aliasmethod setSegments
+# @alias setSegments.AbstractCBS
 #
 # @title "Gets the segments"
 #
@@ -861,7 +876,8 @@ setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
 ############################################################################
 # HISTORY:
 # 2013-11-05
-# o Added a basic implementation of setSegments() for AbstractCBS.
+# o Added basic implementations of setLocusData() and setSegments()
+#   for AbstractCBS.
 # 2013-10-20
 # o Added abstract getChangePoints().
 # 2013-05-07

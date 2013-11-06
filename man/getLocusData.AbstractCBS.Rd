@@ -10,6 +10,11 @@
 \alias{getLocusData.AbstractCBS}
 \alias{AbstractCBS.getLocusData}
 \alias{getLocusData,AbstractCBS-method}
+\alias{AbstractCBS.setLocusData}
+\alias{setLocusData.AbstractCBS}
+\alias{setLocusData,AbstractCBS-method}
+
+\alias{setLocusData.AbstractCBS}
 
 \title{Gets the locus-level data}
 
