@@ -47,7 +47,7 @@
  highlightCalls highlightCalls.CBS highlightLocusCalls
  highlightLocusCalls.CBS isWholeChromosomeGained
  isWholeChromosomeGained.CBS isWholeChromosomeLost
- isWholeChromosomeLost.CBS joinSegments joinSegments.CBS linesC1C2
+ isWholeChromosomeLost.CBS joinSegments linesC1C2
  linesC1C2.PairedPSCBS linesDeltaC1C2 linesDeltaC1C2.PairedPSCBS
  mergeNonCalledSegments mergeTwoSegments mergeTwoSegments.CBS
  nbrOfAmplifications nbrOfAmplifications.CBS nbrOfChangePoints

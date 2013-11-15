@@ -121,8 +121,8 @@ setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
     knownSegments$chromosome[knownSegments$chromosome == chr] <- chrN;
   } # for (cc ...)
 
-  fit$data <- data;
-  fit$output <- segs;
+  fit <- setLocusData(fit, data);
+  fit <- setSegments(fit, segs);
   fit$params$knownSegments <- knownSegments;
 
   fit;

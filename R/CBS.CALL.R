@@ -133,15 +133,11 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
     verbose && cat(verbose, "Call parameters:");
     verbose && str(verbose, list(sigma=sigma, scale=scale, adjust=adjust));
 
-    # Calculate segment statistics (utilizing DNAcopy methods)
-    stats <- segments.summary(as.DNAcopy(fit));
-    kept <- is.element(rownames(segs), rownames(stats));
-
-    naValue <- as.double(NA);
-    mu <- rep(naValue, times=nbrOfRows);
-
-    # The segmented mean levels
-    mu[kept] <- stats$seg.median;
+    # Calculate segment levels using the median estimator
+    fitT <- updateMeans(fit, avg="median")
+    segsT <- getSegments(fitT, splitters=TRUE);
+    mu <- segsT$mean;
+    fitT <- segsT <- NULL; # Not needed anymore
 
     # The median segmented level
     muR <- median(mu, na.rm=TRUE);
@@ -168,6 +164,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   }
 
   verbose && cat(verbose, "Number of called segments: ", length(lossCalls));
+
 
   # Sanity check
   stopifnot(length(lossCalls) == nbrOfRows);
@@ -1217,6 +1214,11 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2013-11-14
+# o BUG FIX: callGainsAndLosses() for CBS would not estimate the median
+#   median CN level correctly if there were "empty" segments (e.g. gaps).
+#   This was/is due to a bug in segments.summary() of the DNAcopy package.
+#   Instead, we are now calculating the segment median levels ourselves.
 # 2012-01-24
 # o ROBUSTNESS: Now getCallStatistics() for CBS asserts that calls have
 #   been made.  If not, an exception is thrown.

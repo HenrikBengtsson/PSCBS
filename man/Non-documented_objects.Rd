@@ -137,7 +137,6 @@
 \alias{isWholeChromosomeLost}
 \alias{isWholeChromosomeLost.CBS}
 \alias{joinSegments}
-\alias{joinSegments.CBS}
 \alias{linesC1C2}
 \alias{linesC1C2.PairedPSCBS}
 \alias{linesDeltaC1C2}

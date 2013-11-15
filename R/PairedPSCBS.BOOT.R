@@ -33,12 +33,6 @@
 # }
 #
 # @author "HB"
-#
-# \seealso{
-#   Internally, one of the following methods are used:
-#   @seemethod "callCopyNeutralByTCNofAB".
-# }
-#
 #*/###########################################################################
 setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, boot=NULL, ..., probs=c(0.025, 0.050, 0.95, 0.975), statsFcn=NULL, what=c("segment", "changepoint"), force=FALSE, verbose=FALSE, .debug=FALSE) {
   # Settings for sanity checks

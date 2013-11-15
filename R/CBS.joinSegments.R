@@ -1,4 +1,39 @@
-setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE) {
+###########################################################################/**
+# @set "class=CBS"
+# @RdocMethod joinSegments
+#
+# @title "Joins neighboring segments such that there is no gap in between them"
+#
+# \description{
+#  @get "title".
+#  For instance, consider two neighboring segments [x1,x2] and [x3,x4]
+#  with x1 < x2 < x3 < x4.  After join the segments, they are
+#  [x1,x23] and [x23,x4] where x23 = (x2 + x3)/2.
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{range}{(optional) A @numeric @vector of length two.}
+#   \item{verbose}{See @see "R.utils::Verbose".}
+#   \item{...}{Not used.}
+# }
+#
+# \value{
+#   Returns an updated @see "CBS" object.
+# }
+#
+# \details{
+#   This function assumes only chromosome exists.
+#   If more, an error will be thrown.
+# }
+#
+# @author "HB"
+#
+# @keyword IO
+# @keyword internal
+#*/###########################################################################
+setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -16,7 +51,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
   }
 
 
-  verbose && enter(verbose, "Joining segments");  
+  verbose && enter(verbose, "Joining segments");
   segs <- getSegments(fit);
   verbose && cat(verbose, "Segments:");
   verbose && print(verbose, segs);
@@ -26,17 +61,15 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
   nbrOfSegs <- nrow(segs);
   if (nbrOfSegs > 1) {
     verbose && enter(verbose, "Centering change points");
-    data <- getLocusData(fit);
-    x <- data$x;
     prevSeg <- segs[1L,];
     for (ss in 2:nbrOfSegs) {
       currSeg <- segs[ss,];
       currStart <- currSeg[,"start"];
       prevEnd <- prevSeg[,"end"];
 
-      # Sanity check
+      # Sanity check (will give an error if more than one chromosome)
       stopifnot(all(currStart >= prevEnd, na.rm=TRUE));
-  
+
       # Center CP
       xMid <- (prevEnd + currStart) / 2;
 
@@ -92,9 +125,9 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
     verbose && exit(verbose);
   } # if (!is.null(range))
 
-  fit$output <- segs;
+  fit <- setSegments(fit, segs);
 
-  segs <- as.data.frame(fit);
+  segs <- getSegments(fit, splitters=FALSE);
   if (nbrOfSegs > 6) {
     verbose && print(verbose, head(segs));
     verbose && print(verbose, tail(segs));
@@ -109,6 +142,9 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, ..., verbose=FALSE)
 
 ############################################################################
 # HISTORY:
+# 2013-11-14
+# o DOCUMENTATION: Added Rd help for joinSegments().
+# o CLEANUP: Removed stray variables.
 # 2011-11-17
 # o Added more sanity checks to joinSegments().
 # 2011-09-04

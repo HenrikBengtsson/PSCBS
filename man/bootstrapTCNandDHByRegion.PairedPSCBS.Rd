@@ -47,10 +47,5 @@
 }
 
 \author{Henrik Bengtsson}
-
-\seealso{
-  Internally, one of the following methods are used:
-  \code{\link[PSCBS:callCopyNeutralByTCNofAB.PairedPSCBS]{*callCopyNeutralByTCNofAB}()}.
-}
 \keyword{internal}
 \keyword{methods}

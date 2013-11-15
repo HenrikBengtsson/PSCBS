@@ -456,7 +456,7 @@ setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
     segs <- segs[,-excl];
   }
 
-  fit$output <- segs;
+  fit <- setSegments(fit, segs);
   invisible(fit);
 }, protected=TRUE)
 
