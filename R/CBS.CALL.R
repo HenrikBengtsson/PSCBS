@@ -1212,9 +1212,43 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 }, protected=TRUE); # mergeNonCalledSegments()
 
 
+setMethodS3("estimateDeltaCN", "CBS", function(fit, adjust=0.3, ..., verbose=FALSE) {
+  # Argument 'adjust':
+  adjust <- Arguments$getDouble(adjust, range=c(0,10));
+
+  # Get segment mean levels
+  segs <- getSegments(fit, splitters=FALSE);
+  x <- segs$mean;
+  w <- segs$nbrOfLoci;
+  keep <- is.finite(x) & is.finite(w);
+  x <- x[keep];
+  w <- w[keep];
+
+  # Estimate density
+  w <- w / sum(w, na.rm=TRUE);
+  d <- density(x, weights=w, adjust=adjust);
+
+  # Find peaks
+  pv <- findPeaksAndValleys(d, ...);
+  p <- subset(pv, type == "peak");
+  px <- p$x;
+  pw <- p$density;
+
+  # Distance between peaks
+  dx <- diff(px);
+  # Weights "between" peaks (AD HOC: sum up peak weights)
+  dw <- pw[-length(pw)] + pw[-1];
+
+  deltaCN <- weighted.mean(dx, w=dw);
+
+  deltaCN;
+}, protected=TRUE)
+
+
 ############################################################################
 # HISTORY:
 # 2013-11-14
+# o Added estimateDeltaCN() for CBS.
 # o BUG FIX: callGainsAndLosses() for CBS would not estimate the median
 #   median CN level correctly if there were "empty" segments (e.g. gaps).
 #   This was/is due to a bug in segments.summary() of the DNAcopy package.

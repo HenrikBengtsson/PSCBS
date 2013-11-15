@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.39.5 [2013-11-15]
+o Added estimateDeltaCN() for CBS.
+
+
 Version: 0.39.4 [2013-11-14]
 o BUG FIX: callGainsAndLosses() for CBS would not estimate the median
   median CN level correctly if there were "empty" segments (e.g. gaps).

@@ -43,11 +43,20 @@ fitC <- callGainsAndLosses(fit)
 plotTracks(fitC)
 pars <- fitC$params$callGainsAndLosses
 stext(side=3, pos=1/2, line=-1, substitute(sigma==x, list(x=sprintf("%.2f", pars$sigmaMAD))))
-abline(h=pars$muR, lty=2, lwd=2)
+mu <- pars$muR
 tau <- unlist(pars[c("tauLoss", "tauGain")], use.names=FALSE)
+abline(h=mu, lty=2, lwd=2)
 abline(h=tau, lwd=2)
 mtext(side=4, at=tau[1], expression(Delta[LOSS]), adj=-0.2, cex=0.7, las=2, xpd=TRUE)
 mtext(side=4, at=tau[2], expression(Delta[GAIN]), adj=-0.2, cex=0.7, las=2, xpd=TRUE)
 title(main="CN caller: \"ucsf-mad\"")
+
+
+# Caller to be implemented
+deltaCN <- estimateDeltaCN(fit)
+tau <- mu + 1/2*c(-1,+1)*deltaCN
+abline(h=tau, lty=2, lwd=1, col="red")
+
+
 
 } # if (Sys.getenv("_R_CHECK_FULL_"))
