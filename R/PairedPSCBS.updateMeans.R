@@ -1,4 +1,4 @@
-setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("asis", "mean", "median"), avgDH=c("asis", "mean", "median"), verbose=FALSE) {
+setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments"), adjustFor=NULL, ..., avgTCN=c("asis", "mean", "median"), avgDH=c("asis", "mean", "median"), clear=FALSE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -183,7 +183,9 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   # Update
   fit$output <- segs;
   fit <- setMeanEstimators(fit, tcn=avgTCN, dh=avgDH);
-##  fit <- clearBootstrapSummaries(fit);
+  if (clear) {
+    fit <- clearBootstrapSummaries(fit);
+  }
 
   # Update (C1,C2) mean levels
   fit <- updateMeansC1C2(fit, verbose=verbose);
@@ -236,6 +238,9 @@ setMethodS3("updateMeansC1C2", "PairedPSCBS", function(fit, ..., verbose=FALSE) 
 
 ##############################################################################
 # HISTORY
+# 2013-11-23
+# o Now updateMeans(..., clear=TRUE) clears bootstrap summaries, otherwise
+#   not.
 # 2013-10-26
 # o Now updateMeans() for PairedPSCBS always clears the bootstrap summaries.
 # o Added updateMeansC1C2().

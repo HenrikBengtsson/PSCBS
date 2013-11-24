@@ -220,19 +220,12 @@ setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
 # 2013-03-08
 # o Added getLocusData() for PairedPSCBS.
 # 2012-04-21
-# o CLEANUP: Removed unused objects in updateMeans().
 # o CLEANUP: Moved getSegmentSizes() from PairedPSCBS to PSCBS.
 # 2011-11-21
 # o BUG FIX: resegment() was trying to call segmentByCBS() instead
 #   of segmentByPairedPSCBS().
 # 2011-11-17
 # o Added resegment() for PairedPSCBS for easy resegmentation.
-# 2011-11-12
-# o Added arguments 'from' and 'adjustFor' to updateMeans().
-# 2011-01-16
-# o BUG FIX: updateMeans() save to the incorrect column names.
-# 2011-01-12
-# o Added updateMeans() for PairedPSCBS.
 # 2011-10-02
 # o CLEANUP: Moved print() and as.data.frame() to PSCBS.
 # o Added Rdoc help.
