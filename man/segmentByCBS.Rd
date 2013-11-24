@@ -235,6 +235,10 @@ stopifnot(all.equal(getSegments(fitWG), getSegments(fit)))
   \emph{with} a matched normal, see \code{\link{segmentByPairedPSCBS}}().
   For the same \emph{without} a matched normal,
   see \code{\link{segmentByNonPairedPSCBS}}().
+
+  It is also possible to prune change points after segmentation (with
+  identical results) using
+  \code{\link[PSCBS:pruneBySdUndo.CBS]{pruneBySdUndo}()}.
 }
 
 \keyword{IO}

@@ -104,6 +104,10 @@
 #   \emph{with} a matched normal, see @see "segmentByPairedPSCBS".
 #   For the same \emph{without} a matched normal,
 #   see @see "segmentByNonPairedPSCBS".
+#
+#   It is also possible to prune change points after segmentation (with
+#   identical results) using
+#   \code{\link[PSCBS:pruneBySdUndo.CBS]{pruneBySdUndo}()}.
 # }
 # @keyword IO
 #*/###########################################################################
