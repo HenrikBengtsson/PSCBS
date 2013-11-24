@@ -5,6 +5,7 @@
 # Only run this test in full testing mode
 if (Sys.getenv("_R_CHECK_FULL_") != "") {
 library("PSCBS")
+stext <- R.utils::stext
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data

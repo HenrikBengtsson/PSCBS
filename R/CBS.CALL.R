@@ -1213,6 +1213,12 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 setMethodS3("estimateDeltaCN", "CBS", function(fit, adjust=0.3, ..., verbose=FALSE) {
+  # This will load the 'aroma.light' namespace, if not already done.
+  findPeaksAndValleys <- .useAromaLight("findPeaksAndValleys");
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'adjust':
   adjust <- Arguments$getDouble(adjust, range=c(0,10));
 
@@ -1230,6 +1236,7 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, adjust=0.3, ..., verbose=FAL
 
   # Find peaks
   pv <- findPeaksAndValleys(d, ...);
+  type <- NULL; rm(list="type"); # To please R CMD check
   p <- subset(pv, type == "peak");
   px <- p$x;
   pw <- p$density;
@@ -1247,6 +1254,8 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, adjust=0.3, ..., verbose=FAL
 
 ############################################################################
 # HISTORY:
+# 2013-11-23
+# o BUG FIX: estimateDeltaCN() assumed aroma.light was loaded.
 # 2013-11-14
 # o Added estimateDeltaCN() for CBS.
 # o BUG FIX: callGainsAndLosses() for CBS would not estimate the median

@@ -125,3 +125,6 @@ getChangePoints.CBS getChangePoints.PSCBS
 clearBootstrapSummaries clearBootstrapSummaries.PairedPSCBS
 findBootstrapSummaries findBootstrapSummaries.PairedPSCBS
 hasBootstrapSummaries hasBootstrapSummaries.PairedPSCBS
+clearCalls clearCalls.AbstractCBS estimateDeltaCN.CBS
+extractSegmentDataByLocus extractSegmentDataByLocus.PairedPSCBS
+updateMeansC1C2 updateMeansC1C2.PairedPSCBS

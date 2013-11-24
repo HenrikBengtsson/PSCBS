@@ -299,6 +299,13 @@
 \alias{findBootstrapSummaries.PairedPSCBS}
 \alias{hasBootstrapSummaries}
 \alias{hasBootstrapSummaries.PairedPSCBS}
+\alias{clearCalls}
+\alias{clearCalls.AbstractCBS}
+\alias{estimateDeltaCN.CBS}
+\alias{extractSegmentDataByLocus}
+\alias{extractSegmentDataByLocus.PairedPSCBS}
+\alias{updateMeansC1C2}
+\alias{updateMeansC1C2.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

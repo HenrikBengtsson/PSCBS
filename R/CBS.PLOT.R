@@ -133,7 +133,7 @@ setMethodS3("plot", "CBS", function(x, ...) {
 }, protected=TRUE)
 
 
-setMethodS3("drawLevels", "CBS", function(fit, col="purple", xScale=1e-6, ...) {
+setMethodS3("drawLevels", "CBS", function(fit, col="purple", xScale=1e-6, byIndex=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Tile chromosomes
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -427,6 +427,9 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
 
 ############################################################################
 # HISTORY:
+# 2013-11-23
+# o Added "dummy" 'byIndex' argument to drawLevels() for CBS to avoid
+#   that argument being passed down lines().
 # 2013-10-14
 # o Now plotTracks() for CBS gives a more informative error if 'Clim'
 #   is invalid or "auto" and could not be inferred due to an unknown
