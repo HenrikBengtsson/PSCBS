@@ -306,6 +306,10 @@
 \alias{extractSegmentDataByLocus.PairedPSCBS}
 \alias{updateMeansC1C2}
 \alias{updateMeansC1C2.PairedPSCBS}
+\alias{encodeCalls}
+\alias{encodeCalls.data.frame}
+\alias{callGLAO}
+\alias{callGLAO.CBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

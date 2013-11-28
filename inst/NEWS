@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.39.7 [2013-11-27]
+o Added callGLAO() for CBS.
+o Added encodeCalls() for 'data.frame' object returned by
+  getLocusData(..., addCalls=TRUE).
+o Bumped up package dependencies.
+
+
 Version: 0.39.6 [2013-11-23]
 o Added clearCalls() for AbstractCBS.
 o Added extractSegmentDataByLocus() for PairedPSCBS.

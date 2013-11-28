@@ -14,7 +14,7 @@
  drawCentromeres drawCentromeres.CBS drawChromosomes
  drawChromosomes.CBS drawConfidenceBands
  drawConfidenceBands.PairedPSCBS drawLevels drawLevels.CBS
- drawLevels.DNAcopy drawLevels.PairedPSCBS 
+ drawLevels.DNAcopy drawLevels.PairedPSCBS
  dropChangePoint dropRegion dropRegions dropSegmentationOutliers
  dropSegmentationOutliers.default estimateDeltaAB
  estimateDeltaABBySmallDH estimateDeltaLOH
@@ -23,7 +23,7 @@
  estimateKappaByC1Density estimateMeanForDH
  estimateMeanForDH.PairedPSCBS estimateStandardDeviation
  estimateStandardDeviation.DNAcopy estimateStdDevForHeterozygousBAF
- estimateStdDevForHeterozygousBAF.PairedPSCBS 
+ estimateStdDevForHeterozygousBAF.PairedPSCBS
  extractC1C2 extractCallsByLocus
  extractCallsByLocus.PairedPSCBS
  extractCallsByLocus.CBS extractChromosome
@@ -128,3 +128,5 @@ hasBootstrapSummaries hasBootstrapSummaries.PairedPSCBS
 clearCalls clearCalls.AbstractCBS estimateDeltaCN.CBS
 extractSegmentDataByLocus extractSegmentDataByLocus.PairedPSCBS
 updateMeansC1C2 updateMeansC1C2.PairedPSCBS
+encodeCalls encodeCalls.data.frame
+callGLAO callGLAO.CBS

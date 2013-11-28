@@ -1252,8 +1252,74 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, adjust=0.3, ..., verbose=FAL
 }, protected=TRUE)
 
 
+
+setMethodS3("encodeCalls", "data.frame", function(calls, flavor="UCSF", ...) {
+  # Argument 'calls':
+  stopifnot(all(is.element(c("chromosome", "x"), colnames(calls))));
+  stopifnot(all(is.element(c("lossCall", "gainCall"), colnames(calls))));
+
+  # Argument 'flavor':
+  flavor <- match.arg(flavor);
+
+  calls0 <- calls;
+
+  # Allocate
+  calls <- rep(NA_real_, times=nrow(calls0));
+
+  # Encode loss, neutral and gain (required)
+  calls[!calls0$gainCall & !calls0$lossCall] <- 0;
+  calls[calls0$gainCall] <- +1;
+  calls[calls0$lossCall] <- -1;
+
+  # Encode amplifications, if any/called.
+  idxs <- which(calls0$amplificationCall);
+  calls[idxs] <- +9;
+
+  # Encode negative and positive outliers, if any/called.
+  idxs <- which(calls0$negOutlierCall);
+  calls[idxs] <- calls[idxs] - 0.1;
+
+  idxs <- which(calls0$posOutlierCall);
+  calls[idxs] <- calls[idxs] + 0.1;
+
+  calls;
+}, protected=TRUE) # encodeCalls()
+
+
+setMethodS3("callGLAO", "CBS", function(fit, ..., verbose=FALSE) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'verbose':
+  verbose <- Arguments$getVerbose(verbose);
+  if (verbose) {
+    pushState(verbose);
+    on.exit(popState(verbose));
+  }
+
+  verbose && enter(verbose, "Call gains, losses, amplifications and (negative and positive) outliers");
+  verbose && cat(verbose, "Number of segments: ", nbrOfSegments(fit));
+
+  # Call segments
+  fitC <- callGainsAndLosses(fit, ..., verbose=verbose);
+  fitC <- callAmplifications(fitC, ..., verbose=verbose);
+
+  # Call loci, i.e. locus-level negative and positive outliers
+  fitC <- callOutliers(fitC, ..., verbose=verbose);
+  verbose && print(verbose, fitC);
+
+  verbose && exit(verbose);
+
+  fitC;
+}, protected=TRUE) # callGLAO()
+
+
 ############################################################################
 # HISTORY:
+# 2013-11-27
+# o Added callGLAO() for CBS.
+# o Added encodeCalls() for 'data.frame' object returned by
+#   getLocusData(..., addCalls=TRUE).
 # 2013-11-23
 # o BUG FIX: estimateDeltaCN() assumed aroma.light was loaded.
 # 2013-11-14
