@@ -15,8 +15,8 @@
  drawChromosomes.CBS drawConfidenceBands
  drawConfidenceBands.PairedPSCBS drawLevels drawLevels.CBS
  drawLevels.DNAcopy drawLevels.PairedPSCBS
- dropChangePoint dropRegion dropRegions dropSegmentationOutliers
- dropSegmentationOutliers.default estimateDeltaAB
+ dropChangePoint dropRegion dropRegions
+ estimateDeltaAB
  estimateDeltaABBySmallDH estimateDeltaLOH
  estimateDeltaLOHByMinC1ForNonAB estimateHighDHQuantileAtAB
  estimateHighDHQuantileAtAB.PairedPSCBS estimateKappa
@@ -81,8 +81,6 @@ callROH callROHOneSegment callROHOneSegment.PairedPSCBS
 testROH
 pruneBySdUndo updateBoundaries updateBoundaries.CBS
 resegment resegment.AbstractCBS resegment.CBS resegment.PairedPSCBS
-callSegmentationOutliers.data.frame
-dropSegmentationOutliers.data.frame
  hclustCNs pruneByHClust updateMeansTogether updateMeans
 drawChangePoints drawChangePoints.AbstractCBS
 drawKnownSegments drawKnownSegments.AbstractCBS

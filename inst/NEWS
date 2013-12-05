@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.39.8 [2013-12-04]
+o DOCUMENTATION: Now the vignette sections on dropping outliers
+  before segmentation explains why outliers are dropped whereas in
+  the original CBS publication they were shrunk ("smoothed").
+  Also, added help for dropSegmentationOutliers().
+
+
 Version: 0.39.7 [2013-11-27]
 o Added callGLAO() for CBS.
 o Added encodeCalls() for 'data.frame' object returned by

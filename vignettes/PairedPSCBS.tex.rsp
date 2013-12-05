@@ -141,7 +141,7 @@ In additional to the mandatory fields (\code{chromosome}, \code{x}, \code{CT}, \
 
 \subsection{Dropping TCN outliers}
 \label{secTCNOutliers}
-There may be some outliers among the tumor TCNs.  In CBS~\citep{OlshenA_etal_2004,VenkatramanOlshen_2007}, the authors propose to drop those before segmentation, which can be done by:
+There may be some outliers among the TCNs.  In CBS~\citep{OlshenA_etal_2004,VenkatramanOlshen_2007}, the authors propose a method for identifying outliers and then to shrink such values toward their neighbors ("smooth") before performing segmentation.  At the time CBS was developed it made sense to not just to drop outliers because the resolution was low and every datapoint was valuable.  With modern technologies the resolution is much higher and we can affort dropping such outliers, which can be done by:
 \begin{verbatim}
 <%=evalCapture({
 data <- dropSegmentationOutliers(data)

@@ -62,8 +62,6 @@
 \alias{dropChangePoint}
 \alias{dropRegion}
 \alias{dropRegions}
-\alias{dropSegmentationOutliers}
-\alias{dropSegmentationOutliers.default}
 \alias{estimateDeltaAB}
 \alias{estimateDeltaABBySmallDH}
 \alias{estimateDeltaLOH}
@@ -222,8 +220,6 @@
 \alias{resegment.AbstractCBS}
 \alias{resegment.CBS}
 \alias{resegment.PairedPSCBS}
-\alias{callSegmentationOutliers.data.frame}
-\alias{dropSegmentationOutliers.data.frame}
 \alias{hclustCNs}
 \alias{pruneByHClust}
 \alias{updateMeansTogether}

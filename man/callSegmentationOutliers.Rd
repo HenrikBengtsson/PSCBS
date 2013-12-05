@@ -7,19 +7,27 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \name{callSegmentationOutliers}
-\alias{callSegmentationOutliers.default}
 \alias{callSegmentationOutliers}
 
-\title{Calls single-locus outliers along the genome}
+\alias{callSegmentationOutliers.default}
+\alias{callSegmentationOutliers.data.frame}
+\alias{dropSegmentationOutliers}
+\alias{dropSegmentationOutliers.default}
+\alias{dropSegmentationOutliers.data.frame}
+
+\title{Calls/drops single-locus outliers along the genome}
 
 \description{
- Calls single-locus outliers along the genome that have a signal that differ significantly from the
+ Calls/drops single-locus outliers along the genome that have a signal that differ significantly from the
  neighboring loci.
 }
 
 \usage{
-\method{callSegmentationOutliers}{default}(y, chromosome=0, x=NULL, method="DNAcopy::smooth.CNA", ...,
+ \method{callSegmentationOutliers}{default}(y, chromosome=0, x=NULL, method="DNAcopy::smooth.CNA", ...,
   verbose=FALSE)
+ \method{callSegmentationOutliers}{data.frame}(y, ...)
+ \method{dropSegmentationOutliers}{default}(y, ...)
+ \method{dropSegmentationOutliers}{data.frame}(y, ...)
 }
 
 \arguments{
@@ -37,7 +45,10 @@
 }
 
 \value{
-  Returns \code{\link[base]{logical}} \code{\link[base]{vector}} of length J.
+  \code{callSegmentationOutliers()} returns a \code{\link[base]{logical}} \code{\link[base]{vector}} of length J.
+  \code{dropSegmentationOutliers()} returns an object of the same type
+  as argument \code{y}, where the signals for which outliers were called
+  have been set to \code{\link[base]{NA}}.
 }
 
 \section{Missing and non-finite values}{
@@ -54,4 +65,5 @@
 }
 
 
+\keyword{methods}
 \keyword{IO}

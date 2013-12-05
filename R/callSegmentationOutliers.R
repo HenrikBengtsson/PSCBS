@@ -1,14 +1,24 @@
 ###########################################################################/**
-# @RdocDefault callSegmentationOutliers
+# @RdocGeneric callSegmentationOutliers
+# @alias callSegmentationOutliers.default
+# @alias callSegmentationOutliers.data.frame
+# @alias dropSegmentationOutliers
+# @alias dropSegmentationOutliers.default
+# @alias dropSegmentationOutliers.data.frame
 #
-# @title "Calls single-locus outliers along the genome"
+# @title "Calls/drops single-locus outliers along the genome"
 #
 # \description{
 #  @get "title" that have a signal that differ significantly from the
 #  neighboring loci.
 # }
 #
-# @synopsis
+# \usage{
+#  @usage callSegmentationOutliers,default
+#  @usage callSegmentationOutliers,data.frame
+#  @usage dropSegmentationOutliers,default
+#  @usage dropSegmentationOutliers,data.frame
+# }
 #
 # \arguments{
 #   \item{y}{A @numeric @vector of J genomic signals to be segmented.}
@@ -17,7 +27,7 @@
 #       Only used for annotation purposes.}
 #   \item{x}{Optional @numeric @vector of J genomic locations.
 #            If @NULL, index locations \code{1:J} are used.}
-#   \item{method}{A @character string specifying the Method
+#   \item{method}{A @character string specifying the method
 #        used for calling outliers.}
 #   \item{...}{Additional arguments passed to internal outlier
 #        detection method.}
@@ -25,7 +35,10 @@
 # }
 #
 # \value{
-#   Returns @logical @vector of length J.
+#   \code{callSegmentationOutliers()} returns a @logical @vector of length J.
+#   \code{dropSegmentationOutliers()} returns an object of the same type
+#   as argument \code{y}, where the signals for which outliers were called
+#   have been set to @NA.
 # }
 #
 # \section{Missing and non-finite values}{
@@ -52,12 +65,12 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
   y <- Arguments$getDoubles(y, disallow=disallow);
   nbrOfLoci <- length(y);
 
-  length2 <- rep(nbrOfLoci, times=2);
+  length2 <- rep(nbrOfLoci, times=2L);
 
   # Argument 'chromosome':
   disallow <- c("NaN", "Inf");
   chromosome <- Arguments$getIntegers(chromosome, range=c(0,Inf), disallow=disallow);
-  if (length(chromosome) == 1) {
+  if (length(chromosome) == 1L) {
     chromosome <- rep(chromosome, times=nbrOfLoci);
   } else {
     chromosome <- Arguments$getVector(chromosome, length=length2);
@@ -131,6 +144,7 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     yKK <- yKK[o];
     chromosomeKK <- chromosomeKK[o];
     keepKK <- keepKK[o];
+    o <- NULL; # Not needed anymore
 
     # Supress all warnings, in order to avoid warnings by DNAcopy::CNA()
     # on "array has repeated maploc positions".  Ideally we should filter
@@ -138,22 +152,31 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     suppressWarnings({
       dataKK <- DNAcopy::CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE);
     });
+    chromosomeKK <- xKK <- NULL; # Not needed anymore
+
     yKKs <- DNAcopy::smooth.CNA(dataKK, ...)$y;
+    dataKK <- NULL; # Not needed anymore
 
     # Sanity check
     stopifnot(length(yKKs) == nbrOfLociKK);
-
     outliersKK <- which(yKKs != yKK);
+    yKKs <- yKK <- NULL; # Not needed anymore
+
     nbrOfOutliers <- length(outliersKK);
     verbose && cat(verbose, "Number of outliers: ", nbrOfOutliers);
 
     outliers <- keepKK[outliersKK];
+    keepKK <- outliersKK <- NULL; # Not needed anymore
+
     isOutlierT[outliers] <- TRUE;
+    outliers <- NULL; # Not needed anymore
 
     verbose && exit(verbose);
   } # for (kk ...)
+  chromosome <- x <- y <- NULL; # Not needed anymore
 
   isOutlier[keep] <- isOutlierT;
+  isOutlierT <- keep <- NULL; # Not needed anymore
 
   nbrOfOutliers <- sum(isOutlier, na.rm=TRUE);
   verbose && cat(verbose, "Total number of outliers: ", nbrOfOutliers);
@@ -179,7 +202,8 @@ setMethodS3("callSegmentationOutliers", "data.frame", function(y, ...) {
 
 setMethodS3("dropSegmentationOutliers", "default", function(y, ...) {
   isOutlier <- callSegmentationOutliers(y, ...);
-  y[isOutlier] <- as.double(NA);
+  y[isOutlier] <- NA_real_;
+  isOutlier <- NULL; # Not needed anymore
   y;
 })
 
@@ -195,7 +219,9 @@ setMethodS3("dropSegmentationOutliers", "data.frame", function(y, ...) {
     key <- "y";
   }
 
-  data[[key]][isOutlier] <- as.double(NA);
+  data[[key]][isOutlier] <- NA_real_;
+
+  isOutlier <- NULL; # Not needed anymore
 
   data;
 })
@@ -203,6 +229,11 @@ setMethodS3("dropSegmentationOutliers", "data.frame", function(y, ...) {
 
 ############################################################################
 # HISTORY:
+# 2013-12-04
+# o DOCUMENTATION: Now {call|drop}SegmentationOutliers() are documented
+#   as generic functions.
+# o Now {call|drop}SegmentationOutliers() drops allocated memory faster.
+# o Added Rdoc for dropSegmentationOutliers().
 # 2011-11-23
 # o Added callSegmentationOutliers() and dropSegmentationOutliers()
 #   for data frames.
