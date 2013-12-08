@@ -37,7 +37,7 @@
       Only used for annotation purposes.}
   \item{x}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic locations.
            If \code{\link[base]{NULL}}, index locations \code{1:J} are used.}
-  \item{method}{A \code{\link[base]{character}} string specifying the Method
+  \item{method}{A \code{\link[base]{character}} string specifying the method
        used for calling outliers.}
   \item{...}{Additional arguments passed to internal outlier
        detection method.}
