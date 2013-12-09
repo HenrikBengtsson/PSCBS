@@ -225,7 +225,7 @@ plotTracks(fit, xlim=c(120,244)*1e6)
 \section{Calling segments}
 TBA.
 
-
+<%---
 \subsection{Results from calling <%=signalType%> states}
 All calls are appended to the segmentation results as logical columns:
 \begin{verbatim}
@@ -234,7 +234,7 @@ getSegments(fit, simplify=TRUE)
 })%>
 \end{verbatim}
 <% segs <- getSegments(fit, simplify=TRUE) %>
-
+---%>
 
 \section{Saving results}
 
