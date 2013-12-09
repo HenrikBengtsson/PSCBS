@@ -203,7 +203,7 @@ plotTracks(fit)
 which by default displays <%=signalType%> as in Figure~\ref{figTracks}.
 To zoom in on a partical region, do:
 \begin{verbatim}
-plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
+plotTracks(fit, tracks="tcn", xlim=c(120,244)*1e6)
 \end{verbatim}
 \begin{figure}[htp]
  \begin{center}

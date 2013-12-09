@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.40.1 [2013-12-09]
+o DOCUMENTATION: The CBS vignette referred to C1 and C2 in one of
+  the code examples.
+o Bumped up package dependencies.
+
+
 Version: 0.40.0 [2013-12-07]
 o CLEANUP: No longer need for an ad hoc NAMESPACE import.
 
