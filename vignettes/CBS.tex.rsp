@@ -200,10 +200,10 @@ To plot the <%=signalType%> segmentation results, do:
 \begin{verbatim}
 plotTracks(fit)
 \end{verbatim}
-which by default displays <%=signalType%> as in Figure~\ref{figTracks}.
+which displays <%=signalType%> as in Figure~\ref{figTracks}.
 To zoom in on a partical region, do:
 \begin{verbatim}
-plotTracks(fit, tracks="tcn", xlim=c(120,244)*1e6)
+plotTracks(fit, xlim=c(120,244)*1e6)
 \end{verbatim}
 \begin{figure}[htp]
  \begin{center}
@@ -212,7 +212,7 @@ plotTracks(fit, tracks="tcn", xlim=c(120,244)*1e6)
   })%>}}
  \end{center}
  \caption{Segments identified by CBS.
-  \textbf{Top}: The <%=signalType%> signals with the <%=signalType%> mean levels (purple).
+  The <%=signalType%> signals with the <%=signalType%> mean levels (purple).
  }
  \label{figTracks}
 \end{figure}
