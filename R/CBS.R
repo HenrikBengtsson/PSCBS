@@ -323,7 +323,7 @@ setMethodS3("getChangePoints", "CBS", function(fit, ...) {
   if (!is.null(cps)) return(cps);
 
   segs <- getSegments(fit, splitters=TRUE);
-  tcn <- segs[["tcnMean"]];
+  tcn <- segs[["mean"]];
   n <- length(tcn);
 
   # Calculate observed (d) data
@@ -645,6 +645,8 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2013-12-17
+# o BUG FIX: getChangePoints() for CBS returned empty results.
 # 2013-10-20
 # o Added getChangePoints() for CBS.
 # 2012-09-21

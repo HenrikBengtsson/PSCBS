@@ -2,6 +2,13 @@
 Package: PSCBS
 ==============
 
+Version: 0.40.2 [2013-12-17]
+o Now estimateDeltaCN() for CBS have the option to estimate the size
+  of a copy-number unit based on the change-point magnitutes, in
+  addition to the estimator based on the density of segment means.
+o BUG FIX: getChangePoints() for CBS returned empty results.
+
+
 Version: 0.40.1 [2013-12-09]
 o DOCUMENTATION: The CBS vignette referred to C1 and C2 in one of
   the code examples.

@@ -1212,41 +1212,95 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 }, protected=TRUE); # mergeNonCalledSegments()
 
 
-setMethodS3("estimateDeltaCN", "CBS", function(fit, adjust=0.3, ..., verbose=FALSE) {
+setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "density(dTCN)", "dTCN"), adjust=0.3, ..., verbose=FALSE) {
   # This will load the 'aroma.light' namespace, if not already done.
-  findPeaksAndValleys <- .useAromaLight("findPeaksAndValleys");
+#  findPeaksAndValleys <- .useAromaLight("findPeaksAndValleys");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Argument 'flavor':
+  flavor <- match.arg(flavor);
+
   # Argument 'adjust':
   adjust <- Arguments$getDouble(adjust, range=c(0,10));
 
-  # Get segment mean levels
-  segs <- getSegments(fit, splitters=FALSE);
-  x <- segs$mean;
-  w <- segs$nbrOfLoci;
-  keep <- is.finite(x) & is.finite(w);
-  x <- x[keep];
-  w <- w[keep];
 
-  # Estimate density
-  w <- w / sum(w, na.rm=TRUE);
-  d <- density(x, weights=w, adjust=adjust);
+  if (flavor == "density(TCN)") {
+    # Get segment mean levels
+    segs <- getSegments(fit, splitters=FALSE);
+    x <- segs$mean;
+    w <- segs$nbrOfLoci;
 
-  # Find peaks
-  pv <- findPeaksAndValleys(d, ...);
-  type <- NULL; rm(list="type"); # To please R CMD check
-  p <- subset(pv, type == "peak");
-  px <- p$x;
-  pw <- p$density;
+    # Drop missing values
+    keep <- is.finite(x) & is.finite(w);
+    x <- x[keep];
+    w <- w[keep];
+    keep <- NULL; # Not needed anymore
 
-  # Distance between peaks
-  dx <- diff(px);
-  # Weights "between" peaks (AD HOC: sum up peak weights)
-  dw <- pw[-length(pw)] + pw[-1];
+    # Normalize weights
+    w <- w / sum(w, na.rm=TRUE);
 
-  deltaCN <- weighted.mean(dx, w=dw);
+    # Estimate density
+    d <- density(x, weights=w, adjust=adjust);
+
+    w <- NULL; # Not needed anymore
+
+    # Find peaks
+    pv <- findPeaksAndValleys(d, ...);
+    type <- NULL; rm(list="type"); # To please R CMD check
+    p <- subset(pv, type == "peak");
+    px <- p$x;
+    pw <- p$density;
+
+    # Distance between peaks
+    dx <- diff(px);
+    # Weights "between" peaks (AD HOC: sum up peak weights)
+    dw <- pw[-length(pw)] + pw[-1L];
+
+    deltaCN <- weighted.mean(dx, w=dw);
+  } else if (flavor == "density(dTCN)") {
+    # Get change-point magnitudes
+    x <- getChangePoints(fit)[[1L]];
+    x <- abs(x);
+
+    # Drop missing values
+    keep <- is.finite(x);
+    x <- x[keep];
+    keep <- NULL; # Not needed anymore
+
+
+    # Estimate density
+    d <- density(x, adjust=adjust);
+
+    # Find peaks
+    pv <- findPeaksAndValleys(d, ...);
+    type <- NULL; rm(list="type"); # To please R CMD check
+    p <- subset(pv, type == "peak");
+    px <- p$x;
+    pw <- p$density;
+
+    # Distance between peaks
+    dx <- diff(px);
+    # Weights "between" peaks (AD HOC: sum up peak weights)
+    dw <- pw[-length(pw)] + pw[-1L];
+
+    throw("Still not implemented.");
+  } else if (flavor == "dTCN") {
+    # Get change-point magnitudes
+    x <- getChangePoints(fit)[[1L]];
+    x <- abs(x);
+
+    # Drop missing values
+    keep <- is.finite(x);
+    x <- x[keep];
+    keep <- NULL; # Not needed anymore
+
+    deltaCN <- median(x);
+  }
+
+  # Sanity check
+  deltaCN <- Arguments$getDouble(deltaCN, range=c(0, Inf));
 
   deltaCN;
 }, protected=TRUE)
@@ -1316,6 +1370,9 @@ setMethodS3("callGLAO", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2013-12-17
+# o Added argument 'flavor' to estimateDeltaCN() for CBS, which specifies
+#   the type of estimator to use.
 # 2013-11-27
 # o Added callGLAO() for CBS.
 # o Added encodeCalls() for 'data.frame' object returned by
