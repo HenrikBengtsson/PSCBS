@@ -272,7 +272,7 @@ A multipage PDF report that contains both whole-genome and per-chromosome summar
 \begin{verbatim}
 > report(fit, sampleName="CBS", studyName="CBS-Ex", verbose=-10)
 \end{verbatim}
-By default, the reports are written to directory \code{reports/<studyName>/} under the current working directory.  In addition to the PDF, that directory also contains subdirectory \code{figures/} holding all generated figure files (e.g. PNGs and PDFs) for easy inclusing elsewhere.
+By default, the reports are written to directory \code{reports/<studyName>/} under the current working directory.  In addition to the PDF, that directory also contains subdirectory \code{figures/} holding all generated figure files (e.g. PNGs and PDFs) for easy inclusion elsewhere.
 
 
 
