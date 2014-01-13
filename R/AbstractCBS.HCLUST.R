@@ -99,13 +99,13 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 
   verbose && enter(verbose, "Clustering");
   # TODO: Do *weighted* hierarchical clustering
-  h <- stats::hclust(D, method=hclustMethod)
-  verbose && str(verbose, h);
+  tree <- stats::hclust(D, method=hclustMethod);
+  verbose && str(verbose, tree);
   verbose && exit(verbose);
 
   verbose && exit(verbose);
 
-  h;
+  tree;
 }, private=TRUE) # hclustCNs()
 
 
@@ -161,15 +161,15 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
   verbose && str(verbose, c(list(size=size, distMethod=distMethod, hclustMethod=hclustMethod), list(...)));
 
   verbose && enter(verbose, "Clustering");
-  h <- hclustCNs(fit, size=size, distMethod=distMethod,
-                 hclustMethod=hclustMethod, ..., verbose=less(verbose,5));
-  verbose && print(verbose, h);
+  tree <- hclustCNs(fit, size=size, distMethod=distMethod,
+                    hclustMethod=hclustMethod, ..., verbose=less(verbose,5));
+  verbose && print(verbose, tree);
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Cutting tree");
   verbose && cat(verbose, "Cutting arguments:");
-  verbose && str(verbose, c(list(h=h), list(...)));
-  p <- cutree(h, ...);
+  verbose && str(verbose, c(list(tree=tree), list(...)));
+  p <- cutree(tree, ...);
   verbose && str(verbose, p);
 
   # Group segments
@@ -200,7 +200,7 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
       verbose && str(verbose, idxs);
 
       # Indices to segments to merge
-      leftsII <- idxs[which(diff(idxs) == 1)];
+      leftsII <- idxs[which(diff(idxs) == 1L)];
       verbose && cat(verbose, "Left indices of neighboring segments:");
       verbose && str(verbose, leftsII);
 
@@ -236,6 +236,9 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
 ############################################################################
 # HISTORY:
+# 2014-01-12
+# o CLEANUP: Renamed variable 'h' to 'tree' in pruneByHClust(), because
+#   it could easily be misinterpreted as argument 'h' to cutree().
 # 2013-09-18
 # o WORKAROUND: For R v2.15.3 and before, we need to attach the 'methods'
 #   package, otherwise we get 'Error in rowAlls(ok) : could not find
