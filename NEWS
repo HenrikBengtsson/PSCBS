@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.40.3 [2014-01-29]
+o ROBUSTNESS: Now segmentByPairedPSCBS() asserts that argument 'muN'
+  is not all NAs.  Similarily, if 'muN' is called from 'betaN' the
+  same assertion is done after calling.
+
+
 Version: 0.40.2 [2013-12-17]
 o Now estimateDeltaCN() for CBS have the option to estimate the size
   of a copy-number unit based on the change-point magnitutes, in

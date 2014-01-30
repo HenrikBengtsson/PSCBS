@@ -158,7 +158,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   disallow <- c("Inf");
   CT <- Arguments$getDoubles(CT, disallow=disallow);
   nbrOfLoci <- length(CT);
-  length2 <- rep(nbrOfLoci, times=2);
+  length2 <- rep(nbrOfLoci, times=2L);
 
   # Argument 'betaT':
   betaT <- Arguments$getDoubles(betaT, length=length2, disallow="Inf");
@@ -171,6 +171,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
   # Argument 'muN':
   if (!is.null(muN)) {
     muN <- Arguments$getDoubles(muN, length=length2, range=c(0,1), disallow="Inf");
+    if (all(is.na(muN)) == nbrOfLoci) {
+      throw(sprintf("All genotypes ('muN') are NAs: %d (100%%) out of %d", nbrOfLoci, nbrOfLoci));
+    }
   }
 
   if (is.null(betaN) && is.null(muN)) {
@@ -291,7 +294,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Call genotypes
+  # Call genotypes?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # If muN is missing, call genotypes from betaN
   if (is.null(muN)) {
@@ -302,9 +305,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, betaT, betaN=NULL, m
     verbose && cat(verbose, "Called genotypes:");
     verbose && str(verbose, muN);
     verbose && print(verbose, table(muN));
+    # Assert proper calls
+    muN <- Arguments$getDoubles(muN, length=length2, range=c(0,1), disallow="Inf");
+    # Sanity check
+    if (all(is.na(muN))) {
+      throw(sprintf("All genotypes ('muN') called from the normal allele B fractions ('betaN') are NAs: %d (100%%) out of %d", nbrOfLoci, nbrOfLoci));
+    }
     verbose && exit(verbose);
   }
-
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1127,6 +1135,10 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2014-01-29
+# o ROBUSTNESS: Now segmentByPairedPSCBS() asserts that argument 'muN'
+#   is not all NAs.  Similarily, if 'muN' is called from 'betaN' the
+#   same assertion is done after calling.
 # 2013-02-01
 # o BUG FIX: segmentByPairedPSCBS(..., avgDH="median") only worked for
 #   single-chromosome data.  Same for avgTCN="median".

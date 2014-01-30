@@ -49,6 +49,34 @@ setMethodS3("print", "AbstractCBS", function(x, ...) {
 
 
 setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attributes=FALSE, ...) {
+  # NOTE: Here we cannot trust argument '...', because it may contain
+  # copies of 'target' and 'current'
+  args <- list(...);
+  drop <- integer(0L);
+  for (kk in seq_along(args)) {
+    if (identical(args[[kk]], target)) drop <- c(drop, kk);
+    if (identical(args[[kk]], current)) drop <- c(drop, kk);
+  }
+  if (length(drop) > 0L) {
+    args <- args[-drop];
+    str(args);
+#    assign("...", args, inherits=FALSE);
+  }
+  args <- list(...);
+
+  xs <- ll(private=TRUE, properties="data.class");
+  print(xs);
+  str(list(
+    .Generic=.Generic,
+    .GenericCallEnv=.GenericCallEnv,
+    .GenericDefEnv=.GenericDefEnv,
+    .Class=.Class,
+    .Method=.Method,
+    .Group=.Group,
+    NA
+  ))
+stop();
+
   # Compare class attributes
   res <- all.equal(class(target), class(current));
   if (!isTRUE(res)) {
@@ -58,7 +86,7 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
   # Compare locus-level data
   dataT <- getLocusData(target);
   dataC <- getLocusData(current);
-  res <- all.equal(dataT, dataC, check.attributes=check.attributes, ...);
+  res <- all.equal(dataT, dataC, check.attributes=check.attributes);
   if (!isTRUE(res)) {
     attr(res, "what") <- "getLocusData()";
     return(res);
@@ -67,7 +95,7 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
   # Compare segments
   dataT <- getSegments(target);
   dataC <- getSegments(current);
-  res <- all.equal(dataT, dataC, check.attributes=check.attributes, ...);
+  res <- all.equal(dataT, dataC, check.attributes=check.attributes);
   if (!isTRUE(res)) {
     attr(res, "what") <- "getSegments()";
     return(res);
@@ -76,7 +104,7 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
   # Compare field names
   fieldsT <- names(target);
   fieldsC <- names(current);
-  res <- all.equal(fieldsT, fieldsC, check.attributes=check.attributes, ...);
+  res <- all.equal(fieldsT, fieldsC, check.attributes=check.attributes);
   if (!isTRUE(res)) {
       attr(res, "what") <- "names";
     return(res);
@@ -86,7 +114,7 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
   for (key in fieldsT) {
     dataT <- target[[key]];
     dataC <- current[[key]];
-    res <- all.equal(dataT, dataC, check.attributes=check.attributes, ...);
+    res <- all.equal(dataT, dataC, check.attributes=check.attributes);
     if (!isTRUE(res)) {
       attr(res, "what") <- sprintf("[[\"%s\"]]", key);
       return(res);
