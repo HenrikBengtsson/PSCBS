@@ -64,19 +64,6 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
   }
   args <- list(...);
 
-  xs <- ll(private=TRUE, properties="data.class");
-  print(xs);
-  str(list(
-    .Generic=.Generic,
-    .GenericCallEnv=.GenericCallEnv,
-    .GenericDefEnv=.GenericDefEnv,
-    .Class=.Class,
-    .Method=.Method,
-    .Group=.Group,
-    NA
-  ))
-stop();
-
   # Compare class attributes
   res <- all.equal(class(target), class(current));
   if (!isTRUE(res)) {
