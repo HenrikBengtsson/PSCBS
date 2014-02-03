@@ -62,7 +62,12 @@ setMethodS3("all.equal", "CBS", function(target, current, check.attributes=FALSE
     current$output <- segs;
   }
 
-  NextMethod("all.equal", target=target, current=current, check.attributes=check.attributes);
+  # NOTE: Here arguments 'target' and 'current' are lists and does not
+  # have to be passed explicitly (although they have been modified).
+  # If passed explicity, note that they must be named *and* that the
+  # first/dispatch argument have to be passed as 'object=target'
+  # (and never as 'target=target').  /HB 2014-02-03
+  NextMethod("all.equal", object=target, current=current, check.attributes=check.attributes);
 }, protected=TRUE)
 
 
@@ -645,6 +650,16 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
 
 ############################################################################
 # HISTORY:
+# 2014-02-03
+# o BUG FIX: all.equal() for CBS would pass the first/dispatch argument
+#   to NextMethod() as 'target=target' and not as 'object=target', which
+#   would result in it being passed it twice both named and non-named
+#   where the latter would become argument 'tolerance=target' in an
+#   internal call to all.equal() for numerics.  In recent R-devel version
+#   this would generate "Error in all.equal.numeric(target[[i]],
+#   current[[i]], check.attributes = check.attributes, : 'tolerance'
+#   should be numeric  Calls: stopifnot ... all.equal.default ->
+#   all.equal.list -> all.equal -> all.equal.numeric".
 # 2013-12-17
 # o BUG FIX: getChangePoints() for CBS returned empty results.
 # 2013-10-20

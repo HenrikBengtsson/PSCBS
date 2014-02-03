@@ -2,6 +2,18 @@
 Package: PSCBS
 ==============
 
+Version: 0.40.4 [2014-02-03]
+o BUG FIX: all.equal() for CBS would pass the first/dispatch argument
+  to NextMethod() as 'target=target' and not as 'object=target', which
+  would result in it being passed it twice both named and non-named
+  where the latter would become argument 'tolerance=target' in an
+  internal call to all.equal() for numerics.  In recent R-devel version
+  this would generate "Error in all.equal.numeric(target[[i]],
+  current[[i]], check.attributes = check.attributes, : 'tolerance'
+  should be numeric  Calls: stopifnot ... all.equal.default ->
+  all.equal.list -> all.equal -> all.equal.numeric".
+
+
 Version: 0.40.3 [2014-01-29]
 o ROBUSTNESS: Now segmentByPairedPSCBS() asserts that argument 'muN'
   is not all NAs.  Similarily, if 'muN' is called from 'betaN' the
