@@ -46,8 +46,6 @@ importFrom("R.cache", "getCachePath")
 importFrom("R.cache", "loadCache")
 importFrom("R.cache", "saveCache")
 
-importFrom("DNAcopy", "segments.summary")
-
 importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
 importFrom("R.utils", "capitalize")
 importFrom("R.utils", "copyDirectory")
@@ -79,11 +77,12 @@ importFrom("R.utils", "wrap")
 
 
 ## Manual imports
+importFrom("R.utils", "subplots")
+importFrom("DNAcopy", "segments.summary")
 importFrom("DNAcopy", "smooth.CNA")
 importFrom("DNAcopy", "CNA")
 importFrom("DNAcopy", "segment")
 importFrom("DNAcopy", "getbdry")
-importFrom("R.utils", "subplots")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

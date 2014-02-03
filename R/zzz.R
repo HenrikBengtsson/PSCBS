@@ -52,6 +52,24 @@
 } # .useAromaLight()
 
 
+# This function exists solely for the purpose of backward compatibility
+# /HB 2014-02-04
+.useDNAcopy <- function(name=NULL, mode="function") {
+  if (!isPackageInstalled("DNAcopy")) {
+    throw("Bioconductor package not installed: DNAcopy");
+  }
+
+  # Done?
+  if (is.null(name)) return(invisible(NULL))
+
+  # Retrieve a particular function?
+  ns <- getNamespace("DNAcopy");
+  res <- get(name, mode=mode, envir=ns);
+
+  invisible(res);
+} # .useDNAcopy()
+
+
 .onLoad <- function(libname, pkgname) {
   ns <- getNamespace(pkgname);
   pkg <- Package(pkgname);
@@ -84,6 +102,8 @@
 
 ############################################################################
 # HISTORY:
+# 2014-02-04
+# o Added .useDNAcopy() to simplify backward compatibility.
 # 2013-10-13
 # o Added .onLoad() that creates Package '.PSCBS' object, which is
 #   used in .onAttach().  This is a workaround for not allocating a

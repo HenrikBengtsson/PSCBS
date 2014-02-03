@@ -112,6 +112,11 @@
 # @keyword IO
 #*/###########################################################################
 setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+  # Local copies of DNAcopy functions
+  getbdry <- .useDNAcopy("getbdry");
+  CNA <- .useDNAcopy("CNA");
+  segment <- .useDNAcopy("segment");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -130,7 +135,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     if (!is.null(bdry)) return(bdry);
 
     max.ones <- floor(nperm * alpha) + 1L;
-    bdry <- DNAcopy::getbdry(eta=eta, nperm=nperm, max.ones=max.ones, tol=tol);
+    bdry <- getbdry(eta=eta, nperm=nperm, max.ones=max.ones, tol=tol);
 
     saveCache(bdry, key=key, dirs=dirs);
 
@@ -638,7 +643,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # on "array has repeated maploc positions".  Ideally we should filter
   # just those out. /HB 2013-10-22
   suppressWarnings({
-    cnData <- DNAcopy::CNA(
+    cnData <- CNA(
       genomdat  = data$y,
       chrom     = data$chrom,
       data.type = "logratio",
@@ -728,9 +733,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # (b) SPEEDUP: When undo=+Inf we don't really have to segment.
   nbrOfNonMissingLoci <- sum(!is.na(cnData$y));
   if (nbrOfNonMissingLoci == 0) {
-    args[[1]] <- DNAcopy::CNA(genomdat=0, chrom=0, maploc=0);
+    args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
   } else if (undo == +Inf) {
-    args[[1]] <- DNAcopy::CNA(genomdat=0, chrom=0, maploc=0);
+    args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
     verbose && cat(verbose, "Skipping identification of new change points (undo=+Inf)");
   }
 

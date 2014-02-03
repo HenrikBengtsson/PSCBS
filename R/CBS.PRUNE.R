@@ -43,11 +43,8 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Local functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ns <- getNamespace("DNAcopy");
-  DNAcopy_changepoints.sdundo <- get("changepoints.sdundo", mode="function", envir=ns);
+  # Local copies of DNAcopy functions
+  DNAcopy_changepoints.sdundo <- .useDNAcopy("changepoints.sdundo");
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

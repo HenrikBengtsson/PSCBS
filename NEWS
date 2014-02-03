@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.40.4 [2014-02-03]
+Version: 0.40.4 [2014-02-04]
 o BUG FIX: all.equal() for CBS would pass the first/dispatch argument
   to NextMethod() as 'target=target' and not as 'object=target', which
   would result in it being passed it twice both named and non-named

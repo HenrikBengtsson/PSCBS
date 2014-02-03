@@ -57,6 +57,10 @@
 # @keyword IO
 #*/###########################################################################
 setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=NULL, method="DNAcopy::smooth.CNA", ..., verbose=FALSE) {
+  # Local copies of DNAcopy functions
+  CNA <- .useDNAcopy("CNA");
+  smooth.CNA <- .useDNAcopy("smooth.CNA");
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -150,11 +154,11 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     # on "array has repeated maploc positions".  Ideally we should filter
     # just those out. /HB 2013-10-22
     suppressWarnings({
-      dataKK <- DNAcopy::CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE);
+      dataKK <- CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE);
     });
     chromosomeKK <- xKK <- NULL; # Not needed anymore
 
-    yKKs <- DNAcopy::smooth.CNA(dataKK, ...)$y;
+    yKKs <- smooth.CNA(dataKK, ...)$y;
     dataKK <- NULL; # Not needed anymore
 
     # Sanity check
@@ -229,6 +233,8 @@ setMethodS3("dropSegmentationOutliers", "data.frame", function(y, ...) {
 
 ############################################################################
 # HISTORY:
+# 2014-02-04
+# o Now retrieving local copies on DNAcopy functions up front.
 # 2013-12-04
 # o DOCUMENTATION: Now {call|drop}SegmentationOutliers() are documented
 #   as generic functions.
