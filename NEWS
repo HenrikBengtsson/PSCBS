@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.41.0 [2014-03-25]
+o BUG FIX: updateMeans() for PairedPSCBS and NonPairedPSCBS returned the
+  incorrect DH segment levels for region in AB if adjustFor="ab" and
+  likewise for segments in LOH if adjustFor="loh".  This bug does *not*
+  affect any of PSCBS methods themselves, because none of them utilizes
+  those 'adjustFor' options.
+o Bumped up package dependencies.
+
+
 Version: 0.40.4 [2014-02-04]
 o BUG FIX: all.equal() for CBS would pass the first/dispatch argument
   to NextMethod() as 'target=target' and not as 'object=target', which

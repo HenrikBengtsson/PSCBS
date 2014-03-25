@@ -158,21 +158,21 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
     if (is.element("ab", adjustFor)) {
       verbose && enter(verbose, "Adjusting for AB");
       calls <- segs$abCall;
-      segs$dhMean[calls] <- 1/2;
+      segs$dhMean[calls] <- 0;
       verbose && exit(verbose);
     }
 
     if (is.element("loh", adjustFor)) {
       verbose && enter(verbose, "Adjusting for LOH");
       calls <- segs$lohCall;
-      segs$dhMean[calls] <- 0;
+      segs$dhMean[calls] <- 1;
       verbose && exit(verbose);
     }
 
     if (is.element("roh", adjustFor)) {
       verbose && enter(verbose, "Adjusting for ROH");
       calls <- segs$rohCall;
-      segs$dhMean[calls] <- as.double(NA);
+      segs$dhMean[calls] <- NA_real_;
       verbose && exit(verbose);
     }
 
@@ -238,6 +238,10 @@ setMethodS3("updateMeansC1C2", "PairedPSCBS", function(fit, ..., verbose=FALSE) 
 
 ##############################################################################
 # HISTORY
+# 2014-03-25
+# o BUG FIX: updateMeans() for PairedPSCBS and NonPairedPSCBS returned the
+#   incorrect DH segment levels for region in AB if adjustFor="ab" and
+#   likewise for segments in LOH if adjustFor="loh".
 # 2013-11-23
 # o Now updateMeans(..., clear=TRUE) clears bootstrap summaries, otherwise
 #   not.
