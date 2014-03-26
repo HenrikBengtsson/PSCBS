@@ -65,6 +65,8 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #    are calculated.}
 #   \item{adjust}{A @numeric scale factor specifying the size of
 #    the bandwidth parameter used by the density estimator.}
+#   \item{from}{A @numeric scalar specifying the lower bound for the
+#    support of the estimated density.}
 #   \item{minDensity}{A non-negative @numeric threshold specifying
 #    the minimum density a peak should have in order to consider
 #    it a peak.}
@@ -118,7 +120,7 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, minDensity=0.2, ..., verbose=FALSE) {
+setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, from=0, minDensity=0.2, ..., verbose=FALSE) {
   findPeaksAndValleys <- .useAromaLight("findPeaksAndValleys");
 
 
@@ -183,15 +185,21 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
     verbose && cat(verbose, "minDensity (adjusted for ploidy): ", minDensity);
   }
 
-  d <- density(c1, weights=weights, adjust=adjust, from=0, na.rm=FALSE);
+  d <- density(c1, weights=weights, adjust=adjust, from=from, na.rm=FALSE);
   fit <- findPeaksAndValleys(d);
 
   type <- NULL; rm(list="type"); # To please R CMD check
   fit <- subset(fit, type == "peak");
-  stopifnot(nrow(fit) >= 2);
+  if (nrow(fit) < 2L) {
+    throw(sprintf("Less that two modes were found in the empirical density of C1: %d", nrow(fit)));
+  }
+  nModes <- nrow(fit);
 
   fit <- subset(fit, density >= minDensity);
-  stopifnot(nrow(fit) >= 2);
+  if (nrow(fit) < 2L) {
+    throw(sprintf("Less that two modes were found in the empirical density of C1 after removing %d modes that are too weak (density < %g): %d", nModes - nrow(fit), minDensity, nrow(fit)));
+  }
+  nModes <- nrow(fit);
   verbose && cat(verbose, "All peaks:");
   verbose && print(verbose, fit);
 
@@ -228,7 +236,11 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
 
 #############################################################################
 # HISTORY:
-# 2013-09-26 [HB]
+# 2014-03-26
+# o Now estimateKappaByC1Density() give more informative error messages
+#   if it failed to identify modes for estimating the parameter.
+# o Added argument 'from' to estimateKappaByC1Density().
+# 2013-09-26
 # o CLEANUP: Now estimateKappaByC1Density() no longer attached
 #   'aroma.light', but only loads its namespace.
 # 2013-05-07

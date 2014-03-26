@@ -24,7 +24,7 @@
 
 \usage{
 \method{estimateKappaByC1Density}{PairedPSCBS}(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"),
-  adjust=1, minDensity=0.2, ..., verbose=FALSE)
+  adjust=1, from=0, minDensity=0.2, ..., verbose=FALSE)
 }
 
 \arguments{
@@ -32,6 +32,8 @@
    are calculated.}
   \item{adjust}{A \code{\link[base]{numeric}} scale factor specifying the size of
    the bandwidth parameter used by the density estimator.}
+  \item{from}{A \code{\link[base]{numeric}} scalar specifying the lower bound for the
+   support of the estimated density.}
   \item{minDensity}{A non-negative \code{\link[base]{numeric}} threshold specifying
    the minimum density a peak should have in order to consider
    it a peak.}
