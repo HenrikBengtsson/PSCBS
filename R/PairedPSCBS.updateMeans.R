@@ -222,8 +222,11 @@ setMethodS3("updateMeansC1C2", "PairedPSCBS", function(fit, ..., verbose=FALSE) 
 
     # Preserve (C1,C2) swaps / change-point flips?
     swap <- segs$c1c2Swap;
-    if (!is.null(swap) && any(swap)) {
-      segs[swap, c("c1Mean","c2Mean")] <- segs[swap, c("c2Mean","c1Mean")];
+    if (!is.null(swap)) {
+      swap <- which(swap);
+      if (length(swap) > 0L) {
+        segs[swap, c("c1Mean","c2Mean")] <- segs[swap, c("c2Mean","c1Mean")];
+      }
     }
 
     fit$output <- segs;
@@ -238,6 +241,9 @@ setMethodS3("updateMeansC1C2", "PairedPSCBS", function(fit, ..., verbose=FALSE) 
 
 ##############################################################################
 # HISTORY
+# 2014-03-26
+# o BUG FIX: updateMeansC1C2() for PairedPSCBS did not handle missing
+#   values (=splitters) in the 'c1c2Swap' field.
 # 2014-03-25
 # o BUG FIX: updateMeans() for PairedPSCBS and NonPairedPSCBS returned the
 #   incorrect DH segment levels for region in AB if adjustFor="ab" and
