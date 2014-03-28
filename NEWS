@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.41.1 [2014-03-28]
+o Added unTumorBoost() to recalculating the segment means and other
+  statistics for a given PairedPSCBS profile based on non-TumorBoosted
+  tumor BAFs (rather than TumorBoost:ed tumor BAFs).
+
+
 Version: 0.41.0 [2014-03-26]
 o Now estimateKappaByC1Density() give more informative error messages
   if it failed to identify modes for estimating the parameter.

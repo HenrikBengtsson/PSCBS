@@ -17,9 +17,14 @@
 \description{
  Estimate global background in segmented copy numbers based on the location of peaks in a weighted
  density estimator of the minor copy number mean levels.
+
  The global background, here called \eqn{\kappa},
  may have multiple origins where normal contamination is one,
  but not necessarily the only one.
+
+ \emph{Assumptions:}  This estimator assumes that there are segments
+ with C1=0 and C1=1, i.e. some deletions and, typically, some normal
+ segements.
 }
 
 \usage{

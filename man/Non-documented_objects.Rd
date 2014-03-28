@@ -306,6 +306,8 @@
 \alias{encodeCalls.data.frame}
 \alias{callGLAO}
 \alias{callGLAO.CBS}
+\alias{unTumorBoost}
+\alias{unTumorBoost.PairedPSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that

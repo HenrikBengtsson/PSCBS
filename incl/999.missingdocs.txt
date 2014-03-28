@@ -128,3 +128,4 @@ extractSegmentDataByLocus extractSegmentDataByLocus.PairedPSCBS
 updateMeansC1C2 updateMeansC1C2.PairedPSCBS
 encodeCalls encodeCalls.data.frame
 callGLAO callGLAO.CBS
+unTumorBoost unTumorBoost.PairedPSCBS
