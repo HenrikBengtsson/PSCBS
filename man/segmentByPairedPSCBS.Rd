@@ -26,8 +26,8 @@
 \method{segmentByPairedPSCBS}{default}(CT, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL,
   alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"),
   avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh",
-  "tcn"), tbn=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL,
-  verbose=FALSE)
+  "tcn"), tbn=TRUE, preserveScale=TRUE, joinSegments=TRUE, knownSegments=NULL,
+  dropMissingCT=TRUE, seed=NULL, verbose=FALSE)
 }
 
 \arguments{
@@ -66,6 +66,8 @@
     calling algorithm to be used.}
   \item{tbn}{If \code{\link[base:logical]{TRUE}}, \code{betaT} is normalized before segmentation
     using the TumorBoost method [2], otherwise not.}
+  \item{preserveScale}{Passed to \code{\link[aroma.light]{normalizeTumorBoost}},
+    which is only called if \code{tbn} is \code{\link[base:logical]{TRUE}}.}
   \item{joinSegments}{If \code{\link[base:logical]{TRUE}}, there are no gaps between neighboring
     segments.
     If \code{\link[base:logical]{FALSE}}, the boundaries of a segment are defined by the support

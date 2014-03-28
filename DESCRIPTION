@@ -1,5 +1,5 @@
 Package: PSCBS
-Version: 0.41.1
+Version: 0.41.2
 Depends: R (>= 2.15.0), utils
 Imports: R.methodsS3 (>= 1.6.1), R.oo (>= 1.18.0), R.utils (>= 1.29.8), R.cache (>= 0.9.0), matrixStats (>= 0.8.14), DNAcopy (>= 1.32.0)
 Suggests: aroma.light (>= 1.30.5), Hmisc (>= 3.14-3),

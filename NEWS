@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.41.2 [2014-03-28]
+o Added argument 'preserveScale' to segmentByPairedPSCBS(), which is
+  passed as is to normalizeTumorBoost() with the default being TRUE
+  corresponding to the previous default behavior.
+
+
 Version: 0.41.1 [2014-03-28]
 o Added unTumorBoost() to recalculating the segment means and other
   statistics for a given PairedPSCBS profile based on non-TumorBoosted
