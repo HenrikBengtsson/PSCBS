@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.41.3 [2014-03-29]
+o Methods no longer generates warnings on "in max(c(NA_integer_,
+  NA_integer_), na.rm = TRUE) : no non-missing arguments to max;
+  returning -Inf".
+o BUG FIX: In rare cases, callROH() could throw "Error in if
+  (is.na(delta)) { : argument is of length zero".
+
+
 Version: 0.41.2 [2014-03-28]
 o Added argument 'preserveScale' to segmentByPairedPSCBS(), which is
   passed as is to normalizeTumorBoost() with the default being TRUE

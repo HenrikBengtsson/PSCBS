@@ -130,7 +130,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   verbose && str(verbose, tcnSegRows);
   # Sanity checks
   segRows <- tcnSegRows;
-  stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
+  stopifnot(suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT));
   drow <- segRows[-1,1] - segRows[-nrow(segRows),2];
   if (!all(is.na(drow) | (drow > 0))) {
     print(segRows);
@@ -141,7 +141,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   verbose && str(verbose, dhSegRows);
   # Sanity checks
   segRows <- dhSegRows;
-  stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
+  stopifnot(suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT));
   drow <- segRows[-1,1] - segRows[-nrow(segRows),2];
   stopifnot(all(is.na(drow) | (drow > 0)));
   if (!all(is.na(drow) | (drow > 0))) {

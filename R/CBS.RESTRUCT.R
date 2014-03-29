@@ -227,7 +227,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   segRows <- segRows[idxs,,drop=FALSE] - d;
   verbose && str(verbose, segRows);
   # Sanity checks
-  stopifnot(max(segRows, na.rm=TRUE) <= nrow(dataT));
+  stopifnot(suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT));
   drow <- segRows[-1,1] - segRows[-nrow(segRows),2];
   stopifnot(all(is.na(drow) | (drow > 0)));
   if (!all(is.na(drow) | (drow > 0))) {
