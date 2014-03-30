@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.41.4 [2014-03-30]
+o As an alternative to argument 'CT', segmentByPairedPSCBS() now accepts
+  arguments 'thetaT' and 'thetaN', in case 'CT' is calculated as
+  CT=2*thetaT/thetaN.
+
+
 Version: 0.41.3 [2014-03-29]
 o Methods no longer generates warnings on "in max(c(NA_integer_,
   NA_integer_), na.rm = TRUE) : no non-missing arguments to max;
