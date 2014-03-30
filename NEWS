@@ -3,6 +3,11 @@ Package: PSCBS
 ==============
 
 Version: 0.41.4 [2014-03-30]
+o GENERALIZATION: Now callROH() also works if paired PSCBS was done
+  with only 'muN' available (and not 'betaN').  In that case, it assumes
+  that all genotype confidence scores are equal.
+o Updated the ordering and the defaults of testROH() arguments to make
+  it clear that 'betaN' is optional and only used if 'csN' is not given.
 o As an alternative to argument 'CT', segmentByPairedPSCBS() now accepts
   arguments 'thetaT' and 'thetaN', in case 'CT' is calculated as
   CT=2*thetaT/thetaN.

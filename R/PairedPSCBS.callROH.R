@@ -125,6 +125,7 @@ setMethodS3("callROHOneSegment", "PairedPSCBS", function(fit, ..., verbose=FALSE
   # Extract the locus-level data for the segment tested
   data <- getLocusData(fit);
 
+
   # Keep only SNPs:
   # SNPs are identifies as those loci that have non-missing
   # 'betaTN' & 'muN', cf. segmentByPairedPSCBS().
@@ -139,7 +140,7 @@ setMethodS3("callROHOneSegment", "PairedPSCBS", function(fit, ..., verbose=FALSE
   csN <- data$csN;  # Genotyping confidence scores, if available
 
   # Test for ROH
-  fit <- testROH(betaN=betaN, muN=muN, csN=csN, ..., verbose=less(verbose, 10));
+  fit <- testROH(muN=muN, csN=csN, betaN=betaN, ..., verbose=less(verbose, 10));
 
   # Get the ROH call (TRUE, FALSE, or NA)
   call <- fit;

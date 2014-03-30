@@ -117,6 +117,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   CNA <- .useDNAcopy("CNA");
   segment <- .useDNAcopy("segment");
 
+  R_SANITY_CHECK <- TRUE;
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -368,12 +370,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                 verbose=verbose);
 
       # Sanity checks
-      if (nrow(knownSegmentsKK) == 0) {
-        # Since all missing data have been dropped...
-        stopifnot(nrow(fit$data) == length(y));
-        # ...and ordered along the genome already.
-        stopifnot(all.equal(fit$data$y, y));
-      }
+      if (R_SANITY_CHECK) {
+        if (nrow(knownSegmentsKK) == 0) {
+          # Since all missing data have been dropped...
+          stopifnot(nrow(fit$data) == length(y));
+          # ...and ordered along the genome already.
+          stopifnot(all.equal(fit$data$y, y));
+        }
+      } # if (R_SANITY_CHECK)
 
       rm(list=fields); # Not needed anymore
 
@@ -436,14 +440,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && exit(verbose);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sanity checks
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Here 'knownSegments' should specify at most a single chromosome
-  uChromosomes <- sort(unique(knownSegments$chromosome));
-  if (length(uChromosomes) > 1) {
-    throw("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes));
-  }
+  if (R_SANITY_CHECK) {
+    # Here 'knownSegments' should specify at most a single chromosome
+    uChromosomes <- sort(unique(knownSegments$chromosome));
+    if (length(uChromosomes) > 1) {
+      throw("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes));
+    }
+  } # if (R_SANITY_CHECK)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -459,7 +463,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     suppressWarnings({
       splitter <- extractSegment(splitter, 2);
       # Sanity check
-      stopifnot(nbrOfSegments(splitter, splitters=TRUE) == 1);
+      if (R_SANITY_CHECK) {
+        stopifnot(nbrOfSegments(splitter, splitters=TRUE) == 1);
+      } # if (R_SANITY_CHECK)
     });
 
     fitList <- list();
@@ -505,8 +511,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         }
 
         # Sanity checks
-        stopifnot(nrow(fit$data) == nbrOfLoci);
-        stopifnot(all.equal(fit$data$y, y));
+        if (R_SANITY_CHECK) {
+          stopifnot(nrow(fit$data) == nbrOfLoci);
+          stopifnot(all.equal(fit$data$y, y));
+        } # if (R_SANITY_CHECK)
 
         rm(list=fields); # Not needed anymore
 
@@ -520,7 +528,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       } # if (isSplitter)
 
       # Sanity check
-      stopifnot(TRUE && nbrOfSegments(fit, splitters=TRUE) > 0);
+      if (R_SANITY_CHECK) {
+        stopifnot(TRUE && nbrOfSegments(fit, splitters=TRUE) > 0);
+      } # if (R_SANITY_CHECK)
 
       fitList[[segTag]] <- fit;
 
@@ -551,20 +561,21 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     }
 
     # Sanity checks
-    segs <- getSegments(fit);
-    stopifnot(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE));
-    stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-    stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+    if (R_SANITY_CHECK) {
+      segs <- getSegments(fit);
+      stopifnot(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE));
+      stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
+      stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
 
-    # Sanity check
-#    if (nrow(fit$data) != length(y)) {
-#      print(c(nrow(fit$data), nrow(data)));
-#    }
-#    stopifnot(nrow(fit$data) == nrow(data));
-#    stopifnot(all(fit$data$chromosome == data$chromosome));
-#    stopifnot(all(fit$data$x == data$x));
-#    stopifnot(all(fit$data$index == data$index));
-#    stopifnot(all.equal(fit$data$y, data$y));
+  #    if (nrow(fit$data) != length(y)) {
+  #      print(c(nrow(fit$data), nrow(data)));
+  #    }
+  #    stopifnot(nrow(fit$data) == nrow(data));
+  #    stopifnot(all(fit$data$chromosome == data$chromosome));
+  #    stopifnot(all(fit$data$x == data$x));
+  #    stopifnot(all(fit$data$index == data$index));
+  #    stopifnot(all.equal(fit$data$y, data$y));
+    } # if (R_SANITY_CHECK)
 
     verbose && exit(verbose);
 
@@ -574,9 +585,12 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     return(fit);
   } # if (nbrOfSegments > 1)
 
-  # Sanity check
   nbrOfSegments <- nrow(knownSegments);
-  stopifnot(nbrOfSegments <= 1);
+
+  # Sanity check
+  if (R_SANITY_CHECK) {
+    stopifnot(nbrOfSegments <= 1);
+  } # if (R_SANITY_CHECK)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Specific segment?
@@ -585,7 +599,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     knownSegments <- subset(knownSegments, chromosome == chromosome);
     nbrOfSegments <- nrow(knownSegments);
     # Sanity check
-    stopifnot(nbrOfSegments <= 1);
+    if (R_SANITY_CHECK) {
+      stopifnot(nbrOfSegments <= 1);
+    } # if (R_SANITY_CHECK)
   }
 
   if (nbrOfSegments == 1) {
@@ -658,8 +674,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && exit(verbose);
 
   # Sanity check
-  # (because all loci with unknown locations have already been dropped)
-  stopifnot(nrow(cnData) == nrow(data));
+  if (R_SANITY_CHECK) {
+    # (because all loci with unknown locations have already been dropped)
+    stopifnot(nrow(cnData) == nrow(data));
+  } # if (R_SANITY_CHECK)
 
 
   userArgs <- list(...);
@@ -767,7 +785,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     segRows <- fit$segRows;
 
     # Sanity check
-    stopifnot(nrow(output) == 1);
+    if (R_SANITY_CHECK) {
+      stopifnot(nrow(output) == 1);
+    } # if (R_SANITY_CHECK)
 
     # Was a region specified?
     if (nbrOfSegments == 1) {
@@ -797,7 +817,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     segRows <- fit$segRows;
 
     # Sanity check
-    stopifnot(nrow(output) == 1);
+    if (R_SANITY_CHECK) {
+      stopifnot(nrow(output) == 1);
+    } # if (R_SANITY_CHECK)
 
     # Was a region specified?
     if (nbrOfSegments == 1) {
@@ -873,9 +895,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   class(fit) <- c("CBS", "AbstractCBS");
 
   # Sanity checks
-  segRows <- fit$segRows;
-  stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
-  stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
+  if (R_SANITY_CHECK) {
+    segRows <- fit$segRows;
+    stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
+    stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
+  } # if (R_SANITY_CHECK)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -922,9 +946,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     fit <- joinSegments(fit, range=range, verbose=verbose);
 
     # Sanity checks
-    segRows <- fit$segRows;
-    stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
-    stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
+    if (R_SANITY_CHECK) {
+      segRows <- fit$segRows;
+      stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
+      stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
+    } # if (R_SANITY_CHECK)
   }
 
 
