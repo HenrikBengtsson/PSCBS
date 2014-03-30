@@ -124,7 +124,7 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
   formals <- formals[!sapply(formals, FUN=is.language)];
   formals <- formals[!sapply(formals, FUN=is.name)];
-  drop <- c("chromosome", "x", "w", "CT", "betaT", "betaN", "muN", "...");
+  drop <- c("chromosome", "x", "w", "CT", "thetaT", "thetaN", "betaT", "betaN", "muN", "...");
   keep <- !is.element(names(formals), drop);
   formals <- formals[keep];
 
@@ -214,6 +214,8 @@ setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
 
 ##############################################################################
 # HISTORY
+# 2014-03-30
+# o Update resegment() for PairedPSCBS to handle 'thetaT' and 'thetaN'.
 # 2013-10-25
 # o BUG FIX: The 'rho' signals returned by getLocusData(..., fields="full")
 #   for PairedPSCBS would have values also for homozygote SNPs.
