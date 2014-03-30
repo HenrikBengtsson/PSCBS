@@ -119,7 +119,7 @@ setMethodS3("callROHOneSegment", "PairedPSCBS", function(fit, ..., verbose=FALSE
   verbose && enter(verbose, "Calling ROH for a single segment");
 
   # Make sure that there is only a single segment in this object
-  stopifnot(nbrOfSegments(fit, splitters=TRUE) == 1);
+  stopifnot(nbrOfSegments(fit, splitters=TRUE) == 1L);
 
 
   # Extract the locus-level data for the segment tested
