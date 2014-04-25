@@ -265,7 +265,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    verbose && enter(verbose, "Setting (temporary) random seed");
+    verbose && enter(verbose, "Setting (temporary) random seed", level=-10);
     oldRandomSeed <- NULL;
     if (exists(".Random.seed", mode="integer")) {
       oldRandomSeed <- get(".Random.seed", mode="integer");
@@ -275,8 +275,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         .Random.seed <<- oldRandomSeed;
       }
     }, add=TRUE);
-    verbose && cat(verbose, "The random seed will be reset to its original state afterward.");
-    verbose && cat(verbose, "Seed: ", seed);
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.", level=-10);
+    verbose && cat(verbose, "Seed: ", seed, level=-10);
     set.seed(seed);
     verbose && exit(verbose);
   }
@@ -284,13 +284,13 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Setup up data");
+  verbose && enter(verbose, "Setup up data", level=-10);
   data <- data.frame(chrom=chrom, x=x, y=y, index=index);
   if (hasWeights) {
-    verbose && cat(verbose, "Adding locus-specific weights");
+    verbose && cat(verbose, "Adding locus-specific weights", level=-10);
     data$w <- w;
   }
-  verbose && str(verbose, data);
+  verbose && str(verbose, data, level=-10);
   # Not needed anymore
   chrom <- x <- index <- y <- w <- NULL;
   verbose && exit(verbose);
@@ -302,8 +302,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ok <- (!is.na(data$chrom) & !is.na(data$x));
   if (any(!ok)) {
-    verbose && enter(verbose, "Dropping loci with unknown locations");
-    verbose && cat(verbose, "Number of loci dropped: ", sum(!ok));
+    verbose && enter(verbose, "Dropping loci with unknown locations", level=-10);
+    verbose && cat(verbose, "Number of loci dropped: ", sum(!ok), level=-10);
     data <- data[ok,,drop=FALSE];
     verbose && exit(verbose);
   }
@@ -316,16 +316,20 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # the sort such that the returned 'data' object is always in
   # the same order and number of loci as the input data.
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Ordering data along genome");
+  verbose && enter(verbose, "Ordering data along genome", level=-50);
   o <- order(data$chrom, data$x, decreasing=FALSE, na.last=TRUE);
   # Any change?
   if (any(o != seq(along=o))) {
     data <- data[o,,drop=FALSE];
   }
   o <- NULL; # Not needed anymore
-  verbose && str(verbose, data);
+  verbose && str(verbose, data, level=-50);
   verbose && exit(verbose);
 
+      message("---------------")
+      message(verbose$defaultLevel)
+      message(verbose$threshold)
+      message("---------------Y")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Multiple chromosomes?
@@ -334,8 +338,13 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   chromosomes <- sort(unique(data$chrom), na.last=NA);
   nbrOfChromosomes <- length(chromosomes);
   if (nbrOfChromosomes > 1) {
+      message("---------------")
+      message(verbose$defaultLevel)
+      message(verbose$threshold)
+      message("---------------Y")
     verbose && enter(verbose, "Segmenting multiple chromosomes");
     verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
+      message("---------------Y")
 
     fitList <- list();
     for (kk in seq(length=nbrOfChromosomes)) {
@@ -345,7 +354,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
-      verbose && str(verbose, dataKK);
+      verbose && str(verbose, dataKK, level=-10);
       fields <- attachLocally(dataKK, fields=c("y", "chrom", "x", "index"));
       dataKK <- NULL; # Not needed anymore
 
@@ -355,8 +364,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         if (nrow(knownSegmentsKK) == 0L) {
           knownSegmentsKK <- data.frame(chromosome=chromosomeKK, start=-Inf, end=+Inf);
         }
-        verbose && cat(verbose, "Known segments:");
-        verbose && print(verbose, knownSegmentsKK);
+        verbose && cat(verbose, "Known segments:", level=-5);
+        verbose && print(verbose, knownSegmentsKK, level=-5);
       }
 
       fit <- segmentByCBS(y=y,
@@ -381,8 +390,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
       rm(list=fields); # Not needed anymore
 
-      verbose && print(verbose, head(as.data.frame(fit)));
-      verbose && print(verbose, tail(as.data.frame(fit)));
+      verbose && print(verbose, head(as.data.frame(fit)), level=-10);
+      verbose && print(verbose, tail(as.data.frame(fit)), level=-10);
 
       fitList[[chrTag]] <- fit;
 
@@ -391,7 +400,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       verbose && exit(verbose);
     } # for (kk ...)
 
-    verbose && enter(verbose, "Merging (independently) segmented chromosome");
+    verbose && enter(verbose, "Merging (independently) segmented chromosome", level=-50);
     fit <- Reduce(append, fitList);
     # Not needed anymore
     fitList <- NULL;
@@ -399,15 +408,15 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Update parameters that otherwise may be incorrect
     fit$params$seed <- seed;
 
-    verbose && str(verbose, fit);
+    verbose && str(verbose, fit, level=-10);
     verbose && exit(verbose);
 
     segs <- as.data.frame(fit);
     if (nrow(segs) < 6) {
-      verbose && print(verbose, segs);
+      verbose && print(verbose, segs, level=-10);
     } else {
-      verbose && print(verbose, head(segs));
-      verbose && print(verbose, tail(segs));
+      verbose && print(verbose, head(segs), level=-10);
+      verbose && print(verbose, tail(segs), level=-10);
     }
 
     verbose && exit(verbose);
@@ -418,15 +427,16 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     return(fit);
   } # if (nbrOfChromosomes > 1)
 
+  verbose && cat(verbose, "Chromosome: ", data$chrom[1L]);
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Subset 'knownSegments'
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Keeping only current chromosome for 'knownSegments'");
+  verbose && enter(verbose, "Keeping only current chromosome for 'knownSegments'", level=-10);
 
   # Assume no missing values
   currChromosome <- data$chrom[1];
-  verbose && cat(verbose, "Chromosome: ", currChromosome);
+  verbose && cat(verbose, "Chromosome: ", currChromosome, level=-10);
 
   knownSegments <- subset(knownSegments, chromosome == currChromosome);
   if (nrow(knownSegments) == 0L) {
@@ -434,8 +444,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   }
   nbrOfSegments <- nrow(knownSegments);
 
-  verbose && cat(verbose, "Known segments for this chromosome:");
-  verbose && print(verbose, knownSegments);
+  verbose && cat(verbose, "Known segments for this chromosome:", level=-10);
+  verbose && print(verbose, knownSegments, level=-10);
 
   verbose && exit(verbose);
 
@@ -455,8 +465,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Sanity check of limitation  /HB 2011-10-19
   if (nbrOfSegments > 1) {
-    verbose && enter(verbose, "Segmenting multiple segments on current chromosome");
-    verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
+    verbose && enter(verbose, "Segmenting multiple segments on current chromosome", level=-5);
+    verbose && cat(verbose, "Number of segments: ", nbrOfSegments, level=-5);
 
     # Create a splitter-only CBS object
     splitter <- segmentByCBS(y=c(0,0), chromosome=c(1,2), x=c(0,0));
@@ -475,16 +485,16 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       xStart <- seg$start;
       xEnd <- seg$end;
       segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
-      verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments));
+      verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments), level=-10);
 
       isSplitter <- (is.na(xStart) && is.na(xEnd));
       if (isSplitter) {
         fit <- splitter;
-        verbose && cat(verbose, "Nothing to segment. Inserting an explicit splitter.");
+        verbose && cat(verbose, "Nothing to segment. Inserting an explicit splitter.", level=-10);
       } else {
         # Extract subset of data and parameters for this segment
         dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
-        verbose && str(verbose, dataJJ);
+        verbose && str(verbose, dataJJ, level=-50);
         fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
         dataJJ <- NULL; # Not needed anymore
 
@@ -507,7 +517,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                     knownSegments=seg,
                     ...,
                     seed=NULL,
-                    verbose=verbose);
+                    verbose=less(verbose,1));
         }
 
         # Sanity checks
@@ -520,10 +530,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
         segs <- as.data.frame(fit);
         if (nrow(segs) < 6) {
-          verbose && print(verbose, segs);
+          verbose && print(verbose, segs, level=-10);
         } else {
-          verbose && print(verbose, head(segs));
-          verbose && print(verbose, tail(segs));
+          verbose && print(verbose, head(segs), level=-10);
+          verbose && print(verbose, tail(segs), level=-10);
         }
       } # if (isSplitter)
 
@@ -539,8 +549,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       verbose && exit(verbose);
     } # for (jj ...)
 
-    verbose && enter(verbose, "Merging (independently) segmented known segments");
-    verbose && cat(verbose, "Number of segments: ", length(fitList));
+    verbose && enter(verbose, "Merging (independently) segmented known segments", level=-10);
+    verbose && cat(verbose, "Number of segments: ", length(fitList), level=-10);
     appendT <- function(...) append(..., addSplit=FALSE);
     fit <- Reduce(appendT, fitList);
     # Not needed anymore
@@ -549,15 +559,15 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Update parameters that otherwise may be incorrect
     fit$params$seed <- seed;
 
-    verbose && str(verbose, fit);
+    verbose && str(verbose, fit, level=-10);
     verbose && exit(verbose);
 
     segs <- getSegments(fit);
     if (nrow(segs) > 6) {
-      verbose && print(verbose, head(segs));
-      verbose && print(verbose, tail(segs));
+      verbose && print(verbose, head(segs), level=-10);
+      verbose && print(verbose, tail(segs), level=-10);
     } else {
-      verbose && print(verbose, segs);
+      verbose && print(verbose, segs, level=-10);
     }
 
     # Sanity checks
@@ -610,18 +620,17 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     xStart <- seg$start;
     xEnd <- seg$end;
     segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
-    verbose && printf(verbose, "Extracting segment '%s'", segTag);
+    verbose && printf(verbose, "Extracting segment '%s'", segTag, level=-50);
 
     # Extract subset of data and parameters for this segment
     data <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
-    verbose && str(verbose, data);
+    verbose && str(verbose, data, level=-50);
   }
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Retrieving segmentation function
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Retrieving the fit function");
+  verbose && enter(verbose, "Retrieving the fit function", level=-50);
   pkgName <- "DNAcopy";
   # Assert that package is installed
   isPackageInstalled(pkgName) || throw("Package is not installed: ", pkgName);
@@ -630,8 +639,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   pkgDetails <- sprintf("%s v%s", pkgName, pkgVer);
 
   methodName <- "segment";
-  verbose && cat(verbose, "Method: ", methodName);
-  verbose && cat(verbose, "Package: ", pkgDetails);
+  verbose && cat(verbose, "Method: ", methodName, level=-50);
+  verbose && cat(verbose, "Package: ", pkgDetails, level=-50);
 
   # We need to attach the 'DNAcopy' package
   require(pkgName, character.only=TRUE, quietly=TRUE) || throw("Package not loaded: ", pkgName);
@@ -639,19 +648,19 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Get the fit function for the segmentation method
 #  fitFcn <- getExportedValue(pkgName, methodName);
   fitFcn <- getFromNamespace(methodName, pkgName);
-  verbose && str(verbose, "Function: ", fitFcn);
+  verbose && str(verbose, "Function: ", fitFcn, level=-50);
   formals <- formals(fitFcn);
-  verbose && cat(verbose, "Formals:");
-  verbose && str(verbose, formals);
+  verbose && cat(verbose, "Formals:", level=-50);
+  verbose && str(verbose, formals, level=-50);
   verbose && exit(verbose);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up arguments to pass to segmentation function
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Setting up method arguments");
+  verbose && enter(verbose, "Setting up method arguments", level=-50);
 
-  verbose && enter(verbose, "Setting up ", pkgName, " data structure");
+  verbose && enter(verbose, "Setting up ", pkgName, " data structure", level=-50);
 
   sampleName <- "y";  # This is going to be the name of the data field
 
@@ -668,9 +677,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       presorted = TRUE
     );
   });
-  verbose && str(verbose, cnData);
+  verbose && str(verbose, cnData, level=-50);
   names(cnData)[3] <- sampleName;
-  verbose && str(verbose, cnData);
+  verbose && str(verbose, cnData, level=-50);
   verbose && exit(verbose);
 
   # Sanity check
@@ -682,8 +691,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   userArgs <- list(...);
   if (length(userArgs) > 0) {
-    verbose && cat(verbose, "User arguments:");
-    verbose && str(verbose, userArgs);
+    verbose && cat(verbose, "User arguments:", level=-50);
+    verbose && str(verbose, userArgs, level=-50);
   }
 
   # Check if 'sbdry' can/should be precalculated.  This uses memoization
@@ -693,7 +702,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     keys <- c("nperm", "alpha", "eta");
     keep <- is.element(keys, names(userArgs));
     if (any(keep)) {
-      verbose && enter(verbose, "Precalculating argument 'sbdry' (with memoization)");
+      verbose && enter(verbose, "Precalculating argument 'sbdry' (with memoization)", level=-50);
       # Precalculate boundaries
       argsT <- formals[keys];
       keys <- keys[keep];
@@ -716,8 +725,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     params$undo.SD <- undo;
   }
 
-  verbose && cat(verbose, "Segmentation parameters:");
-  verbose && str(verbose, params);
+  verbose && cat(verbose, "Segmentation parameters:", level=-50);
+  verbose && str(verbose, params, level=-50);
 
   # Assign/overwrite by user arguments
   if (length(userArgs) > 0) {
@@ -726,16 +735,16 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     }
   }
 
-  verbose && cat(verbose, "Segmentation and user parameters:");
-  verbose && str(verbose, params);
+  verbose && cat(verbose, "Segmentation and user parameters:", level=-50);
+  verbose && str(verbose, params, level=-50);
 
   # Cleaning out unknown parameters
   keep <- (names(params) %in% names(formals));
   params <- params[keep];
 
   args <- c(list(cnData), params, verbose=as.logical(verbose));
-  verbose && cat(verbose, "Final arguments:");
-  verbose && str(verbose, args);
+  verbose && cat(verbose, "Final arguments:", level=-50);
+  verbose && str(verbose, args, level=-50);
 
   verbose && exit(verbose);
 
@@ -743,7 +752,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Calling segmentation function
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, sprintf("Calling %s() of %s", methodName, pkgName));
+  verbose && enter(verbose, sprintf("Calling %s() of %s", methodName, pkgName), level=-50);
 
   # There are a few cases where we can/need to do a dummy segmentation
   # based on a single data points:
@@ -754,7 +763,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
   } else if (undo == +Inf) {
     args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
-    verbose && cat(verbose, "Skipping identification of new change points (undo=+Inf)");
+    verbose && cat(verbose, "Skipping identification of new change points (undo=+Inf)", level=-50);
   }
 
   # In case the method writes to stdout, we capture it
@@ -845,21 +854,21 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     fit$segRows <- segRows;
   } # if (undo == +Inf)
 
-  verbose && cat(verbose, "Captured output that was sent to stdout:");
+  verbose && cat(verbose, "Captured output that was sent to stdout:", level=-50);
   stdout <- paste(stdout, collapse="\n");
-  verbose && cat(verbose, stdout);
+  verbose && cat(verbose, stdout, level=-50);
 
-  verbose && cat(verbose, "Fitting time (in seconds):");
-  verbose && print(verbose, t);
+  verbose && cat(verbose, "Fitting time (in seconds):", level=-50);
+  verbose && print(verbose, t, level=-50);
 
-  verbose && cat(verbose, "Fitting time per 1000 loci (in seconds):");
-  verbose && print(verbose, 1000*t/nbrOfLoci);
+  verbose && cat(verbose, "Fitting time per 1000 loci (in seconds):", level=-50);
+  verbose && print(verbose, 1000*t/nbrOfLoci, level=-50);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Restructure
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Restructuring results");
+  verbose && enter(verbose, "Restructuring results", level=-50);
 
   # Coerce
   fit$output$num.mark <- as.integer(fit$output$num.mark);
@@ -943,7 +952,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       range <- NULL;
     }
 
-    fit <- joinSegments(fit, range=range, verbose=verbose);
+    fit <- joinSegments(fit, range=range, verbose=less(verbose, 10));
 
     # Sanity checks
     if (R_SANITY_CHECK) {
@@ -954,8 +963,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   }
 
 
-  verbose && cat(verbose, "Results object:");
-  verbose && str(verbose, fit);
+  verbose && cat(verbose, "Results object:", level=-10);
+  verbose && str(verbose, fit, level=-10);
 
   verbose && exit(verbose);
 

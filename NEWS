@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.42.0 [2014-04-25]
+o SPEEDUP: Minor speedup (a few percents) by now byte compiling the
+  package by default.
+o Bumped up package dependencies.
+
+
 Version: 0.41.4 [2014-03-30]
 o GENERALIZATION: Now callROH() also works if paired PSCBS was done
   with only 'muN' available (and not 'betaN').  In that case, it assumes
