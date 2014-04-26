@@ -17,6 +17,6 @@ Authors@R: c(
   person("Richard A.", "Olshen", role="aut"))
 Description: Segmentation of allele-specific DNA copy number data and detection of regions with abnormal copy number within each parental chromosome.  Both tumor-normal paired and tumor-only analyses are supported.
 License: GPL (>= 2)
-LazyLoad: yes
-ByteCompile: yes
+LazyLoad: TRUE
+ByteCompile: TRUE
 biocViews: aCGH, CopyNumberVariants, SNP, Microarray, OneChannel, TwoChannel, Genetics

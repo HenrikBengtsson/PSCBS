@@ -5,6 +5,7 @@ Package: PSCBS
 Version: 0.42.0 [2014-04-25]
 o SPEEDUP: Minor speedup (a few percents) by now byte compiling the
   package by default.
+o CLEANUP: Dropped unnecessary usage of '::'.
 o Bumped up package dependencies.
 
 
