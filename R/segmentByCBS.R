@@ -326,11 +326,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && str(verbose, data, level=-50);
   verbose && exit(verbose);
 
-      message("---------------")
-      message(verbose$defaultLevel)
-      message(verbose$threshold)
-      message("---------------Y")
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Multiple chromosomes?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -338,13 +333,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   chromosomes <- sort(unique(data$chrom), na.last=NA);
   nbrOfChromosomes <- length(chromosomes);
   if (nbrOfChromosomes > 1) {
-      message("---------------")
-      message(verbose$defaultLevel)
-      message(verbose$threshold)
-      message("---------------Y")
     verbose && enter(verbose, "Segmenting multiple chromosomes");
     verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
-      message("---------------Y")
 
     fitList <- list();
     for (kk in seq(length=nbrOfChromosomes)) {
