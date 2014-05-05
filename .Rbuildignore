@@ -5,3 +5,8 @@
 ^incl
 ^NAMESPACE,.*[.]txt$
 ^nohup.*$
+^.travis.yml$
+^.svn
+^.git
+^.check
+^.test
