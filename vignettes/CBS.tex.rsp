@@ -12,7 +12,7 @@
 <%
 library("PSCBS");
 library("R.devices");
-evalCapture <- R.utils::evalCapture;
+withCapture <- R.utils::withCapture;
 PSCBS <- R.oo::Package("PSCBS");
 R.rsp <- R.oo::Package("R.rsp");
 fixLocations <- function(fit, ...) {
@@ -128,7 +128,7 @@ In this example we will use a small example data set part of the \pkg{PSCBS} pac
 fullname <- "PairedPSCBS,exData,chr01";
 %>
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 data <- PSCBS::exampleData("paired.chr01")
 data <- data[,c("chromosome", "x", "CT")]
 colnames(data)[3] <- "y"
@@ -141,7 +141,7 @@ In additional to the mandatory fields (\code{chromosome}, \code{x}, and \code{C}
 \label{secTCNOutliers}
 There may be some outliers among the <%=signalType%>s.  In CBS~\citep{OlshenA_etal_2004,VenkatramanOlshen_2007}, the authors propose a method for identifying outliers and then to shrink such values toward their neighbors ("smooth") before performing segmentation.  At the time CBS was developed it made sense to not just to drop outliers because the resolution was low and every datapoint was valuable.  With modern technologies the resolution is much higher and we can afford dropping such outliers, which can be done by:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 data <- dropSegmentationOutliers(data)
 })%>
 \end{verbatim}
@@ -157,7 +157,7 @@ The CBS method does not take the physical locations (in units of nucleotides) of
 
 To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observered loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 gaps <- findLargeGaps(data, minLength=1e6)
 gaps
 })%>
@@ -165,7 +165,7 @@ gaps
 which shows that there is a 20.5Mb long gap between 121.0Mb and 141.5Mb on Chromosome~1.  This is the centromere of Chromosome~1.
 Gaps cannot be specified directly.  Instead they need to be give as part of a set of "known" segments, which is done as:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 knownSegments <- gapsToSegments(gaps)
 knownSegments
 })%>
@@ -178,7 +178,7 @@ Specifying known segments is optional.
 \subsection{Identifying <%=signalType%> segments}
 We are now ready to segment the locus-level <%=signalType%> signals.  This is done by\footnote{We fix the random seed in order for the results of this vignette to be exactly reproducible.}:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fit <- segmentByCBS(data, knownSegments=knownSegments, seed=0xBEEF, verbose=-10)
 })%>
 \end{verbatim}
@@ -187,7 +187,7 @@ Note that this may take several minutes when applied to whole-genome data.
 The result of the segmentation is a set of segments identified to have the same underlying <%=signalType%> levels.  In this particular case, <%=nbrOfSegments(fit)%> <%=signalType%> segments were found:
 <% fit <- fixLocations(fit); %>
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 getSegments(fit, simplify=TRUE)
 })%>
 \end{verbatim}
@@ -229,7 +229,7 @@ TBA.
 \subsection{Results from calling <%=signalType%> states}
 All calls are appended to the segmentation results as logical columns:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 getSegments(fit, simplify=TRUE)
 })%>
 \end{verbatim}
@@ -252,7 +252,7 @@ In this section we illustrate some of the ongoing and future work of the PSCBS p
 \subsection{Pruning segmentation profile}
 By using hierarchical cluster of the segment means it is possible to prune the <%=signalType%> profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer.
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fitP <- pruneByHClust(fit, h=0.25, verbose=-10)
 })%>
 \end{verbatim}

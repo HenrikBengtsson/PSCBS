@@ -12,7 +12,7 @@
 <%
 library("PSCBS");
 library("R.devices");
-evalCapture <- R.utils::evalCapture;
+withCapture <- R.utils::withCapture;
 PSCBS <- R.oo::Package("PSCBS");
 R.rsp <- R.oo::Package("R.rsp");
 fixLocations <- function(fit, ...) {
@@ -132,7 +132,7 @@ In this example we will use a small example data set part of the \pkg{PSCBS} pac
 fullname <- "PairedPSCBS,exData,chr01";
 %>
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 data <- PSCBS::exampleData("paired.chr01")
 str(data)
 })%>
@@ -143,7 +143,7 @@ In additional to the mandatory fields (\code{chromosome}, \code{x}, \code{CT}, \
 \label{secTCNOutliers}
 There may be some outliers among the TCNs.  In CBS~\citep{OlshenA_etal_2004,VenkatramanOlshen_2007}, the authors propose a method for identifying outliers and then to shrink such values toward their neighbors ("smooth") before performing segmentation.  At the time CBS was developed it made sense to not just to drop outliers because the resolution was low and every datapoint was valuable.  With modern technologies the resolution is much higher and we can afford dropping such outliers, which can be done by:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 data <- dropSegmentationOutliers(data)
 })%>
 \end{verbatim}
@@ -159,7 +159,7 @@ Like the CBS method, Paired PSCBS does not take the physical locations (in units
 
 To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observered loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 gaps <- findLargeGaps(data, minLength=1e6)
 gaps
 })%>
@@ -167,7 +167,7 @@ gaps
 which shows that there is a 20.5Mb long gap between 121.0Mb and 141.5Mb on Chromosome~1.  This is the centromere of Chromosome~1.
 It is not possible to specify "gaps" to the segmentation function.  Instead they need to be given as part of a set of "known" segments, which is done as:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 knownSegments <- gapsToSegments(gaps)
 knownSegments
 })%>
@@ -180,7 +180,7 @@ Specifying known segments is optional.
 \subsection{Identifying PSCN segments}
 We are now ready to segment the locus-level PSCN signals.  This is done by\footnote{We fix the random seed in order for the results of this vignette to be numerically reproducible.}:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fit <- segmentByPairedPSCBS(data, knownSegments=knownSegments, seed=0xBEEF, verbose=-10)
 })%>
 \end{verbatim}
@@ -190,7 +190,7 @@ The above call will also normalize the tumor BAFs using the TumorBoost normaliza
 The result of the segmentation is a set of segments identified to have the same underlying PSCN levels.  In this particular case, <%=nbrOfSegments(fit)%> PSCN segments were found:
 <% fit <- fixLocations(fit); %>
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 getSegments(fit, simplify=TRUE)
 })%>
 \end{verbatim}
@@ -241,7 +241,7 @@ After the Paired PSCBS method was published, we have added methods for calling r
 A region has a run of homozygotes (ROH) if all of its SNPs are homozygous (in the normal).  Since such a region has no heterozyous SNPs, its decrease in heterozygosity (DH) is undefined.  Likewise, the minor and major copy numbers are unknown.
  However, if there are genotyping errors within an ROH region, we will obtain a non-missing DH mean level and hence also finite minor and major CNs.  In order to adjust for these faulty estimates, we test if the identified segments are ROHs or not by:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fit <- callROH(fit, verbose=-10)
 })%>
 \end{verbatim}
@@ -261,7 +261,7 @@ more conservative.\footnote{It is our plan to replace this basic test with a bio
 The AB caller tests whether the DH level of a segment is small enough to be considered zero, which means that the minor and the major CNs are equal, i.e. the segment is in allelic balance.
 To call the AB state of all segments, do:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fit <- callAB(fit, verbose=-10)
 })%>
 \end{verbatim}
@@ -285,7 +285,7 @@ threshold will be obtained resulting in a more conservative AB caller.
 The LOH caller tests whether the minor CN level of a segment is large enough to be considered non-zero, which means that the segment is \emph{not} in LOH.
 To call the LOH state of all segments, do:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fit <- callLOH(fit, verbose=-10)
 })%>
 \end{verbatim}
@@ -311,7 +311,7 @@ threshold will be obtained resulting in a more conservative LOH caller.
 The neutral total copy number (NTCN) caller tests whether the total CN level of a segment is neutral (e.g. diploid) or not.
 To call the NTCN state of all segments, do:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fit <- callNTCN(fit, verbose=-10)
 })%>
 \end{verbatim}
@@ -333,7 +333,7 @@ By decreasing the tuning parameter \code{scale} (a positive scalar), a smaller a
 \subsection{Results from calling ROH, AB, LOH and NTCN}
 All calls are appended to the segmentation results as logical columns:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 getSegments(fit, simplify=TRUE)
 })%>
 \end{verbatim}
@@ -362,7 +362,7 @@ The DH mean levels of the segments are estimated as the sample mean of the DH si
 \subsection{Pruning segmentation profile}
 By applying hierarchical clustering on the segment means, it is possible to prune the PSCN profile such that change points with very small absolute changes are dropped.  If change points are dropped this way, this results in a smaller number of segments, which are hence longer on average.  To prune Paired PSCBS segmentation results this way, do:
 \begin{verbatim}
-<%=evalCapture({
+<%=withCapture({
 fitP <- pruneByHClust(fit, h=0.25, verbose=-10)
 })%>
 \end{verbatim}
