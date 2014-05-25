@@ -2,6 +2,14 @@
 Package: PSCBS
 ==============
 
+Version: 0.42.1 [2014-05-05]
+o BUG FIX: pruneByHClust() for PairedPSCBS would give an error on
+  "unable to find an inherited method for function 'anyMissing' for
+  signature '"PairedPSCNSegments"'", unless the object contained
+  bootstrap statistics.  This is no longer needed.  Thanks to
+  Junsong Zhao, Los Angeles, CA for reporting on this.
+
+
 Version: 0.42.0 [2014-04-25]
 o SPEEDUP: Minor speedup (a few percents) by now byte compiling the
   package by default.
