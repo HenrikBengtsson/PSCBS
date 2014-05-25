@@ -421,11 +421,11 @@ dataT <- subset(data, type == "SNP");
         gg <- gg + scale_color_manual(values=muNCols);
 
         # See https://github.com/hadley/ggplot2/wiki/Legend-Attributes
-        gg <- gg + opts(#legend.position=c(0.97, 0.85),
-                        #legend.justification = 1,
-                        legend.direction="vertical",
-                        legend.title=element_text(size=0),
-                        legend.text=element_text(size=16));
+        gg <- gg + theme(#legend.position=c(0.97, 0.85),
+                         #legend.justification = 1,
+                         legend.direction="vertical",
+                         legend.title=element_text(size=0),
+                         legend.text=element_text(size=16));
 
         if (REPORT_USE_ALPHA_CHANNEL) {
           gg <- gg + geom_point(alpha=min(10e3/nrow(dataT), 0.5), na.rm=TRUE);
@@ -434,8 +434,8 @@ dataT <- subset(data, type == "SNP");
         }
         gg <- gg + xlab(labList[["betaN"]]) + ylab(labList[[ff]]);
         gg <- gg + xlim(BlimX) + ylim(BlimX);
-        gg <- gg + opts(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
-        gg <- gg + opts(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
+        gg <- gg + theme(axis.text.x=xnbrOpts, axis.text.y=ynbrOpts);
+        gg <- gg + theme(axis.title.x=xlabOpts, axis.title.y=ylabOpts);
         print(gg);
       });
     }%>}%
@@ -646,6 +646,8 @@ assign("renamePDF", function() {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+% 2014-05-24
+# o Replaced a deprecated opts() of ggplot2 with theme().
 % 2013-10-18
 % o BUG FIX: Report template assumed that R.utils was attached.
 % 2012-11-03

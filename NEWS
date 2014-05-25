@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.42.2 [2014-05-24]
+o Bumped package dependencies.
+
+
 Version: 0.42.1 [2014-05-05]
 o BUG FIX: pruneByHClust() for PairedPSCBS would give an error on
   "unable to find an inherited method for function 'anyMissing' for
@@ -14,7 +18,7 @@ Version: 0.42.0 [2014-04-25]
 o SPEEDUP: Minor speedup (a few percents) by now byte compiling the
   package by default.
 o CLEANUP: Dropped unnecessary usage of '::'.
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.41.4 [2014-03-30]
@@ -59,7 +63,7 @@ o BUG FIX: updateMeans() for PairedPSCBS and NonPairedPSCBS returned the
   likewise for segments in LOH if adjustFor="loh".  This bug does *not*
   affect any of PSCBS methods themselves, because none of them utilizes
   those 'adjustFor' options.
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.40.4 [2014-02-04]
@@ -90,7 +94,7 @@ o BUG FIX: getChangePoints() for CBS returned empty results.
 Version: 0.40.1 [2013-12-09]
 o DOCUMENTATION: The CBS vignette referred to C1 and C2 in one of
   the code examples.
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.40.0 [2013-12-07]
@@ -108,7 +112,7 @@ Version: 0.39.7 [2013-11-27]
 o Added callGLAO() for CBS.
 o Added encodeCalls() for 'data.frame' object returned by
   getLocusData(..., addCalls=TRUE).
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.39.6 [2013-11-23]
@@ -174,7 +178,7 @@ o BUG FIX: The CBS and Paired PSCBS report templates assumed that
 
 Version: 0.38.4 [2013-10-15]
 o CLEANUP: Removed a few unnecessary NAMESPACE imports.
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.38.3 [2013-10-14]
@@ -209,7 +213,7 @@ o BUG FIX: tileChromosomes() for CBS did not set "tiledChromosomes"
   horizontally misplace the plotted segment levels.
   Added a system tests for this for CBS and PairedPSCBS objects.
   Thanks to Ilari Scheinin at VUMC for reporting on this.
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.38.0 [2013-09-27]
@@ -224,7 +228,7 @@ Version: 0.37.2 [2013-09-27]
 o SPEEDUP: Now utilizing 'matrixStats' functions in more places.
 o ROBUSTNESS: Further improved how aroma.light is handled for
   backward compatibility.
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.37.1 [2013-09-26]
@@ -262,7 +266,7 @@ o WORKAROUND: For R (< 3.0.0), hclustCNs() for AbstractCBS would generate
   'Error in rowAlls(ok) : could not find function "loadMethod"'. This
   seems to be a bug in R (< 3.0.0), which we can avoid by attaching the
   'methods' package in hclustCNs().
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.36.1 [2013-09-10]
@@ -288,7 +292,7 @@ o Updated the Makefile for the vignettes and added .Rinstignore such
   that auxiliary (bib and bst) LaTeX files are not installed but
   part of the build so they are available to R CMD check, which
   is recently needed by R devel.
-o Bumped up package dependencies.
+o Bumped package dependencies.
 
 
 Version: 0.35.3 [2013-05-25]
@@ -499,7 +503,7 @@ o Updated deprecated ggplot2 functions in the RSP reports.
 
 
 Version: 0.29.6 [2012-11-01]
-o Bumped up package dependencies.
+o Bumped package dependencies.
 o CRAN POLICY: Made the examples run faster for R CMD check.
 
 
