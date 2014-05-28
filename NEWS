@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.42.3 [2014-05-28]
+o Added 'Recommends' field to DESCRIPTION.
+
+
 Version: 0.42.2 [2014-05-24]
 o Bumped package dependencies.
 
