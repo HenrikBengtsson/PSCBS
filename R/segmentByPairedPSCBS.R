@@ -208,8 +208,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Argument 'preserveScale':
   if (missing(preserveScale)) {
     # MIGRATION: Prepare for changing the default argument value. /HB 2014-06-08
-    if (is.null(getOption("PSCBS/preserveScale"))) {
-      warning("Argument 'preserveScale' for segmentByPairedPSCBS() currently defaults to TRUE.  However, in a future version of PSCBS it will default to FALSE (which is also the recommended value).  To avoid this warning, explicitly specify this argument when calling segmentByPairedPSCBS(), or set option 'PSCBS/preserveScale' to explicitly set the default value to TRUE or FALSE.");
+    if (!identical(getOption("PSCBS/preserveScale"), FALSE)) {
+      warning("Argument 'preserveScale' for segmentByPairedPSCBS() currently defaults to TRUE. However, in a future version of PSCBS it will default to FALSE (which is also the recommended value). To avoid this warning, explicitly specify this argument when calling segmentByPairedPSCBS(). Alternatively, set option 'PSCBS/preserveScale' to FALSE to migrate to the upcoming default already now.");
     }
   }
   preserveScale <- Arguments$getLogical(preserveScale);

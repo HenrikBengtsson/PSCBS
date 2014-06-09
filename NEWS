@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.50.0 [2014-06-08]
+Version: 0.43.0 [2014-06-08]
 o Now segmentByPairedPSCBS() gives a warning about future change of the
   default value of argument 'preserveScale' (from current TRUE to FALSE).
   The warning only appears if the argument is not specified explicitly.
