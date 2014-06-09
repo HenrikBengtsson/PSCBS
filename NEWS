@@ -2,8 +2,11 @@
 Package: PSCBS
 ==============
 
-Version: 0.42.3 [2014-05-28]
-o Added 'Recommends' field to DESCRIPTION.
+Version: 0.43.0 [2014-06-08]
+o Now segmentByPairedPSCBS() gives a warning about future change of the
+  default value of argument 'preserveScale' (from current TRUE to FALSE).
+  The warning only appears if the argument is not specified explicitly.
+o Bumped package dependencies.
 
 
 Version: 0.42.2 [2014-05-24]

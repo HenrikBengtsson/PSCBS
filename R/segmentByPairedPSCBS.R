@@ -146,7 +146,7 @@
 #
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, preserveScale=TRUE, joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, preserveScale=getOption("PSCBS/preserveScale", TRUE), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -206,6 +206,12 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   }
 
   # Argument 'preserveScale':
+  if (missing(preserveScale)) {
+    # MIGRATION: Prepare for changing the default argument value. /HB 2014-06-08
+    if (is.null(getOption("PSCBS/preserveScale"))) {
+      warning("Argument 'preserveScale' for segmentByPairedPSCBS() currently defaults to TRUE.  However, in a future version of PSCBS it will default to FALSE (which is also the recommended value).  To avoid this warning, explicitly specify this argument when calling segmentByPairedPSCBS(), or set option 'PSCBS/preserveScale' to explicitly set the default value to TRUE or FALSE.");
+    }
+  }
   preserveScale <- Arguments$getLogical(preserveScale);
 
   # Argument 'chromosome':
@@ -1162,6 +1168,10 @@ setMethodS3("segmentByPairedPSCBS", "PairedPSCBS", function(...) {
 
 ############################################################################
 # HISTORY:
+# 2014-06-08
+# o Now segmentByPairedPSCBS() gives a warning about future change of the
+#   default value of argument 'preserveScale' (from current TRUE to FALSE).
+#   The warning only appears if the argument is not specified explicitly.
 # 2014-03-30
 # o As an alternative to argument 'CT', segmentByPairedPSCBS() now accepts
 #   arguments 'thetaT' and 'thetaN', in case 'CT' is calculated as

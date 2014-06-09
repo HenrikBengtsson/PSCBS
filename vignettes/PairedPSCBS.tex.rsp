@@ -10,22 +10,29 @@
 <% t0 <- Sys.time() %>
 
 <%
-library("PSCBS");
-library("R.devices");
-withCapture <- R.utils::withCapture;
-PSCBS <- R.oo::Package("PSCBS");
-R.rsp <- R.oo::Package("R.rsp");
-fixLocations <- function(fit, ...) {
-  for (key in grep("(End|Start)$", colnames(fit$output))) {
-    fit$output[[key]] <- as.integer(fit$output[[key]]);
-  }
-  fit;
-} # fixLocations()
+R.utils::use("R.utils")
 
-devOptions("png", width=840);
-options(width=85);
-options(digits=3);
-options(str=strOptions(strict.width="cut"));
+# RSP specific
+R.rsp <- R.oo::Package("R.rsp")
+withCapture <- R.utils::withCapture
+options("withCapture/newline"=FALSE)
+options(str=strOptions(strict.width="cut"))
+options(width=85)
+options(digits=3)
+
+# Graphics
+use("R.devices")
+devOptions("png", width=840)
+
+# Analysis
+use("PSCBS")
+PSCBS <- R.oo::Package("PSCBS")
+fixLocations <- function(fit, ...) {
+  for (key in grep("(end|start)$", colnames(fit$output))) {
+    fit$output[[key]] <- as.integer(fit$output[[key]])
+  }
+  fit
+} # fixLocations()
 %>
 
 \documentclass[letter]{article}
@@ -129,7 +136,7 @@ The Paired PSCBS~\citep{OlshenA_etal_2011} method requires tumor-normal paired p
 \label{secData}
 In this example we will use a small example data set part of the \pkg{PSCBS} package.  It can be loaded as:
 <%
-fullname <- "PairedPSCBS,exData,chr01";
+fullname <- "PairedPSCBS,exData,chr01"
 %>
 \begin{verbatim}
 <%=withCapture({
@@ -188,7 +195,7 @@ Note that this may take several minutes when applied to whole-genome data.
 The above call will also normalize the tumor BAFs using the TumorBoost normalization method~\citep{BengtssonH_etal_2010}.  If this has already been done or the tumor signals have been normalized by other means, the TumorBoost step can be skipped by setting argument \code{tbn=FALSE}.
 
 The result of the segmentation is a set of segments identified to have the same underlying PSCN levels.  In this particular case, <%=nbrOfSegments(fit)%> PSCN segments were found:
-<% fit <- fixLocations(fit); %>
+<% fit <- fixLocations(fit) %>
 \begin{verbatim}
 <%=withCapture({
 getSegments(fit, simplify=TRUE)
@@ -212,7 +219,7 @@ plotTracks(fit, tracks="tcn,c1,c2", xlim=c(120,244)*1e6)
 \begin{figure}[htp]
  \begin{center}
   \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c(class(fit)[1L], "tracks"), aspectRatio=0.6, {
-    plotTracks(fit);
+    plotTracks(fit)
   })%>}}
  \end{center}
  \caption{PSCN segments identified by Paired PSCBS.
@@ -370,7 +377,7 @@ The result of this is shown in Figure~\ref{figTracksPruned}.
 \begin{figure}[htp]
  \begin{center}
   \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c(class(fitP)[1L], "pruned", "tracks"), aspectRatio=0.6, {
-    plotTracks(fitP);
+    plotTracks(fitP)
   })%>}}
  \end{center}
  \caption{Pruned PSCN segments plotted as in Figure~\ref{figTracks}.}

@@ -10,24 +10,31 @@
 <% t0 <- Sys.time() %>
 
 <%
-library("PSCBS");
-library("R.devices");
-withCapture <- R.utils::withCapture;
-PSCBS <- R.oo::Package("PSCBS");
-R.rsp <- R.oo::Package("R.rsp");
+R.utils::use("R.utils")
+
+# RSP specific
+R.rsp <- R.oo::Package("R.rsp")
+withCapture <- R.utils::withCapture
+options("withCapture/newline"=FALSE)
+options(str=strOptions(strict.width="cut"))
+options(width=85)
+options(digits=3)
+
+# Graphics
+use("R.devices")
+devOptions("png", width=840)
+
+# Analysis
+use("PSCBS")
+PSCBS <- R.oo::Package("PSCBS")
 fixLocations <- function(fit, ...) {
   for (key in grep("(end|start)$", colnames(fit$output))) {
-    fit$output[[key]] <- as.integer(fit$output[[key]]);
+    fit$output[[key]] <- as.integer(fit$output[[key]])
   }
-  fit;
+  fit
 } # fixLocations()
 
-signalType <- "TCN";
-
-devOptions("png", width=840);
-options(width=85);
-options(digits=3);
-options(str=strOptions(strict.width="cut"));
+signalType <- "TCN"
 %>
 
 \documentclass[letter]{article}
@@ -125,7 +132,7 @@ The CBS method requires total copy-number (TCN) estimates.  More precisely, it r
 \label{secData}
 In this example we will use a small example data set part of the \pkg{PSCBS} package.  It can be loaded as:
 <%
-fullname <- "PairedPSCBS,exData,chr01";
+fullname <- "PairedPSCBS,exData,chr01"
 %>
 \begin{verbatim}
 <%=withCapture({
@@ -185,7 +192,7 @@ fit <- segmentByCBS(data, knownSegments=knownSegments, seed=0xBEEF, verbose=-10)
 Note that this may take several minutes when applied to whole-genome data.
 
 The result of the segmentation is a set of segments identified to have the same underlying <%=signalType%> levels.  In this particular case, <%=nbrOfSegments(fit)%> <%=signalType%> segments were found:
-<% fit <- fixLocations(fit); %>
+<% fit <- fixLocations(fit) %>
 \begin{verbatim}
 <%=withCapture({
 getSegments(fit, simplify=TRUE)
@@ -208,7 +215,7 @@ plotTracks(fit, xlim=c(120,244)*1e6)
 \begin{figure}[htp]
  \begin{center}
   \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c(class(fit)[1L], "tracks"), aspectRatio=0.35, {
-    plotTracks(fit);
+    plotTracks(fit)
   })%>}}
  \end{center}
  \caption{Segments identified by CBS.
@@ -259,7 +266,7 @@ fitP <- pruneByHClust(fit, h=0.25, verbose=-10)
 \begin{figure}[htp]
  \begin{center}
   \resizebox{0.96\textwidth}{!}{\includegraphics{<%=toPNG(fullname, tags=c(class(fitP)[1L], "pruned", "tracks"), aspectRatio=0.35, {
-    plotTracks(fitP);
+    plotTracks(fitP)
   })%>}}
  \end{center}
  \caption{Pruned <%=signalType%> segments plotted as in Figure~\ref{figTracks}.}
