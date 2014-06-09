@@ -57,7 +57,11 @@
 #   \item{tbn}{If @TRUE, \code{betaT} is normalized before segmentation
 #     using the TumorBoost method [2], otherwise not.}
 #   \item{preserveScale}{Passed to @see "aroma.light::normalizeTumorBoost",
-#     which is only called if \code{tbn} is @TRUE.}
+#     which is only called if \code{tbn} is @TRUE.
+#     Currently the default is @TRUE, but this will be migrated to become
+#     @FALSE in a future version. You can migrate already now by setting
+#     \code{options("PSCBS/preserveScale"=FALSE)}, otherwise we recommend
+#     you to set this argument explicitly to avoid relying on its default.}
 #   \item{joinSegments}{If @TRUE, there are no gaps between neighboring
 #     segments.
 #     If @FALSE, the boundaries of a segment are defined by the support

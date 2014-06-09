@@ -1,3 +1,4 @@
+
 <%@meta language="R-vignette" content="--------------------------------
   DIRECTIVES FOR R:
 
@@ -188,11 +189,11 @@ Specifying known segments is optional.
 We are now ready to segment the locus-level PSCN signals.  This is done by\footnote{We fix the random seed in order for the results of this vignette to be numerically reproducible.}:
 \begin{verbatim}
 <%=withCapture({
-fit <- segmentByPairedPSCBS(data, knownSegments=knownSegments, seed=0xBEEF, verbose=-10)
+fit <- segmentByPairedPSCBS(data, knownSegments=knownSegments, preserveScale=FALSE, seed=0xBEEF, verbose=-10)
 })%>
 \end{verbatim}
 Note that this may take several minutes when applied to whole-genome data.
-The above call will also normalize the tumor BAFs using the TumorBoost normalization method~\citep{BengtssonH_etal_2010}.  If this has already been done or the tumor signals have been normalized by other means, the TumorBoost step can be skipped by setting argument \code{tbn=FALSE}.
+The above call will also normalize the tumor BAFs using the TumorBoost normalization method~\citep{BengtssonH_etal_2010} (without preserving the relative scale for homozygous and heterozygous BAFs; in a future version, this will be the default).  If this has already been done or the tumor signals have been normalized by other means, the TumorBoost step can be skipped by setting argument \code{tbn=FALSE}.
 
 The result of the segmentation is a set of segments identified to have the same underlying PSCN levels.  In this particular case, <%=nbrOfSegments(fit)%> PSCN segments were found:
 <% fit <- fixLocations(fit) %>
