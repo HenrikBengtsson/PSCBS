@@ -49,7 +49,7 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
 
     # Genotype calls
     if (!is.element("muN", names)) {
-      callNaiveGenotypes <- .useAromaLight("callNaiveGenotypes");
+      callNaiveGenotypes <- .use("callNaiveGenotypes", package="aroma.light");
       data$muN <- callNaiveGenotypes(data$betaN);
     }
     data$isHet <- (data$muN == 1/2);
@@ -66,7 +66,7 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
 
     # TumorBoost BAFs
     if (!is.element("betaTN", names)) {
-      normalizeTumorBoost <- .useAromaLight("normalizeTumorBoost");
+      normalizeTumorBoost <- .use("normalizeTumorBoost", package="aroma.light");
       data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
     }
     data$rhoN <- 2*abs(data$betaTN-1/2);

@@ -44,7 +44,7 @@
 #*/###########################################################################
 setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE) {
   # Local copies of DNAcopy functions
-  DNAcopy_changepoints.sdundo <- .useDNAcopy("changepoints.sdundo");
+  DNAcopy_changepoints.sdundo <- .use("changepoints.sdundo", package="DNAcopy");
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -294,7 +294,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
 #*/###########################################################################
 setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, method=c("diff", "res", "abs", "DNAcopy"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
   # Local copies of DNAcopy functions
-  DNAcopy_trimmed.variance <- .useDNAcopy("trimmed.variance");
+  DNAcopy_trimmed.variance <- .use("trimmed.variance", package="DNAcopy");
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

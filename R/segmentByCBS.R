@@ -113,9 +113,9 @@
 #*/###########################################################################
 setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # Local copies of DNAcopy functions
-  getbdry <- .useDNAcopy("getbdry");
-  CNA <- .useDNAcopy("CNA");
-  segment <- .useDNAcopy("segment");
+  getbdry <- .use("getbdry", package="DNAcopy");
+  CNA <- .use("CNA", package="DNAcopy");
+  segment <- .use("segment", package="DNAcopy");
 
   R_SANITY_CHECK <- TRUE;
 
@@ -621,9 +621,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Retrieving segmentation function
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Retrieving the fit function", level=-50);
-  pkgName <- "DNAcopy";
-  # Assert that package is installed
-  isPackageInstalled(pkgName) || throw("Package is not installed: ", pkgName);
+  # We need to attach the 'DNAcopy' package
+  pkgName <- "DNAcopy"
+  use(pkgName);
   pkg <- packageDescription(pkgName);
   pkgVer <- pkg$Version;
   pkgDetails <- sprintf("%s v%s", pkgName, pkgVer);
@@ -631,9 +631,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   methodName <- "segment";
   verbose && cat(verbose, "Method: ", methodName, level=-50);
   verbose && cat(verbose, "Package: ", pkgDetails, level=-50);
-
-  # We need to attach the 'DNAcopy' package
-  require(pkgName, character.only=TRUE, quietly=TRUE) || throw("Package not loaded: ", pkgName);
 
   # Get the fit function for the segmentation method
 #  fitFcn <- getExportedValue(pkgName, methodName);

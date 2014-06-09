@@ -126,7 +126,7 @@ setMethodS3("estimateKappa", "PairedPSCBS", function(this, flavor=c("density(C1)
 # @keyword internal
 #*/###########################################################################
 setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeights=c("dhNbrOfLoci", "sqrt(dhNbrOfLoci)"), adjust=1, from=0, minDensity=0.2, ..., verbose=FALSE) {
-  findPeaksAndValleys <- .useAromaLight("findPeaksAndValleys");
+  findPeaksAndValleys <- .use("findPeaksAndValleys", package="aroma.light");
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

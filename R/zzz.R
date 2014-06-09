@@ -1,73 +1,19 @@
-# Allows conflicts. For more information, see library() and
-# conflicts() in [R] base.
-.conflicts.OK <- TRUE
-
-
-.requirePkg <- function(name, quietly=FALSE) {
-  # Nothing to do?
-  if (is.element(sprintf("package:%s", name), search())) {
-    return(invisible(TRUE));
-  }
-  if (quietly) {
-    # Load the package (super quietly)
-    res <- suppressPackageStartupMessages(require(name, character.only=TRUE, quietly=TRUE));
-  } else {
-    res <- require(name, character.only=TRUE);
-  }
-  if (!res) throw("Package not loaded: ", name);
-  invisible(res);
-} # .requirePkg()
-
-
-# This function exists solely for the purpose of backward compatibility
-# /HB 2013-09-27
-.useAromaLight <- function(name=NULL, mode="function") {
-  if (!isPackageInstalled("aroma.light")) {
-    throw("Bioconductor package not installed: aroma.light");
+# This should ideally be added to 'R.utils' one day, e.g. as import().
+# /HB 2014-06-08
+.use <- function(name=NULL, package, ..., mode="function") {
+  # Attach package?
+  if (is.null(name)) {
+    use(package, ...);
+    return(invisible(NULL))
   }
 
-  # Are S3 method declared in NAMESPACE?
-  ver <- packageVersion("aroma.light");
-  properS3methods <- (ver >= "1.31.5") || (ver >= "1.30.5" && ver < "1.31.0");
-
-  # If not, the package needs to be attached.
-  if (!properS3methods) .requirePkg("aroma.light", quietly=TRUE);
-
-  # Done?
-  if (is.null(name)) return(invisible(NULL))
-
-
-  # Retrieve a particular function?
-  ns <- getNamespace("aroma.light");
-  res <- get(name, mode=mode, envir=ns);
-
-  # Function-specific patches?
-  if (name == "normalizeTumorBoost") {
-    # Workaround for older versions of aroma.light::normalizeTumorBoost()
-    # assuming that the 'R.utils' package is attached. /HB 2013-09-20
-    if (!properS3methods) .requirePkg("R.utils", quietly=TRUE);
-  }
-
-  invisible(res);
-} # .useAromaLight()
-
-
-# This function exists solely for the purpose of backward compatibility
-# /HB 2014-02-04
-.useDNAcopy <- function(name=NULL, mode="function") {
-  if (!isPackageInstalled("DNAcopy")) {
-    throw("Bioconductor package not installed: DNAcopy");
-  }
-
-  # Done?
-  if (is.null(name)) return(invisible(NULL))
-
-  # Retrieve a particular function?
-  ns <- getNamespace("DNAcopy");
+  # Retrieve a particular function
+  use(package, ..., how="load");
+  ns <- getNamespace(package);
   res <- get(name, mode=mode, envir=ns);
 
   invisible(res);
-} # .useDNAcopy()
+} # .use()
 
 
 .onLoad <- function(libname, pkgname) {
@@ -85,9 +31,7 @@
   .prememoize();
 
   # Inform user if DNAcopy is missing
-  if (isPackageInstalled("DNAcopy")) {
-    .requirePkg("DNAcopy");
-  } else {
+  if (!isPackageInstalled("DNAcopy")) {
     msg <- "The Bioconductor package 'DNAcopy' is not installed. Please see http://www.bioconductor.org/ on how to install it, or try calling PSCBS::installDNAcopy().";
     hrule <- paste(rep("*", times=getOption("width", 80L)-1L), collapse="");
     packageStartupMessage(sprintf("%s\nNOTE: %s\n%s", hrule, msg, hrule));
@@ -102,6 +46,8 @@
 
 ############################################################################
 # HISTORY:
+# 2014-06-08
+# o CLEANUP: Using R.utils::use() instead of require().
 # 2014-02-04
 # o Added .useDNAcopy() to simplify backward compatibility.
 # 2013-10-13

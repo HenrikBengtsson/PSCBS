@@ -2,10 +2,14 @@
 Package: PSCBS
 ==============
 
-Version: 0.43.0 [2014-06-08]
+Version: 0.50.0 [2014-06-08]
 o Now segmentByPairedPSCBS() gives a warning about future change of the
   default value of argument 'preserveScale' (from current TRUE to FALSE).
   The warning only appears if the argument is not specified explicitly.
+o Now using use() of R.utils where possible.
+o Package now requires R (>= 3.0.0) and BioC (>= 2.13), which were 
+  released April 2013 and are in fact old and it's recommended to
+  use a more recent version of R.
 o Bumped package dependencies.
 
 
