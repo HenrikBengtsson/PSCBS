@@ -1,10 +1,10 @@
-# R package: R.cache
+# R package: PSCBS
 
-Stable release available via [CRAN](http://cran.r-project.org/package=R.cache).  Install in R as:
+Stable release available via [CRAN](http://cran.r-project.org/package=PSCBS).  Install in R as:
 
 ```s
-install.packages('R.cache')
+install.packages('PSCBS')
 ```
 
 
-R CMD check status: <a href="https://travis-ci.org/HenrikBengtsson/R.cache"><img src="https://travis-ci.org/HenrikBengtsson/R.cache.svg?branch=master" alt="Build status"></a>
+R CMD check status: <a href="https://travis-ci.org/HenrikBengtsson/PSCBS"><img src="https://travis-ci.org/HenrikBengtsson/PSCBS.svg?branch=master" alt="Build status"></a>
