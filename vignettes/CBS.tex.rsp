@@ -22,6 +22,7 @@ options(digits=3)
 
 # Graphics
 use("R.devices")
+options("devEval/args/field"="fullname") # Preferred for LaTeX
 devOptions("png", width=840)
 
 # Analysis
