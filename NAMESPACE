@@ -25,6 +25,7 @@ importFrom("R.oo", "startupMessage")
 
 importFrom("matrixStats", "anyMissing")
 importFrom("matrixStats", "binMeans")
+importFrom("matrixStats", "colCumsums")
 importFrom("matrixStats", "colDiffs")
 importFrom("matrixStats", "colMins")
 importFrom("matrixStats", "colMaxs")

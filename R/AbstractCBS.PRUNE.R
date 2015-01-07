@@ -337,7 +337,7 @@ threshold = 0.5,
   # How should NAs be handled?!?
   Yz <- Y;
   Yz[is.na(Yz)] <- 0;
-  s <- rbind(rep(0, times=p), apply(Yz, MARGIN=2, FUN=cumsum));
+  s <- rbind(rep(0, times=p), colCumsums(Yz));
   v <- c(0, cumsum(rowSums(Y^2, na.rm=TRUE)));
   for (i in 1:k) {
     for (j in i:k) {
