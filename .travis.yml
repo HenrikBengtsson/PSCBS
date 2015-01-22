@@ -48,7 +48,7 @@ before_install:
     fi
 
 install:
-  - ./travis-tool.sh bioc_install aroma.light DNAcopy
+  - $RENV bioc_install aroma.light DNAcopy
   - $RENV install_deps
 
 script:
