@@ -20,6 +20,7 @@ env:
     - R_BUILD_ARGS="--no-manual"
     - R_CHECK_ARGS="--no-manual --as-cran"
     - R_RSP_COMPILELATEX_FALLBACK="copy-force"
+    - _R_CHECK_FULL_="true"
     # Need LaTeX? (very time consuming!)
     - BOOTSTRAP_LATEX=""
     # Skip building vignettes, which iff LaTeX-based are very
