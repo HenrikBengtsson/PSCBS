@@ -6,7 +6,7 @@ Version: 0.43.0-9000 [2015-02-22]
 o ROBUSTNESS: Forgot to declare some S3 methods in NAMESPACE.
 o SPEEDUP: Now using more functions of matrixStats.
 o CLEANUP: bootstrapDHByRegion() is defunct (was deprecated since 2013).
-o Package now requires R (>= 3.0.3) and BioC (>= 2.14), which are
+o Package now requires R (>= 3.0.3) and BioC (>= 2.13), which are
   from March 2014 and are in fact old. It's recommended to use a
   more recent version of R.
 
