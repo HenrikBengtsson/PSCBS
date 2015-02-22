@@ -3,6 +3,7 @@
 #----------------------------
 ^.svn
 ^.git
+^.make
 README[.]md
 
 #----------------------------
@@ -12,6 +13,8 @@ README[.]md
 ^travis-tool[.]sh$
 ^pkg-build[.]sh$
 ^appveyor[.]yml$
+^covr-utils.R$
+^[.]coveralls[.]R$
 
 #----------------------------
 # R related
@@ -27,3 +30,4 @@ README[.]md
 ^[.]devel
 ^[.]test
 ^[.]check
+^.*[.]tar[.]gz$

@@ -1,16 +1,17 @@
 # R package: PSCBS
 
-Stable release available via [CRAN](http://cran.r-project.org/package=PSCBS).  Install in R as:
 
-```s
+## Installation
+Package is available on [CRAN](http://cran.r-project.org/package=PSCBS).  Install in R as:
+```r
 install.packages('PSCBS')
 ```
 
 
-## Quality assessment
+## Software quality
 
-* R CMD check status:
-  - <a href="http://cran.r-project.org/web/checks/check_results_PSCBS.html">CRAN checks</a> 
-  - <a href="https://travis-ci.org/HenrikBengtsson/PSCBS"><img src="https://travis-ci.org/HenrikBengtsson/PSCBS.svg?branch=master" alt="Build status"></a>
-* Test coverage status:
-  <a href='https://coveralls.io/r/HenrikBengtsson/PSCBS?branch=develop'><img src='https://coveralls.io/repos/HenrikBengtsson/PSCBS/badge.png?branch=develop' alt='Coverage Status' /></a>
+| Resource:     | CRAN        | Travis CI        | Appveyor         |
+| ------------- | ------------------- | ---------------- | ---------------- |
+| _Platforms:_  | _Multiple_          | _Linux_          | _Windows_        |
+| R CMD check   | [status](http://cran.r-project.org/web/checks/check_results_PSCBS.html) | <a href="https://travis-ci.org/HenrikBengtsson/PSCBS"><img src="https://travis-ci.org/HenrikBengtsson/PSCBS.svg?branch=master" alt="Build status"></a>    |  |
+| Test coverage |                     |  |                  |
