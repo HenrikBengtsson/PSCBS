@@ -2,8 +2,11 @@
 Package: PSCBS
 ==============
 
-Version: 0.43.0-9000 [2014-06-08]
+Version: 0.43.0-9000 [2015-02-22]
 o Now using more functions of matrixStats.
+o Package now requires R (>= 3.0.3) and BioC (>= 2.14), which are
+  from March 2014 and are in fact old. It's recommended to use a
+  more recent version of R. 
 
 
 Version: 0.43.0 [2014-06-08]
