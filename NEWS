@@ -3,6 +3,7 @@ Package: PSCBS
 ==============
 
 Version: 0.43.0-9000 [2015-02-22]
+o ROBUSTNESS: Package test coverage is 58%.
 o ROBUSTNESS: Forgot to declare some S3 methods in NAMESPACE.
 o SPEEDUP: Now using more functions of matrixStats.
 o CLEANUP: bootstrapDHByRegion() is defunct (was deprecated since 2013).
