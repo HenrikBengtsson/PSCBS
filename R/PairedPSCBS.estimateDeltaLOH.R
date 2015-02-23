@@ -229,7 +229,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 # HISTORY:
 # 2012-08-30
 # o Now estimateKappaByC1Density() relies on matrixStats (and no longer
-#   aroma.light) to implement weightedMedians().
+#   aroma.light) to implement weightedMedian().
 # 2012-01-13
 # o Corrected some of verbose messages of estimateDeltaLOHByMinC1ForNonAB()
 #   for PairedPSCBS objects.

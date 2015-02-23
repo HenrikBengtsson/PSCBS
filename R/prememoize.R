@@ -23,7 +23,7 @@
   path <- "PSCBS/segmentByCBS/sbdry"
   pathS <- system.file("misc/_Rcache", path, package="PSCBS");
   pathD <- getCachePath(path);
-  copyDirectory(pathS, pathD, recursive=FALSE, overwrite=TRUE);
+  copyDirectory(pathS, pathD, copy.mode=FALSE, recursive=FALSE, overwrite=TRUE);
   if (verbose) {
     message("Added pre-memoized calculations: ", getAbsolutePath(pathD));
   }

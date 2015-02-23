@@ -1,12 +1,14 @@
-
 <%@meta language="R-vignette" content="--------------------------------
-  DIRECTIVES FOR R:
+DIRECTIVES FOR R:
+%\VignetteIndexEntry{Parent-specific copy-number segmentation using Paired PSCBS}
+%\VignetteAuthor{Henrik Bengtsson}
+%\VignetteKeyword{copy numbers}
+%\VignetteKeyword{allele specific}
+%\VignetteKeyword{parent specific}
+%\VignetteKeyword{genomic aberrations}
+%\VignetteEngine{R.rsp::rsp}
+--------------------------------------------------------------------"%>
 
-  %\VignetteIndexEntry{Parent-specific copy-number segmentation using Paired PSCBS}
-  %\VignetteAuthor{Henrik Bengtsson}
-  %\VignetteKeyword{copy numbers, allele specific, parent specific, genomic aberrations}
-  %\VignetteEngine{R.rsp::rsp}
-  ------------------------------------------------------------------"%>
 
 <% t0 <- Sys.time() %>
 
@@ -23,6 +25,7 @@ options(digits=3)
 
 # Graphics
 use("R.devices")
+options("devEval/args/field"="fullname") # Preferred for LaTeX
 devOptions("png", width=840)
 
 # Analysis

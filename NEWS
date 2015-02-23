@@ -2,12 +2,22 @@
 Package: PSCBS
 ==============
 
+Version: 0.44.0 [2015-02-22]
+o ROBUSTNESS: Package test coverage is 58%.
+o ROBUSTNESS: Forgot to declare some S3 methods in NAMESPACE.
+o SPEEDUP: Now using more functions of matrixStats.
+o CLEANUP: bootstrapDHByRegion() is defunct (was deprecated since 2013).
+o Package now requires R (>= 3.0.3) and BioC (>= 2.13), which are
+  from March 2014 and are in fact old. It's recommended to use a
+  more recent version of R.
+
+
 Version: 0.43.0 [2014-06-08]
 o Now segmentByPairedPSCBS() gives a warning about future change of the
   default value of argument 'preserveScale' (from current TRUE to FALSE).
   The warning only appears if the argument is not specified explicitly.
 o Now using use() of R.utils where possible.
-o Package now requires R (>= 3.0.0) and BioC (>= 2.13), which were 
+o Package now requires R (>= 3.0.0) and BioC (>= 2.13), which were
   released April 2013 and are in fact old and it's recommended to
   use a more recent version of R.
 o Bumped package dependencies.
