@@ -67,14 +67,14 @@ deps_elsewhere <- function(...) {
 install_cran <- function(...) {
   pkgs <- deps_on_cran(...)
   if (length(pkgs) > 0L) {
-    sprintf(" - %%RENV%% install_r %s", paste(pkgs, collapse=" "))
+    sprintf(" - $RENV install_r %s", paste(pkgs, collapse=" "))
   } else ""
 }
 
 install_bioc <- function(...) {
   pkgs <- deps_on_bioc(...)
   if (length(pkgs) > 0L) {
-    sprintf(" - %%RENV%% install_bioc %s", paste(pkgs, collapse=" "))
+    sprintf(" - $RENV install_bioc %s", paste(pkgs, collapse=" "))
   } else ""
 }
 %>
@@ -114,10 +114,10 @@ build_script:
 <%= install_cran("Suggests") %>
 
 test_script:
-  - %RENV% run_tests
+  - $RENV run_tests
 
 on_failure:
-  - %RENV% dump_logs
+  - $RENV dump_logs
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
