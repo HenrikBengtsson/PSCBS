@@ -29,7 +29,6 @@ env:
   matrix:
 #    - RVERSION=3.0.3
 #    - RVERSION=3.1.2
-#    - RVERSION=devel _R_CHECK_FULL_=FALSE
     - RVERSION=devel _R_CHECK_FULL_=TRUE
 
 
@@ -45,10 +44,10 @@ before_install:
     fi
 
 install:
- - $RENV install_r matrixStats R.cache R.methodsS3 R.oo R.utils
  - $RENV install_bioc DNAcopy
- - $RENV install_r ggplot2 Hmisc R.devices R.rsp
  - $RENV install_bioc aroma.light
+ - $RENV install_r matrixStats R.cache R.methodsS3 R.oo R.utils
+ - $RENV install_r ggplot2 Hmisc R.devices R.rsp
 
 script:
   - $RENV run_build

@@ -67,87 +67,73 @@ deps_elsewhere <- function(...) {
 install_cran <- function(...) {
   pkgs <- deps_on_cran(...)
   if (length(pkgs) > 0L) {
-    sprintf(" - $RENV install_r %s", paste(pkgs, collapse=" "))
+    sprintf(" - %%RENV%% install_r %s", paste(pkgs, collapse=" "))
   } else ""
 }
 
 install_bioc <- function(...) {
   pkgs <- deps_on_bioc(...)
   if (length(pkgs) > 0L) {
-    sprintf(" - $RENV install_bioc %s", paste(pkgs, collapse=" "))
+    sprintf(" - %%RENV%% install_bioc %s", paste(pkgs, collapse=" "))
   } else ""
 }
 %>
 #----------------------------------------------------------------
-# Travis-CI configuration for R packages
+# AppVeyor configuration for R packages
 #
 # REFERENCES:
-# * Travis CI: https://travis-ci.org/
-# * r-builder: https://github.com/metacran/r-builder
+# * AppVeyor CI: https://ci.appveyor.com/
+# * r-travis: https://github.com/craigcitro/r-travis
 # * covr: https://github.com/jimhester/covr
 # * Coveralls: https://coveralls.io/
 #
-# Validate your .travis.yml file at http://lint.travis-ci.org/
+# Validate your .appveyor.yml file at
+# https://ci.appveyor.com/tools/validate-yaml 
 #----------------------------------------------------------------
-language: c
+environment:
+  _R_CHECK_FORCE_SUGGESTS_: false
+  RENV: travis-tool.sh
 
-env:
-  global:
-    - RENV="./pkg-build.sh"    # r-builder
-    - R_BUILD_ARGS="--no-manual"
-    - R_CHECK_ARGS="--no-manual --as-cran"
-    - _R_CHECK_CRAN_INCOMING_=TRUE
-    - _R_CHECK_FORCE_SUGGESTS_=false
-    # Need LaTeX? (very time consuming!)
-    - BOOTSTRAP_LATEX=""
-    # Skip building vignettes, which iff LaTeX-based are very
-    # time consuming because LaTeX needs to be installed
-#    - R_BUILD_ARGS="--no-build-vignettes ${R_BUILD_ARGS}"
-#    - R_CHECK_ARGS="--no-build-vignettes ${R_CHECK_ARGS}"
+# DO NOT CHANGE the "init" and "install" sections below
 
-  # R versions r-builder should test on (ignored by r-travis)
-  matrix:
-    - RVERSION=3.0.3
-    - RVERSION=3.1.2
-    - RVERSION=devel _R_CHECK_FULL_=TRUE
-
-
-before_install:
-  - echo RENV=$RENV
-  - curl -OL https://raw.githubusercontent.com/HenrikBengtsson/r-builder/master/pkg-build.sh;
-  - chmod 755 $RENV
-  - $RENV bootstrap
-  - if [ "BOOTSTRAP_LATEX" == "true" ]; then
-      (cd /tmp && curl -OL http://mirrors.ctan.org/macros/latex/contrib/xcolor.zip && cd /usr/share/texmf/tex/latex && sudo unzip /tmp/xcolor.zip && cd xcolor && sudo latex xcolor.ins && sudo texhash);
-    else
-      export R_RSP_COMPILELATEX_FALLBACK="copy-force";
-    fi
-
+# Download script file from GitHub
+init:
+  ps: |
+        $ErrorActionPreference = "Stop"
+        Invoke-WebRequest http://raw.github.com/HenrikBengtsson/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Import-Module '..\appveyor-tool.ps1'
 install:
+  ps: Bootstrap
+
+# Adapt as necessary starting from here
+
+build_script:
 <%= install_bioc(c("Depends", "Imports")) %>
 <%= install_bioc("Suggests") %>
 <%= install_cran(c("Depends", "Imports")) %>
 <%= install_cran("Suggests") %>
 
-script:
-  - $RENV run_build
-  - $RENV run_check
+test_script:
+  - %RENV% run_tests
 
-after_success:
-  - $RENV dump_logs_by_extension out
-  - $RENV install_devtools
-  - $RENV install_github HenrikBengtsson/covr
-  - curl -OL https://raw.githubusercontent.com/HenrikBengtsson/covr-utils/master/covr-utils.R
-  - $RENV run_script .coveralls.R
+on_failure:
+  - %RENV% dump_logs
 
-after_failure:
-  - $RENV dump_logs
+artifacts:
+  - path: '*.Rcheck\**\*.log'
+    name: Logs
 
-notifications:
-  email:
-    on_success: change
-    on_failure: change
+  - path: '*.Rcheck\**\*.out'
+    name: Logs
 
-branches:
-  except:
-   - /-expt$/
+  - path: '*.Rcheck\**\*.fail'
+    name: Logs
+
+  - path: '*.Rcheck\**\*.Rout'
+    name: Logs
+
+  - path: '\*_*.tar.gz'
+    name: Bits
+
+  - path: '\*_*.zip'
+    name: Bits
