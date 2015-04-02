@@ -45,8 +45,8 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{\link[PSCBS:append.PSCBS]{append}} \tab Appends one segmentation result to another.\cr
- \tab \code{\link[PSCBS:writeSegments.PSCBS]{writeSegments}} \tab Writes the table of segments to file.\cr
+ \tab \code{append} \tab  -\cr
+ \tab \code{writeSegments} \tab  -\cr
 }
 
 

@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.44.0-9000 [2015-04-01]
+o pruneByHClust() no longer gives a message about method "ward"
+  is now named "ward.D".
+o Package now requires R (>= 3.1.0) and BioC (>= 3.0), which were
+  released October 2014. It's recommended to use a more recent 
+  version of R.
+o Bumped package dependencies.
+
+
 Version: 0.44.0 [2015-02-22]
 o ROBUSTNESS: Package test coverage is 58%.
 o ROBUSTNESS: Forgot to declare some S3 methods in NAMESPACE.
