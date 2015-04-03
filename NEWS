@@ -2,12 +2,16 @@
 Package: PSCBS
 ==============
 
-Version: 0.44.0-9000 [2015-04-01]
+Version: 0.44.0-9000 [2015-04-02]
 o pruneByHClust() no longer gives a message about method "ward"
   is now named "ward.D".
 o Package now requires R (>= 3.1.0) and BioC (>= 3.0), which were
   released October 2014. It's recommended to use a more recent 
   version of R.
+o Added skip=TRUE to report().
+o BUG FIX: The report() RSP-embedded TeX templates for CBS and
+  PairedPSCBS data did not escape sample and data set names
+  to LaTeX in all places needed.
 o Bumped package dependencies.
 
 
