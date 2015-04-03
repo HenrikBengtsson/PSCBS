@@ -178,7 +178,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
     verbose && cat(verbose, "Expected output pathname: ", pathname);
     if (isFile(pathname)) {
       verbose && cat(verbose, "Already exists: Skipping.")
-      report <- RspFileProduct(pathname)
+      report <- R.rsp::RspFileProduct(pathname)
       return(report)
     }
   }
