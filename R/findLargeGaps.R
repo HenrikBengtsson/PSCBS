@@ -22,8 +22,9 @@
 # }
 #
 # \value{
-#   Returns @data.frame with columns \code{chromosome} (if given),
-#   \code{start}, \code{stop} and \code{length}.
+#   Returns @data.frame zero or more rows and with columns
+#   \code{chromosome} (if given), \code{start}, \code{stop},
+#   and \code{length}.
 # }
 #
 # @author "HB"
@@ -56,7 +57,8 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
     allChromosomes <- sort(unique(chromosome));
     nbrOfChromosomes <-  length(allChromosomes);
 
-    gaps <- NULL;
+    xEmpty <- vector(mode(x), length=0L)
+    gaps <- data.frame(chromosome=integer(0L), start=xEmpty, end=xEmpty);
     for (cc in seq(along=allChromosomes)) {
       chr <- allChromosomes[cc];
       idxs <- which(chromosome == chr);
@@ -68,6 +70,9 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
         gaps <- rbind(gaps, gapsCC);
       }
     } # for (cc ...)
+
+    ## Sanity check
+    stopifnot(is.data.frame(gaps))
 
     return(gaps);
   }
@@ -83,6 +88,9 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
   gaps <- data.frame(start=xL+resolution, end=xR-resolution);
   gaps$length <- gaps$end - gaps$start;
 
+  ## Sanity check
+  stopifnot(is.data.frame(gaps))
+
   gaps;
 }) # findLargeGaps()
 
@@ -96,6 +104,9 @@ setMethodS3("findLargeGaps", "data.frame", function(chromosome, ...) {
 
 ###############################################################################
 # HISTORY:
+# 2015-04-25
+# o BUG FIX: findLargeGaps() could return NULL.  Now it always returns
+#   a data.frame.
 # 2012-02-22
 # o BUG FIX: findLargeGaps() did not handle missing values for
 #   argument 'chromosome'.

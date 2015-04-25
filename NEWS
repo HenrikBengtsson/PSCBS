@@ -2,17 +2,20 @@
 Package: PSCBS
 ==============
 
-Version: 0.44.0-9000 [2015-04-02]
+Version: 0.44.0-9000 [2015-04-25]
 o pruneByHClust() no longer gives a message about method "ward"
   is now named "ward.D".
 o Package now requires R (>= 3.1.0) and BioC (>= 3.0), which were
-  released October 2014. It's recommended to use a more recent 
+  released October 2014. It's recommended to use a more recent
   version of R.
 o Added skip=TRUE to report().
+o BUG FIX: findLargeGaps() could return NULL. Now it always returns
+  a data.frame.
 o BUG FIX: The report() RSP-embedded TeX templates for CBS and
   PairedPSCBS data did not escape sample and data set names
   to LaTeX in all places needed.
-o Bumped package dependencies.
+o Package now requires R (>= 3.1.1) released July 2014. This allows 
+  us to use BioC (>= 3.0) (October 2014).
 
 
 Version: 0.44.0 [2015-02-22]
