@@ -205,8 +205,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Argument 'tbn':
   tbn <- Arguments$getLogical(tbn);
-  if (tbn && is.null(betaN)) {
-    throw("When argument 'betaN' is not available, then argument 'tbn' must FALSE.");
+  if (!is.null(tbn)) {
+    if (tbn && is.null(betaN)) {
+      throw("If TumorBoost-normalized BAFs are not given (betaTN=NULL), then normal BAFs ('betaN') are required if TumorBoost normalization is to be done (tbn=TRUE).")
+    }
   }
 
   # Argument 'preserveScale':
