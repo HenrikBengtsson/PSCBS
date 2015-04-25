@@ -1,7 +1,7 @@
 library("PSCBS")
 
 # BUG FIX: PSCBS GitHub Issue #6
-gaps <- findLargeGaps(chromosome=rep(0,10), x=1:10, minLength=2)
+gaps <- findLargeGaps(chromosome=rep(1,10), x=1:10, minLength=2)
 print(gaps)
 stopifnot(is.data.frame(gaps))
 stopifnot(nrow(gaps) == 0L)
@@ -40,3 +40,10 @@ gaps <- findLargeGaps(x=x2, minLength=1e6)
 print(gaps)
 stopifnot(is.data.frame(gaps))
 stopifnot(nrow(gaps) == 1L)
+
+
+# BUG FIX: PSCBS GitHub Issue #8
+gaps <- try({
+  findLargeGaps(chromosome=rep(1,3), x=as.numeric(1:3), minLength=1)
+})
+stopifnot(inherits(gaps, "try-error"))
