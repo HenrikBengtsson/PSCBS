@@ -6,6 +6,7 @@ print(gaps)
 stopifnot(is.data.frame(gaps))
 stopifnot(nrow(gaps) == 0L)
 
+
 # Simulating copy-number data
 set.seed(0xBEEF)
 
@@ -31,10 +32,6 @@ print(gaps)
 stopifnot(is.data.frame(gaps))
 stopifnot(nrow(gaps) == 0L)
 
-gaps <- findLargeGaps(x=x2, minLength=1e6)
-print(gaps)
-stopifnot(is.data.frame(gaps))
-stopifnot(nrow(gaps) == 1L)
 
 ## Add missing values
 x2 <- x

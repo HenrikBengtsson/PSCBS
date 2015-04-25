@@ -70,26 +70,23 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
         gaps <- rbind(gaps, gapsCC);
       }
     } # for (cc ...)
+  } else {
+    x <- x[is.finite(x)];
+    x <- sort(x);
+    dx <- diff(x);
 
-    ## Sanity check
-    stopifnot(is.data.frame(gaps))
-
-    return(gaps);
+    isGap <- (dx >= minLength);
+    idxsL <- which(isGap);
+    xL <- x[idxsL];
+    xR <- x[idxsL+1L];
+    gaps <- data.frame(start=xL+resolution, end=xR-resolution);
+    gaps$length <- gaps$end - gaps$start;
   }
 
-  x <- x[is.finite(x)];
-  x <- sort(x);
-  dx <- diff(x);
-
-  isGap <- (dx >= minLength);
-  idxsL <- which(isGap);
-  xL <- x[idxsL];
-  xR <- x[idxsL+1L];
-  gaps <- data.frame(start=xL+resolution, end=xR-resolution);
-  gaps$length <- gaps$end - gaps$start;
-
-  ## Sanity check
+  ## Sanity checks
   stopifnot(is.data.frame(gaps))
+  stopifnot(all(gaps$start <= gaps$end))
+  stopifnot(all(gaps$length >= 0))
 
   gaps;
 }) # findLargeGaps()
