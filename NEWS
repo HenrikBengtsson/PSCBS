@@ -9,12 +9,14 @@ o Package now requires R (>= 3.1.0) and BioC (>= 3.0), which were
   released October 2014. It's recommended to use a more recent
   version of R.
 o Added skip=TRUE to report().
+o BUG FIX: gapsToSegments(gaps) gave an error if nrow(gaps) == 0
+  or contained no 'chromosome' column.
 o BUG FIX: findLargeGaps() could return NULL. Now it always returns
   a data.frame.
 o BUG FIX: The report() RSP-embedded TeX templates for CBS and
   PairedPSCBS data did not escape sample and data set names
   to LaTeX in all places needed.
-o Package now requires R (>= 3.1.1) released July 2014. This allows 
+o Package now requires R (>= 3.1.1) released July 2014. This allows
   us to use BioC (>= 3.0) (October 2014).
 
 

@@ -1,12 +1,5 @@
 library("PSCBS")
 
-# BUG FIX: PSCBS GitHub Issue #6
-gaps <- findLargeGaps(chromosome=rep(1,10), x=1:10, minLength=2)
-print(gaps)
-stopifnot(is.data.frame(gaps))
-stopifnot(nrow(gaps) == 0L)
-
-
 # Simulating copy-number data
 set.seed(0xBEEF)
 
@@ -26,20 +19,46 @@ gaps <- findLargeGaps(x=x, minLength=1e6)
 print(gaps)
 stopifnot(is.data.frame(gaps))
 stopifnot(nrow(gaps) == 0L)
+segs <- gapsToSegments(gaps)
+print(segs)
+stopifnot(is.data.frame(segs))
+stopifnot(nrow(segs) == 1L)
+
 
 gaps <- findLargeGaps(data, minLength=1e6)
 print(gaps)
 stopifnot(is.data.frame(gaps))
 stopifnot(nrow(gaps) == 0L)
+segs <- gapsToSegments(gaps)
+print(segs)
+stopifnot(is.data.frame(segs))
+stopifnot(nrow(segs) == 1L)
 
 
 ## Add missing values
-x2 <- x
-x2[30e6 < x & x < 50e6] <- NA
-gaps <- findLargeGaps(x=x2, minLength=1e6)
+data2 <- data
+data$x[30e6 < x & x < 50e6] <- NA
+gaps <- findLargeGaps(data, minLength=1e6)
 print(gaps)
 stopifnot(is.data.frame(gaps))
 stopifnot(nrow(gaps) == 1L)
+segs <- gapsToSegments(gaps)
+print(segs)
+stopifnot(is.data.frame(segs))
+stopifnot(nrow(segs) == 3L)
+
+
+
+# BUG FIX: Issue #6
+gaps <- findLargeGaps(chromosome=rep(1,10), x=1:10, minLength=2)
+print(gaps)
+stopifnot(is.data.frame(gaps))
+stopifnot(nrow(gaps) == 0L)
+# BUG FIX: Issue #9
+segs <- gapsToSegments(gaps)
+print(segs)
+stopifnot(is.data.frame(segs))
+stopifnot(nrow(segs) == 1L)
 
 
 # BUG FIX: PSCBS GitHub Issue #8
