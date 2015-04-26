@@ -792,7 +792,7 @@ setMethodS3("getChromosomeRanges", "PairedPSCBS", function(fit, ...) {
   chromosomes <- sort(unique(segs$chromosome));
 
   # Allocate
-  naValue <- as.double(NA);
+  naValue <- NA_real_;
   res <- matrix(naValue, nrow=length(chromosomes), ncol=3);
   rownames(res) <- chromosomes;
   colnames(res) <- c("start", "end", "length");

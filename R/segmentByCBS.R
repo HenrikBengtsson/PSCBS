@@ -206,7 +206,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Argument 'knownSegments':
   if (is.null(knownSegments)) {
-    knownSegments <- data.frame(chromosome=NA, start=+Inf, end=-Inf);
+    knownSegments <- data.frame(chromosome=NA_integer_, start=+Inf, end=-Inf);
   } else {
 #    if (!joinSegments) {
 #      throw("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.");
@@ -797,8 +797,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         output$loc.end <- seg$end;
       }
       output$num.mark <- 0L;
-      output$seg.mean <- as.double(NA);
-      segRows[1,] <- as.integer(NA);
+      output$seg.mean <- NA_real_;
+      segRows[1,] <- NA_integer_;
     } else {
       output <- output[-1,,drop=FALSE];
       segRows <- segRows[-1,,drop=FALSE];

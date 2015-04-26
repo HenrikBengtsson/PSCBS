@@ -78,7 +78,7 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
 
     # All boundaries in order
     # (this is possible because gaps are non-overlapping)
-    naValue <- as.double(NA);
+    naValue <- NA_real_;
     if (dropGaps) {
       bps <- rep(naValue, times=2*nCC);
       bps[seq(from=1, to=2*nCC, by=2)] <- starts - resolution;
