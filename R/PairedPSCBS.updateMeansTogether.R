@@ -1,7 +1,7 @@
 setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE);
 
   # Argument 'idxList':
@@ -23,25 +23,25 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., av
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
   verbose && enter(verbose, "Updating mean level estimates of multiple segments");
 
   verbose && cat(verbose, "Segments:");
   verbose && str(verbose, idxList);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up averaging functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   avgList <- list(
     tcn = get(avgTCN, mode="function"),
     dh = get(avgDH, mode="function")
   );
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the data and segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
 
   segs <- getSegments(fit, splitters=TRUE);
@@ -61,11 +61,11 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., av
     CT <- dataT$CT;
     rho <- dataT$rho;
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Update the TCN segments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Recalculate (TCN,DH,C1,C2) means");
-    naValue <- as.double(NA);
+    naValue <- NA_real_;
     mus <- c(tcn=naValue, dh=naValue, c1=naValue, c2=naValue);
     for (key in c("tcn", "dh")) {
       avgFUN <- avgList[[key]];
@@ -77,16 +77,16 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., av
         value <- rho;
       }
       keep <- which(!is.na(value));
-  
+
       # (d) Update mean
       gamma <- avgFUN(value[keep]);
-  
+
       # Sanity check
       stopifnot(length(gamma) == 0 || !is.na(gamma));
-  
+
       mus[key] <- gamma;
     } # for (what ...)
-  
+
     mus["c1"] <- 1/2*(1-mus["dh"])*mus["tcn"];
     mus["c2"] <- mus["tcn"] - mus["c1"];
     names(mus) <- sprintf("%sMean", names(mus));
@@ -107,7 +107,7 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., av
 
   res;
 }, private=TRUE) # updateMeansTogether()
- 
+
 
 
 ############################################################################

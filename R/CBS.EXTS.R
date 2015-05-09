@@ -77,7 +77,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   ats <- which(diff(output$chromosome) != 0) + 1L;
   if (length(ats) > 0) {
     idxs <- seq(length=nrow(output));
-    values <- rep(as.integer(NA), times=length(ats));
+    values <- rep(NA_integer_, times=length(ats));
     expand <- insert(idxs, ats=ats, values=values); # R.utils::insert()
     output <- output[expand,];
     rownames(output) <- NULL;
@@ -343,9 +343,9 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
   nbrOfLoci <- nbrOfLoci(fit);
   # Nothing to do?
   if (nbrOfLoci <= 1) {
-    sigma <- as.double(NA);
+    sigma <- NA_real_;
     attr(sigma, "nbrOfLoci") <- nbrOfLoci;
-    attr(sigma, "df") <- as.integer(NA);
+    attr(sigma, "df") <- NA_integer_;
     return(sigma);
   }
 
@@ -405,7 +405,7 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
   chromosomes <- sort(unique(segs$chromosome));
 
   # Allocate
-  naValue <- as.double(NA);
+  naValue <- NA_real_;
   res <- matrix(naValue, nrow=length(chromosomes), ncol=3);
   rownames(res) <- chromosomes;
   colnames(res) <- c("start", "end", "length");

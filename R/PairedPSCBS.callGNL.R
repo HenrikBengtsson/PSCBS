@@ -236,7 +236,7 @@ setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, d
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get call regions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  naValue <- as.double(NA);
+  naValue <- NA_real_;
   callRegions <- matrix(c(
      Inf,    1,
        1,    1,

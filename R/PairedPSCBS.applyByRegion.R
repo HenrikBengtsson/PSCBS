@@ -274,7 +274,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
   muCC <- apply(CC, MARGIN=2, FUN=meanFcn);
   sigmaCC <- apply(CC, MARGIN=2, FUN=sdFcn);
   if (nrow(CC) < 3) {
-    rhoCC <- as.double(NA);
+    rhoCC <- NA_real_;
   } else {
     rhoCC <- cor(CC[,1], CC[,2], use="pairwise.complete.obs");
   }

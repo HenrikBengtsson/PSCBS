@@ -295,7 +295,7 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
       idxs <- seq(length=n);
-      values <- rep(as.integer(NA), times=nGaps);
+      values <- rep(NA_integer_, times=nGaps);
       idxs <- insert(idxs, at=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
@@ -311,7 +311,7 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
       idxs <- seq(length=n);
-      values <- rep(as.integer(NA), times=nGaps);
+      values <- rep(NA_integer_, times=nGaps);
       idxs <- insert(idxs, at=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
