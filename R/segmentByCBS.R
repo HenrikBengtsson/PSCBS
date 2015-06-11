@@ -564,8 +564,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     if (R_SANITY_CHECK) {
       segs <- getSegments(fit);
       stopifnot(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE));
-      stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-      stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE));
+      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));
 
   #    if (nrow(fit$data) != length(y)) {
   #      print(c(nrow(fit$data), nrow(data)));
