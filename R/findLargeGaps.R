@@ -82,10 +82,10 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
 
     isGap <- (dx >= minLength);
     idxsL <- which(isGap);
-str(list(x=x, dx=dx, isGap=isGap, idxsL=idxsL))
+##str(list(x=x, dx=dx, isGap=isGap, idxsL=idxsL))
     xL <- x[idxsL];
     xR <- x[idxsL+1L];
-str(list(x=x, dx=dx, isGap=isGap, idxsL=idxsL, xL=xL, xR=xR))
+##str(list(x=x, dx=dx, isGap=isGap, idxsL=idxsL, xL=xL, xR=xR))
     gaps <- data.frame(start=xL+resolution, end=xR-resolution);
     gaps$length <- gaps$end - gaps$start;
   }
