@@ -34,6 +34,8 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...) {
+  R_SANITY_CHECK <- TRUE;
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -68,7 +70,9 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
       prevEnd <- prevSeg[,"end"];
 
       # Sanity check (will give an error if more than one chromosome)
-      stopifnot(all(currStart >= prevEnd, na.rm=TRUE));
+      if (R_SANITY_CHECK) {
+        stopifnot(all(currStart >= prevEnd, na.rm=TRUE));
+      }
 
       # Center CP
       xMid <- (prevEnd + currStart) / 2;
@@ -82,9 +86,11 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     verbose && exit(verbose);
 
     # Sanity checks
-    stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
-    stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-    stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+    if (R_SANITY_CHECK) {
+      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
+      stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
+      stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+    } # if (R_SANITY_CHECK)
 
     if (nbrOfSegs > 6) {
       verbose && print(verbose, head(segs));
@@ -102,18 +108,20 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     xMin <- min(range, na.rm=TRUE);
     xMax <- max(range, na.rm=TRUE);
     if (nbrOfSegs > 0) {
-      # Sanity check
-      stopifnot(xMin <= segs[1L,"start"]);
+      # Sanity checks
+      if (R_SANITY_CHECK) {
+        stopifnot(xMin <= segs[1L,"start"]);
+        stopifnot(segs[1L,"end"] <= xMax);
+      }
       segs[1L,"start"] <- xMin;
-      # Sanity check
-      stopifnot(segs[1L,"end"] <= xMax);
       segs[nbrOfSegs,"end"] <- xMax;
 
       # Sanity checks
-      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
-      stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-      stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
-
+      if (R_SANITY_CHECK) {
+        stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
+        stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
+        stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+      }
 
       if (nbrOfSegs > 6) {
         verbose && print(verbose, head(segs));
