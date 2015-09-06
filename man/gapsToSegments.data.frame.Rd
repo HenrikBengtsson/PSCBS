@@ -33,8 +33,8 @@
 }
 
 \value{
-  Returns \code{\link[base]{data.frame}} with columns \code{chromosome} (if that argument
-  is given), \code{start}, \code{stop} and \code{length}.
+  Returns \code{\link[base]{data.frame}} of least one row with columns \code{chromosome}
+  if that argument is given), \code{start}, \code{stop} and \code{length}.
   The segments are ordered along the genome.
 }
 

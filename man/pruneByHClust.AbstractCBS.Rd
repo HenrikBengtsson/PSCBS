@@ -18,7 +18,7 @@
 }
 
 \usage{
-\method{pruneByHClust}{AbstractCBS}(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward",
+\method{pruneByHClust}{AbstractCBS}(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward.D",
   merge=TRUE, update=TRUE, verbose=FALSE)
 }
 
