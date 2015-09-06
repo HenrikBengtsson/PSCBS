@@ -5,7 +5,6 @@
 # * Travis CI: https://travis-ci.org/
 # * r-builder: https://github.com/metacran/r-builder
 # * covr: https://github.com/jimhester/covr
-# * Coveralls: https://coveralls.io/
 #
 # Validate your .travis.yml file at http://lint.travis-ci.org/
 #----------------------------------------------------------------
@@ -28,8 +27,8 @@ env:
   # R versions r-builder should test on (ignored by r-travis)
   matrix:
     - RVERSION=3.1.3
-    - RVERSION=3.2.0
-    - RVERSION=devel _R_CHECK_FULL_=TRUE
+    - RVERSION=3.2.2
+    - RVERSION=devel _R_COVR_=TRUE _R_CHECK_FULL_=TRUE
 
 
 before_install:
@@ -42,11 +41,22 @@ before_install:
     else
       export R_RSP_COMPILELATEX_FALLBACK="copy-force";
     fi
+  - if [[ "$_R_CHECK_USE_VALGRIND_" == "TRUE" ]]; then
+      export R_BUILD_ARGS="--no-manual --no-build-vignettes";
+      export R_CHECK_ARGS="--no-manual --no-build-vignettes --no-codoc --no-examples --use-valgrind";
+      export _R_CHECK_TIMINGS_=10;
+      sudo apt-get install valgrind;
+      valgrind --version;
+    fi
 
 install:
- - $RENV install_bioc DNAcopy
  - $RENV install_bioc aroma.light
+ - $RENV install_r Hmisc
+
+ - $RENV install_r R.rsp
+ - $RENV install_bioc DNAcopy
  - $RENV install_r matrixStats R.cache R.methodsS3 R.oo R.utils
+ - $RENV install_bioc aroma.light
  - $RENV install_r ggplot2 Hmisc R.devices R.rsp
 
 script:
@@ -55,11 +65,13 @@ script:
 
 after_success:
   - $RENV dump_logs_by_extension out
-  - if [ -f ".coveralls.R" ]; then
+  - if [[ "$_R_COVR_" == "TRUE" && -f ".covr.R" ]]; then
       $RENV install_devtools;
-      $RENV install_github HenrikBengtsson/covr;
+      $RENV install_github jimhester/covr;
       curl -OL https://raw.githubusercontent.com/HenrikBengtsson/covr-utils/master/covr-utils.R;
-      $RENV run_script .coveralls.R;
+    fi
+  - if [[ "$_R_COVR_" == "TRUE" && -f ".covr.R" ]]; then
+      $RENV run_script .covr.R;
     fi
 
 after_failure:
