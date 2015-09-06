@@ -145,7 +145,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, update=TRUE, verbose=FALSE) {
+setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward.D", merge=TRUE, update=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
