@@ -114,17 +114,21 @@ abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Tiling multiple chromosomes
+# Segment multiple chromosomes
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulate multiple chromosomes
 fit1 <- renameChromosomes(fit, from=0, to=1)
 fit2 <- renameChromosomes(fit, from=0, to=2)
 fitM <- append(fit1, fit2)
+fitM <- segmentByCBS(fitM)
+print(fitM)
+plotTracks(fitM, Clim=c(-3,3))
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Tiling multiple chromosomes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Tile chromosomes
 fitT <- tileChromosomes(fitM)
 fitTb <- tileChromosomes(fitT)
 stopifnot(identical(fitTb, fitT))
-
-# Plotting multiple chromosomes
-plotTracks(fitT, Clim=c(-3,3))
