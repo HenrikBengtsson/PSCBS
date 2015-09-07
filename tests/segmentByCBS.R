@@ -27,8 +27,8 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-subplots(7, ncol=1)
-par(mar=c(1.7,1,0.2,1)+0.1);
+subplots(8, ncol=1L)
+par(mar=c(1.7,1,0.2,1)+0.1)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation
@@ -97,7 +97,7 @@ fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, undo=Inf, verbose=TRUE
 print(fit5)
 plotTracks(fit5)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
-stopifnot(nbrOfSegments(fit5) == nrow(knownSegments));
+stopifnot(nbrOfSegments(fit5) == nrow(knownSegments))
 
 
 # One can also force a separator between two segments by setting
@@ -117,8 +117,8 @@ abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 # Tiling multiple chromosomes
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulate multiple chromosomes
-fit1 <- fit
-fit2 <- renameChromosomes(fit, from=1, to=2)
+fit1 <- renameChromosomes(fit, from=0, to=1)
+fit2 <- renameChromosomes(fit, from=0, to=2)
 fitM <- append(fit1, fit2)
 
 # Tile chromosomes
@@ -127,4 +127,4 @@ fitTb <- tileChromosomes(fitT)
 stopifnot(identical(fitTb, fitT))
 
 # Plotting multiple chromosomes
-plotTracks(fitT)
+plotTracks(fitT, Clim=c(-3,3))
