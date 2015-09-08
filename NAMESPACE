@@ -136,6 +136,7 @@ S3method("shiftTCN", "AbstractCBS")
 S3method("tileChromosomes", "AbstractCBS")
 S3method("updateMeans", "AbstractCBS")
 S3method("updateMeansTogether", "AbstractCBS")
+S3method("writeWIG", "AbstractCBS")
 
 
 # CBS
@@ -206,7 +207,6 @@ S3method("updateMeans", "CBS")
 S3method("updateMeansTogether", "CBS")
 S3method("writeLocusData", "CBS")
 S3method("writeSegments", "CBS")
-S3method("writeWIG", "CBS")
 
 # CNA
 S3method("segmentByCBS", "CNA")

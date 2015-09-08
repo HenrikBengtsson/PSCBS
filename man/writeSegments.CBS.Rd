@@ -12,6 +12,7 @@
 \alias{CBS.writeSegments}
 \alias{writeSegments,CBS-method}
 \alias{writeWIG}
+\alias{writeWIG.AbstractCBS}
 
 \title{Writes the table of segments to file}
 

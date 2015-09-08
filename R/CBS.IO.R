@@ -99,6 +99,7 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
 # @set "class=CBS"
 # @RdocMethod writeSegments
 # @alias writeWIG
+# @alias writeWIG.AbstractCBS
 #
 # @title "Writes the table of segments to file"
 #
