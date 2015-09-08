@@ -7,6 +7,10 @@ library("PSCBS")
 data <- PSCBS::exampleData("paired.chr01")
 str(data)
 
+# Non-paired / tumor-only data
+data <- data[,c("chromosome", "x", "CT", "betaT")]
+str(data)
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Paired PSCBS segmentation
@@ -22,16 +26,10 @@ dataT <- dataS
 dataT$chromosome <- 2L
 dataS <- rbind(dataS, dataT)
 rm(dataT)
-
 str(dataS)
 
-R.oo::attachLocally(dataS)
-
 # Non-Paired PSCBS segmentation
-fit <- segmentByNonPairedPSCBS(CT, betaT=betaT,
-                            chromosome=chromosome, x=x,
-                            avgDH="median",
-                            seed=0xBEEF, verbose=-10)
+fit <- segmentByNonPairedPSCBS(dataS, avgDH="median", seed=0xBEEF, verbose=-10)
 print(fit)
 
 
