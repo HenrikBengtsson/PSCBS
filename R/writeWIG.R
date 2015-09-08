@@ -1,4 +1,4 @@
-setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, graphType=c("bar", "points", "line"), nbrOfDecimals=4L, viewLimits=NULL, colors=c(negative="231,41,138", positive="117,112,179"), ...) {
+setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, transform=NULL, nbrOfDecimals=4L, label=toupper(signal), graphType=c("bar", "points", "line"), viewLimits=NULL, colors=c(negative="231,41,138", positive="117,112,179"), ...) {
   # Argument 'graphType':
   graphType <- match.arg(graphType)
 
@@ -19,6 +19,11 @@ setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, graphType=c("bar"
     data[[ff]] <- as.integer(round(data[[ff]], digits=0L))
   }
 
+  # Transform mean levels?
+  if (!is.null(transform)) {
+    data[["mean"]] <- transform(data[["mean"]])
+  }
+  
   # Round mean levels
   if (!is.null(nbrOfDecimals)) {
     data[["mean"]] <- round(data[["mean"]], digits=nbrOfDecimals);
@@ -39,7 +44,7 @@ setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, graphType=c("bar"
     autoScale="true"
   )
   if (is.na(track$name)) track$name <- "Unknown sample"
-  if (!is.null(signal)) track$name <- sprintf("%s (%s)", track$name, toupper(signal))
+  if (!is.null(signal)) track$name <- sprintf("%s [%s]", track$name, label)
 
   if (!is.null(viewLimits)) {
     track$viewLimits <- sprintf("%g:%g", viewLimits[1], viewLimits[2])
