@@ -85,12 +85,12 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
     cat(file=pathnameT, bfr, sep="\n");
   } # if (addHeader)
 
-  write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep, 
+  write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep,
                                           row.names=FALSE, col.names=TRUE);
 
   pathname <- popTemporaryFile(pathnameT);
 
-  pathname;  
+  pathname;
 }, protected=TRUE) # writeLocusData()
 
 
@@ -98,6 +98,7 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
 ###########################################################################/**
 # @set "class=CBS"
 # @RdocMethod writeSegments
+# @alias writeWIG
 #
 # @title "Writes the table of segments to file"
 #
@@ -122,7 +123,7 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
 # \value{
 #   Returns the pathname of the the file written.
 # }
-# 
+#
 # @author "HB"
 #
 # \seealso{
@@ -131,7 +132,7 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
 # }
 #
 # @keyword internal
-#*/###########################################################################  
+#*/###########################################################################
 setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=NULL, ext="tsv", path=NULL, addHeader=TRUE, createdBy=NULL, sep="\t", nbrOfDecimals=4L, splitters=FALSE, overwrite=FALSE, skip=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -201,7 +202,7 @@ setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=
         values <- round(values, digits=nbrOfDecimals);
         data[[kk]] <- values;
       }
-    } # for (key ...) 
+    } # for (key ...)
   }
 
 
@@ -236,12 +237,12 @@ setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=
     cat(file=pathnameT, bfr, sep="\n");
   } # if (addHeader)
 
-  write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep, 
+  write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep,
                                           row.names=FALSE, col.names=TRUE);
 
   pathname <- popTemporaryFile(pathnameT);
 
-  pathname;  
+  pathname;
 }) # writeSegments()
 
 
