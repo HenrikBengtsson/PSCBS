@@ -2,12 +2,9 @@
 Package: PSCBS
 ==============
 
-Version: 0.44.0-9000 [2015-04-25]
+Version: 0.44.0-9000 [2015-09-07]
 o pruneByHClust() no longer gives a message about method "ward"
   is now named "ward.D".
-o Package now requires R (>= 3.1.0) and BioC (>= 3.0), which were
-  released October 2014. It's recommended to use a more recent
-  version of R.
 o Added skip=TRUE to report().
 o ROBUSTNESS: Explicitly importing core R functions.
 o BUG FIX: gapsToSegments(gaps) gave an error if nrow(gaps) == 0
