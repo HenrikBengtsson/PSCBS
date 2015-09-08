@@ -136,6 +136,7 @@ S3method("shiftTCN", "AbstractCBS")
 S3method("tileChromosomes", "AbstractCBS")
 S3method("updateMeans", "AbstractCBS")
 S3method("updateMeansTogether", "AbstractCBS")
+S3method("writeWIG", "AbstractCBS")
 
 
 # CBS
@@ -160,6 +161,7 @@ S3method("extractCNs", "CBS")
 S3method("extractSegmentMeansByLocus", "CBS")
 S3method("extractSegments", "CBS")
 S3method("extractTotalCNs", "CBS")
+S3method("extractWIG", "CBS")
 S3method("getCallStatistics", "CBS")
 S3method("getCallStatisticsByArms", "CBS")
 S3method("getChangePoints", "CBS")
