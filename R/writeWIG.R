@@ -1,4 +1,4 @@
-setMethodS3("extractWIG", "CBS", function(fit, graphType=c("bar", "points", "line"), nbrOfDecimals=4L, Clim=NULL, colors=c(negative="231,41,138", positive="117,112,179"), ...) {
+setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, graphType=c("bar", "points", "line"), nbrOfDecimals=4L, viewLimits=NULL, colors=c(negative="231,41,138", positive="117,112,179"), ...) {
   # Argument 'graphType':
   graphType <- match.arg(graphType)
 
@@ -6,26 +6,32 @@ setMethodS3("extractWIG", "CBS", function(fit, graphType=c("bar", "points", "lin
   nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
 
   data <- getSegments(fit, splitter=FALSE)
-  data <- data[,c("chromosome", "start", "end", "mean")]
+  fields <- c("chromosome", "start", "end", "mean")
+  if (!is.null(signal)) {
+    fields[-1] <- sprintf("%s%s", signal, capitalize(fields[-1]))
+  }
+  data <- data[,fields]
+  colnames(data) <- c("chromosome", "start", "end", "mean")
   data$chromosome <- sprintf("chr%d", data$chromosome)
-  colnames(data) <- c("chrom", "chromStart", "chromEnd", "signal")
 
   ## Round / truncate
-  for (ff in c("chromStart", "chromEnd")) {
+  for (ff in c("start", "end")) {
     data[[ff]] <- as.integer(round(data[[ff]], digits=0L))
   }
 
   # Round mean levels
   if (!is.null(nbrOfDecimals)) {
-    data[["signal"]] <- round(data[["signal"]], digits=nbrOfDecimals);
+    data[["mean"]] <- round(data[["mean"]], digits=nbrOfDecimals);
   }
 
+  # Drop segments with missing values
+  data <- na.omit(data)
 
   ## Track information
   track <- list(
     type="wiggle_0",
     name=sampleName(fit),
-    description="Circular Binary Segmentation from PSCBS::segmentByCBS()",
+    description=sprintf("Data type: %s", class(fit)),
     graphType=graphType,
     visibility="full",
     maxHeightPixels="128:96:64",
@@ -33,9 +39,10 @@ setMethodS3("extractWIG", "CBS", function(fit, graphType=c("bar", "points", "lin
     autoScale="true"
   )
   if (is.na(track$name)) track$name <- "Unknown sample"
+  if (!is.null(signal)) track$name <- sprintf("%s (%s)", track$name, toupper(signal))
 
-  if (!is.null(Clim)) {
-    track$viewLimits <- sprintf("%g:%g", Clim[1], Clim[2])
+  if (!is.null(viewLimits)) {
+    track$viewLimits <- sprintf("%g:%g", viewLimits[1], viewLimits[2])
   }
 
   if (!is.null(colors)) {
@@ -47,6 +54,18 @@ setMethodS3("extractWIG", "CBS", function(fit, graphType=c("bar", "points", "lin
   attr(data, "track") <- track
 
   data
+}, protected=TRUE)
+
+
+
+setMethodS3("extractWIG", "CBS", function(fit, ..., colors=c(negative="231,41,138", positive="117,112,179")) {
+  NextMethod("extractWIG", signal=NULL, colors=colors)
+}, protected=TRUE)
+
+
+setMethodS3("extractWIG", "PSCBS", function(fit, signal=c("tcn", "dh"), ..., colors=c(negative="231,41,138", positive="117,112,179")) {
+  signal <- match.arg(signal)
+  NextMethod("extractWIG", signal=signal, colors=colors)
 }, protected=TRUE)
 
 
