@@ -2,12 +2,13 @@
 Package: PSCBS
 ==============
 
-Version: 0.44.0-9000 [2015-09-07]
+Version: 0.44.0-9000 [2015-09-08]
 o Add writeWIG() for CBS objects.
 o pruneByHClust() no longer gives a message about method "ward"
   is now named "ward.D".
 o Added skip=TRUE to report().
 o ROBUSTNESS: Explicitly importing core R functions.
+o BUG FIX: tileChromosomes() for CBS returned incorrect locus data.
 o BUG FIX: gapsToSegments(gaps) gave an error if nrow(gaps) == 0
   or contained no 'chromosome' column.
 o BUG FIX: findLargeGaps() could return NULL. Now it always returns
