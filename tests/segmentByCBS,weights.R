@@ -47,6 +47,13 @@ drawLevels(fitW, col="red")
 
 legend("topright", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA))
 
+## Assert that weighted segment means are less biased
+dmean <- getSegments(fit)$mean - getSegments(fitW)$mean
+cat("Segment mean differences:\n")
+print(dmean)
+stopifnot(all(dmean > 0, na.rm=TRUE))
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Multi-chromosome segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -69,3 +76,9 @@ print(fitW)
 drawLevels(fitW, col="red")
 
 legend("topright", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA), bg="white")
+
+## Assert that weighted segment means are less biased
+dmean <- getSegments(fit)$mean - getSegments(fitW)$mean
+cat("Segment mean differences:\n")
+print(dmean)
+stopifnot(all(dmean > 0, na.rm=TRUE))
