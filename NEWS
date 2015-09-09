@@ -8,6 +8,10 @@ o pruneByHClust() no longer gives a message about method "ward"
   is now named "ward.D".
 o Added skip=TRUE to report().
 o ROBUSTNESS: Explicitly importing core R functions.
+o FIX: plotTracks() for CBS ignored arguments 'cex', 'col' and
+  'meanCol' if two or more chromosomes were plotted.
+o BUG FIX: segmentByCBS() would ignore argument 'w' (weights) if
+  more than one chromosome was fitted.
 o BUG FIX: tileChromosomes() for CBS returned incorrect locus data.
 o BUG FIX: gapsToSegments(gaps) gave an error if nrow(gaps) == 0
   or contained no 'chromosome' column.

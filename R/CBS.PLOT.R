@@ -73,7 +73,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
 
   # Argument 'fit':
   if (nbrOfChromosomes(fit) > 1L) {
-    res <- plotTracksManyChromosomes(fit, scatter=scatter, pch=pch, Clim=Clim, xScale=xScale, Clab=Clab, ..., byIndex=byIndex, mar=mar, add=add);
+    res <- plotTracksManyChromosomes(fit, scatter=scatter, pch=pch, col=col, cex=cex, meanCol=meanCol, Clim=Clim, xScale=xScale, Clab=Clab, ..., byIndex=byIndex, mar=mar, add=add);
     return(invisible(res));
   }
 

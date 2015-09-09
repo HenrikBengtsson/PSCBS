@@ -23,25 +23,49 @@ y[outliers] <- y[outliers] + 1.5
 w <- rep(1.0, times=J)
 w[outliers] <- 0.01
 
-par(mar=c(1.7,1,0.2,1)+0.1)
+data <- data.frame(chromosome=1L, x=x, y=y)
+dataW <- cbind(data, w=w)
+
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Segmentation without weights
+# Single-chromosome segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fit <- segmentByCBS(y, x=x)
+par(mar=c(2,3,0.2,1)+0.1)
+# Segment without weights
+fit <- segmentByCBS(data)
 sampleName(fit) <- "CBS_Example"
 print(fit)
 plotTracks(fit)
 ## Highlight outliers (they pull up the mean levels)
 points(x[outliers]/1e6, y[outliers], col="purple")
 
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Segmentation with weights
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-fitW <- segmentByCBS(y, x=x, w=w)
+# Segment with weights
+fitW <- segmentByCBS(dataW)
 sampleName(fitW) <- "CBS_Example (weighted)"
 print(fitW)
 drawLevels(fitW, col="red")
 
 legend("topright", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA))
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Multi-chromosome segmentation
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+data2 <- data
+data2$chromosome <- 2L
+data <- rbind(data, data2)
+dataW <- cbind(data, w=w)
+
+par(mar=c(2,3,0.2,1)+0.1)
+# Segment without weights
+fit <- segmentByCBS(data)
+sampleName(fit) <- "CBS_Example"
+print(fit)
+plotTracks(fit, Clim=c(-3,3))
+
+# Segment with weights
+fitW <- segmentByCBS(dataW)
+sampleName(fitW) <- "CBS_Example (weighted)"
+print(fitW)
+drawLevels(fitW, col="red")
+
+legend("topright", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA), bg="white")

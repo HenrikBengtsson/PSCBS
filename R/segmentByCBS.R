@@ -345,7 +345,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
       verbose && str(verbose, dataKK, level=-10);
-      fields <- attachLocally(dataKK, fields=c("y", "chrom", "x", "index"));
+      fields <- attachLocally(dataKK, fields=c("y", "chrom", "x", "index", "w"));
       dataKK <- NULL; # Not needed anymore
 
       knownSegmentsKK <- NULL;
@@ -360,6 +360,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
       fit <- segmentByCBS(y=y,
                 chromosome=chrom, x=x,
+                w=w,
                 index=index,
                 undo=undo,
                 joinSegments=joinSegments,
@@ -485,7 +486,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         # Extract subset of data and parameters for this segment
         dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
         verbose && str(verbose, dataJJ, level=-50);
-        fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
+        fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index", "w"));
         dataJJ <- NULL; # Not needed anymore
 
         nbrOfLoci <- length(y);
@@ -501,6 +502,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         } else {
           fit <- segmentByCBS(y=y,
                     chromosome=chrom, x=x,
+                    w=w,
                     index=index,
                     undo=undo,
                     joinSegments=joinSegments,
