@@ -1,4 +1,4 @@
-extractWIG extractWIG.CBS
+extractWIG extractWIG.AbstractCBS extractWIG.CBS extractWIG.PSCBS
 all.equal.AbstractCBS all.equal.CBS append append.default
  applyByRegion applyByRegion.PairedPSCBS arrowsC1C2
  arrowsC1C2.PairedPSCBS arrowsDeltaC1C2 arrowsDeltaC1C2.PairedPSCBS

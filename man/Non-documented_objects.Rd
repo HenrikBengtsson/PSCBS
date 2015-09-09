@@ -13,7 +13,9 @@
 
 % Other missing docs
 \alias{extractWIG}
+\alias{extractWIG.AbstractCBS}
 \alias{extractWIG.CBS}
+\alias{extractWIG.PSCBS}
 \alias{all.equal.AbstractCBS}
 \alias{all.equal.CBS}
 \alias{append}
