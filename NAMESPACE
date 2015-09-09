@@ -51,7 +51,7 @@ importFrom("grDevices",
 
 importFrom("stats",
            "cor", "cutree", "density", "end", "mad", "median",
-           "quantile", "sd", "start", "weighted.mean")
+           "na.omit", "quantile", "sd", "start", "weighted.mean")
 
 importFrom("utils",
            "capture.output", "file_test", "getFromNamespace",
