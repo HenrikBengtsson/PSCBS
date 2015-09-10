@@ -75,7 +75,7 @@ sampleName(fitW) <- "CBS_Example (weighted)"
 print(fitW)
 drawLevels(fitW, col="red")
 
-legend("topright", bg="white", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA), bg="white")
+legend("topright", bg="white", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA))
 
 ## Assert that weighted segment means are less biased
 dmean <- getSegments(fit)$mean - getSegments(fitW)$mean
