@@ -50,7 +50,8 @@
 #        See argument \code{undo} of @see "segmentByCBS" for more
 #        details.}
 #   \item{avgTCN, avgDH}{A @character string specifying how to calculating
-#         segment mean levels.}
+#         segment mean levels \emph{after} change points have been
+#         identified.}
 #   \item{...}{Additional arguments passed to @see "segmentByCBS".}
 #   \item{flavor}{A @character specifying what type of segmentation and
 #     calling algorithm to be used.}

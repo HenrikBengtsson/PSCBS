@@ -309,7 +309,7 @@ kmax = n-1,
 threshold = 0.5,
 ### Stopping criteria. Typically chosen to be in the interval
 ### (0 0.5]. The smaller the threshold, the higher the tendency to keep more
-### breakpoints. The criteria is based on the method found in 'Picard et al
+### changepoints. The criteria is based on the method found in 'Picard et al
 ### (2005)', "A statistical approach for array CGH data analysis" (BMC
 ### Bioinformatics). Default=0.5
 ...

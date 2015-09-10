@@ -45,6 +45,9 @@
       In the special case when \code{undo} is +\code{\link[base:is.finite]{Inf}}, the segmentation
       result will not contain any changepoints (in addition to what
       is specified by argument \code{knownSegments}).}
+  \item{avg}{A \code{\link[base]{character}} string specifying how to calculating
+        segment mean levels \emph{after} change points have been
+        identified.}
   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
       segmentation function.}
   \item{joinSegments}{If \code{\link[base:logical]{TRUE}}, there are no gaps between neighboring

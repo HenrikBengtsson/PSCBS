@@ -33,6 +33,9 @@
 #       In the special case when \code{undo} is +@Inf, the segmentation
 #       result will not contain any changepoints (in addition to what
 #       is specified by argument \code{knownSegments}).}
+#   \item{avg}{A @character string specifying how to calculating
+#         segment mean levels \emph{after} change points have been
+#         identified.}
 #   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
 #       segmentation function.}
 #   \item{joinSegments}{If @TRUE, there are no gaps between neighboring
@@ -111,7 +114,7 @@
 # }
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, avg=c("mean", "median"), ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # Local copies of DNAcopy functions
   getbdry <- .use("getbdry", package="DNAcopy");
   CNA <- .use("CNA", package="DNAcopy");
@@ -200,6 +203,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Argument 'undo':
   undo <- Arguments$getDouble(undo, range=c(0,Inf));
+
+  # Argument 'avg':
+  avg <- match.arg(avg)
 
   # Argument 'cpFlavor':
   joinSegments <- Arguments$getLogical(joinSegments);
@@ -364,6 +370,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                 w=w,
                 index=index,
                 undo=undo,
+                avg=avg,
                 joinSegments=joinSegments,
                 knownSegments=knownSegmentsKK,
                 ...,
@@ -510,6 +517,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                     w=w,
                     index=index,
                     undo=undo,
+                    avg=avg,
                     joinSegments=joinSegments,
                     knownSegments=seg,
                     ...,
@@ -957,6 +965,17 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
       stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
     } # if (R_SANITY_CHECK)
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Update?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (avg != "mean") {
+    verbose && enter(verbose, "Updating mean level using different estimator")
+    verbose && cat(verbose, "Estimator: ", avgTCN)
+    fit <- updateMeans(fit, avg=avg, verbose=less(verbose, 20))
+    verbose && exit(verbose)
   }
 
 

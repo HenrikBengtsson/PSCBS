@@ -2,7 +2,8 @@
 Package: PSCBS
 ==============
 
-Version: 0.44.0-9000 [2015-09-08]
+Version: 0.44.0-9000 [2015-09-09]
+o segmentByCBS() gained argument 'avg'.
 o Add writeWIG() for CBS objects.
 o pruneByHClust() no longer gives a message about method "ward"
   is now named "ward.D".
