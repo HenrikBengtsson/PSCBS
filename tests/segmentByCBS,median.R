@@ -39,17 +39,34 @@ plotTracks(fit)
 ## Highlight outliers (they pull up the mean levels)
 points(x[outliers]/1e6, y[outliers], col="purple")
 
+# Segment without weights but with median
+fitM <- segmentByCBS(data, avg="median")
+sampleName(fitM) <- "CBS_Example (median)"
+print(fitM)
+drawLevels(fitM, col="magenta", lty=3)
+
 # Segment with weights
-fitW <- segmentByCBS(dataW)
+fitW <- segmentByCBS(dataW, avg="median")
 sampleName(fitW) <- "CBS_Example (weighted)"
 print(fitW)
 drawLevels(fitW, col="red")
 
-legend("topright", bg="white", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA))
+# Segment with weights and median
+fitWM <- segmentByCBS(dataW, avg="median")
+sampleName(fitWM) <- "CBS_Example (weighted median)"
+print(fitWM)
+drawLevels(fitWM, col="orange", lty=3)
+
+legend("topright", bg="white", legend=c("outliers", "non-weighted CBS (mean)", "non-weighted CBS (median)", "weighted CBS (mean)", "weighted CBS (median)"), col=c("purple", "purple", "magenta", "red", "orange"), lwd=c(NA,3,3,3,3), lty=c(NA,1,3,1,3), pch=c(1,NA,NA,NA,NA))
 
 ## Assert that weighted segment means are less biased
 dmean <- getSegments(fit)$mean - getSegments(fitW)$mean
 cat("Segment mean differences:\n")
+print(dmean)
+stopifnot(all(dmean > 0, na.rm=TRUE))
+
+dmean <- getSegments(fitM)$mean - getSegments(fitWM)$mean
+cat("Segment median differences:\n")
 print(dmean)
 stopifnot(all(dmean > 0, na.rm=TRUE))
 
@@ -69,16 +86,33 @@ sampleName(fit) <- "CBS_Example"
 print(fit)
 plotTracks(fit, Clim=c(-3,3))
 
+# Segment without weights but with median
+fitM <- segmentByCBS(data, avg="median")
+sampleName(fitM) <- "CBS_Example (median)"
+print(fitM)
+drawLevels(fitM, col="magenta", lty=3)
+
 # Segment with weights
-fitW <- segmentByCBS(dataW)
+fitW <- segmentByCBS(dataW, avg="median")
 sampleName(fitW) <- "CBS_Example (weighted)"
 print(fitW)
 drawLevels(fitW, col="red")
 
-legend("topright", bg="white", legend=c("outliers", "non-weighted CBS", "weighted CBS"), col=c("purple", "purple", "red"), lwd=c(NA,3,3), pch=c(1,NA,NA), bg="white")
+# Segment with weights and median
+fitWM <- segmentByCBS(dataW, avg="median")
+sampleName(fitWM) <- "CBS_Example (weighted median)"
+print(fitWM)
+drawLevels(fitWM, col="orange", lty=3)
+
+legend("topright", bg="white", legend=c("outliers", "non-weighted CBS (mean)", "non-weighted CBS (median)", "weighted CBS (mean)", "weighted CBS (median)"), col=c("purple", "purple", "magenta", "red", "orange"), lwd=c(NA,3,3,3,3), lty=c(NA,1,3,1,3), pch=c(1,NA,NA,NA,NA))
 
 ## Assert that weighted segment means are less biased
 dmean <- getSegments(fit)$mean - getSegments(fitW)$mean
 cat("Segment mean differences:\n")
+print(dmean)
+stopifnot(all(dmean > 0, na.rm=TRUE))
+
+dmean <- getSegments(fitM)$mean - getSegments(fitWM)$mean
+cat("Segment median differences:\n")
 print(dmean)
 stopifnot(all(dmean > 0, na.rm=TRUE))
