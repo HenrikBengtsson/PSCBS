@@ -8,6 +8,7 @@ o Add writeWIG() for CBS objects.
 o pruneByHClust() no longer gives a message about method "ward"
   is now named "ward.D".
 o Added skip=TRUE to report().
+o ROBUSTNESS: Package test coverage is 62%.
 o ROBUSTNESS: Explicitly importing core R functions.
 o FIX: plotTracks() for CBS ignored arguments 'cex', 'col' and
   'meanCol' if two or more chromosomes were plotted.

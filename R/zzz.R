@@ -17,6 +17,7 @@
 
 
 .onLoad <- function(libname, pkgname) {
+  ## covr: skip=5
   ns <- getNamespace(pkgname);
   pkg <- Package(pkgname);
   # Assign '.PSCBS' object [since 'PSCBS' is a constructor/Class].
