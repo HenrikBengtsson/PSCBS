@@ -453,7 +453,7 @@ setMethodS3("getChangePoints", "AbstractCBS", abstract=TRUE);
 # }
 #*/###########################################################################
 setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
-  segs <- fit$output;
+  segs <- getSegments(fit, splitters=TRUE)
   names <- colnames(segs);
 
   excl <- NULL;
@@ -471,7 +471,7 @@ setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
     segs <- segs[,-excl];
   }
 
-  fit <- setSegments(fit, segs);
+  fit <- setSegments(fit, segs, splitters=TRUE)
   invisible(fit);
 }, protected=TRUE)
 

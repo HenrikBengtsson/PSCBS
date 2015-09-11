@@ -11,9 +11,8 @@ o Added skip=TRUE to report().
 o ROBUSTNESS: Explicitly importing core R functions.
 o FIX: plotTracks() for CBS ignored arguments 'cex', 'col' and
   'meanCol' if two or more chromosomes were plotted.
-o BUG FIX: joinSegments() and pruneBySdUndo() for CBS only worked
-  for single-chromosome segmentation results and gave an error
-  if used for multi-chromosome results.
+o BUG FIX: joinSegments(), resetSegments() and pruneBySdUndo() gave
+  errors for multi-chromosome (>= 2) segmentation results.
 o BUG FIX: segmentByCBS() would ignore argument 'w' (weights) if
   more than one chromosome was fitted.
 o BUG FIX: tileChromosomes() for CBS returned incorrect locus data.

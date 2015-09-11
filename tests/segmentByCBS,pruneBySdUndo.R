@@ -39,8 +39,20 @@ fitj <- lapply(fit, FUN=joinSegments)
 print(fitj)
 assertMatchingSegments(fitj$M, fitj)
 
+## Reset segments
+message("*** resetSegments()")
+fitj <- lapply(fit, FUN=resetSegments)
+print(fitj)
+assertMatchingSegments(fitj$M, fitj)
+
 ## Prune by SD undo
 message("*** pruneBySdUndo()")
 fitp <- lapply(fit, FUN=pruneBySdUndo)
+print(fitp)
+assertMatchingSegments(fitp$M, fitp)
+
+## Prune by hierarchical clustering
+message("*** pruneByHClust()")
+fitp <- lapply(fit, FUN=pruneByHClust, k=1L)
 print(fitp)
 assertMatchingSegments(fitp$M, fitp)
