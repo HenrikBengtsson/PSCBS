@@ -973,7 +973,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (avg != "mean") {
     verbose && enter(verbose, "Updating mean level using different estimator")
-    verbose && cat(verbose, "Estimator: ", avgTCN)
+    verbose && cat(verbose, "Estimator: ", avg)
     fit <- updateMeans(fit, avg=avg, verbose=less(verbose, 20))
     verbose && exit(verbose)
   }

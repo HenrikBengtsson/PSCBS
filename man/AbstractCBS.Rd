@@ -65,6 +65,7 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
  \tab \code{plotTracks} \tab  -\cr
  \tab \code{sampleCNs} \tab  -\cr
  \tab \code{save} \tab  -\cr
+ \tab \code{writeWIG} \tab  -\cr
 }
 
 
