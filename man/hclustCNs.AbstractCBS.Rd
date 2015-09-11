@@ -19,7 +19,7 @@
 }
 
 \usage{
-\method{hclustCNs}{AbstractCBS}(fit, size=NULL, distMethod="euclidean", hclustMethod="ward", ...,
+\method{hclustCNs}{AbstractCBS}(fit, size=NULL, distMethod="euclidean", hclustMethod="ward.D", ...,
   verbose=FALSE)
 }
 

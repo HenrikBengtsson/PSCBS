@@ -66,7 +66,8 @@
        See argument \code{undo} of \code{\link{segmentByCBS}}() for more
        details.}
   \item{avgTCN, avgDH}{A \code{\link[base]{character}} string specifying how to calculating
-        segment mean levels.}
+        segment mean levels \emph{after} change points have been
+        identified.}
   \item{...}{Additional arguments passed to \code{\link{segmentByCBS}}().}
   \item{flavor}{A \code{\link[base]{character}} specifying what type of segmentation and
     calling algorithm to be used.}

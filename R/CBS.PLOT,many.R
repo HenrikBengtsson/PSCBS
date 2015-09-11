@@ -103,8 +103,8 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
 
   data <- getLocusData(fit);
   dataT <- getLocusData(fitT);
-  data <- segs[,!is.element(colnames(data), c("x"))];
-  dataT <- segsT[,!is.element(colnames(dataT), c("x"))];
+  data <- data[,!is.element(colnames(data), c("x"))];
+  dataT <- dataT[,!is.element(colnames(dataT), c("x"))];
   stopifnot(all.equal(dataT, data));
 
   stopifnot(nbrOfLoci(fitT) == nbrOfLoci(fit));

@@ -36,8 +36,8 @@
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filename="*", envir=new.env(), verbose=FALSE) {
-  use("R.rsp (>= 0.9.1)");
+setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit), studyName, ..., rspTags=NULL, rootPath="reports/", .filename="*", skip=TRUE, envir=new.env(), verbose=FALSE) {
+  use("R.rsp (>= 0.20.0)");
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -162,6 +162,27 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
 
   verbose && exit(verbose);
 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Skip?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (skip) {
+    ## Try to guess report filename
+    filename <- basename(destPathname)
+    filename <- gsub("[.]rsp$", "", filename)
+    ext <- gsub(".*[.]", "", filename)
+    fullname <- gsub(sprintf("[.]%s$", ext), "", filename)
+    ext <- switch(ext, tex="pdf", md="html", ext)
+    filename <- sprintf("%s.%s", fullname, ext)
+    pathname <- file.path(rspArgs$reportPath, filename)
+    pathname <- getAbsolutePath(pathname)
+    verbose && cat(verbose, "Expected output pathname: ", pathname);
+    if (isFile(pathname)) {
+      verbose && cat(verbose, "Already exists: Skipping.")
+      report <- R.rsp::RspFileProduct(pathname)
+      return(report)
+    }
+  }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Create file links to all LaTeX include files
@@ -229,18 +250,15 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Processing RSP template");
   rspArgs$figPath <- "figures/";
-
   args <- c(list(rspArgs=rspArgs), rspArgs);
-  pdfPathname <- R.rsp::rfile(destPathname, workdir=rspArgs$reportPath, args=args, envir=envir, verbose=verbose);
-  pdfPathname <- getAbsolutePath(pdfPathname);
+  report <- R.rsp::rfile(destPathname, workdir=rspArgs$reportPath, args=args, envir=envir, verbose=verbose);
   verbose && exit(verbose);
 
-  pdfPathname <- getRelativePath(pdfPathname);
-  verbose && cat(verbose, "Final report: ", pdfPathname);
+  verbose && cat(verbose, "Final report: ", getRelativePath(report));
 
   verbose && exit(verbose);
 
-  pdfPathname;
+  report;
 }, protected=TRUE)
 
 

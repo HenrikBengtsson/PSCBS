@@ -32,7 +32,7 @@
 # }
 #
 # @keyword internal
-#*/########################################################################### 
+#*/###########################################################################
 setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   sampleName <- getSampleName(fit);
   if (is.na(sampleName)) sampleName <- "<NA>";
@@ -115,9 +115,9 @@ setMethodS3("getChromosomes", "DNAcopy", function(fit, ...) {
 
 
 setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1L, method=c("diff", "abs", "res"), estimator=c("mad", "sd"), na.rm=TRUE, weights=NULL, ...) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'sample':
   sample <- Arguments$getIndex(sample, max=nbrOfSamples(fit));
 
@@ -139,14 +139,14 @@ setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1L, met
 
   # Nothing to do?
   if (nbrOfLoci <= 1) {
-    return(as.double(NA));
+    return(NA_real_);
   }
 
   # Get the estimator function
   if (!is.null(weights)) {
     estimator <- sprintf("weighted %s", estimator);
     estimator <- R.utils::toCamelCase(estimator);
-  }  
+  }
   estimatorFcn <- get(estimator, mode="function");
 
 
@@ -189,9 +189,9 @@ setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1L, met
 
 
 setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ...) {
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'FUN':
   FUN <- match.arg(FUN);
   FUN <- get(FUN, mode="function");

@@ -47,24 +47,25 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
  \bold{Methods:}\cr
 \tabular{rll}{
  \tab \code{adjustPloidyScale} \tab  -\cr
- \tab \code{\link[PSCBS:append.AbstractCBS]{append}} \tab Appends one segmentation result to another.\cr
+ \tab \code{append} \tab  -\cr
  \tab \code{extractCNs} \tab  -\cr
  \tab \code{getChangePoints} \tab  -\cr
- \tab \code{\link[PSCBS:getChromosomes.AbstractCBS]{getChromosomes}} \tab Gets the set of chromosomes.\cr
- \tab \code{\link[PSCBS:getLocusData.AbstractCBS]{getLocusData}} \tab Gets the locus-level data.\cr
+ \tab \code{getChromosomes} \tab  -\cr
+ \tab \code{getLocusData} \tab  -\cr
  \tab \code{getSegmentSizes} \tab  -\cr
- \tab \code{\link[PSCBS:getSegments.AbstractCBS]{getSegments}} \tab Gets the segments.\cr
- \tab \code{\link[PSCBS:load.AbstractCBS]{load}} \tab Loads an AbstractCBS object from file.\cr
- \tab \code{\link[PSCBS:mergeThreeSegments.AbstractCBS]{mergeThreeSegments}} \tab Merge a segment and its two flanking segments.\cr
- \tab \code{\link[PSCBS:nbrOfChangePoints.AbstractCBS]{nbrOfChangePoints}} \tab Gets the number of change points.\cr
- \tab \code{\link[PSCBS:nbrOfChromosomes.AbstractCBS]{nbrOfChromosomes}} \tab Gets the number of chromosomes.\cr
- \tab \code{\link[PSCBS:nbrOfLoci.AbstractCBS]{nbrOfLoci}} \tab Gets the number of loci.\cr
- \tab \code{\link[PSCBS:nbrOfSegments.AbstractCBS]{nbrOfSegments}} \tab Gets the number of segments.\cr
- \tab \code{\link[PSCBS:ploidy.AbstractCBS]{ploidy}} \tab Gets and sets ploidy.\cr
+ \tab \code{getSegments} \tab  -\cr
+ \tab \code{load} \tab  -\cr
+ \tab \code{mergeThreeSegments} \tab  -\cr
+ \tab \code{nbrOfChangePoints} \tab  -\cr
+ \tab \code{nbrOfChromosomes} \tab  -\cr
+ \tab \code{nbrOfLoci} \tab  -\cr
+ \tab \code{nbrOfSegments} \tab  -\cr
+ \tab \code{ploidy} \tab  -\cr
  \tab \code{ploidy<-} \tab  -\cr
- \tab \code{\link[PSCBS:plotTracks.AbstractCBS]{plotTracks}} \tab Plots the segmentation result along the genome.\cr
+ \tab \code{plotTracks} \tab  -\cr
  \tab \code{sampleCNs} \tab  -\cr
- \tab \code{\link[PSCBS:save.AbstractCBS]{save}} \tab Saves an AbstractCBS object to file.\cr
+ \tab \code{save} \tab  -\cr
+ \tab \code{writeWIG} \tab  -\cr
 }
 
 

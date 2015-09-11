@@ -19,72 +19,44 @@ importFrom("R.oo", "save") ## Multi-sources: R.oo, base
 
 
 ## Importing functions
-importFrom("R.oo", "extend")
-importFrom("R.oo", "attachLocally")
-importFrom("R.oo", "startupMessage")
+importFrom("R.oo",
+           "extend", "attachLocally", "startupMessage")
 
-importFrom("matrixStats", "anyMissing")
-importFrom("matrixStats", "binMeans")
-importFrom("matrixStats", "colCumsums")
-importFrom("matrixStats", "colDiffs")
-importFrom("matrixStats", "colMins")
-importFrom("matrixStats", "colMaxs")
-importFrom("matrixStats", "rowAlls")
-importFrom("matrixStats", "rowAnys")
-importFrom("matrixStats", "rowMins")
-importFrom("matrixStats", "weightedMedian")
+importFrom("R.cache",
+           "getCachePath", "loadCache", "saveCache")
 
-importFrom("utils", "capture.output")
-importFrom("utils", "file_test")
-importFrom("utils", "getFromNamespace")
-importFrom("utils", "head")
-importFrom("utils", "packageVersion")
-importFrom("utils", "str")
-importFrom("utils", "tail")
-importFrom("utils", "write.table")
+importFrom("R.utils",
+           "cat", "capitalize", "copyDirectory", "createLink",
+           "enter", "enterf", "exit", "filePath", "getAbsolutePath",
+           "getRelativePath", "hpaste", "insert", "isDirectory",
+           "isFile", "isPackageInstalled", "isZero", "less",
+           "loadObject", "more", "popState", "popTemporaryFile",
+           "printf", "pushState", "pushTemporaryFile", "resample",
+           "saveObject", "stext", "subplots", "toCamelCase", "wrap")
 
-importFrom("R.cache", "getCachePath")
-importFrom("R.cache", "loadCache")
-importFrom("R.cache", "saveCache")
+importFrom("matrixStats",
+           "anyMissing", "binMeans", "colCumsums", "colDiffs",
+           "colMins", "colMaxs", "rowAlls", "rowAnys", "rowMins",
+           "weightedMedian")
 
-importFrom("R.utils", "cat") ## Multi-sources: R.utils, base
-importFrom("R.utils", "capitalize")
-importFrom("R.utils", "copyDirectory")
-importFrom("R.utils", "createLink")
-importFrom("R.utils", "enter")
-importFrom("R.utils", "enterf")
-importFrom("R.utils", "exit")
-importFrom("R.utils", "filePath")
-importFrom("R.utils", "getAbsolutePath")
-importFrom("R.utils", "getRelativePath")
-importFrom("R.utils", "hpaste")
-importFrom("R.utils", "insert")
-importFrom("R.utils", "isDirectory")
-importFrom("R.utils", "isFile")
-importFrom("R.utils", "isPackageInstalled")
-importFrom("R.utils", "isZero")
-importFrom("R.utils", "less")
-importFrom("R.utils", "loadObject")
-importFrom("R.utils", "more")
-importFrom("R.utils", "popState")
-importFrom("R.utils", "popTemporaryFile")
-importFrom("R.utils", "printf")
-importFrom("R.utils", "pushState")
-importFrom("R.utils", "pushTemporaryFile")
-importFrom("R.utils", "resample")
-importFrom("R.utils", "saveObject")
-importFrom("R.utils", "stext")
-importFrom("R.utils", "toCamelCase")
-importFrom("R.utils", "wrap")
+importFrom("DNAcopy",
+           "segments.summary", "smooth.CNA", "CNA", "segment", "getbdry")
 
+importFrom("graphics",
+           "abline", "arrows", "axis", "box", "lines",
+           "mtext", "par", "plot", "points", "rect", "text")
 
-## Manual imports
-importFrom("R.utils", "subplots")
-importFrom("DNAcopy", "segments.summary")
-importFrom("DNAcopy", "smooth.CNA")
-importFrom("DNAcopy", "CNA")
-importFrom("DNAcopy", "segment")
-importFrom("DNAcopy", "getbdry")
+importFrom("grDevices",
+           "col2rgb", "rgb")
+
+importFrom("stats",
+           "cor", "cutree", "density", "end", "mad", "median",
+           "na.omit", "quantile", "sd", "start", "weighted.mean")
+
+importFrom("utils",
+           "capture.output", "file_test", "getFromNamespace",
+           "head", "packageVersion", "str", "tail", "write.table",
+           "packageDescription")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -164,6 +136,7 @@ S3method("shiftTCN", "AbstractCBS")
 S3method("tileChromosomes", "AbstractCBS")
 S3method("updateMeans", "AbstractCBS")
 S3method("updateMeansTogether", "AbstractCBS")
+S3method("writeWIG", "AbstractCBS")
 
 
 # CBS
@@ -188,6 +161,9 @@ S3method("extractCNs", "CBS")
 S3method("extractSegmentMeansByLocus", "CBS")
 S3method("extractSegments", "CBS")
 S3method("extractTotalCNs", "CBS")
+S3method("extractWIG", "CBS")
+S3method("extractWIG", "AbstractCBS")
+S3method("extractWIG", "PSCBS")
 S3method("getCallStatistics", "CBS")
 S3method("getCallStatisticsByArms", "CBS")
 S3method("getChangePoints", "CBS")

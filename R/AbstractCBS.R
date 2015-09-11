@@ -406,15 +406,15 @@ setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
 
 setMethodS3("setSegments", "AbstractCBS", function(fit, segments, ...) {
   # Argument 'segments':
-  segments <- Arguments$getInstanceOf(segments, "data.frame");
-  nbrOfSegs <- nbrOfSegments(fit);
+  segments <- Arguments$getInstanceOf(segments, "data.frame")
+  nbrOfSegs <- nbrOfSegments(fit, ...)
   if (nrow(segments) != nbrOfSegs) {
-    throw("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs);
+    throw("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs)
   }
 
-  fit$output <- segments;
+  fit$output <- segments
 
-  invisible(fit);
+  invisible(fit)
 }, protected=TRUE)
 
 
@@ -453,7 +453,7 @@ setMethodS3("getChangePoints", "AbstractCBS", abstract=TRUE);
 # }
 #*/###########################################################################
 setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
-  segs <- fit$output;
+  segs <- getSegments(fit, splitters=TRUE)
   names <- colnames(segs);
 
   excl <- NULL;
@@ -471,7 +471,7 @@ setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
     segs <- segs[,-excl];
   }
 
-  fit <- setSegments(fit, segs);
+  fit <- setSegments(fit, segs, splitters=TRUE)
   invisible(fit);
 }, protected=TRUE)
 

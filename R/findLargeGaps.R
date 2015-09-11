@@ -22,8 +22,9 @@
 # }
 #
 # \value{
-#   Returns @data.frame with columns \code{chromosome} (if given),
-#   \code{start}, \code{stop} and \code{length}.
+#   Returns @data.frame zero or more rows and with columns
+#   \code{chromosome} (if given), \code{start}, \code{stop},
+#   and \code{length}.
 # }
 #
 # @author "HB"
@@ -51,12 +52,18 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
   # Argument 'minLength':
   minLength <- Arguments$getNumeric(minLength, range=c(0,Inf));
 
+  # Argument 'resolution':
+  resolution <- Arguments$getNumeric(resolution, range=c(0,Inf));
+  if (resolution >= minLength) {
+    throw(sprintf("Cannot identify large gaps. Argument 'resolution' (=%g) is not strictly smaller than 'minLength' (=%g).", resolution, minLength))
+  }
 
   if (!is.null(chromosome)) {
     allChromosomes <- sort(unique(chromosome));
     nbrOfChromosomes <-  length(allChromosomes);
 
-    gaps <- NULL;
+    xEmpty <- vector(mode(x), length=0L)
+    gaps <- data.frame(chromosome=integer(0L), start=xEmpty, end=xEmpty);
     for (cc in seq(along=allChromosomes)) {
       chr <- allChromosomes[cc];
       idxs <- which(chromosome == chr);
@@ -68,20 +75,25 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
         gaps <- rbind(gaps, gapsCC);
       }
     } # for (cc ...)
+  } else {
+    x <- x[is.finite(x)];
+    x <- sort(x);
+    dx <- diff(x);
 
-    return(gaps);
+    isGap <- (dx >= minLength);
+    idxsL <- which(isGap);
+##str(list(x=x, dx=dx, isGap=isGap, idxsL=idxsL))
+    xL <- x[idxsL];
+    xR <- x[idxsL+1L];
+##str(list(x=x, dx=dx, isGap=isGap, idxsL=idxsL, xL=xL, xR=xR))
+    gaps <- data.frame(start=xL+resolution, end=xR-resolution);
+    gaps$length <- gaps$end - gaps$start;
   }
 
-  x <- x[is.finite(x)];
-  x <- sort(x);
-  dx <- diff(x);
-
-  isGap <- (dx >= minLength);
-  idxsL <- which(isGap);
-  xL <- x[idxsL];
-  xR <- x[idxsL+1L];
-  gaps <- data.frame(start=xL+resolution, end=xR-resolution);
-  gaps$length <- gaps$end - gaps$start;
+  ## Sanity checks
+  stopifnot(is.data.frame(gaps))
+  stopifnot(all(gaps$start <= gaps$end))
+  stopifnot(all(gaps$length >= 0))
 
   gaps;
 }) # findLargeGaps()
@@ -96,6 +108,9 @@ setMethodS3("findLargeGaps", "data.frame", function(chromosome, ...) {
 
 ###############################################################################
 # HISTORY:
+# 2015-04-25
+# o BUG FIX: findLargeGaps() could return NULL.  Now it always returns
+#   a data.frame.
 # 2012-02-22
 # o BUG FIX: findLargeGaps() did not handle missing values for
 #   argument 'chromosome'.

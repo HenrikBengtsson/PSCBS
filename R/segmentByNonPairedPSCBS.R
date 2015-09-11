@@ -188,7 +188,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   isHet <- isSnp & !isHom;
 
   # Tumor proxy for germline genotypes
-  naValue <- as.double(NA);
+  naValue <- NA_real_;
   muNx <- rep(naValue, times=length(betaT));
   muNx[isHomA] <-   0;
   muNx[isHet]  <- 1/2;

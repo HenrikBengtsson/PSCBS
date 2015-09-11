@@ -104,7 +104,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     y <- data$y;
 
     # Label data points by their segment index
-    segId <- rep(as.integer(NA), times=max(segRows[,2], na.rm=TRUE));
+    segId <- rep(NA_integer_, times=max(segRows[,2], na.rm=TRUE));
     for (rr in 1:nbrOfSegs) {
       segRow <- unlist(segRows[rr,], use.names=FALSE);
       idxs <- segRow[1]:segRow[2];

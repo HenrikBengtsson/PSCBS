@@ -254,7 +254,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
     if (is.element("roh", adjustFor)) {
       verbose && enter(verbose, "Adjusting for ROH");
       calls <- segs$rohCall;
-      segs$dhMean[calls] <- as.double(NA);
+      segs$dhMean[calls] <- NA_real_;
       verbose && exit(verbose);
     }
 

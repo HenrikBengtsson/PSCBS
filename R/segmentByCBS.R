@@ -33,6 +33,9 @@
 #       In the special case when \code{undo} is +@Inf, the segmentation
 #       result will not contain any changepoints (in addition to what
 #       is specified by argument \code{knownSegments}).}
+#   \item{avg}{A @character string specifying how to calculating
+#         segment mean levels \emph{after} change points have been
+#         identified.}
 #   \item{...}{Additional arguments passed to the \code{DNAcopy::segment()}
 #       segmentation function.}
 #   \item{joinSegments}{If @TRUE, there are no gaps between neighboring
@@ -111,7 +114,7 @@
 # }
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, avg=c("mean", "median"), ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # Local copies of DNAcopy functions
   getbdry <- .use("getbdry", package="DNAcopy");
   CNA <- .use("CNA", package="DNAcopy");
@@ -201,12 +204,15 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Argument 'undo':
   undo <- Arguments$getDouble(undo, range=c(0,Inf));
 
+  # Argument 'avg':
+  avg <- match.arg(avg)
+
   # Argument 'cpFlavor':
   joinSegments <- Arguments$getLogical(joinSegments);
 
   # Argument 'knownSegments':
   if (is.null(knownSegments)) {
-    knownSegments <- data.frame(chromosome=NA, start=+Inf, end=-Inf);
+    knownSegments <- data.frame(chromosome=integer(0), start=integer(0), end=integer(0));
   } else {
 #    if (!joinSegments) {
 #      throw("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.");
@@ -345,7 +351,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
       verbose && str(verbose, dataKK, level=-10);
-      fields <- attachLocally(dataKK, fields=c("y", "chrom", "x", "index"));
+      chrom <- x <- index <- y <- w <- NULL
+      fields <- attachLocally(dataKK, fields=c("chrom", "x", "index", "y", "w"));
       dataKK <- NULL; # Not needed anymore
 
       knownSegmentsKK <- NULL;
@@ -360,8 +367,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
       fit <- segmentByCBS(y=y,
                 chromosome=chrom, x=x,
+                w=w,
                 index=index,
                 undo=undo,
+                avg=avg,
                 joinSegments=joinSegments,
                 knownSegments=knownSegmentsKK,
                 ...,
@@ -376,6 +385,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
           # ...and ordered along the genome already.
           stopifnot(all.equal(fit$data$y, y));
         }
+
+        # Assert weights were used
+        stopifnot(!hasWeights || !is.null(fit$data$w))
       } # if (R_SANITY_CHECK)
 
       rm(list=fields); # Not needed anymore
@@ -485,7 +497,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         # Extract subset of data and parameters for this segment
         dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
         verbose && str(verbose, dataJJ, level=-50);
-        fields <- attachLocally(dataJJ, fields=c("y", "chrom", "x", "index"));
+        chrom <- x <- index <- y <- w <- NULL
+        fields <- attachLocally(dataJJ, fields=c("chrom", "x", "index", "y", "w"));
         dataJJ <- NULL; # Not needed anymore
 
         nbrOfLoci <- length(y);
@@ -501,8 +514,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         } else {
           fit <- segmentByCBS(y=y,
                     chromosome=chrom, x=x,
+                    w=w,
                     index=index,
                     undo=undo,
+                    avg=avg,
                     joinSegments=joinSegments,
                     knownSegments=seg,
                     ...,
@@ -514,6 +529,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         if (R_SANITY_CHECK) {
           stopifnot(nrow(fit$data) == nbrOfLoci);
           stopifnot(all.equal(fit$data$y, y));
+
+          # Assert weights were used
+          stopifnot(!hasWeights || !is.null(fit$data$w))
         } # if (R_SANITY_CHECK)
 
         rm(list=fields); # Not needed anymore
@@ -564,8 +582,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     if (R_SANITY_CHECK) {
       segs <- getSegments(fit);
       stopifnot(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE));
-      stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-      stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)); ## FIXME: > 0
+      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));   ## FIXME: > 0
 
   #    if (nrow(fit$data) != length(y)) {
   #      print(c(nrow(fit$data), nrow(data)));
@@ -797,8 +815,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         output$loc.end <- seg$end;
       }
       output$num.mark <- 0L;
-      output$seg.mean <- as.double(NA);
-      segRows[1,] <- as.integer(NA);
+      output$seg.mean <- NA_real_;
+      segRows[1,] <- NA_integer_;
     } else {
       output <- output[-1,,drop=FALSE];
       segRows <- segRows[-1,,drop=FALSE];
@@ -947,6 +965,17 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       stopifnot(all(segRows[,1] <= segRows[,2], na.rm=TRUE));
       stopifnot(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE));
     } # if (R_SANITY_CHECK)
+  }
+
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Update?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  if (avg != "mean") {
+    verbose && enter(verbose, "Updating mean level using different estimator")
+    verbose && cat(verbose, "Estimator: ", avg)
+    fit <- updateMeans(fit, avg=avg, verbose=less(verbose, 20))
+    verbose && exit(verbose)
   }
 
 

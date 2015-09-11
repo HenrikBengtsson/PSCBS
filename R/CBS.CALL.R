@@ -516,10 +516,10 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
     # Allocate per-segment SD estimates
     nbrOfSegments <- nbrOfSegments(fit);
-    naValue <- as.double(NA);
+    naValue <- NA_real_;
     sds <- rep(naValue, times=nbrOfSegments);
 
-    naValue <- as.double(NA);
+    naValue <- NA_real_;
     for (ss in seq(length=nbrOfSegments)) {
       seg <- segs[ss,];
 
@@ -970,7 +970,7 @@ setMethodS3("nbrOfLosses", "CBS", function(fit, ...) {
   stats <- getSegments(fit, ...);
   calls <- stats$lossCall;
   if (is.null(calls)) {
-    return(as.integer(NA));
+    return(NA_integer_);
   }
   sum(calls, na.rm=TRUE);
 }, protected=TRUE)
@@ -980,7 +980,7 @@ setMethodS3("nbrOfGains", "CBS", function(fit, ...) {
   stats <- getSegments(fit, ...);
   calls <- stats$gainCall;
   if (is.null(calls)) {
-    return(as.integer(NA));
+    return(NA_integer_);
   }
   sum(calls, na.rm=TRUE);
 }, protected=TRUE)
@@ -990,7 +990,7 @@ setMethodS3("nbrOfAmplifications", "CBS", function(fit, ...) {
   stats <- getSegments(fit, ...);
   calls <- stats$amplificationCall;
   if (is.null(calls)) {
-    return(as.integer(NA));
+    return(NA_integer_);
   }
   sum(calls, na.rm=TRUE);
 }, protected=TRUE)

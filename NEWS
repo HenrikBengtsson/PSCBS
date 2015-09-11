@@ -2,6 +2,32 @@
 Package: PSCBS
 ==============
 
+Version: 0.45.0 [2015-09-11]
+o segmentByCBS() gained argument 'avg'.
+o Add writeWIG() for CBS objects.
+o pruneByHClust() no longer gives a message about method "ward"
+  is now named "ward.D".
+o Added skip=TRUE to report().
+o ROBUSTNESS: Package test coverage is 62%.
+o ROBUSTNESS: Explicitly importing core R functions.
+o FIX: plotTracks() for CBS ignored arguments 'cex', 'col' and
+  'meanCol' if two or more chromosomes were plotted.
+o BUG FIX: joinSegments(), resetSegments() and pruneBySdUndo() gave
+  errors for multi-chromosome (>= 2) segmentation results.
+o BUG FIX: segmentByCBS() would ignore argument 'w' (weights) if
+  more than one chromosome was fitted.
+o BUG FIX: tileChromosomes() for CBS returned incorrect locus data.
+o BUG FIX: gapsToSegments(gaps) gave an error if nrow(gaps) == 0
+  or contained no 'chromosome' column.
+o BUG FIX: findLargeGaps() could return NULL. Now it always returns
+  a data.frame.
+o BUG FIX: The report() RSP-embedded TeX templates for CBS and
+  PairedPSCBS data did not escape sample and data set names
+  to LaTeX in all places needed.
+o Package now requires R (>= 3.1.1) released July 2014. This allows
+  us to use BioC (>= 3.0) (October 2014).
+
+
 Version: 0.44.0 [2015-02-22]
 o ROBUSTNESS: Package test coverage is 58%.
 o ROBUSTNESS: Forgot to declare some S3 methods in NAMESPACE.

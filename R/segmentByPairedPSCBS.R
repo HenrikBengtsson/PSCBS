@@ -50,7 +50,8 @@
 #        See argument \code{undo} of @see "segmentByCBS" for more
 #        details.}
 #   \item{avgTCN, avgDH}{A @character string specifying how to calculating
-#         segment mean levels.}
+#         segment mean levels \emph{after} change points have been
+#         identified.}
 #   \item{...}{Additional arguments passed to @see "segmentByCBS".}
 #   \item{flavor}{A @character specifying what type of segmentation and
 #     calling algorithm to be used.}
@@ -205,8 +206,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Argument 'tbn':
   tbn <- Arguments$getLogical(tbn);
-  if (tbn && is.null(betaN)) {
-    throw("When argument 'betaN' is not available, then argument 'tbn' must FALSE.");
+  if (!is.null(tbn)) {
+    if (tbn && is.null(betaN)) {
+      throw("If TumorBoost-normalized BAFs are not given (betaTN=NULL), then normal BAFs ('betaN') are required if TumorBoost normalization is to be done (tbn=TRUE).")
+    }
   }
 
   # Argument 'preserveScale':
@@ -837,7 +840,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
         # Add a splitter segment
         segT <- segs[[kk-1]];
-        segT <- segT[as.integer(NA),];
+        segT <- segT[NA_integer_,];
         keys <- colnames(tcnSegments);
         segT[,keys] <- tcnSegments[kk,keys];
         segT[,"tcnId"] <- tcnId;
@@ -849,10 +852,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         verbose && print(verbose, segT);
 
         # Add a splitter to TCN and DH segment row matrix
-        segRowsT <- dhSegRows[as.integer(NA),];
+        segRowsT <- dhSegRows[NA_integer_,];
         dhSegRows <- rbind(dhSegRows, segRowsT);
 
-        segRowsT <- tcnSegsExpanded[as.integer(NA),];
+        segRowsT <- tcnSegsExpanded[NA_integer_,];
         tcnSegsExpanded <- rbind(tcnSegsExpanded, segRowsT);
 
         verbose && exit(verbose);
@@ -945,8 +948,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
       # Special case: If there where not enough data to segment DH...
       if (nrow(dhSegments) == 0) {
-        dhSegments <- dhSegments[as.integer(NA),,drop=FALSE];
-        dhSegRowsKK <- dhSegRowsKK[as.integer(NA),,drop=FALSE];
+        dhSegments <- dhSegments[NA_integer_,,drop=FALSE];
+        dhSegRowsKK <- dhSegRowsKK[NA_integer_,,drop=FALSE];
       }
 
       verbose && cat(verbose, "DH segmentation table:");

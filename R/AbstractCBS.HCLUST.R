@@ -68,7 +68,7 @@ setMethodS3("updateMeansTogether", "AbstractCBS", abstract=TRUE, private=TRUE);
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euclidean", hclustMethod="ward", ..., verbose=FALSE) {
+setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euclidean", hclustMethod="ward.D", ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,6 +98,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Clustering");
+
   # TODO: Do *weighted* hierarchical clustering
   tree <- stats::hclust(D, method=hclustMethod);
   verbose && str(verbose, tree);
@@ -144,7 +145,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward", merge=TRUE, update=TRUE, verbose=FALSE) {
+setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMethod="euclidean", hclustMethod="ward.D", merge=TRUE, update=TRUE, verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

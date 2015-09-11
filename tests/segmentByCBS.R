@@ -27,13 +27,14 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-subplots(7, ncol=1)
-par(mar=c(1.7,1,0.2,1)+0.1);
+subplots(8, ncol=1L)
+par(mar=c(1.7,1,0.2,1)+0.1)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fit <- segmentByCBS(y, x=x)
+sampleName(fit) <- "CBS_Example"
 print(fit)
 plotTracks(fit)
 
@@ -47,6 +48,7 @@ knownSegments <- data.frame(
   end       =x[c(349,   J)]
 )
 fit2 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit2) <- "CBS_Example_2"
 print(fit2)
 plotTracks(fit2)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
@@ -59,6 +61,7 @@ knownSegments <- data.frame(
   end       =c(x[349],   +Inf)
 )
 fit2b <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit2b) <- "CBS_Example_2b"
 print(fit2b)
 plotTracks(fit2b)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
@@ -72,6 +75,7 @@ knownSegments <- data.frame(
   end       =x[c(400)]
 )
 fit3 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit3) <- "CBS_Example_3"
 print(fit3)
 plotTracks(fit3, Clim=c(0,5), xlim=c(0,100))
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
@@ -87,6 +91,7 @@ knownSegments <- data.frame(
   end       =x[c(349, 400,   J)]
 )
 fit4 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit4) <- "CBS_Example_4"
 print(fit4)
 plotTracks(fit4)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
@@ -94,10 +99,11 @@ abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
 fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, undo=Inf, verbose=TRUE)
+sampleName(fit5) <- "CBS_Example_5"
 print(fit5)
 plotTracks(fit5)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
-stopifnot(nbrOfSegments(fit5) == nrow(knownSegments));
+stopifnot(nbrOfSegments(fit5) == nrow(knownSegments))
 
 
 # One can also force a separator between two segments by setting
@@ -108,23 +114,45 @@ knownSegments <- data.frame(
   end       =x[c(349, NA,   J)]
 )
 fit6 <- segmentByCBS(y, x=x, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit6) <- "CBS_Example_6"
 print(fit6)
 plotTracks(fit6)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# Tiling multiple chromosomes
+# Segment multiple chromosomes
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulate multiple chromosomes
-fit1 <- fit
-fit2 <- renameChromosomes(fit, from=1, to=2)
+fit1 <- renameChromosomes(fit, from=0, to=1)
+fit2 <- renameChromosomes(fit, from=0, to=2)
 fitM <- append(fit1, fit2)
+fitM <- segmentByCBS(fitM)
+sampleName(fitM) <- "CBS_Example_M"
+print(fitM)
+plotTracks(fitM, Clim=c(-3,3))
 
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Tiling multiple chromosomes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Tile chromosomes
 fitT <- tileChromosomes(fitM)
 fitTb <- tileChromosomes(fitT)
 stopifnot(identical(fitTb, fitT))
 
-# Plotting multiple chromosomes
-plotTracks(fitT)
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Write segmentation to file
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pathT <- tempdir()
+
+## Tab-delimited file
+pathname <- writeSegments(fitM, path=pathT)
+print(pathname)
+
+## WIG file
+pathname <- writeWIG(fitM, path=pathT)
+print(pathname)
+
+unlink(pathT, recursive=TRUE)

@@ -166,7 +166,7 @@ symbolList <- list(
 
 \maketitle
 \begin{abstract}
-This is a quality control (QC) report on the sample '<%=sampleName%>' in data set '<%=dataSet%>'.
+This is a quality control (QC) report on the sample '<%=toLatex(sampleName)%>' in data set '<%=toLatex(dataSet)%>'.
 \end{abstract}
 
 \tableofcontents

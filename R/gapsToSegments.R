@@ -23,8 +23,8 @@
 # }
 #
 # \value{
-#   Returns @data.frame with columns \code{chromosome} (if that argument
-#   is given), \code{start}, \code{stop} and \code{length}.
+#   Returns @data.frame of least one row with columns \code{chromosome}
+#   if that argument is given), \code{start}, \code{stop} and \code{length}.
 #   The segments are ordered along the genome.
 # }
 #
@@ -45,15 +45,23 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'gaps':
   keys <- colnames(gaps);
-  stopifnot(all(is.element(c("chromosome", "start", "end"), keys)));
+  stopifnot(all(is.element(c("start", "end"), keys)));
   stopifnot(all(gaps$start <= gaps$end, na.rm=TRUE));
+  hasChr <- is.element("chromosome", keys)
+
+  ## Nothing more to do?
+  if (nrow(gaps) == 0L) {
+    knownSegments <- data.frame(chromosome=integer(1L), start=-Inf, end=+Inf);
+    if (!hasChr) knownSegments$hromosome <- NULL
+    return(knownSegments)
+  }
 
   # Order gaps by the genome
   o <- order(gaps$chromosome, gaps$start, gaps$end);
   gaps <- gaps[o,];
 
   # For each chromosome...
-  knownSegments <- NULL;
+  knownSegments <- NULL
   chromosomes <- sort(unique(gaps$chromosome));
   for (chr in chromosomes) {
     gapsCC <- subset(gaps, chromosome == chr);
@@ -70,7 +78,7 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
 
     # All boundaries in order
     # (this is possible because gaps are non-overlapping)
-    naValue <- as.double(NA);
+    naValue <- NA_real_;
     if (dropGaps) {
       bps <- rep(naValue, times=2*nCC);
       bps[seq(from=1, to=2*nCC, by=2)] <- starts - resolution;
@@ -107,6 +115,8 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate generated 'knownSegments'
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  stopifnot(is.data.frame(knownSegments))
+  stopifnot(nrow(knownSegments) >= 1L)
   for (chr in sort(unique(knownSegments$chromosome))) {
     dd <- subset(knownSegments, chromosome == chr);
 

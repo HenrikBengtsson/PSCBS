@@ -33,8 +33,9 @@
 }
 
 \value{
-  Returns \code{\link[base]{data.frame}} with columns \code{chromosome} (if given),
-  \code{start}, \code{stop} and \code{length}.
+  Returns \code{\link[base]{data.frame}} zero or more rows and with columns
+  \code{chromosome} (if given), \code{start}, \code{stop},
+  and \code{length}.
 }
 
 \author{Henrik Bengtsson}

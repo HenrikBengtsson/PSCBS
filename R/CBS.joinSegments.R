@@ -34,11 +34,19 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...) {
+  R_SANITY_CHECK <- TRUE;
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  chromosomes <- getChromosomes(fit)
+  nbrOfChrs <- length(chromosomes)
+
   # Argument 'range':
   if (!is.null(range)) {
+    if (nbrOfChrs > 1L) {
+      throw("Argument 'range' cannot be given when 'fit' contains multiple chromosomes.")
+    }
     range <- Arguments$getDoubles(range, length=c(2,2));
     stopifnot(range[2] >= range[1]);
   }
@@ -52,9 +60,11 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
 
 
   verbose && enter(verbose, "Joining segments");
-  segs <- getSegments(fit);
+  segs <- getSegments(fit, splitters=TRUE);
   verbose && cat(verbose, "Segments:");
   verbose && print(verbose, segs);
+  verbose && cat(verbose, "Chromosomes:")
+  verbose && print(verbose, chromosomes)
   verbose && cat(verbose, "Range:");
   verbose && print(verbose, range);
 
@@ -64,11 +74,22 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     prevSeg <- segs[1L,];
     for (ss in 2:nbrOfSegs) {
       currSeg <- segs[ss,];
+
+      ## New chromosome?
+      if (!identical(currSeg$chromosome, prevSeg$chromosome)) {
+        ## Skip splitters
+        if (is.na(currSeg$chromosome)) next
+        prevSeg <- currSeg
+        next
+      }
+
       currStart <- currSeg[,"start"];
       prevEnd <- prevSeg[,"end"];
 
       # Sanity check (will give an error if more than one chromosome)
-      stopifnot(all(currStart >= prevEnd, na.rm=TRUE));
+      if (R_SANITY_CHECK) {
+        stopifnot(all(currStart >= prevEnd, na.rm=TRUE));
+      }
 
       # Center CP
       xMid <- (prevEnd + currStart) / 2;
@@ -82,9 +103,11 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     verbose && exit(verbose);
 
     # Sanity checks
-    stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
-    stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-    stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
+    if (R_SANITY_CHECK) {
+      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
+      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE));  ## FIXME: > 0
+      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));    ## FIXME: > 0
+    } # if (R_SANITY_CHECK)
 
     if (nbrOfSegs > 6) {
       verbose && print(verbose, head(segs));
@@ -102,18 +125,20 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     xMin <- min(range, na.rm=TRUE);
     xMax <- max(range, na.rm=TRUE);
     if (nbrOfSegs > 0) {
-      # Sanity check
-      stopifnot(xMin <= segs[1L,"start"]);
+      # Sanity checks
+      if (R_SANITY_CHECK) {
+        stopifnot(xMin <= segs[1L,"start"]);
+        stopifnot(segs[1L,"end"] <= xMax);
+      }
       segs[1L,"start"] <- xMin;
-      # Sanity check
-      stopifnot(segs[1L,"end"] <= xMax);
       segs[nbrOfSegs,"end"] <- xMax;
 
       # Sanity checks
-      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
-      stopifnot(all(diff(segs$start) > 0, na.rm=TRUE));
-      stopifnot(all(diff(segs$end) > 0, na.rm=TRUE));
-
+      if (R_SANITY_CHECK) {
+        stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
+        stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE));  ## FIXME: > 0
+        stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));    ## FIXME: > 0
+      }
 
       if (nbrOfSegs > 6) {
         verbose && print(verbose, head(segs));
@@ -125,7 +150,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     verbose && exit(verbose);
   } # if (!is.null(range))
 
-  fit <- setSegments(fit, segs);
+  fit <- setSegments(fit, segs, splitters=TRUE);
 
   segs <- getSegments(fit, splitters=FALSE);
   if (nbrOfSegs > 6) {
