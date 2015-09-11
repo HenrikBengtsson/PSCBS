@@ -1,4 +1,16 @@
 library("PSCBS")
+
+## Compare segments
+assertMatchingSegments <- function(fitM, fit) {
+  chrs <- getChromosomes(fitM)
+  segsM <- lapply(chrs, FUN=function(chr) {
+    getSegments(extractChromosome(fitM, chr))
+  })
+  segs <- lapply(fit[chrs], FUN=getSegments)
+  stopifnot(all.equal(segsM, segs, check.attributes=FALSE))
+}
+
+## Simulate data
 set.seed(0xBEEF)
 J <- 1000
 mu <- double(J)
@@ -9,21 +21,26 @@ eps <- rnorm(J, sd=1/2)
 y <- mu + eps
 x <- sort(runif(length(y), max=length(y))) * 1e5
 
-data1 <- data.frame(chromosome=1L, x=x, y=y)
-data2 <- data.frame(chromosome=2L, x=x, y=y)
-dataM <- rbind(data1, data2)
+data <- list()
+for (chr in 1:2) {
+  data[[chr]] <- data.frame(chromosome=chr, x=x, y=y)
+}
+data$M <- Reduce(rbind, data)
 
-fit1 <- segmentByCBS(data1)
-print(fit1)
-fit2 <- segmentByCBS(data2)
-print(fit2)
-fitM <- segmentByCBS(dataM)
-print(fitM)
+## Segment
+message("*** segmentByCBS()")
+fit <- lapply(data, FUN=segmentByCBS)
+print(fit)
+assertMatchingSegments(fit$M, fit)
 
-fit1p <- pruneBySdUndo(fit1)
-print(fit1p)
-fit2p <- pruneBySdUndo(fit2)
-print(fit2p)
-## FIXME: Issue #20
-## fitMp <- pruneBySdUndo(fitM)
-## print(fitMp)
+## Join segments
+message("*** joinSegments()")
+fitj <- lapply(fit, FUN=joinSegments)
+print(fitj)
+assertMatchingSegments(fitj$M, fitj)
+
+## Prune by SD undo
+message("*** pruneBySdUndo()")
+fitp <- lapply(fit, FUN=pruneBySdUndo)
+print(fitp)
+assertMatchingSegments(fitp$M, fitp)

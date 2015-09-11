@@ -39,8 +39,14 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  chromosomes <- getChromosomes(fit)
+  nbrOfChrs <- length(chromosomes)
+
   # Argument 'range':
   if (!is.null(range)) {
+    if (nbrOfChrs > 1L) {
+      throw("Argument 'range' cannot be given when 'fit' contains multiple chromosomes.")
+    }
     range <- Arguments$getDoubles(range, length=c(2,2));
     stopifnot(range[2] >= range[1]);
   }
@@ -54,9 +60,11 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
 
 
   verbose && enter(verbose, "Joining segments");
-  segs <- getSegments(fit);
+  segs <- getSegments(fit, splitters=TRUE);
   verbose && cat(verbose, "Segments:");
   verbose && print(verbose, segs);
+  verbose && cat(verbose, "Chromosomes:")
+  verbose && print(verbose, chromosomes)
   verbose && cat(verbose, "Range:");
   verbose && print(verbose, range);
 
@@ -66,6 +74,15 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     prevSeg <- segs[1L,];
     for (ss in 2:nbrOfSegs) {
       currSeg <- segs[ss,];
+
+      ## New chromosome?
+      if (!identical(currSeg$chromosome, prevSeg$chromosome)) {
+        ## Skip splitters
+        if (is.na(currSeg$chromosome)) next
+        prevSeg <- currSeg
+        next
+      }
+
       currStart <- currSeg[,"start"];
       prevEnd <- prevSeg[,"end"];
 
@@ -133,7 +150,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     verbose && exit(verbose);
   } # if (!is.null(range))
 
-  fit <- setSegments(fit, segs);
+  fit <- setSegments(fit, segs, splitters=TRUE);
 
   segs <- getSegments(fit, splitters=FALSE);
   if (nbrOfSegs > 6) {

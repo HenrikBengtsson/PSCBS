@@ -406,15 +406,15 @@ setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
 
 setMethodS3("setSegments", "AbstractCBS", function(fit, segments, ...) {
   # Argument 'segments':
-  segments <- Arguments$getInstanceOf(segments, "data.frame");
-  nbrOfSegs <- nbrOfSegments(fit);
+  segments <- Arguments$getInstanceOf(segments, "data.frame")
+  nbrOfSegs <- nbrOfSegments(fit, ...)
   if (nrow(segments) != nbrOfSegs) {
-    throw("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs);
+    throw("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs)
   }
 
-  fit$output <- segments;
+  fit$output <- segments
 
-  invisible(fit);
+  invisible(fit)
 }, protected=TRUE)
 
 
