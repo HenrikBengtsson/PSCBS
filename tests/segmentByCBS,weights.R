@@ -27,10 +27,12 @@ data <- data.frame(chromosome=1L, x=x, y=y)
 dataW <- cbind(data, w=w)
 
 
+par(mar=c(2,3,0.2,1)+0.1)
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-chromosome segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-par(mar=c(2,3,0.2,1)+0.1)
 # Segment without weights
 fit <- segmentByCBS(data)
 sampleName(fit) <- "CBS_Example"
@@ -52,6 +54,21 @@ dmean <- getSegments(fit)$mean - getSegments(fitW)$mean
 cat("Segment mean differences:\n")
 print(dmean)
 stopifnot(all(dmean > 0, na.rm=TRUE))
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Segmentation with some known change points
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+knownSegments <- data.frame(
+  chromosome=c(    1,   1),
+  start     =x[c(  1, 401)],
+  end       =x[c(349,   J)]
+)
+fit2 <- segmentByCBS(data, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit2) <- "CBS_Example_2 (weighted)"
+print(fit2)
+plotTracks(fit2)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
