@@ -27,10 +27,12 @@ data <- data.frame(chromosome=1L, x=x, y=y)
 dataW <- cbind(data, w=w)
 
 
+par(mar=c(2,3,0.2,1)+0.1)
+
+
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Single-chromosome segmentation
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-par(mar=c(2,3,0.2,1)+0.1)
 # Segment without weights
 fit <- segmentByCBS(data)
 sampleName(fit) <- "CBS_Example"
@@ -52,6 +54,85 @@ dmean <- getSegments(fit)$mean - getSegments(fitW)$mean
 cat("Segment mean differences:\n")
 print(dmean)
 stopifnot(all(dmean > 0, na.rm=TRUE))
+
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Segmentation with some known change points
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+knownSegments <- data.frame(
+  chromosome=c(    1,   1),
+  start     =x[c(  1, 401)],
+  end       =x[c(349,   J)]
+)
+fit2 <- segmentByCBS(dataW, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit2) <- "CBS_Example_2 (weighted)"
+print(fit2)
+plotTracks(fit2)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
+# Chromosome boundaries can be specified as -Inf and +Inf
+knownSegments <- data.frame(
+  chromosome=c(     1,      1),
+  start     =c(  -Inf, x[401]),
+  end       =c(x[349],   +Inf)
+)
+fit2b <- segmentByCBS(dataW, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit2b) <- "CBS_Example_2b (weighted)"
+print(fit2b)
+plotTracks(fit2b)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
+# As a proof of concept, it is possible to segment just the centromere,
+# which contains no data.  All statistics will be NAs.
+knownSegments <- data.frame(
+  chromosome=c(    1),
+  start     =x[c(350)],
+  end       =x[c(400)]
+)
+fit3 <- segmentByCBS(dataW, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit3) <- "CBS_Example_3"
+print(fit3)
+plotTracks(fit3, Clim=c(0,5), xlim=c(0,100))
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
+# If one specify the (empty) centromere as a segment, then its
+# estimated statistics will be NAs, which becomes a natural
+# separator between the two "independent" arms.
+knownSegments <- data.frame(
+  chromosome=c(    1,   1,   1),
+  start     =x[c(  1, 350, 401)],
+  end       =x[c(349, 400,   J)]
+)
+fit4 <- segmentByCBS(dataW, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit4) <- "CBS_Example_4"
+print(fit4)
+plotTracks(fit4)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+
+
+fit5 <- segmentByCBS(dataW, knownSegments=knownSegments, undo=Inf, verbose=TRUE)
+sampleName(fit5) <- "CBS_Example_5"
+print(fit5)
+plotTracks(fit5)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
+stopifnot(nbrOfSegments(fit5) == nrow(knownSegments))
+
+
+# One can also force a separator between two segments by setting
+# 'start' and 'end' to NAs ('chromosome' has to be given)
+knownSegments <- data.frame(
+  chromosome=c(    1,  1,   1),
+  start     =x[c(  1, NA, 401)],
+  end       =x[c(349, NA,   J)]
+)
+fit6 <- segmentByCBS(dataW, knownSegments=knownSegments, verbose=TRUE)
+sampleName(fit6) <- "CBS_Example_6"
+print(fit6)
+plotTracks(fit6)
+abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
