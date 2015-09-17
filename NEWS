@@ -6,7 +6,8 @@ Version: 0.45.0-1 [2015-09-16]
 o More informative error messages when append() for CBS or PSCBS fail.
 o BUG FIX: segmentByCBS(, ..., w, knownSegments) would give internal
   assertion errors if one of the priorly known segments would have
-  zero data points.
+  zero data points.  Thanks to Kirill Tsukanov (Moscow) and 
+  Eric Talevich (UCSF) for reporting on this.
 
 
 Version: 0.45.0 [2015-09-11]
