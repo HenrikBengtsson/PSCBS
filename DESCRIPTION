@@ -1,5 +1,5 @@
 Package: PSCBS
-Version: 0.45.0
+Version: 0.45.1
 Depends:
   R (>= 3.1.1),
   utils
@@ -22,7 +22,7 @@ SuggestsNote:
   Hmisc,
   aroma.light
 VignetteBuilder: R.rsp
-Date: 2015-09-11
+Date: 2015-09-16
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
@@ -37,3 +37,5 @@ License: GPL (>= 2)
 LazyLoad: TRUE
 ByteCompile: TRUE
 biocViews: aCGH, CopyNumberVariants, SNP, Microarray, OneChannel, TwoChannel, Genetics
+URL: https://github.com/HenrikBengtsson/PSCBS
+BugReports: https://github.com/HenrikBengtsson/PSCBS/issues

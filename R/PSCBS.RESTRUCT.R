@@ -37,10 +37,12 @@ setMethodS3("append", "PSCBS", function(x, other, addSplit=TRUE, ...) {
   # Argument 'other':
   other <- Arguments$getInstanceOf(other, "PSCBS");
   for (field in c("data", "output")) {
-    thisFF <- this[[field]];
-    otherFF <- other[[field]];
-    if (ncol(otherFF) != ncol(thisFF)) {
-      throw(sprintf("Cannot merge %s objects. Arguments 'other' and 'this' has different number of columns in field '%s': %s != %s", class(this)[1], field, ncol(otherFF), ncol(thisFF)));
+    dataA <- this[[field]]
+    dataB <- other[[field]]
+    namesA <- colnames(dataA)
+    namesB <- colnames(dataB)
+    if (!all(namesA == namesB)) {
+      throw(sprintf("Cannot merge %s objects. Arguments 'other' and 'this' has different sets of columns in field '%s': {%s} [n=%d] != {%s} [n=%d]", class(this)[1], field, paste(namesA, collapse=", "), length(namesA), paste(namesB, collapse=", "), length(namesB)))
     }
   }
 

@@ -471,7 +471,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     verbose && cat(verbose, "Number of segments: ", nbrOfSegments, level=-5);
 
     # Create a splitter-only CBS object
-    splitter <- segmentByCBS(y=c(0,0), chromosome=c(1,2), x=c(0,0));
+    dataS <- data.frame(y=c(0,0), chromosome=c(1,2), x=c(0,0))
+    if (hasWeights) dataS$w <- 1
+    splitter <- segmentByCBS(dataS)
+    dataS <- NULL
     suppressWarnings({
       splitter <- extractSegment(splitter, 2);
       # Sanity check
@@ -558,6 +561,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     } # for (jj ...)
 
     verbose && enter(verbose, "Merging (independently) segmented known segments", level=-10);
+    verbose && str(verbose, fitList, level=-50)
     verbose && cat(verbose, "Number of segments: ", length(fitList), level=-10);
     appendT <- function(...) append(..., addSplit=FALSE);
     fit <- Reduce(appendT, fitList);
@@ -766,8 +770,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   nbrOfNonMissingLoci <- sum(!is.na(cnData$y));
   if (nbrOfNonMissingLoci == 0) {
     args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
+    if (hasWeights) args$weights <- 1.0
   } else if (undo == +Inf) {
     args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
+    if (hasWeights) args$weights <- 1.0
     verbose && cat(verbose, "Skipping identification of new change points (undo=+Inf)", level=-50);
   }
 
