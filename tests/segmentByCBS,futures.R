@@ -38,6 +38,15 @@ if (packageVersion("globals") <= "0.4.0") {
   strategies <- setdiff(strategies, "lazy")
 }
 
+pkg <- "async"
+if (R.utils::isPackageInstalled(pkg)) {
+  library(pkg, character.only=TRUE)
+  backend("local")
+  strategies <- c(strategies, "batchjobs")
+}
+
+message("Future strategies: ", paste(sQuote(strategies), collapse=", "))
+
 for (strategy in strategies) {
   message(sprintf("*** segmentByCBS() using '%s' futures ...", strategy))
   plan(strategy)
