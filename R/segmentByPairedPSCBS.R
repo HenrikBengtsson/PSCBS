@@ -502,37 +502,37 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         verbose && print(verbose, knownSegmentsKK);
       }
 
-      fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
-                betaT=betaTN, betaN=betaN, muN=muN,
-                chromosome=chromosome, x=x,
-                tbn=FALSE, joinSegments=joinSegments,
-                knownSegments=knownSegmentsKK,
-                alphaTCN=alphaTCN, alphaDH=alphaDH,
-                undoTCN=undoTCN, undoDH=undoDH,
-                avgTCN=avgTCN, avgDH=avgDH,
-                flavor=flavor,
-                ...,
-                seed=NULL,
-                verbose=verbose);
+      fitList[[chrTag]] <- {
+        fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
+                  betaT=betaTN, betaN=betaN, muN=muN,
+                  chromosome=chromosome, x=x,
+                  tbn=FALSE, joinSegments=joinSegments,
+                  knownSegments=knownSegmentsKK,
+                  alphaTCN=alphaTCN, alphaDH=alphaDH,
+                  undoTCN=undoTCN, undoDH=undoDH,
+                  avgTCN=avgTCN, avgDH=avgDH,
+                  flavor=flavor,
+                  ...,
+                  seed=NULL,
+                  verbose=verbose)
 
-      # Sanity checks
-      if (nrow(knownSegmentsKK) == 0) {
-        stopifnot(nrow(fit$data) == length(CT));
-        stopifnot(all.equal(fit$data$CT, CT));
-        stopifnot(all.equal(fit$data$muN, muN));
-      }
+        # Sanity checks
+        if (nrow(knownSegmentsKK) == 0) {
+          stopifnot(nrow(fit$data) == length(CT))
+          stopifnot(all.equal(fit$data$CT, CT))
+          stopifnot(all.equal(fit$data$muN, muN))
+        }
 
-      # Update betaT (which is otherwise equals betaTN)
-      fit$data$betaT <- betaT;
+        # Update betaT (which is otherwise equals betaTN)
+        fit$data$betaT <- betaT
 
-      rm(list=fields); # Not needed anymore
+        verbose && print(verbose, head(as.data.frame(fit)))
+        verbose && print(verbose, tail(as.data.frame(fit)))
 
-      verbose && print(verbose, head(as.data.frame(fit)));
-      verbose && print(verbose, tail(as.data.frame(fit)));
+        fit
+      } ## fitList[[chrTag]] <- ...
 
-      fitList[[chrTag]] <- fit;
-
-      fit <- NULL; # Not needed anymore
+      rm(list=fields) # Not needed anymore
       verbose && exit(verbose);
     } # for (kk ...)
 

@@ -365,40 +365,39 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         verbose && print(verbose, knownSegmentsKK, level=-5);
       }
 
-      fit <- segmentByCBS(y=y,
-                chromosome=chrom, x=x,
-                w=w,
-                index=index,
-                undo=undo,
-                avg=avg,
-                joinSegments=joinSegments,
-                knownSegments=knownSegmentsKK,
-                ...,
-                seed=NULL,
-                verbose=verbose);
+      fitList[[chrTag]] <- {
+        fit <- segmentByCBS(y=y,
+                  chromosome=chrom, x=x,
+                  w=w,
+                  index=index,
+                  undo=undo,
+                  avg=avg,
+                  joinSegments=joinSegments,
+                  knownSegments=knownSegmentsKK,
+                  ...,
+                  seed=NULL,
+                  verbose=verbose);
 
-      # Sanity checks
-      if (R_SANITY_CHECK) {
-        if (nrow(knownSegmentsKK) == 0) {
-          # Since all missing data have been dropped...
-          stopifnot(nrow(fit$data) == length(y));
-          # ...and ordered along the genome already.
-          stopifnot(all.equal(fit$data$y, y));
-        }
+        # Sanity checks
+        if (R_SANITY_CHECK) {
+          if (nrow(knownSegmentsKK) == 0) {
+            # Since all missing data have been dropped...
+            stopifnot(nrow(fit$data) == length(y));
+            # ...and ordered along the genome already.
+            stopifnot(all.equal(fit$data$y, y));
+          }
 
-        # Assert weights were used
-        stopifnot(!hasWeights || !is.null(fit$data$w))
-      } # if (R_SANITY_CHECK)
+          # Assert weights were used
+          stopifnot(!hasWeights || !is.null(fit$data$w))
+        } # if (R_SANITY_CHECK)
 
-      rm(list=fields); # Not needed anymore
+        verbose && print(verbose, head(as.data.frame(fit)), level=-10);
+        verbose && print(verbose, tail(as.data.frame(fit)), level=-10);
 
-      verbose && print(verbose, head(as.data.frame(fit)), level=-10);
-      verbose && print(verbose, tail(as.data.frame(fit)), level=-10);
+        fit
+      } ## fitList[[chrTag]] <- ...
 
-      fitList[[chrTag]] <- fit;
-
-      # Not needed anymore
-      fit <- NULL;
+      rm(list=fields) # Not needed anymore
       verbose && exit(verbose);
     } # for (kk ...)
 
@@ -493,71 +492,80 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
       verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments), level=-10);
 
+      ## Nothing to do?
       isSplitter <- (is.na(xStart) && is.na(xEnd));
       if (isSplitter) {
-        fit <- splitter;
-        verbose && cat(verbose, "Nothing to segment. Inserting an explicit splitter.", level=-10);
-      } else {
-        # Extract subset of data and parameters for this segment
-        dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd);
-        verbose && str(verbose, dataJJ, level=-50);
-        chrom <- x <- index <- y <- w <- NULL
-        fields <- attachLocally(dataJJ, fields=c("chrom", "x", "index", "y", "w"));
-        dataJJ <- NULL; # Not needed anymore
+        fit <- splitter
+        verbose && cat(verbose, "Nothing to segment. Inserting an explicit splitter.", level=-10)
+        fitList[[segTag]] <- fit
+        fit <- NULL
+        verbose && exit(verbose)
+        next
+      }
 
-        nbrOfLoci <- length(y);
+      # Extract subset of data and parameters for this segment
+      dataJJ <- subset(data, chrom == chromosomeJJ & xStart <= x & x <= xEnd)
+      verbose && str(verbose, dataJJ, level=-50)
+      chrom <- x <- index <- y <- w <- NULL
+      fields <- attachLocally(dataJJ, fields=c("chrom", "x", "index", "y", "w"))
+      dataJJ <- NULL # Not needed anymore
+      nbrOfLoci <- length(y)
 
-        # Empty segment?
-        # [AD HOC. Should be done by segmentCBS(). /HB 2011-10-21]
-        if(nbrOfLoci == 0) {
-          fit <- splitter;
-          fit$output$chromosome <- chromosomeJJ;
-          fit$output$start <- xStart;
-          fit$output$end <- xEnd;
-          fit$output$nbrOfLoci <- nbrOfLoci;
-        } else {
-          fit <- segmentByCBS(y=y,
-                    chromosome=chrom, x=x,
-                    w=w,
-                    index=index,
-                    undo=undo,
-                    avg=avg,
-                    joinSegments=joinSegments,
-                    knownSegments=seg,
-                    ...,
-                    seed=NULL,
-                    verbose=less(verbose,1));
-        }
+      # Empty segment?
+      # [AD HOC. Should be done by segmentCBS(). /HB 2011-10-21]
+      if(nbrOfLoci == 0) {
+        fit <- splitter
+        fit$output$chromosome <- chromosomeJJ
+        fit$output$start <- xStart
+        fit$output$end <- xEnd
+        fit$output$nbrOfLoci <- nbrOfLoci
+        fitList[[segTag]] <- fit
+        fit <- NULL
+        verbose && exit(verbose)
+        next
+      }
+
+
+      fitList[[segTag]] <- {
+        fit <- segmentByCBS(y=y,
+                  chromosome=chrom, x=x,
+                  w=w,
+                  index=index,
+                  undo=undo,
+                  avg=avg,
+                  joinSegments=joinSegments,
+                  knownSegments=seg,
+                  ...,
+                  seed=NULL,
+                  verbose=less(verbose,1))
 
         # Sanity checks
         if (R_SANITY_CHECK) {
-          stopifnot(nrow(fit$data) == nbrOfLoci);
-          stopifnot(all.equal(fit$data$y, y));
+          stopifnot(nrow(fit$data) == nbrOfLoci)
+          stopifnot(all.equal(fit$data$y, y))
 
           # Assert weights were used
           stopifnot(!hasWeights || !is.null(fit$data$w))
         } # if (R_SANITY_CHECK)
 
-        rm(list=fields); # Not needed anymore
+        rm(list=fields) # Not needed anymore
 
-        segs <- as.data.frame(fit);
+        segs <- as.data.frame(fit)
         if (nrow(segs) < 6) {
-          verbose && print(verbose, segs, level=-10);
+          verbose && print(verbose, segs, level=-10)
         } else {
-          verbose && print(verbose, head(segs), level=-10);
-          verbose && print(verbose, tail(segs), level=-10);
+          verbose && print(verbose, head(segs), level=-10)
+          verbose && print(verbose, tail(segs), level=-10)
         }
-      } # if (isSplitter)
 
-      # Sanity check
-      if (R_SANITY_CHECK) {
-        stopifnot(TRUE && nbrOfSegments(fit, splitters=TRUE) > 0);
-      } # if (R_SANITY_CHECK)
+        # Sanity check
+        if (R_SANITY_CHECK) {
+          stopifnot(TRUE && nbrOfSegments(fit, splitters=TRUE) > 0)
+        } # if (R_SANITY_CHECK)
 
-      fitList[[segTag]] <- fit;
+        fit
+      }
 
-      # Not needed anymore
-      fit <- NULL;
       verbose && exit(verbose);
     } # for (jj ...)
 
