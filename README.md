@@ -24,6 +24,17 @@ to the beginning of the PSCBS script.  Everything else will work the
 same.  To reset to non-parallel (synchronously) processing, use
 `future::plan("eager")`.
 
+An alternative to editing the R script is to set environment variable
+`R_FUTURE_PLAN`, e.g.
+```sh
+export R_FUTURE_PLAN=multicore
+```
+This can also be set in the cross-platform `~/.Renviron` file as:
+```r
+R_FUTURE_PLAN=multicore
+```
+
+
 
 
 ## Software status
