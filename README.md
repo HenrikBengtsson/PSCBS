@@ -7,6 +7,14 @@ R package PSCBS is available on [CRAN](http://cran.r-project.org/package=PSCBS) 
 install.packages('PSCBS')
 ```
 
+### Pre-release version
+To install the pre-release version that is available in branch `feature/future`, use:
+```r
+source('http://callr.org/install#HenrikBengtsson/PSCBS@feature/future')
+```
+This will install the package from source.  
+
+
 
 ## Software status
 
