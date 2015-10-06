@@ -19,16 +19,19 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 ## Create multiple chromosomes
-data <- list()
+data <- knownSegments <- list()
 for (cc in 1:3) {
   data[[cc]] <- data.frame(chromosome=cc, y=y, x=x)
+  knownSegments[[cc]] <- data.frame(
+    chromosome=c(   cc,  cc,  cc),
+    start     =x[c(  1, 350, 401)],
+    end       =x[c(349, 400,   J)]
+  )
 }
 data <- Reduce(rbind, data)
 str(data)
-
-## Segment
-fits <- list()
-
+knownSegments <- Reduce(rbind, knownSegments)
+str(knownSegments)
 
 message("*** segmentByCBS() via futures ...")
 
@@ -54,7 +57,7 @@ if (R.utils::isPackageInstalled(pkg)) {
 }
 
 message("Future strategies to test: ", paste(sQuote(strategies), collapse=", "))
-
+fits <- list()
 for (strategy in strategies) {
   message(sprintf("- segmentByCBS() using '%s' futures ...", strategy))
   plan(strategy)
@@ -64,5 +67,22 @@ for (strategy in strategies) {
   stopifnot(all.equal(fit, fitL))
 }
 
+
+message("*** segmentByCBS() via futures with known segments ...")
+fits <- list()
+dataT <- subset(data, chromosome == 1)
+for (strategy in strategies) {
+  message(sprintf("- segmentByCBS() w/ known segments using '%s' futures ...", strategy))
+  plan(strategy)
+  fit <- segmentByCBS(dataT, knownSegments=knownSegments, verbose=TRUE)
+  fits[[strategy]] <- fit
+  stopifnot(all.equal(fit, fits[[1]]))
+}
+
+message("*** segmentByCBS() via futures ... DONE")
+
+
 ## Cleanup
 plan(oplan)
+rm(list=c("fits", "dataT", "data", "fit"))
+
