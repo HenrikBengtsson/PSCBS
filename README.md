@@ -22,7 +22,7 @@ future::plan("multicore")
 ```
 to the beginning of the PSCBS script.  Everything else will work the
 same.  To reset to non-parallel (synchronously) processing, use
-`r future::plan("eager")`
+`future::plan("eager")`
 
 
 
