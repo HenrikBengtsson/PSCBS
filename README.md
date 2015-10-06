@@ -8,11 +8,21 @@ install.packages('PSCBS')
 ```
 
 ### Pre-release version
+
 To install the pre-release version that is available in branch `feature/future`, use:
 ```r
 source('http://callr.org/install#HenrikBengtsson/PSCBS@feature/future')
 ```
 This will install the package from source.  
+#### Parallel processing
+The `feature/future` branch supports segmentation of the
+chromosomes in parallel (asynchronously) by adding the following
+```r
+future::plan("multicore")
+```
+to the beginning of the PSCBS script.  Everything else will work the
+same.  To reset to non-parallel (synchronously) processing, use
+`r future::plan("eager")`
 
 
 
