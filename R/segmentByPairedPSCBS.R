@@ -502,7 +502,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         verbose && print(verbose, knownSegmentsKK);
       }
 
-      fitList[[chrTag]] <- {
+      fitList[[chrTag]] %<=% {
         fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
                   betaT=betaTN, betaN=betaN, muN=muN,
                   chromosome=chromosome, x=x,

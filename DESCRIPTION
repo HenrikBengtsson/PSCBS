@@ -10,7 +10,8 @@ Imports:
   R.cache (>= 0.10.0),
   matrixStats (>= 0.14.2),
   DNAcopy (>= 1.40.0),
-  listenv (>= 0.4.0)
+  listenv (>= 0.4.0),
+  future (>= 0.8.1)
 Suggests:
   Hmisc (>= 3.16-0),
   R.rsp (>= 0.20.0),

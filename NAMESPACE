@@ -59,6 +59,7 @@ importFrom("utils",
            "packageDescription")
 
 importFrom("listenv", "listenv")
+importFrom("future", "%<=%")
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

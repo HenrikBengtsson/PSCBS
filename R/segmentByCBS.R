@@ -365,7 +365,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         verbose && print(verbose, knownSegmentsKK, level=-5);
       }
 
-      fitList[[chrTag]] <- {
+      fitList[[chrTag]] %<=% {
         fit <- segmentByCBS(y=y,
                   chromosome=chrom, x=x,
                   w=w,
@@ -526,7 +526,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       }
 
 
-      fitList[[segTag]] <- {
+      fitList[[segTag]] %<=% {
         fit <- segmentByCBS(y=y,
                   chromosome=chrom, x=x,
                   w=w,
