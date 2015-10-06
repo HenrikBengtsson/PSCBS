@@ -483,7 +483,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     verbose && enter(verbose, "Segmenting multiple chromosomes");
     verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
 
-    fitList <- list();
+    fitList <- listenv()
     for (kk in seq(length=nbrOfChromosomes)) {
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
@@ -537,6 +537,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     } # for (kk ...)
 
     verbose && enter(verbose, "Merging (independently) segmented chromosome");
+    fitList <- as.list(fitList)
     fit <- Reduce(append, fitList);
     fitList <- NULL; # Not needed anymore
     verbose && str(verbose, fit);

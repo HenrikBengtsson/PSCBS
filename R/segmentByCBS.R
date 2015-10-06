@@ -342,7 +342,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     verbose && enter(verbose, "Segmenting multiple chromosomes");
     verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
 
-    fitList <- list();
+    fitList <- listenv()
     for (kk in seq(length=nbrOfChromosomes)) {
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
@@ -403,6 +403,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     } # for (kk ...)
 
     verbose && enter(verbose, "Merging (independently) segmented chromosome", level=-50);
+    fitList <- as.list(fitList)
     fit <- Reduce(append, fitList);
     # Not needed anymore
     fitList <- NULL;
@@ -483,7 +484,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       } # if (R_SANITY_CHECK)
     });
 
-    fitList <- list();
+    fitList <- listenv()
     for (jj in seq(length=nbrOfSegments)) {
       seg <- knownSegments[jj,];
       chromosomeJJ <- seg$chromosome;
@@ -561,8 +562,9 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     } # for (jj ...)
 
     verbose && enter(verbose, "Merging (independently) segmented known segments", level=-10);
-    verbose && str(verbose, fitList, level=-50)
     verbose && cat(verbose, "Number of segments: ", length(fitList), level=-10);
+    fitList <- as.list(fitList)
+    verbose && str(verbose, fitList, level=-50)
     appendT <- function(...) append(..., addSplit=FALSE);
     fit <- Reduce(appendT, fitList);
     # Not needed anymore
