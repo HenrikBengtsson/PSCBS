@@ -57,6 +57,7 @@ if (R.utils::isPackageInstalled(pkg)) {
 }
 
 message("Future strategies to test: ", paste(sQuote(strategies), collapse=", "))
+
 fits <- list()
 for (strategy in strategies) {
   message(sprintf("- segmentByCBS() using '%s' futures ...", strategy))

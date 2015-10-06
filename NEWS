@@ -2,6 +2,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.45.9-9000 [2015-10-06]
+o PARALLEL: Add support for parallel processing via futures.
+
+
 Version: 0.45.1 [2015-09-16]
 o More informative error messages when append() for CBS or PSCBS fail.
 o BUG FIX: segmentByCBS(, ..., w, knownSegments) would give internal
