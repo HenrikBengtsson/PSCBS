@@ -1,6 +1,4 @@
 library("PSCBS")
-library("future")
-oplan <- plan()
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Simulating copy-number data
@@ -31,6 +29,20 @@ str(data)
 ## Segment
 fits <- list()
 
+
+message("*** segmentByCBS() via futures ...")
+
+message("*** segmentByCBS() via 'lazy' futures without attaching 'future'...")
+future::plan("lazy")
+print(future::plan)
+fitL <- segmentByCBS(data, verbose=TRUE)
+print(fitL)
+
+
+message("*** segmentByCBS() via futures with 'future' attached...")
+library("future")
+oplan <- plan()
+
 strategies <- c("eager", "lazy", "multicore")
 
 ## Also test BatchJobs futures in async?
@@ -41,14 +53,15 @@ if (R.utils::isPackageInstalled(pkg)) {
   strategies <- c(strategies, "batchjobs")
 }
 
-message("Future strategies: ", paste(sQuote(strategies), collapse=", "))
+message("Future strategies to test: ", paste(sQuote(strategies), collapse=", "))
 
 for (strategy in strategies) {
-  message(sprintf("*** segmentByCBS() using '%s' futures ...", strategy))
+  message(sprintf("- segmentByCBS() using '%s' futures ...", strategy))
   plan(strategy)
   fit <- segmentByCBS(data, verbose=TRUE)
   fits[[strategy]] <- fit
   stopifnot(all.equal(fit, fits[[1]]))
+  stopifnot(all.equal(fit, fitL))
 }
 
 ## Cleanup
