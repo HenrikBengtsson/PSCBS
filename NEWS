@@ -2,7 +2,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.49.9-9000 [2015-10-14]
+Version: 0.50.0 [2015-10-14]
 o Now argument 'preserveScale' for segmentByPairedPSCBS() defaults
   to FALSE.  In the past the default has effectively been TRUE, but
   has given a warning since v0.43.0 (June 2014) that it eventually
