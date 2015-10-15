@@ -2,6 +2,15 @@
 Package: PSCBS
 ==============
 
+Version: 0.50.0 [2015-10-14]
+o Now argument 'preserveScale' for segmentByPairedPSCBS() defaults
+  to FALSE.  In the past the default has effectively been TRUE, but
+  has given a warning since v0.43.0 (June 2014) that it eventually
+  will be changed to FALSE.  Now it will give a warning that it
+  has changed, unless the option is explicitly specified.  This
+  new warning will eventually be removed in a future version.
+
+
 Version: 0.45.1 [2015-09-16]
 o More informative error messages when append() for CBS or PSCBS fail.
 o BUG FIX: segmentByCBS(, ..., w, knownSegments) would give internal
