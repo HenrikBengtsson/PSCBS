@@ -35,14 +35,14 @@ str(knownSegments)
 
 message("*** segmentByCBS() via futures ...")
 
-message("*** segmentByCBS() via 'lazy' futures without attaching 'future'...")
+message("*** segmentByCBS() via 'lazy' futures without attaching 'future' ...")
 future::plan("lazy")
 print(future::plan)
 fitL <- segmentByCBS(data, verbose=TRUE)
 print(fitL)
 
 
-message("*** segmentByCBS() via futures with 'future' attached...")
+message("*** segmentByCBS() via futures with 'future' attached ...")
 library("future")
 oplan <- plan()
 
