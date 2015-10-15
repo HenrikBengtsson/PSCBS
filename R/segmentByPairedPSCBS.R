@@ -209,7 +209,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   }
 
   # Argument 'preserveScale':
-  if (missing(preserveScale)) {
+  if (tbn && missing(preserveScale)) {
     if (!is.element("PSCBS/preserveScale", names(options()))) {
       warning("Argument 'preserveScale' for segmentByPairedPSCBS() now defaults to FALSE. Prior to PSCBS v0.50.0 (October 2015) the default was TRUE.  To avoid this warning, explicitly specify this argument when calling segmentByPairedPSCBS() or make sure to set option 'PSCBS/preserveScale' to either TRUE or FALSE.  This warning will be removed in a future version.");
     }
