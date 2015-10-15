@@ -37,6 +37,8 @@ R_FUTURE_PLAN=multicore
 
 
 
+
+
 ## Software status
 
 | Resource:     | CRAN        | Travis CI     | Appveyor         |
