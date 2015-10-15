@@ -1,8 +1,7 @@
-
 Package: PSCBS
 ==============
 
-Version: 0.45.9-9000 [2015-10-06]
+Version: 0.50.0-9000 [2015-10-15]
 o PARALLEL: Add support for parallel processing via futures.
 
 
