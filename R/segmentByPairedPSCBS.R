@@ -58,11 +58,7 @@
 #   \item{tbn}{If @TRUE, \code{betaT} is normalized before segmentation
 #     using the TumorBoost method [2], otherwise not.}
 #   \item{preserveScale}{Passed to @see "aroma.light::normalizeTumorBoost",
-#     which is only called if \code{tbn} is @TRUE.
-#     Currently the default is @TRUE, but this will be migrated to become
-#     @FALSE in a future version. You can migrate already now by setting
-#     \code{options("PSCBS/preserveScale"=FALSE)}, otherwise we recommend
-#     you to set this argument explicitly to avoid relying on its default.}
+#     which is only called if \code{tbn} is @TRUE.}
 #   \item{joinSegments}{If @TRUE, there are no gaps between neighboring
 #     segments.
 #     If @FALSE, the boundaries of a segment are defined by the support
@@ -151,7 +147,7 @@
 #
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, preserveScale=getOption("PSCBS/preserveScale", TRUE), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, preserveScale=getOption("PSCBS/preserveScale", FALSE), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -213,10 +209,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   }
 
   # Argument 'preserveScale':
-  if (missing(preserveScale)) {
-    # MIGRATION: Prepare for changing the default argument value. /HB 2014-06-08
-    if (!identical(getOption("PSCBS/preserveScale"), FALSE)) {
-      warning("Argument 'preserveScale' for segmentByPairedPSCBS() currently defaults to TRUE. However, in a future version of PSCBS it will default to FALSE (which is also the recommended value). To avoid this warning, explicitly specify this argument when calling segmentByPairedPSCBS(). Alternatively, set option 'PSCBS/preserveScale' to FALSE to migrate to the upcoming default already now.");
+  if (tbn && missing(preserveScale)) {
+    if (!is.element("PSCBS/preserveScale", names(options()))) {
+      warning("Argument 'preserveScale' for segmentByPairedPSCBS() now defaults to FALSE. Prior to PSCBS v0.50.0 (October 2015) the default was TRUE.  To avoid this warning, explicitly specify this argument when calling segmentByPairedPSCBS() or make sure to set option 'PSCBS/preserveScale' to either TRUE or FALSE.  This warning will be removed in a future version.");
     }
   }
   preserveScale <- Arguments$getLogical(preserveScale);

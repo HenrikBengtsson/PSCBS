@@ -60,7 +60,6 @@ importFrom("utils",
 
 importFrom("listenv", "listenv")
 importFrom("future", "%<=%")
-importFrom("future", "future")  ## Needed with future (<= 0.8.1)
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
