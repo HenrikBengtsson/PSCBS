@@ -1,3 +1,7 @@
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## DEFUNCT
+## - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+## Defunct since v0.41.0 (2015-03-30)
 setMethodS3("bootstrapDHByRegion", "PairedPSCBS", function(fit, B=100, statsFcn=function(x) quantile(x, probs=c(0.025, 0.050, 0.95, 0.975)), by=c("betaTN", "betaT"), ..., force=FALSE, verbose=FALSE) {
   .Defunct("bootstrapTCNandDHByRegion");
 }, deprecated=TRUE) # bootstrapDHByRegion()
