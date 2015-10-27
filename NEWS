@@ -1,8 +1,12 @@
 Package: PSCBS
 ==============
 
-Version: 0.50.0-9000 [2015-10-15]
-o PARALLEL: Add support for parallel processing via futures.
+Version: 0.50.0-9000 [2015-10-27]
+o PARALLEL: Add support for parallel processing via futures by
+  utilizing the future package.  Parallel segmentation over multiple
+  chromosomes (or known segments) done by segmentByCBS() and
+  segmentByPairedPSCBS() is enabled by future::plan("multicore").
+o Bump package dependencies.
 
 
 Version: 0.50.0 [2015-10-14]
