@@ -8,7 +8,7 @@ Imports:
   R.oo (>= 1.19.0),
   R.utils (>= 2.1.0),
   R.cache (>= 0.10.0),
-  matrixStats (>= 0.14.2),
+  matrixStats (>= 0.15.0),
   DNAcopy (>= 1.40.0),
   listenv (>= 0.4.0),
   future (>= 0.8.2)
@@ -24,7 +24,7 @@ SuggestsNote:
   Hmisc,
   aroma.light
 VignetteBuilder: R.rsp
-Date: 2015-10-15
+Date: 2015-10-27
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
