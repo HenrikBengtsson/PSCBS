@@ -29,12 +29,20 @@ An alternative to editing the R script is to set environment variable
 ```sh
 export R_FUTURE_PLAN=multicore
 ```
-This can also be set in the cross-platform `~/.Renviron` file as:
+To control the maximum number of cores the multicore processing may
+use set environment variable `MC_CORES`, e.g.
+```sh
+export MC_CORES=4
+```
+This variable is defined and read by the 'parallel' package when it
+is loaded (so not when R itself is started) and used to set options
+`mc.cores`, which is acknowledged by `future::plan("multicore")`.
+
+This above also be set in the cross-platform `~/.Renviron` file as:
 ```r
 R_FUTURE_PLAN=multicore
+MC_CORES=4
 ```
-
-
 
 
 
