@@ -28,6 +28,7 @@
 #*/###########################################################################
 randomSeed <- local({
   oldSeed <- NULL
+  oldKind <- NULL
   lecuyerSeed <- NULL
 
   genv <- globalenv()
@@ -40,7 +41,14 @@ randomSeed <- local({
     }
   }
 
-  setSeed <- function(seed) {
+  setSeed <- function(seed, kind=NULL) {
+    ## Set new RNG kind?
+    if (!is.null(kind)) {
+       oldKind <<- RNGkind()[1L]
+       RNGkind(kind)
+    }
+
+    ## Reset or set seed?
     if (is.null(seed)) {
       if (exists(".Random.seed", envir=genv, inherits=FALSE)) {
         rm(list=".Random.seed", envir=genv, inherits=FALSE)
@@ -48,6 +56,7 @@ randomSeed <- local({
       }
     } else {
       oldSeed <<- getSeed()
+
       if (length(seed) == 1L) {
         set.seed(seed)
         lecuyerSeed <<- getSeed()
@@ -72,16 +81,20 @@ randomSeed <- local({
   }
 
 
-  function(action=c("set", "advance", "reset", "get"), seed=NULL) {
+  function(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL) {
     action <- match.arg(action)
+
+    ## Record existing RNG kind?
+    if (is.null(oldKind)) oldKind <<- RNGkind()[1L]
+
     currSeed <- getSeed()
 
     if (action == "set") {
-      setSeed(seed)
+      setSeed(seed, kind=kind)
     } else if (action == "advance") {
       advanceSeed()
     } else if (action == "reset") {
-      setSeed(oldSeed)
+      setSeed(oldSeed, kind=oldKind)
     } else if (action == "get") {
       return(currSeed)
     }
