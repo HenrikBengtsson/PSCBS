@@ -1,4 +1,30 @@
-rngSeeder <- local({
+###########################################################################/**
+# @RdocFunction randomSeed
+#
+# @title "Sets and resets the .Random.seed in the global environment"
+#
+# \description{
+#  @get "title".
+# }
+#
+# \usage{
+#  @usage randomSeed
+# }
+#
+# \arguments{
+#   \item{action}{A @character string specifying the action.}
+#   \item{seed}{Random seed to be set; only for \code{action="set"}.}
+# }
+#
+# \value{
+#   Returns invisibly the previous/current \code{.Random.seed}.
+# }
+#
+# @author "HB"
+#
+# @keyword IO
+#*/###########################################################################
+randomSeed <- local({
   oldSeed <- NULL
   oldKind <- NULL
 
@@ -37,4 +63,4 @@ rngSeeder <- local({
       currSeed
     }
   }
-}) # rngSeeder()
+}) # randomSeed()
