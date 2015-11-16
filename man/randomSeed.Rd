@@ -17,12 +17,14 @@
 }
 
 \usage{
- randomSeed(action=c("set", "reset", "get"), seed=NULL)
+ randomSeed(action=c("set", "advance", "reset", "get"), seed=NULL)
 }
 
 \arguments{
   \item{action}{A \code{\link[base]{character}} string specifying the action.}
-  \item{seed}{Random seed to be set; only for \code{action="set"}.}
+  \item{seed}{Random seed to be set; only for \code{action="set"}.
+    If \code{length(seed) == 1}, then \code{set.seed(seed)} is
+    used, otherwise \code{.Random.seed} is assigned the value.}
 }
 
 \value{

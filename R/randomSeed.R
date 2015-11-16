@@ -13,7 +13,9 @@
 #
 # \arguments{
 #   \item{action}{A @character string specifying the action.}
-#   \item{seed}{Random seed to be set; only for \code{action="set"}.}
+#   \item{seed}{Random seed to be set; only for \code{action="set"}.
+#     If \code{length(seed) == 1}, then \code{set.seed(seed)} is
+#     used, otherwise \code{.Random.seed} is assigned the value.}
 # }
 #
 # \value{
@@ -26,7 +28,7 @@
 #*/###########################################################################
 randomSeed <- local({
   oldSeed <- NULL
-  oldKind <- NULL
+  lecuyerSeed <- NULL
 
   genv <- globalenv()
 
@@ -44,8 +46,25 @@ randomSeed <- local({
         rm(list=".Random.seed", envir=genv, inherits=FALSE)
     } else {
       oldSeed <<- getSeed()
-      set.seed(seed)
+      if (length(seed) == 1L) {
+        set.seed(seed)
+      } else {
+        assign(".Random.seed", seed, envir=genv, inherits=FALSE)
+      }
     }
+  }
+
+  advanceSeed <- function() {
+    ## Nothing to do?
+    if (RNGkind()[1L] != "L'Ecuyer-CMRG") return()
+
+    if (is.null(lecuyerSeed)) {
+      stats::runif(1)
+      lecuyerSeed <- getSeed()
+    }
+
+    lecuyerSeed <<- parallel::nextRNGStream(lecuyerSeed)
+    setSeed(lecuyerSeed)
   }
 
 
@@ -55,15 +74,14 @@ randomSeed <- local({
 
     if (action == "set") {
       setSeed(seed)
-      invisible(currSeed)
     } else if (action == "advance") {
-      ## TO DO: Just a stub for now
-      invisible(currSeed)
+      advanceSeed()
     } else if (action == "reset") {
       setSeed(oldSeed)
-      invisible(currSeed)
     } else if (action == "get") {
-      currSeed
+      return(currSeed)
     }
+
+    invisible(currSeed)
   }
 }) # randomSeed()
