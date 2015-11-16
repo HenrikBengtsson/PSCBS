@@ -50,9 +50,7 @@ stopifnot(identical(y4, y2))
 
 
 ## L'Ecuyer-CMRG: Random number generation for parallel processing
-RNGkind("L'Ecuyer-CMRG")
-
-randomSeed("set", seed=42L)
+randomSeed("set", seed=42L, kind="L'Ecuyer-CMRG")
 seed0 <- randomSeed("get")
 seeds0 <- lapply(1:10, FUN=function(i) randomSeed("advance"))
 
@@ -81,6 +79,4 @@ print(y1)
 stopifnot(identical(y1, y0))
 randomSeed("reset")
 
-
-## Cleanup
-RNGkind(okind)
+stopifnot(identical(RNGkind()[1L], okind))
