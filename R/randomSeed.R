@@ -42,14 +42,18 @@ randomSeed <- local({
 
   setSeed <- function(seed) {
     if (is.null(seed)) {
-      if (exists(".Random.seed", envir=genv, inherits=FALSE))
+      if (exists(".Random.seed", envir=genv, inherits=FALSE)) {
         rm(list=".Random.seed", envir=genv, inherits=FALSE)
+        lecuyerSeed <<- NULL
+      }
     } else {
       oldSeed <<- getSeed()
       if (length(seed) == 1L) {
         set.seed(seed)
+        lecuyerSeed <<- getSeed()
       } else {
         assign(".Random.seed", seed, envir=genv, inherits=FALSE)
+        lecuyerSeed <<- seed
       }
     }
   }
@@ -59,8 +63,8 @@ randomSeed <- local({
     if (RNGkind()[1L] != "L'Ecuyer-CMRG") return()
 
     if (is.null(lecuyerSeed)) {
-      stats::runif(1)
-      lecuyerSeed <- getSeed()
+      str(stats::runif(1))
+      lecuyerSeed <<- getSeed()
     }
 
     lecuyerSeed <<- parallel::nextRNGStream(lecuyerSeed)

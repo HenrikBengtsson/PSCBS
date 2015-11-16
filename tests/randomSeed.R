@@ -1,4 +1,5 @@
 library("PSCBS")
+okind <- RNGkind()[1L]
 
 sample1 <- function() { sample(0:9, size=1L) }
 
@@ -45,3 +46,41 @@ randomSeed("set", seed=42L)
 y4 <- sample1()
 message(sprintf("Random number: %d (with random seed = 42L)", y4))
 stopifnot(identical(y4, y2))
+
+
+
+## L'Ecuyer-CMRG: Random number generation for parallel processing
+RNGkind("L'Ecuyer-CMRG")
+
+randomSeed("set", seed=42L)
+seed0 <- randomSeed("get")
+seeds0 <- lapply(1:10, FUN=function(i) randomSeed("advance"))
+
+## Assert reproducible .Random.seed stream
+randomSeed("set", seed=42L)
+seed1 <- randomSeed("get")
+seeds1 <- lapply(1:10, FUN=function(i) randomSeed("advance"))
+stopifnot(identical(seed1, seed0))
+stopifnot(identical(seeds1, seeds0))
+
+
+randomSeed("set", seed=42L)
+y0 <- sapply(1:10, FUN=function(ii) {
+  randomSeed("advance")
+  sample1()
+})
+print(y0)
+randomSeed("reset")
+
+randomSeed("set", seed=42L)
+y1 <- sapply(1:10, FUN=function(ii) {
+  randomSeed("advance")
+  sample1()
+})
+print(y1)
+stopifnot(identical(y1, y0))
+randomSeed("reset")
+
+
+## Cleanup
+RNGkind(okind)
