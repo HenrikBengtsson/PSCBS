@@ -7,6 +7,7 @@ genv <- globalenv()
 if (!is.null(genv$.Random.seed)) rm(list=".Random.seed", envir=genv, inherits=FALSE)
 
 seed0 <- genv$.Random.seed
+stopifnot(is.null(seed0))
 
 ## Get random seed
 seed <- randomSeed("get")
@@ -29,12 +30,12 @@ message(sprintf("Random number: %d (with random seed = 42L)", y2))
 ## Reset to previous state
 randomSeed("reset")
 seed3 <- randomSeed("get")
-stopifnot(!identical(seed3, seed1))
+stopifnot(identical(seed3, seed1))
 
 ## Reset to NULL
 randomSeed("set", seed=NULL)
 seed4 <- randomSeed("get")
-stopifnot(identical(seed4, seed0))
+stopifnot(is.null(seed4))
 
 y3 <- sample1()
 message(sprintf("Random number: %d", y3))
