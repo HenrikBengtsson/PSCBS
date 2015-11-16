@@ -1,11 +1,17 @@
 Package: PSCBS
 ==============
 
-Version: 0.50.0-9000 [2015-10-27]
+Version: 0.50.9-9000 [2015-11-16]
 o PARALLEL: Add support for parallel processing via futures by
   utilizing the future package.  Parallel segmentation over multiple
   chromosomes (or known segments) done by segmentByCBS() and
   segmentByPairedPSCBS() is enabled by future::plan("multicore").
+
+
+Version: 0.50.0-9000 [2015-11-16]
+o ROBUSTNESS: When argument 'seed' is given, the random seed is
+  restored afterward.  Now it is guaranteed that it is the
+  '.Random.seed' in the global environment that is restored.
 o Bump package dependencies.
 
 
@@ -1739,4 +1745,3 @@ o Now psSegment(..., matching.reference=TRUE) does TumorBoost
 
 Version: 0.5.0 [2010-03-12]
 o Added to R-forge repository.
-

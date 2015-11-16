@@ -271,21 +271,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    verbose && enter(verbose, "Setting (temporary) random seed", level=-10);
-    oldRandomSeed <- NULL;
-    if (exists(".Random.seed", mode="integer")) {
-      oldRandomSeed <- get(".Random.seed", mode="integer");
-    }
-    on.exit({
-      if (!is.null(oldRandomSeed)) {
-        .Random.seed <<- oldRandomSeed;
-      }
-    }, add=TRUE);
-    verbose && cat(verbose, "The random seed will be reset to its original state afterward.", level=-10);
-    verbose && cat(verbose, "Seed: ", seed, level=-10);
-    set.seed(seed);
-    verbose && exit(verbose);
+    randomSeed("set", seed=seed)
+    on.exit(randomSeed("reset"), add=TRUE)
+    verbose && printf(verbose, "Random seed temporarily set (seed=%d)\n", seed)
   }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup data
@@ -347,6 +337,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
+
+      randomSeed("advance")
 
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
@@ -491,6 +483,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       xEnd <- seg$end;
       segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
       verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments), level=-10);
+
+      randomSeed("advance")
 
       ## Nothing to do?
       isSplitter <- (is.na(xStart) && is.na(xEnd));
