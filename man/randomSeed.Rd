@@ -17,7 +17,7 @@
 }
 
 \usage{
- randomSeed(action=c("set", "advance", "reset", "get"), seed=NULL)
+ randomSeed(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL)
 }
 
 \arguments{
