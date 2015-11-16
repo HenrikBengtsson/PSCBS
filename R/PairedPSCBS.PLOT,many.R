@@ -236,7 +236,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   if (!is.null(subset)) {
     # (a) Set and unset the random seed
     if (!is.null(seed)) {
-      randomSeed("set", seed=seed)
+      randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
       on.exit(randomSeed("reset"), add=TRUE)
       verbose && printf(verbose, "Random seed temporarily set (seed=%d)\n", seed)
     }

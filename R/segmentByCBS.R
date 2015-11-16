@@ -271,7 +271,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    randomSeed("set", seed=seed)
+    randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
     on.exit(randomSeed("reset"), add=TRUE)
     verbose && printf(verbose, "Random seed temporarily set (seed=%d)\n", seed)
   }
