@@ -49,12 +49,15 @@ randomSeed <- local({
   }
 
 
-  function(action=c("set", "reset", "get"), seed=NULL) {
+  function(action=c("set", "advance", "reset", "get"), seed=NULL) {
     action <- match.arg(action)
     currSeed <- getSeed()
 
     if (action == "set") {
       setSeed(seed)
+      invisible(currSeed)
+    } else if (action == "advance") {
+      ## TO DO: Just a stub for now
       invisible(currSeed)
     } else if (action == "reset") {
       setSeed(oldSeed)

@@ -338,6 +338,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
 
+      randomSeed("advance")
+
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
       verbose && str(verbose, dataKK, level=-10);
@@ -481,6 +483,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       xEnd <- seg$end;
       segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
       verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments), level=-10);
+
+      randomSeed("advance")
 
       isSplitter <- (is.na(xStart) && is.na(xEnd));
       if (isSplitter) {
