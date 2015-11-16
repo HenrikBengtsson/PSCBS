@@ -271,21 +271,24 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    verbose && enter(verbose, "Setting (temporary) random seed", level=-10);
-    oldRandomSeed <- NULL;
-    if (exists(".Random.seed", mode="integer")) {
-      oldRandomSeed <- get(".Random.seed", mode="integer");
+    verbose && enter(verbose, "Setting (temporary) random seed")
+    genv <- globalenv()
+
+    oldRandomSeed <- NULL
+    if (exists(".Random.seed", mode="integer", envir=genv, inherits=FALSE)) {
+      oldRandomSeed <- get(".Random.seed", mode="integer", envir=genv, inherits=FALSE)
     }
     on.exit({
       if (!is.null(oldRandomSeed)) {
-        .Random.seed <<- oldRandomSeed;
+        assign(".Random.seed", oldRandomSeed, envir=genv, inherits=FALSE)
       }
-    }, add=TRUE);
-    verbose && cat(verbose, "The random seed will be reset to its original state afterward.", level=-10);
-    verbose && cat(verbose, "Seed: ", seed, level=-10);
-    set.seed(seed);
-    verbose && exit(verbose);
+    }, add=TRUE)
+    verbose && cat(verbose, "The random seed will be reset to its original state afterward.")
+    verbose && cat(verbose, "Seed: ", seed)
+    set.seed(seed)
+    verbose && exit(verbose)
   }
+
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup data

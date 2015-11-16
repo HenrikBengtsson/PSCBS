@@ -2,6 +2,12 @@
 Package: PSCBS
 ==============
 
+Version: 0.50.0-9000 [2015-11-16]
+o ROBUSTNESS: When argument 'seed' is given, the random seed is
+  restored afterward.  Now it is guaranteed that it is the 
+  '.Random.seed' in the global environment that is restored.
+
+
 Version: 0.50.0 [2015-10-14]
 o Now argument 'preserveScale' for segmentByPairedPSCBS() defaults
   to FALSE.  In the past the default has effectively been TRUE, but
