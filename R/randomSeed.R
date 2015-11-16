@@ -24,7 +24,7 @@
 #
 # @author "HB"
 #
-# @keyword IO
+# @keyword internal
 #*/###########################################################################
 randomSeed <- local({
   oldSeed <- NULL

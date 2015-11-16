@@ -34,4 +34,4 @@
 \author{Henrik Bengtsson}
 
 
-\keyword{IO}
+\keyword{internal}
