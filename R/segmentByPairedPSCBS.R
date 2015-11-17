@@ -306,9 +306,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    randomSeed("set", seed=seed)
+    randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
     on.exit(randomSeed("reset"), add=TRUE)
-    verbose && printf(verbose, "Random seed temporarily set (seed=%d)\n", seed)
+    verbose && printf(verbose, "Random seed temporarily set (seed=%d, kind=\"L'Ecuyer-CMRG\")\n", seed)
   }
 
 
@@ -467,7 +467,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     verbose && enter(verbose, "Segmenting multiple chromosomes");
     verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
 
-    fitList <- list();
+    fitList <- listenv()
     for (kk in seq(length=nbrOfChromosomes)) {
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
@@ -488,41 +488,44 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         verbose && print(verbose, knownSegmentsKK);
       }
 
-      fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
-                betaT=betaTN, betaN=betaN, muN=muN,
-                chromosome=chromosome, x=x,
-                tbn=FALSE, joinSegments=joinSegments,
-                knownSegments=knownSegmentsKK,
-                alphaTCN=alphaTCN, alphaDH=alphaDH,
-                undoTCN=undoTCN, undoDH=undoDH,
-                avgTCN=avgTCN, avgDH=avgDH,
-                flavor=flavor,
-                ...,
-                seed=NULL,
-                verbose=verbose);
+      fitList[[chrTag]] %<=% {
+        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", backup=FALSE)
 
-      # Sanity checks
-      if (nrow(knownSegmentsKK) == 0) {
-        stopifnot(nrow(fit$data) == length(CT));
-        stopifnot(all.equal(fit$data$CT, CT));
-        stopifnot(all.equal(fit$data$muN, muN));
-      }
+        fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
+                  betaT=betaTN, betaN=betaN, muN=muN,
+                  chromosome=chromosome, x=x,
+                  tbn=FALSE, joinSegments=joinSegments,
+                  knownSegments=knownSegmentsKK,
+                  alphaTCN=alphaTCN, alphaDH=alphaDH,
+                  undoTCN=undoTCN, undoDH=undoDH,
+                  avgTCN=avgTCN, avgDH=avgDH,
+                  flavor=flavor,
+                  ...,
+                  seed=NULL,
+                  verbose=verbose)
 
-      # Update betaT (which is otherwise equals betaTN)
-      fit$data$betaT <- betaT;
+        # Sanity checks
+        if (nrow(knownSegmentsKK) == 0) {
+          stopifnot(nrow(fit$data) == length(CT))
+          stopifnot(all.equal(fit$data$CT, CT))
+          stopifnot(all.equal(fit$data$muN, muN))
+        }
 
-      rm(list=fields); # Not needed anymore
+        # Update betaT (which is otherwise equals betaTN)
+        fit$data$betaT <- betaT
 
-      verbose && print(verbose, head(as.data.frame(fit)));
-      verbose && print(verbose, tail(as.data.frame(fit)));
+        verbose && print(verbose, head(as.data.frame(fit)))
+        verbose && print(verbose, tail(as.data.frame(fit)))
 
-      fitList[[chrTag]] <- fit;
+        fit
+      } ## fitList[[chrTag]] <- ...
 
-      fit <- NULL; # Not needed anymore
+      rm(list=fields) # Not needed anymore
       verbose && exit(verbose);
     } # for (kk ...)
 
     verbose && enter(verbose, "Merging (independently) segmented chromosome");
+    fitList <- as.list(fitList)
     fit <- Reduce(append, fitList);
     fitList <- NULL; # Not needed anymore
     verbose && str(verbose, fit);

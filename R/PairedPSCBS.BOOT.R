@@ -405,7 +405,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # Set the random seed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (!is.null(seed)) {
-    randomSeed("set", seed=seed)
+    randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
     on.exit(randomSeed("reset"), add=TRUE)
     verbose && printf(verbose, "Random seed temporarily set (seed=%d)\n", seed)
   }

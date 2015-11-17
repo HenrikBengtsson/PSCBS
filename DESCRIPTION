@@ -1,5 +1,5 @@
 Package: PSCBS
-Version: 0.50.0-9000
+Version: 0.50.9-9000
 Depends:
   R (>= 3.1.1),
   utils
@@ -9,7 +9,10 @@ Imports:
   R.utils (>= 2.1.0),
   R.cache (>= 0.12.0),
   matrixStats (>= 0.15.0),
-  DNAcopy (>= 1.40.0)
+  DNAcopy (>= 1.40.0),
+  listenv (>= 0.5.0),
+  future (>= 0.8.2),
+  parallel
 Suggests:
   Hmisc (>= 3.16-0),
   R.rsp (>= 0.20.0),

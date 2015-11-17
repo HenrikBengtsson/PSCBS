@@ -1,11 +1,23 @@
-
 Package: PSCBS
 ==============
 
+Version: 0.50.9-9000 [2015-11-16]
+o REPRODUCIBILITY: Whenever argument 'seed' is given, the
+  L'Ecuyer-CMRG stream is now used to generate random numbers.
+  For backward compatibility with other types of random number
+  generators, don't specify argument 'seed' but instead use
+  set.seed() to set the seed before calling the method.
+o PARALLEL: Add support for parallel processing via futures by
+  utilizing the future package.  Parallel segmentation over multiple
+  chromosomes (or known segments) done by segmentByCBS() and
+  segmentByPairedPSCBS() is enabled by future::plan("multicore").
+
+
 Version: 0.50.0-9000 [2015-11-16]
 o ROBUSTNESS: When argument 'seed' is given, the random seed is
-  restored afterward.  Now it is guaranteed that it is the 
+  restored afterward.  Now it is guaranteed that it is the
   '.Random.seed' in the global environment that is restored.
+o Bump package dependencies.
 
 
 Version: 0.50.0 [2015-10-14]
@@ -1738,4 +1750,3 @@ o Now psSegment(..., matching.reference=TRUE) does TumorBoost
 
 Version: 0.5.0 [2010-03-12]
 o Added to R-forge repository.
-
