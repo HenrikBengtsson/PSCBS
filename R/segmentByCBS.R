@@ -358,7 +358,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       }
 
       fitList[[chrTag]] %<=% {
-        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", push=FALSE)
+        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", backup=FALSE)
 
         fit <- segmentByCBS(y=y,
                   chromosome=chrom, x=x,

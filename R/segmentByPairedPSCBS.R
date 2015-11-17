@@ -489,7 +489,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       }
 
       fitList[[chrTag]] %<=% {
-        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", push=FALSE)
+        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", backup=FALSE)
 
         fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
                   betaT=betaTN, betaN=betaN, muN=muN,
