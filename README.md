@@ -7,16 +7,9 @@ R package PSCBS is available on [CRAN](http://cran.r-project.org/package=PSCBS) 
 install.packages('PSCBS')
 ```
 
-### Pre-release version
-
-To install the pre-release version that is available in branch `feature/future`, use:
-```r
-source('http://callr.org/install#HenrikBengtsson/PSCBS@feature/future')
-```
-This will install the package from source.  
 #### Parallel processing
-The `feature/future` branch supports segmentation of the
-chromosomes in parallel (asynchronously) by adding the following
+The package supports segmentation of the chromosomes in parallel
+(asynchronously) by adding the following
 ```r
 future::plan("multicore")
 ```
@@ -45,6 +38,14 @@ MC_CORES=4
 ```
 
 
+
+### Pre-release version
+
+To install the pre-release version that is available in branch `develop`, use:
+```r
+source('http://callr.org/install#HenrikBengtsson/PSCBS@develop')
+```
+This will install the package from source.  
 
 
 ## Software status
