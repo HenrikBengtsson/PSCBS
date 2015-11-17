@@ -2,6 +2,8 @@ Package: PSCBS
 ==============
 
 Version: 0.50.9-9000 [2015-11-16]
+o PARALLEL REPRODUCIBILITY: Whenever argument 'seed' is given, 
+  the L'Ecuyer-CMRG stream is now used to generate random numbers.
 o PARALLEL: Add support for parallel processing via futures by
   utilizing the future package.  Parallel segmentation over multiple
   chromosomes (or known segments) done by segmentByCBS() and

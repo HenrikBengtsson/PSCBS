@@ -19,7 +19,7 @@ if (Sys.getenv("_R_CHECK_FULL_") == "") {
   B <- 100L
 } else {
   # Full tests
-  nSegs <- 10L
+  nSegs <- 8L
   B <- 1000L
 }
 
