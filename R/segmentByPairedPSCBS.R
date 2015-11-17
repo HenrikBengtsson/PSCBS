@@ -308,7 +308,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   if (!is.null(seed)) {
     randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
     on.exit(randomSeed("reset"), add=TRUE)
-    verbose && printf(verbose, "Random seed temporarily set (seed=%d)\n", seed)
+    verbose && printf(verbose, "Random seed temporarily set (seed=%d, kind=\"L'Ecuyer-CMRG\")\n", seed)
   }
 
 
@@ -489,6 +489,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       }
 
       fitList[[chrTag]] %<=% {
+        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", push=FALSE)
+
         fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
                   betaT=betaTN, betaN=betaN, muN=muN,
                   chromosome=chromosome, x=x,

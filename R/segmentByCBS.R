@@ -273,7 +273,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   if (!is.null(seed)) {
     randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
     on.exit(randomSeed("reset"), add=TRUE)
-    verbose && printf(verbose, "Random seed temporarily set (seed=%d)\n", seed)
+    verbose && printf(verbose, "Random seed temporarily set (seed=%d, kind=\"L'Ecuyer-CMRG\")\n", seed)
   }
 
 
@@ -358,6 +358,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       }
 
       fitList[[chrTag]] %<=% {
+        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", push=FALSE)
+
         fit <- segmentByCBS(y=y,
                   chromosome=chrom, x=x,
                   w=w,
