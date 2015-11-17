@@ -16,6 +16,8 @@
 #   \item{seed}{Random seed to be set; only for \code{action="set"}.
 #     If \code{length(seed) == 1}, then \code{set.seed(seed)} is
 #     used, otherwise \code{.Random.seed} is assigned the value.}
+#   \item{kind}{(optional) A @character string specifying type of
+#     random number generator to use, cf. @see "base::RNGkind".}
 # }
 #
 # \value{

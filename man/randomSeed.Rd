@@ -17,7 +17,7 @@
 }
 
 \usage{
- randomSeed(action=c("set", "advance", "reset", "get"), seed=NULL)
+ randomSeed(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL)
 }
 
 \arguments{
@@ -25,10 +25,12 @@
   \item{seed}{Random seed to be set; only for \code{action="set"}.
     If \code{length(seed) == 1}, then \code{set.seed(seed)} is
     used, otherwise \code{.Random.seed} is assigned the value.}
+  \item{kind}{(optional) A \code{\link[base]{character}} string specifying type of
+    random number generator to use, cf. \code{\link[base]{RNGkind}}().}
 }
 
 \value{
-  Returns invisibly the previous/current \code{.Random.seed}.
+  Returns a \code{.Random.seed}.
 }
 
 \author{Henrik Bengtsson}
