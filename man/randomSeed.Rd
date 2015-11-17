@@ -17,7 +17,7 @@
 }
 
 \usage{
- randomSeed(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL)
+ randomSeed(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL, backup=TRUE)
 }
 
 \arguments{
@@ -27,6 +27,8 @@
     used, otherwise \code{.Random.seed} is assigned the value.}
   \item{kind}{(optional) A \code{\link[base]{character}} string specifying type of
     random number generator to use, cf. \code{\link[base]{RNGkind}}().}
+  \item{backup}{If \code{\link[base:logical]{TRUE}}, the previous (seed, kind) state is recorded
+    such that it can be reset later.}
 }
 
 \value{

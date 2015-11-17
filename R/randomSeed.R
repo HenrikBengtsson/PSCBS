@@ -18,6 +18,8 @@
 #     used, otherwise \code{.Random.seed} is assigned the value.}
 #   \item{kind}{(optional) A @character string specifying type of
 #     random number generator to use, cf. @see "base::RNGkind".}
+#   \item{backup}{If @TRUE, the previous (seed, kind) state is recorded
+#     such that it can be reset later.}
 # }
 #
 # \value{
@@ -43,14 +45,16 @@ randomSeed <- local({
     }
   }
 
-  setSeed <- function(seed, kind=NULL) {
+  setSeed <- function(seed, kind=NULL, backup=TRUE) {
     force(seed)  ## FIX: Why is this needed?
 
     ## Set new RNG kind?
     newKind <- (!is.null(kind) && !identical(kind, RNGkind()[1L]))
     if (newKind) {
-       oldSeed <<- getSeed()
-       oldKind <<- RNGkind()[1L]
+       if (backup) {
+         oldSeed <<- getSeed()
+         oldKind <<- RNGkind()[1L]
+       }
        RNGkind(kind)  ## Sets .Random.seed
     }
 
@@ -61,7 +65,7 @@ randomSeed <- local({
         lecuyerSeed <<- NULL
       }
     } else {
-      if (!newKind) oldSeed <<- getSeed()
+      if (backup && !newKind) oldSeed <<- getSeed()
 
       if (length(seed) == 1L) {
         set.seed(seed)
@@ -87,18 +91,18 @@ randomSeed <- local({
   }
 
 
-  function(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL) {
+  function(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL, backup=TRUE) {
     action <- match.arg(action)
 
-    ## Record existing RNG kind?
+    ## Record existing RNG kind (only once)
     if (is.null(oldKind)) oldKind <<- RNGkind()[1L]
 
     if (action == "set") {
-      setSeed(seed=seed, kind=kind)
+      setSeed(seed=seed, kind=kind, backup=backup)
     } else if (action == "advance") {
       advanceSeed()
     } else if (action == "reset") {
-      setSeed(seed=oldSeed, kind=oldKind)
+      setSeed(seed=oldSeed, kind=oldKind, backup=FALSE)
     } else if (action == "get") {
       return(getSeed())
     }
