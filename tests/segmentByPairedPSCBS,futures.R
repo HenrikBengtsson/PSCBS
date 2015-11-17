@@ -50,10 +50,9 @@ oplan <- plan()
 
 strategies <- c("eager", "lazy", "multicore")
 
-## Also test BatchJobs futures in async?
+## Test 'async' futures?
 pkg <- "async"
-if (R.utils::isPackageInstalled(pkg)) {
-  library(pkg, character.only=TRUE)
+if (require(pkg, character.only=TRUE)) {
   backend("local")
   strategies <- c(strategies, "batchjobs")
 }
