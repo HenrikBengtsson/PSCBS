@@ -19,7 +19,7 @@
 # }
 #
 # \value{
-#   Returns invisibly the previous/current \code{.Random.seed}.
+#   Returns a \code{.Random.seed}.
 # }
 #
 # @author "HB"
@@ -42,10 +42,14 @@ randomSeed <- local({
   }
 
   setSeed <- function(seed, kind=NULL) {
+    force(seed)  ## FIX: Why is this needed?
+
     ## Set new RNG kind?
-    if (!is.null(kind)) {
+    newKind <- (!is.null(kind) && !identical(kind, RNGkind()[1L]))
+    if (newKind) {
+       oldSeed <<- getSeed()
        oldKind <<- RNGkind()[1L]
-       RNGkind(kind)
+       RNGkind(kind)  ## Sets .Random.seed
     }
 
     ## Reset or set seed?
@@ -55,7 +59,7 @@ randomSeed <- local({
         lecuyerSeed <<- NULL
       }
     } else {
-      oldSeed <<- getSeed()
+      if (!newKind) oldSeed <<- getSeed()
 
       if (length(seed) == 1L) {
         set.seed(seed)
@@ -72,12 +76,12 @@ randomSeed <- local({
     if (RNGkind()[1L] != "L'Ecuyer-CMRG") return()
 
     if (is.null(lecuyerSeed)) {
-      str(stats::runif(1))
+      stats::runif(1)
       lecuyerSeed <<- getSeed()
     }
 
     lecuyerSeed <<- parallel::nextRNGStream(lecuyerSeed)
-    setSeed(lecuyerSeed)
+    assign(".Random.seed", lecuyerSeed, envir=genv, inherits=FALSE)
   }
 
 
@@ -87,18 +91,16 @@ randomSeed <- local({
     ## Record existing RNG kind?
     if (is.null(oldKind)) oldKind <<- RNGkind()[1L]
 
-    currSeed <- getSeed()
-
     if (action == "set") {
-      setSeed(seed, kind=kind)
+      setSeed(seed=seed, kind=kind)
     } else if (action == "advance") {
       advanceSeed()
     } else if (action == "reset") {
-      setSeed(oldSeed, kind=oldKind)
+      setSeed(seed=oldSeed, kind=oldKind)
     } else if (action == "get") {
-      return(currSeed)
+      return(getSeed())
     }
 
-    invisible(currSeed)
+    invisible(getSeed())
   }
 }) # randomSeed()
