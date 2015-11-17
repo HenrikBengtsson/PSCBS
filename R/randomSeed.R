@@ -86,7 +86,7 @@ randomSeed <- local({
       lecuyerSeed <<- getSeed()
     }
 
-    lecuyerSeed <<- parallel::nextRNGStream(lecuyerSeed)
+    lecuyerSeed <<- nextRNGStream(lecuyerSeed)
     assign(".Random.seed", lecuyerSeed, envir=genv, inherits=FALSE)
   }
 

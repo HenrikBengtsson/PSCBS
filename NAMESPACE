@@ -60,7 +60,7 @@ importFrom("utils",
 
 importFrom("listenv", "listenv")
 importFrom("future", "%<=%")
-
+importFrom("parallel", "nextRNGStream")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
