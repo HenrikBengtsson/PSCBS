@@ -338,7 +338,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
 
-      randomSeed("advance")
+      seedKK <- randomSeed("advance")
 
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
