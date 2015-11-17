@@ -1,13 +1,8 @@
-## Installation
-R package <%=pkg()%> is available on [CRAN](http://cran.r-project.org/package=<%=pkg()%>) and can be installed in R as:
-```r
-install.packages('<%=pkg()%>')
-```
-
 <% if (git_branch() == "develop") { %>
-#### Parallel processing
+## Parallel processing
 The package supports segmentation of the chromosomes in parallel
-(asynchronously) by adding the following
+(asynchronously) via [futures](https://cran.r-project.org/package=future)
+by adding the following
 ```r
 future::plan("multicore")
 ```
@@ -37,6 +32,12 @@ MC_CORES=4
 
 <% } %>
 
+
+## Installation
+R package <%=pkg()%> is available on [CRAN](http://cran.r-project.org/package=<%=pkg()%>) and can be installed in R as:
+```r
+install.packages('<%=pkg()%>')
+```
 
 <% if (git_branch() != "master" && !grepl("^release/", git_branch())) { %>
 ### Pre-release version
