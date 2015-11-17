@@ -27,6 +27,7 @@ OVERVIEW[.]md
 ^Makefile$
 ^incl
 ^NAMESPACE,.*[.]txt$
+^README[.]md$
 ^nohup.*$
 ^[.]R
 ^[.]benchmark
