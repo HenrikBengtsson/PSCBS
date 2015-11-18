@@ -1,6 +1,18 @@
-
 Package: PSCBS
 ==============
+
+Version: 0.60.0 [2015-11-17]
+o PARALLEL: Add support for parallel processing via futures by
+  utilizing the future package.  Parallel segmentation over multiple
+  chromosomes (or known segments) done by segmentByCBS() and
+  segmentByPairedPSCBS() is enabled by future::plan("multicore").
+o REPRODUCIBILITY: Whenever argument 'seed' is given, the
+  L'Ecuyer-CMRG stream is now used to generate random numbers.
+  For backward compatibility with other types of random number
+  generators, don't specify argument 'seed' but instead use
+  set.seed() to set the seed before calling the method.
+o Bump package dependencies.
+
 
 Version: 0.50.0 [2015-10-14]
 o Now argument 'preserveScale' for segmentByPairedPSCBS() defaults
@@ -1732,4 +1744,3 @@ o Now psSegment(..., matching.reference=TRUE) does TumorBoost
 
 Version: 0.5.0 [2010-03-12]
 o Added to R-forge repository.
-

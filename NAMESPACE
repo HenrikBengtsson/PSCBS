@@ -58,6 +58,9 @@ importFrom("utils",
            "head", "packageVersion", "str", "tail", "write.table",
            "packageDescription")
 
+importFrom("listenv", "listenv")
+importFrom("future", "%<=%")
+importFrom("parallel", "nextRNGStream")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # EXPORTS
