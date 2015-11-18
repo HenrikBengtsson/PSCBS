@@ -1,6 +1,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.60.0-9000 [2015-11-18]
+o ...
+
+
 Version: 0.60.0 [2015-11-17]
 o PARALLEL: Add support for parallel processing via futures by
   utilizing the future package.  Parallel segmentation over multiple
