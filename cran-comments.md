@@ -1,4 +1,4 @@
-# eCRAN submission PSCBS 0.60.0
+# CRAN submission PSCBS 0.60.0
 on 2015-11-17
 
 Version jump in minor is intentional.
