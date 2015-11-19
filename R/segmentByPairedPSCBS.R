@@ -346,7 +346,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
     # Assert that no missing values where introduced
     keep <- (is.finite(betaT) & is.finite(betaN) & is.finite(muN));
-    if (anyMissing(betaTN[keep])) {
+    if (anyNA(betaTN[keep])) {
       throw("Internal error: normalizeTumorBoost() introduced missing values.");
     }
     # Not needed anymore
