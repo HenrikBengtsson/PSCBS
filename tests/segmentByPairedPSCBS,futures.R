@@ -48,7 +48,8 @@ message("*** segmentByPairedPSCBS() via futures ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("eager", "lazy", "multicore")
+strategies <- c("eager", "lazy")
+if (supportsMulticore()) strategies <- c(strategies, "multicore")
 
 ## Test 'async' futures?
 pkg <- "async"
@@ -63,7 +64,7 @@ fits <- list()
 for (strategy in strategies) {
   message(sprintf("- segmentByPairedPSCBS() using '%s' futures ...", strategy))
   plan(strategy)
-  fit <- segmentByCBS(data, seed=0xBEEF, verbose=TRUE)
+  fit <- segmentByPairedPSCBS(data, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
   stopifnot(all.equal(fit, fits[[1]]))
 }

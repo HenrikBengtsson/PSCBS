@@ -46,7 +46,8 @@ message("*** segmentByCBS() via futures with 'future' attached ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("eager", "lazy", "multicore")
+strategies <- c("eager", "lazy")
+if (supportsMulticore()) strategies <- c(strategies, "multicore")
 
 ## Test 'async' futures?
 pkg <- "async"
