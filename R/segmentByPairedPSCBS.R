@@ -36,6 +36,11 @@
 #        and @NA for non-polymorphic loci.
 #        If not given, they are estimated from the normal BAFs using
 #        @see "aroma.light::callNaiveGenotypes" as described in [2].}
+#   \item{rho}{(alternative to \code{betaT} and \code{betaN}/\code{muN})
+#        A @numeric @vector of J decrease-of-heterozygosity signals (DHs)
+#        in [0,1] (due to noise, values may be slightly larger than one
+#        as well).  By definition, DH should be @NA for homozygous loci
+#        and for non-polymorphic loci.}
 #   \item{chromosome}{(Optional) An @integer scalar (or a @vector of length J),
 #        which can be used to specify which chromosome each locus belongs to
 #        in case multiple chromosomes are segments.
@@ -147,7 +152,7 @@
 #
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT, betaN=NULL, muN=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE, preserveScale=getOption("PSCBS/preserveScale", FALSE), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT=NULL, betaN=NULL, muN=NULL, rho=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho), preserveScale=getOption("PSCBS/preserveScale", FALSE), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -181,7 +186,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
 
   # Argument 'betaT':
-  betaT <- Arguments$getDoubles(betaT, length=length2, disallow="Inf");
+  if (!is.null(betaT)) {
+    betaT <- Arguments$getDoubles(betaT, length=length2, disallow="Inf")
+  }
 
   # Argument 'betaN':
   if (!is.null(betaN)) {
@@ -196,15 +203,27 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     }
   }
 
-  if (is.null(betaN) && is.null(muN)) {
-    throw("If argument 'betaN' is not given, then 'muN' must be.");
+  # Argument 'rho':
+  if (!is.null(rho)) {
+    rho <- Arguments$getDoubles(rho, range=c(0,Inf), length=length2, disallow="Inf")
+  }
+
+  if (is.null(muN)) {
+    if (is.null(betaN) && is.null(rho)) {
+      throw("If argument 'muN' is not given, then either 'betaN' or 'rho' must be.")
+    }
   }
 
   # Argument 'tbn':
   tbn <- Arguments$getLogical(tbn);
   if (!is.null(tbn)) {
-    if (tbn && is.null(betaN)) {
-      throw("If TumorBoost-normalized BAFs are not given (betaTN=NULL), then normal BAFs ('betaN') are required if TumorBoost normalization is to be done (tbn=TRUE).")
+    if (tbn) {
+      if (is.null(betaT)) {
+        throw("Cannot do TumorBoost normalization (tbn=TRUE) without tumor BAFs ('betaT').")
+      }
+      if (is.null(betaN)) {
+        throw("Cannot do TumorBoost normalization (tbn=TRUE) with normal BAFs ('betaN').")
+      }
     }
   }
 
@@ -315,8 +334,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call genotypes?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # If muN is missing, call genotypes from betaN
-  if (is.null(muN)) {
+  # Are genotype calls muN missing and can they be called?
+  if (is.null(muN) && !is.null(betaN)) {
     verbose && enter(verbose, "Calling genotypes from normal allele B fractions");
     verbose && str(verbose, betaN);
     callNaiveGenotypes <- .use("callNaiveGenotypes", package="aroma.light");
@@ -361,17 +380,19 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Setup data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Setup up data");
-  data <- data.frame(chromosome=chromosome, x=x, CT=CT, betaT=betaT, betaTN=betaTN, muN=muN);
+  data <- data.frame(chromosome=chromosome, x=x, CT=CT)
   if (!is.null(thetaT)) {
-    data$thetaT <- thetaT;
-    data$thetaN <- thetaN;
+    data$thetaT <- thetaT
+    data$thetaN <- thetaN
   }
-  if (!is.null(betaN)) {
-    data$betaN <- betaN;
-  }
-  verbose && str(verbose, data);
+  if (!is.null(betaT)) data$betaT <- betaT
+  if (!is.null(betaTN)) data$betaTN <- betaTN
+  if (!is.null(betaN)) data$betaN <- betaN
+  if (!is.null(muN)) data$muN <- muN
+  if (!is.null(rho)) data$rho <- rho
+  verbose && str(verbose, data)
   # Not needed anymore
-  chromosome <- x <- CT <- thetaT <- thetaN <- betaT <- betaTN <- betaN <- muN <- NULL;
+  chromosome <- x <- CT <- thetaT <- thetaN <- betaT <- betaTN <- betaN <- muN <- rho <- NULL
 
   # Sanity check
   stopifnot(nrow(data) == nbrOfLoci);
@@ -478,7 +499,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chromosome == chromosomeKK);
       verbose && str(verbose, dataKK);
-      fields <- attachLocally(dataKK, fields=c("CT", "thetaT", "thetaN", "betaT", "betaTN", "betaN", "muN", "chromosome", "x"));
+      fields <- attachLocally(dataKK, fields=c("CT", "thetaT", "thetaN", "betaT", "betaTN", "betaN", "muN", "rho", "chromosome", "x"));
       dataKK <- NULL; # Not needed anymore
 
       knownSegmentsKK <- NULL;
@@ -492,7 +513,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", backup=FALSE)
 
         fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
-                  betaT=betaTN, betaN=betaN, muN=muN,
+                  betaT=betaTN, betaN=betaN, muN=muN, rho=rho,
                   chromosome=chromosome, x=x,
                   tbn=FALSE, joinSegments=joinSegments,
                   knownSegments=knownSegmentsKK,
@@ -604,29 +625,32 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   verbose && cat(verbose, "alphaDH: ", alphaDH);
   verbose && cat(verbose, "Number of loci: ", nbrOfLoci);
 
-  # SNPs are identifies as those loci that have non-missing 'betaTN' & 'muN'
-  isSnp <- (!is.na(data$betaTN) & !is.na(data$muN));
-  nbrOfSnps <- sum(isSnp);
-  verbose && cat(verbose, "Number of SNPs: ", nbrOfSnps);
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Calculate decrease-of-heterozygosity signals (DHs)
+  # Calculate decrease-of-heterozygosity signals (DHs)?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Calculating DHs");
-  # DH is by definition only defined for heterozygous SNPs.
-  # For simplicity, we set it to be NA for non-heterozygous loci.
-  isHet <- isSnp & (data$muN == 1/2);
-  verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
-                                     sum(isHet), 100*sum(isHet)/nbrOfSnps);
-  rho <- rep(NA_real_, length=nbrOfLoci);
-  rho[isHet] <- 2*abs(data$betaTN[isHet]-1/2);
-  verbose && cat(verbose, "Normalized DHs:");
-  verbose && str(verbose, rho);
-  data$rho <- rho;
-  rho <- NULL; # Not needed anymore
-  verbose && exit(verbose);
+  if (is.null(data$rho)) {
+    verbose && enter(verbose, "Calculating DHs")
+    # SNPs are identifies as those loci that have non-missing 'betaTN' & 'muN'
+    isSnp <- (!is.na(data$betaTN) & !is.na(data$muN))
+    nbrOfSnps <- sum(isSnp)
+    verbose && cat(verbose, "Number of SNPs: ", nbrOfSnps)
 
+    # DH is by definition only defined for heterozygous SNPs.
+    # For simplicity, we set it to be NA for non-heterozygous loci.
+    isHet <- isSnp & (data$muN == 1/2)
+    verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
+                                       sum(isHet), 100*sum(isHet)/nbrOfSnps)
+    rho <- rep(NA_real_, length=nbrOfLoci)
+    rho[isHet] <- 2*abs(data$betaTN[isHet]-1/2)
+    verbose && cat(verbose, "Normalized DHs:")
+    verbose && str(verbose, rho)
+    data$rho <- rho
+    isSnp <- isHet <- rho <- NULL # Not needed anymore
+    verbose && exit(verbose)
+  }
+  ## Sanity check
+  stopifnot(!is.null(data$rho))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -761,13 +785,19 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       verbose && str(verbose, dataKK);
 
       verbose && cat(verbose, "Number of loci: ", nbrOfLociKK);
-      isSnpKK <- !is.na(dataKK$muN);
-      nbrOfSnpsKK <- sum(isSnpKK);
+      hasDH <- !is.null(dataKK$rho)
+      if (hasDH) {
+        isSnpKK <- !is.na(dataKK$rho)
+        isHetsKK <- (isSnpKK & (dataKK$rho > 0))
+      } else {
+        isSnpKK <- !is.na(dataKK$muN)
+        isHetsKK <- (isSnpKK & (dataKK$muN == 1/2))
+      }
+      nbrOfSnpsKK <- sum(isSnpKK)
+      nbrOfHetsKK <- sum(isHetsKK)
       verbose && printf(verbose, "Number of SNPs: %d (%.2f%%)\n",
                                     nbrOfSnpsKK, 100*nbrOfSnpsKK/nbrOfLociKK);
 
-      isHetsKK <- (isSnpKK & (dataKK$muN == 1/2));
-      nbrOfHetsKK <- sum(isHetsKK);
       verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
                                     nbrOfHetsKK, 100*nbrOfHetsKK/nbrOfSnpsKK);
 
@@ -881,10 +911,19 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       verbose && str(verbose, dataKK);
 
       verbose && cat(verbose, "Number of loci: ", nbrOfLociKK);
-      nbrOfSnpsKK <- sum(!is.na(dataKK$muN));
+
+      hasDH <- !is.null(dataKK$rho)
+      if (hasDH) {
+        isSnpKK <- !is.na(dataKK$rho)
+        isHetsKK <- (isSnpKK & (dataKK$rho > 0))
+      } else {
+        isSnpKK <- !is.na(dataKK$muN)
+        isHetsKK <- (isSnpKK & (dataKK$muN == 1/2))
+      }
+      nbrOfSnpsKK <- sum(isSnpKK)
+      nbrOfHetsKK <- sum(isHetsKK)
       verbose && printf(verbose, "Number of SNPs: %d (%.2f%%)\n",
                                     nbrOfSnpsKK, 100*nbrOfSnpsKK/nbrOfLociKK);
-      nbrOfHetsKK <- sum(!is.na(dataKK$muN) & dataKK$muN == 1/2);
       verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
                                     nbrOfHetsKK, 100*nbrOfHetsKK/nbrOfSnpsKK);
 
@@ -1150,7 +1189,7 @@ setMethodS3("segmentByPairedPSCBS", "data.frame", function(CT, ...) {
 
   segmentByPairedPSCBS(CT=data$CT, thetaT=data$thetaT, thetaN=data$thetaN,
                        betaT=data$betaT, betaN=data$betaN,
-                       muN=data$muN,
+                       muN=data$muN, rho=data$rho,
                        chromosome=data$chromosome, x=data$x, ...);
 })
 

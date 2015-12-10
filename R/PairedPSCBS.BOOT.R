@@ -455,7 +455,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   CT <- data$CT;
   betaT <- data[[by]];
   muN <- data$muN;
-
+  rho <- data$rho;
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -463,15 +463,23 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # or (iii) non-polymorphic loci
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Identifying heterozygous & homozygous SNPs and non-polymorphic loci");
-  nbrOfLoci <- length(muN);
+  nbrOfLoci <- length(CT);
   verbose && cat(verbose, "Number of loci: ", nbrOfLoci);
 
-  # SNPs are identifies as those loci that have non-missing 'muN' (& betaTN')
-  isSNP <- (!is.na(muN) & !is.na(betaT));
-  snps <- which(isSNP);
-  nonSNPs <- which(!isSNP);
-  nbrOfSNPs <- sum(isSNP);
-  nbrOfNonSNPs <- sum(!isSNP);
+  # Identify SNPs
+  hasDH <- !is.null(rho)
+  if (hasDH) {
+    isHet <- !is.na(rho)
+    isSnp <- isHet
+  } else {
+    isSnp <- (!is.na(muN) & !is.na(betaT))
+    isHet <- (isSnp & (muN == 1/2))
+  }
+
+  snps <- which(isSnp);
+  nonSNPs <- which(!isSnp);
+  nbrOfSNPs <- sum(isSnp);
+  nbrOfNonSNPs <- sum(!isSnp);
   verbose && cat(verbose, "Number of SNPs: ", nbrOfSNPs);
   verbose && cat(verbose, "Number of non-SNPs: ", nbrOfNonSNPs);
 
@@ -479,43 +487,47 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   stopifnot(length(intersect(snps, nonSNPs)) == 0L);
 
   # Heterozygous SNPs
-  isHet <- isSNP & (muN == 1/2);
-  hets <- which(isSNP &  isHet);
-  homs <- which(isSNP & !isHet);
+  hets <- which(isSnp &  isHet)
+  homs <- which(isSnp & !isHet);
   nbrOfHets <- length(hets);
   nbrOfHoms <- length(homs);
-  verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
-                                      nbrOfHets, 100*nbrOfHets/nbrOfSNPs);
-  verbose && printf(verbose, "Number of homozygous SNPs: %d (%.2f%%)\n",
-                                      nbrOfHoms, 100*nbrOfHoms/nbrOfSNPs);
+
+  if (!hasDH) {
+    verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
+                                        nbrOfHets, 100*nbrOfHets/nbrOfSNPs);
+    verbose && printf(verbose, "Number of homozygous SNPs: %d (%.2f%%)\n",
+                                        nbrOfHoms, 100*nbrOfHoms/nbrOfSNPs);
+  }
 
   # Sanity checks
   stopifnot(length(intersect(hets, homs)) == 0L);
   stopifnot(nbrOfHets + nbrOfHoms == nbrOfSNPs);
 
   # Sanity checks
-  stopifnot(length(isSNP) == nbrOfLoci);
+  stopifnot(length(isSnp) == nbrOfLoci);
   stopifnot(length(isHet) == nbrOfLoci);
 
   # Not needed anymore
-  muN <- NULL;
+  muN <- isSnp <- NULL
   verbose && exit(verbose);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Precalculate DH signals
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Calculate DHs for heterozygous SNPs
-  rho <- 2*abs(betaT - 1/2);
+  if (is.null(rho)) {
+    # Calculate DHs for heterozygous SNPs
+    rho <- 2*abs(betaT - 1/2);
 
-  # DH is by definition only defined for heterozygous SNPs.
-  # For simplicity, we set it to be NA for non-heterozygous loci.
-  rho[!isHet] <- NA;
+    # DH is by definition only defined for heterozygous SNPs.
+    # For simplicity, we set it to be NA for non-heterozygous loci.
+    rho[!isHet] <- NA_real_;
 
-  data$rho <- rho;
+    data$rho <- rho;
+  }
 
   # Not needed anymore
-  betaT <- NULL;
+  betaT <- isHet <- NULL;
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -646,7 +658,12 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
     # Identify heterozygous and homozygous SNPs
     idxsHet <- intersect(idxsSNP, hets);
-    idxsHom <- intersect(idxsSNP, homs);
+    if (nbrOfHoms > 0) {
+      idxsHom <- intersect(idxsSNP, homs)
+    } else {
+      ## Happens when only DH is available
+      idxsHom <- integer(0L)
+    }
 
     # Drop missing values
     idxsNonSNP <- intersect(idxsNonSNP, idxsCT);
@@ -750,7 +767,11 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
         idxsHetBB <- c(idxsDHBB, idxsHetNonDHBB);
 
         # (a) Resample homozygous SNPs
-        idxsHomBB <- resample(idxsHom, size=nHoms, replace=TRUE);
+        if (nbrOfHoms > 0) {
+          idxsHomBB <- resample(idxsHom, size=nHoms, replace=TRUE)
+        } else {
+          idxsHomBB <- integer(0L)
+        }
 
         # (b) Resample non-SNPs
         idxsNonSNPBB <- resample(idxsNonSNP, size=nNonSNPs, replace=TRUE);

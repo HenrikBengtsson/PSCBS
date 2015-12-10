@@ -189,8 +189,15 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   x <- data$x;
   CT <- data$CT;
   muN <- data$muN;
-  isSnp <- !is.na(muN);
-  isHet <- isSnp & (muN == 1/2);
+  rho <- data$rho;
+  hasDH <- !is.null(rho)
+  if (hasDH) {
+    isHet <- !is.na(rho)
+    isSnp <- isHet
+  } else {
+    isSnp <- !is.na(muN)
+    isHet <- (isSnp & (muN == 1/2))
+  }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update the TCN segments

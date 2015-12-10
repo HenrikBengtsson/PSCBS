@@ -25,7 +25,7 @@ SuggestsNote:
   Hmisc,
   aroma.light
 VignetteBuilder: R.rsp
-Date: 2015-11-18
+Date: 2015-12-09
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),

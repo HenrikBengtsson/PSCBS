@@ -1,8 +1,9 @@
 Package: PSCBS
 ==============
 
-Version: 0.60.0-9000 [2015-11-18]
-o ...
+Version: 0.60.0-9000 [2015-12-09]
+o Added support for segmentByPairedPSCBS() using total CNs (TCNs)
+  and decrease-of-heterozygosity signals (DHs).
 
 
 Version: 0.60.0 [2015-11-17]
@@ -31,7 +32,7 @@ Version: 0.45.1 [2015-09-16]
 o More informative error messages when append() for CBS or PSCBS fail.
 o BUG FIX: segmentByCBS(, ..., w, knownSegments) would give internal
   assertion errors if one of the priorly known segments would have
-  zero data points.  Thanks to Kirill Tsukanov (Moscow) and 
+  zero data points.  Thanks to Kirill Tsukanov (Moscow) and
   Eric Talevich (UCSF) for reporting on this.
 
 
