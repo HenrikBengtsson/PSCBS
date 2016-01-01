@@ -114,6 +114,10 @@ randomSeed("reset")
 stopifnot(identical(RNGkind()[1L], okind),
           identical(randomSeed("get"), oseed))
 
+randomSeed("set", seed=seeds2[[1]], kind="L'Ecuyer-CMRG")
+randomSeed("reset")
+stopifnot(identical(RNGkind()[1L], okind),
+          identical(randomSeed("get"), oseed))
 
 randomSeed("set", seed=42L, kind="L'Ecuyer-CMRG")
 y0 <- sapply(1:10, FUN=function(ii) {

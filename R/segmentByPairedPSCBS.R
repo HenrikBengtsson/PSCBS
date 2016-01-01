@@ -308,7 +308,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Argument 'seed':
   if (!is.null(seed)) {
-    seed <- Arguments$getInteger(seed);
+    seed <- Arguments$getIntegers(seed);
   }
 
   # Argument 'verbose':
@@ -320,16 +320,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
 
   verbose && enter(verbose, "Segmenting paired tumor-normal signals using Paired PSCBS");
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Set the random seed
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (!is.null(seed)) {
-    randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
-    on.exit(randomSeed("reset"), add=TRUE)
-    verbose && printf(verbose, "Random seed temporarily set (seed=%d, kind=\"L'Ecuyer-CMRG\")\n", seed)
-  }
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call genotypes?
@@ -488,13 +478,23 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     verbose && enter(verbose, "Segmenting multiple chromosomes");
     verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
 
+    # Generate random seeds?
+    seeds <- NULL
+    if (!is.null(seed)) {
+      randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+      verbose && printf(verbose, "Random seed temporarily set (seed=[%s], kind=\"L'Ecuyer-CMRG\")\n", hpaste(seed))
+      seeds <- randomSeed("advance", n=nbrOfChromosomes)
+      verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
+      randomSeed("reset")
+    }
+
     fitList <- listenv()
     for (kk in seq(length=nbrOfChromosomes)) {
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
 
-      seedKK <- randomSeed("advance")
+      seedKK <- seeds[[kk]]
 
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chromosome == chromosomeKK);
@@ -510,8 +510,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       }
 
       fitList[[chrTag]] %<=% {
-        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", backup=FALSE)
-
         fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
                   betaT=betaTN, betaN=betaN, muN=muN, rho=rho,
                   chromosome=chromosome, x=x,
@@ -522,7 +520,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
                   avgTCN=avgTCN, avgDH=avgDH,
                   flavor=flavor,
                   ...,
-                  seed=NULL,
+                  seed=seedKK,
                   verbose=verbose)
 
         # Sanity checks
@@ -653,6 +651,21 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   stopifnot(!is.null(data$rho))
 
 
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Generate random seeds?
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  seeds <- NULL
+  if (!is.null(seed)) {
+    randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+    verbose && printf(verbose, "Random seed temporarily set (seed=[%s], kind=\"L'Ecuyer-CMRG\")\n", hpaste(seed))
+    seeds <- randomSeed("advance", n=2L) ## For TCN and DH
+    names(seeds) <- c("TCN", "DH")
+    verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
+    randomSeed("reset")
+  }
+
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # 1a. Identification of change points in total copy numbers
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -685,7 +698,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
                       joinSegments=joinSegments,
                       knownSegments=knownSegments,
                       alpha=alphaTCN, undo=undoTCN, ...,
-                      seed=NULL,
+                      seed=seeds[["TCN"]],
                       verbose=verbose);
   verbose && str(verbose, fit);
 
@@ -941,7 +954,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
                           joinSegments=joinSegments,
                           knownSegments=knownSegmentsT,
                           alpha=alphaDH, undo=undoDH, ...,
-                          seed=NULL,
+                          seed=seeds[["DH"]],
                           verbose=verbose);
       verbose && str(verbose, fit);
       dhSegments <- fit$output;
