@@ -552,8 +552,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
           stopifnot(!hasWeights || !is.null(fit$data$w))
         } # if (R_SANITY_CHECK)
 
-        rm(list=fields) # Not needed anymore
-
         segs <- as.data.frame(fit)
         if (nrow(segs) < 6) {
           verbose && print(verbose, segs, level=-10)
@@ -570,8 +568,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         fit
       }
 
+      rm(list=fields) # Not needed anymore
+
       verbose && exit(verbose);
     } # for (jj ...)
+
 
     verbose && enter(verbose, "Merging (independently) segmented known segments", level=-10);
     verbose && cat(verbose, "Number of segments: ", length(fitList), level=-10);
