@@ -1,7 +1,7 @@
 Package: PSCBS
 Version: 0.60.0-9000
 Depends:
-  R (>= 3.1.1),
+  R (>= 3.1.2),
   utils
 Imports:
   R.methodsS3 (>= 1.7.0),
