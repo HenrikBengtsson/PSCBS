@@ -18,12 +18,14 @@
 #     used, otherwise \code{.Random.seed} is assigned the value.}
 #   \item{kind}{(optional) A @character string specifying type of
 #     random number generator to use, cf. @see "base::RNGkind".}
+#   \item{n}{Number of random seeds to generate by \code{action}.}
 #   \item{backup}{If @TRUE, the previous (seed, kind) state is recorded
 #     such that it can be reset later.}
 # }
 #
 # \value{
 #   Returns a \code{.Random.seed}.
+#   If more than one is returned, the they are returned as a @list.
 # }
 #
 # @author "HB"
@@ -91,8 +93,10 @@ randomSeed <- local({
   }
 
 
-  function(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL, backup=TRUE) {
+  function(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL, n=1L, backup=TRUE) {
     action <- match.arg(action)
+    n <- as.integer(n)
+    stopifnot(n >= 1)
 
     ## Record existing RNG kind (only once)
     if (is.null(oldKind)) oldKind <<- RNGkind()[1L]
@@ -100,7 +104,13 @@ randomSeed <- local({
     if (action == "set") {
       setSeed(seed=seed, kind=kind, backup=backup)
     } else if (action == "advance") {
-      advanceSeed()
+      seeds <- list()
+      for (kk in seq_len(n)) {
+        advanceSeed()
+        seeds[[kk]] <- getSeed()
+      }
+      if (n == 1) seeds <- seeds[[1]]
+      return(seeds)
     } else if (action == "reset") {
       setSeed(seed=oldSeed, kind=oldKind, backup=FALSE)
     } else if (action == "get") {
