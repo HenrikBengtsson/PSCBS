@@ -1,9 +1,13 @@
 Package: PSCBS
 ==============
 
-Version: 0.60.0-9000 [2015-12-09]
+Version: 0.60.0-9000 [2016-01-01]
 o Added support for segmentByPairedPSCBS() using total CNs (TCNs)
-  and decrease-of-heterozygosity signals (DHs).
+  and decrease-of-heterozygosity signals (DHs) in addition to
+  using for instance TCN and allele B fractions (BAFs).
+o BUG FIX: Segmentation using futures where not fully reproducible
+  when known segments where specified.  Fixed by changing how the
+  random number stream is set and used.
 
 
 Version: 0.60.0 [2015-11-17]
