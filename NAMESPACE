@@ -35,9 +35,8 @@ importFrom("R.utils",
            "saveObject", "stext", "subplots", "toCamelCase", "wrap")
 
 importFrom("matrixStats",
-           "anyMissing", "binMeans", "colCumsums", "colDiffs",
-           "colMins", "colMaxs", "rowAlls", "rowAnys", "rowMins",
-           "weightedMedian")
+           "binMeans", "colCumsums", "colDiffs", "colMins", "colMaxs",
+           "rowAlls", "rowAnys", "rowMins", "weightedMedian")
 
 importFrom("DNAcopy",
            "segments.summary", "smooth.CNA", "CNA", "segment", "getbdry")

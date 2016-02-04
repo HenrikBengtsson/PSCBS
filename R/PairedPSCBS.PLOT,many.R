@@ -251,13 +251,12 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   }
 
   # To please R CMD check
-  CT <- rho <- muN <- betaT <- betaN <- betaTN <- NULL;
+  CT <- rho <- muN <- betaT <- betaN <- betaTN <- rho <- NULL;
   rm(list=c("CT", "rho", "muN", "betaT", "betaN", "betaTN"));
   attachLocally(data);
   # Calculate (C1,C2)
   C1 <- 1/2*(1-rho)*CT;
   C2 <- CT - C1;
-
 
   # BACKWARD COMPATIBILITY:
   # If 'rho' is not available, recalculate it from tumor BAFs.

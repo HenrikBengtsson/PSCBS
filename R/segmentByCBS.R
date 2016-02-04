@@ -254,7 +254,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Argument 'seed':
   if (!is.null(seed)) {
-    seed <- Arguments$getInteger(seed);
+    seed <- Arguments$getIntegers(seed);
   }
 
   # Argument 'verbose':
@@ -266,16 +266,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
 
   verbose && enter(verbose, "Segmenting by CBS");
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Set the random seed
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (!is.null(seed)) {
-    randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
-    on.exit(randomSeed("reset"), add=TRUE)
-    verbose && printf(verbose, "Random seed temporarily set (seed=%d, kind=\"L'Ecuyer-CMRG\")\n", seed)
-  }
-
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup data
@@ -332,13 +322,23 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     verbose && enter(verbose, "Segmenting multiple chromosomes");
     verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
 
+    # Generate random seeds?
+    seeds <- NULL
+    if (!is.null(seed)) {
+      randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+      verbose && printf(verbose, "Random seed temporarily set (seed=c(%s), kind=\"L'Ecuyer-CMRG\")\n", paste(seed, collapse=", "))
+      seeds <- randomSeed("advance", n=nbrOfChromosomes)
+      verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
+      randomSeed("reset")
+    }
+
     fitList <- listenv()
     for (kk in seq(length=nbrOfChromosomes)) {
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
 
-      seedKK <- randomSeed("advance")
+      seedKK <- seeds[[kk]]
 
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chrom == chromosomeKK);
@@ -358,8 +358,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       }
 
       fitList[[chrTag]] %<=% {
-        randomSeed("set", seed=seedKK, kind="L'Ecuyer-CMRG", backup=FALSE)
-
         fit <- segmentByCBS(y=y,
                   chromosome=chrom, x=x,
                   w=w,
@@ -369,7 +367,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                   joinSegments=joinSegments,
                   knownSegments=knownSegmentsKK,
                   ...,
-                  seed=NULL,
+                  seed=seedKK,
                   verbose=verbose);
 
         # Sanity checks
@@ -477,6 +475,17 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       } # if (R_SANITY_CHECK)
     });
 
+
+    # Generate random seeds?
+    seeds <- NULL
+    if (!is.null(seed)) {
+      randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+      verbose && printf(verbose, "Random seed temporarily set (seed=c(%s), kind=\"L'Ecuyer-CMRG\")\n", paste(seed, collapse=", "))
+      seeds <- randomSeed("advance", n=nbrOfSegments)
+      verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
+      randomSeed("reset")
+    }
+
     fitList <- listenv()
     for (jj in seq(length=nbrOfSegments)) {
       seg <- knownSegments[jj,];
@@ -485,8 +494,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       xEnd <- seg$end;
       segTag <- sprintf("chr%s:(%s,%s)", chromosomeJJ, xStart, xEnd);
       verbose && enter(verbose, sprintf("Segment #%d ('%s') of %d", jj, segTag, nbrOfSegments), level=-10);
-
-      randomSeed("advance")
 
       ## Nothing to do?
       isSplitter <- (is.na(xStart) && is.na(xEnd));
@@ -521,6 +528,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         next
       }
 
+      seedJJ <- seeds[[jj]]
 
       fitList[[segTag]] %<=% {
         fit <- segmentByCBS(y=y,
@@ -532,7 +540,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
                   joinSegments=joinSegments,
                   knownSegments=seg,
                   ...,
-                  seed=NULL,
+                  seed=seedJJ,
                   verbose=less(verbose,1))
 
         # Sanity checks
@@ -543,8 +551,6 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
           # Assert weights were used
           stopifnot(!hasWeights || !is.null(fit$data$w))
         } # if (R_SANITY_CHECK)
-
-        rm(list=fields) # Not needed anymore
 
         segs <- as.data.frame(fit)
         if (nrow(segs) < 6) {
@@ -562,8 +568,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         fit
       }
 
+      rm(list=fields) # Not needed anymore
+
       verbose && exit(verbose);
     } # for (jj ...)
+
 
     verbose && enter(verbose, "Merging (independently) segmented known segments", level=-10);
     verbose && cat(verbose, "Number of segments: ", length(fitList), level=-10);
@@ -781,6 +790,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     args[[1]] <- CNA(genomdat=0, chrom=0, maploc=0);
     if (hasWeights) args$weights <- 1.0
     verbose && cat(verbose, "Skipping identification of new change points (undo=+Inf)", level=-50);
+  }
+
+
+  ## Set random seed?
+  if (!is.null(seed)) {
+    randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+    on.exit(randomSeed("reset"), add=TRUE)
+    verbose && printf(verbose, "Random seed temporarily set (seed=c(%s), kind=\"L'Ecuyer-CMRG\")\n", paste(seed, collapse=", "))
   }
 
   # In case the method writes to stdout, we capture it

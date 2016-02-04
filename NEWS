@@ -1,6 +1,18 @@
 Package: PSCBS
 ==============
 
+Version: 0.61.0 [2016-02-03]
+o Package now requires R (>= 3.1.2) released October 2014, because
+  of its dependency on the listenv package.
+o segmentByPairedPSCBS() gained argument 'rho' for paired PSCBS
+  segmentation on total CNs (TCNs) and decrease-of-heterozygosity
+  signals (DHs) as an alternative to for instance TCN and 
+  allele B fractions (BAFs).
+o BUG FIX: Segmentation using futures where not fully reproducible
+  when known segments where specified.  Fixed by changing how the
+  random number stream is set and used.
+
+
 Version: 0.60.0 [2015-11-17]
 o PARALLEL: Add support for parallel processing via futures by
   utilizing the future package.  Parallel segmentation over multiple
@@ -27,7 +39,7 @@ Version: 0.45.1 [2015-09-16]
 o More informative error messages when append() for CBS or PSCBS fail.
 o BUG FIX: segmentByCBS(, ..., w, knownSegments) would give internal
   assertion errors if one of the priorly known segments would have
-  zero data points.  Thanks to Kirill Tsukanov (Moscow) and 
+  zero data points.  Thanks to Kirill Tsukanov (Moscow) and
   Eric Talevich (UCSF) for reporting on this.
 
 

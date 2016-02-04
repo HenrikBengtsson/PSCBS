@@ -75,14 +75,21 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   betaN <- data$betaN;
   betaTN <- data$betaTN;
   muN <- data$muN;
-  isSnp <- (!is.na(betaTN) & !is.na(muN));
-  isHet <- isSnp & (muN == 1/2);
-  nbrOfLoci <- length(x);
+  rho <- data$rho
+  hasDH <- !is.null(rho)
+  if (hasDH) {
+    isHet <- !is.na(rho)
+    isSnp <- isHet
+  } else {
+    isSnp <- (!is.na(betaTN) & !is.na(muN))
+    isHet <- isSnp & (muN == 1/2)
+  }
+  nbrOfLoci <- length(x)
 
   # BACKWARD COMPATIBILITY:
   # If 'rho' is not available, recalculate it from tumor BAFs.
   # NOTE: This should throw an error in the future. /HB 2013-10-25
-  if (is.null(data$rho)) {
+  if (!hasDH) {
     rho <- rep(NA_real_, length=nbrOfLoci);
     rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
     warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
@@ -142,7 +149,11 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   }
 
   # Color loci by genotype
-  colMu <- c("gray", "black")[(muN == 1/2) + 1];
+  if (hasDH) {
+    colMu <- c("gray", "black")[!is.na(rho) + 1]
+  } else {
+    colMu <- c("gray", "black")[(muN == 1/2) + 1]
+  }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

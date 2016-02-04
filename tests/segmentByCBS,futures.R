@@ -38,7 +38,7 @@ message("*** segmentByCBS() via futures ...")
 message("*** segmentByCBS() via 'lazy' futures without attaching 'future' ...")
 future::plan("lazy")
 print(future::plan)
-fitL <- segmentByCBS(data, verbose=TRUE)
+fitL <- segmentByCBS(data, seed=0xBEEF, verbose=TRUE)
 print(fitL)
 
 
@@ -46,7 +46,8 @@ message("*** segmentByCBS() via futures with 'future' attached ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("eager", "lazy", "multicore")
+strategies <- c("eager", "lazy")
+if (supportsMulticore()) strategies <- c(strategies, "multicore")
 
 ## Test 'async' futures?
 pkg <- "async"
@@ -61,7 +62,7 @@ fits <- list()
 for (strategy in strategies) {
   message(sprintf("- segmentByCBS() using '%s' futures ...", strategy))
   plan(strategy)
-  fit <- segmentByCBS(data, verbose=TRUE)
+  fit <- segmentByCBS(data, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
   stopifnot(all.equal(fit, fits[[1]]))
   stopifnot(all.equal(fit, fitL))
@@ -74,7 +75,7 @@ dataT <- subset(data, chromosome == 1)
 for (strategy in strategies) {
   message(sprintf("- segmentByCBS() w/ known segments using '%s' futures ...", strategy))
   plan(strategy)
-  fit <- segmentByCBS(dataT, knownSegments=knownSegments, verbose=TRUE)
+  fit <- segmentByCBS(dataT, knownSegments=knownSegments, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
   stopifnot(all.equal(fit, fits[[1]]))
 }

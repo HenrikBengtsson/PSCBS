@@ -106,6 +106,8 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   CT <- data$CT;
   betaT <- data[[by]];
   muN <- data$muN;
+  rho <- data$rho
+  hasDH <- !is.null(rho)
 
   # Not needed anymore
   data <- NULL;
@@ -120,15 +122,21 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   # or (iii) non-polymorphic loci
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Identifying heterozygous & homozygous SNPs and non-polymorphic loci");
-  nbrOfLoci <- length(muN);
+  nbrOfLoci <- length(x);
   verbose && cat(verbose, "Number of loci: ", nbrOfLoci);
 
   # SNPs are identifies as those loci that have non-missing 'muN' (& betaTN')
-  isSNP <- (!is.na(muN) & !is.na(betaT));
-  snps <- which(isSNP);
-  nonSNPs <- which(!isSNP);
-  nbrOfSNPs <- sum(isSNP);
-  nbrOfNonSNPs <- sum(!isSNP);
+  if (hasDH) {
+    isHet <- !is.na(rho)
+    isSnp <- isHet
+  } else {
+    isSnp <- (!is.na(muN) & !is.na(betaT))
+    isHet <- isSnp & (muN == 1/2)
+  }
+  snps <- which(isSnp);
+  nonSNPs <- which(!isSnp);
+  nbrOfSNPs <- sum(isSnp);
+  nbrOfNonSNPs <- sum(!isSnp);
   verbose && cat(verbose, "Number of SNPs: ", nbrOfSNPs);
   verbose && cat(verbose, "Number of non-SNPs: ", nbrOfNonSNPs);
 
@@ -136,41 +144,44 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   stopifnot(length(intersect(snps, nonSNPs)) == 0L);
 
   # Heterozygous SNPs
-  isHet <- isSNP & (muN == 1/2);
-  hets <- which(isSNP &  isHet);
-  homs <- which(isSNP & !isHet);
+  hets <- which(isSnp &  isHet);
+  homs <- which(isSnp & !isHet);
   nbrOfHets <- length(hets);
   nbrOfHoms <- length(homs);
-  verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
-                                      nbrOfHets, 100*nbrOfHets/nbrOfSNPs);
-  verbose && printf(verbose, "Number of homozygous SNPs: %d (%.2f%%)\n",
-                                      nbrOfHoms, 100*nbrOfHoms/nbrOfSNPs);
+  if (!hasDH) {
+    verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
+                                        nbrOfHets, 100*nbrOfHets/nbrOfSNPs);
+    verbose && printf(verbose, "Number of homozygous SNPs: %d (%.2f%%)\n",
+                                        nbrOfHoms, 100*nbrOfHoms/nbrOfSNPs);
+  }
 
   # Sanity checks
   stopifnot(length(intersect(hets, homs)) == 0L);
   stopifnot(nbrOfHets + nbrOfHoms == nbrOfSNPs);
 
   # Sanity checks
-  stopifnot(length(isSNP) == nbrOfLoci);
+  stopifnot(length(isSnp) == nbrOfLoci);
   stopifnot(length(isHet) == nbrOfLoci);
 
   # Not needed anymore
-  muN <- NULL;
+  muN <- isSnp <- NULL;
   verbose && exit(verbose);
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Precalculate DH signals
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Calculate DHs for heterozygous SNPs
-  rho <- 2*abs(betaT - 1/2);
+  if (!hasDH) {
+    # Calculate DHs for heterozygous SNPs
+    rho <- 2*abs(betaT - 1/2);
 
-  # DH is by definition only defined for heterozygous SNPs.
-  # For simplicity, we set it to be NA for non-heterozygous loci.
-  rho[!isHet] <- NA;
+    # DH is by definition only defined for heterozygous SNPs.
+    # For simplicity, we set it to be NA for non-heterozygous loci.
+    rho[!isHet] <- NA;
+  }
 
   # Not needed anymore
-  betaT <- NULL;
+  betaT <- isHet <- NULL;
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -331,12 +342,18 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
 
     # Identify heterozygous and homozygous SNPs
     idxsHet <- intersect(idxsSNP, hets);
-    idxsHom <- intersect(idxsSNP, homs);
+    if (nbrOfHoms > 0) {
+      idxsHom <- intersect(idxsSNP, homs);
+    } else {
+      idxsHom <- integer(0L)
+    }
 
     # Drop missing values
     idxsNonSNP <- intersect(idxsNonSNP, idxsCT);
     idxsHet <- intersect(idxsHet, idxsCT);
-    idxsHom <- intersect(idxsHom, idxsCT);
+    if (nbrOfHoms > 0) {
+      idxsHom <- intersect(idxsHom, idxsCT)
+    }
     idxsHetNonDH <- setdiff(idxsHet, idxsDH);
 
     if (verbose) {

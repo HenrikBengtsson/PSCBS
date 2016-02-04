@@ -23,10 +23,10 @@
 }
 
 \usage{
-\method{segmentByPairedPSCBS}{default}(CT, thetaT=NULL, thetaN=NULL, betaT, betaN=NULL, muN=NULL,
-  chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ...,
-  avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh",
-  "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=TRUE,
+\method{segmentByPairedPSCBS}{default}(CT, thetaT=NULL, thetaN=NULL, betaT=NULL, betaN=NULL, muN=NULL,
+  rho=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0,
+  ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"),
+  flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho),
   preserveScale=getOption("PSCBS/preserveScale", FALSE), joinSegments=TRUE,
   knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE)
 }
@@ -52,6 +52,11 @@
        and \code{\link[base]{NA}} for non-polymorphic loci.
        If not given, they are estimated from the normal BAFs using
        \code{\link[aroma.light]{callNaiveGenotypes}} as described in [2].}
+  \item{rho}{(alternative to \code{betaT} and \code{betaN}/\code{muN})
+       A \code{\link[base]{numeric}} \code{\link[base]{vector}} of J decrease-of-heterozygosity signals (DHs)
+       in [0,1] (due to noise, values may be slightly larger than one
+       as well).  By definition, DH should be \code{\link[base]{NA}} for homozygous loci
+       and for non-polymorphic loci.}
   \item{chromosome}{(Optional) An \code{\link[base]{integer}} scalar (or a \code{\link[base]{vector}} of length J),
        which can be used to specify which chromosome each locus belongs to
        in case multiple chromosomes are segments.

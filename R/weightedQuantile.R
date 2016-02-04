@@ -67,7 +67,7 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
     tmp <- !(is.na(x) | is.na(w));
     x <- .subset(x, tmp);
     w <- .subset(w, tmp);
-  } else if (anyMissing(x)) {
+  } else if (anyNA(x)) {
     return(naValue);
   }
 

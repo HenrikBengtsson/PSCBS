@@ -27,20 +27,13 @@ str(dataS)
 
 
 ## Create multiple chromosomes
-data <- knownSegments <- list()
+data <- list()
 for (cc in 1:3) {
   dataS$chromosome <- cc
   data[[cc]] <- dataS
-  knownSegments[[cc]] <- data.frame(
-    chromosome = c(       cc, cc,        cc),
-    start      = c(     -Inf, NA, 141510003),
-    end        = c(120992603, NA,      +Inf)
-  )
 }
 data <- Reduce(rbind, data)
 str(data)
-knownSegments <- Reduce(rbind, knownSegments)
-str(knownSegments)
 
 
 message("*** segmentByPairedPSCBS() via futures ...")
@@ -48,7 +41,8 @@ message("*** segmentByPairedPSCBS() via futures ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("eager", "lazy", "multicore")
+strategies <- c("eager", "lazy")
+if (supportsMulticore()) strategies <- c(strategies, "multicore")
 
 ## Test 'async' futures?
 pkg <- "async"
@@ -63,12 +57,31 @@ fits <- list()
 for (strategy in strategies) {
   message(sprintf("- segmentByPairedPSCBS() using '%s' futures ...", strategy))
   plan(strategy)
-  fit <- segmentByCBS(data, seed=0xBEEF, verbose=TRUE)
+  fit <- segmentByPairedPSCBS(data, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
   stopifnot(all.equal(fit, fits[[1]]))
 }
 
 message("*** segmentByPairedPSCBS() via futures ... DONE")
+
+
+message("*** segmentByPairedPSCBS() via futures with known segments ...")
+fits <- list()
+dataT <- subset(data, chromosome == 1)
+gaps <- findLargeGaps(dataT, minLength=2e6)
+knownSegments <- gapsToSegments(gaps)
+
+for (strategy in strategies) {
+  message(sprintf("- segmentByCBS() w/ known segments using '%s' futures ...", strategy))
+  plan(strategy)
+  fit <- segmentByPairedPSCBS(dataT, knownSegments=knownSegments, seed=0xBEEF, verbose=TRUE)
+  fits[[strategy]] <- fit
+## FIXME: 2015-12-09
+  stopifnot(all.equal(fit, fits[[1]]))
+}
+
+message("*** segmentByPairedPSCBS() via futures ... DONE")
+
 
 ## Cleanup
 plan(oplan)
