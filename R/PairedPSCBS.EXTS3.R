@@ -18,13 +18,13 @@ setMethodS3("extractLocusLevelTCN", "PairedPSCBS", function(fit, ...) {
 setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets", "SNPs", "all"), ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'what':
   what <- match.arg(what);
 
 
   segs <- getSegments(fit, splitters=TRUE);
-  stopifnot(!is.null(segs)); 
+  stopifnot(!is.null(segs));
   nbrOfSegments <- nrow(segs);
 
   # Argument 'idx':
@@ -35,15 +35,15 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
+  }
 
 
 
   verbose && enter(verbose, "Extracting a specific DH segment");
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the data and segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
   stopifnot(!is.null(data));
 
@@ -66,7 +66,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Subsetting data");
-  units <- seq(length=nrow(data));
+  units <- seq_len(nrow(data));
 
   # Keep only chromosome of interest
   chr <- as.numeric(seg[,"chromosome"]);
@@ -143,7 +143,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
 #   from the aroma.cn package.  The below history has been updated to
 #   document changes in this method too.
 # 2012-02-23
-# o Made extractDhSegment() protected. 
+# o Made extractDhSegment() protected.
 # 2011-10-08
 # o ROBUSTIFICATION: Uses drop=FALSE in mergeTwoSegments() for PairedPSCBS.
 # 2010-10-26 [HB]

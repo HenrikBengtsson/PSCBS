@@ -1,7 +1,7 @@
 setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mean", "median"), verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE);
 
   # Argument 'idxList':
@@ -22,22 +22,22 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mea
     pushState(verbose);
     on.exit(popState(verbose));
   }
- 
+
   verbose && enter(verbose, "Updating mean level estimates of multiple segments");
 
   verbose && cat(verbose, "Segments:");
   verbose && str(verbose, idxList);
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up averaging functions
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   avgFUN <- get(avg, mode="function");
 
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the data and segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
 
   segs <- getSegments(fit, splitters=TRUE);
@@ -45,7 +45,7 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mea
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Total number of segments: ", nbrOfSegments);
 
-  for (ss in seq(along=idxList)) {
+  for (ss in seq_along(idxList)) {
     idxs <- idxList[[ss]];
 
     fitT <- extractSegments(fit, idxs);
@@ -56,22 +56,22 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mea
 
     y <- dataT$y;
 
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Update the TCN segments
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     verbose && enter(verbose, "Recalculate TCN means");
 
     # (c) Adjust for missing values
     keep <- which(!is.na(y));
-  
+
     # (d) Update mean
     gamma <- avgFUN(y[keep]);
- 
+
     # Sanity check
     stopifnot(length(gamma) == 0 || !is.na(gamma));
-  
+
     mus <- c(mean=gamma);
-  
+
     verbose && print(verbose, mus);
     verbose && exit(verbose);
 
@@ -89,7 +89,7 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mea
 
   res;
 }, private=TRUE) # updateMeansTogether()
- 
+
 
 
 ############################################################################

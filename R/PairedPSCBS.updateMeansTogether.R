@@ -49,7 +49,7 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., av
   nbrOfSegments <- nrow(segs);
   verbose && cat(verbose, "Total number of segments: ", nbrOfSegments);
 
-  for (ss in seq(along=idxList)) {
+  for (ss in seq_along(idxList)) {
     idxs <- idxList[[ss]];
 
     fitT <- extractSegments(fit, idxs);

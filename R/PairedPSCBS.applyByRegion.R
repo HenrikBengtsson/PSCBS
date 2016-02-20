@@ -83,7 +83,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
     from <- from[ok];
     to <- to[ok];
     keep <- logical(nrow(data));
-    for (kk in seq(along=from)) {
+    for (kk in seq_along(from)) {
       keep[from[kk]:to[kk]] <- TRUE;
     }
     dataRowsRR <- which(keep);

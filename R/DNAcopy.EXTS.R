@@ -216,7 +216,7 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
   avgY <- estList$y;
 
   yS <- y;
-  for (ss in seq(length=nbrOfSegments)) {
+  for (ss in seq_len(nbrOfSegments)) {
     seg <- segs[ss,];
     idxs <- which(seg$chrom == chr & seg$loc.start <= x & x <= seg$loc.end);
     idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
@@ -234,7 +234,7 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
 
 
 
-setMethodS3("writeSegments", "DNAcopy", function(fit, samples=seq(length=nbrOfSamples(fit)), ...) {
+setMethodS3("writeSegments", "DNAcopy", function(fit, samples=seq_len(nbrOfSamples(fit)), ...) {
   # Argument 'samples':
   samples <- Arguments$getIndices(samples, max=nbrOfSamples(fit));
 

@@ -48,7 +48,7 @@ setMethodS3("extractSegmentDataByLocus", "PairedPSCBS", function(fit, fields=NUL
   verbose && enter(verbose, "Extracting segment by segment");
 
   # For each segment...
-  for (ss in seq(length=nrow(segs))) {
+  for (ss in seq_len(nrow(segs))) {
     verbose && enter(verbose, sprintf("Segment %d of %d", ss, nrow(segs)));
     seg <- segs[ss,];
     idxs <- which(chromosome == seg$chromosome &

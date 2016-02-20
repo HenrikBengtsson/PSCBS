@@ -130,7 +130,7 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
   # For each chromosome
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   isOutlierT <- logical(nbrOfLoci);
-  for (kk in seq(along=uChromosomes)) {
+  for (kk in seq_along(uChromosomes)) {
     chr <- uChromosomes[kk];
     verbose && enter(verbose, sprintf("Chromosome #%d ('Chr%02d') of %d", kk, chr, length(uChromosomes)));
     keepKK <- which(chromosome == chr);

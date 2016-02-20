@@ -49,7 +49,7 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   # Offset...
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segFields <- grep("(start|end)$", colnames(segs), value=TRUE);
-  for (kk in seq(along=chromosomes)) {
+  for (kk in seq_along(chromosomes)) {
     chromosome <- chromosomes[kk];
     chrTag <- sprintf("Chr%02d", chromosome);
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d",
@@ -192,7 +192,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   chrLabels <- sprintf("%02d", chromosomes);
 
   if (byIndex) {
-    xs <- seq(along=x);
+    xs <- seq_along(x);
   } else {
     xs <- x;
   }

@@ -194,7 +194,7 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
   if (merge) {
     verbose && enter(verbose, "Merging neighboring segments within each cluster");
     lefts <- c();
-    for (ii in seq(along=idxList)) {
+    for (ii in seq_along(idxList)) {
       verbose && enter(verbose, sprintf("Cluster #%d of %d", ii, length(idxList)));
       idxs <- idxList[[ii]];
       verbose && cat(verbose, "Segments in cluster:");
@@ -216,7 +216,7 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
     verbose && enter(verbose, "Merging segments");
     lefts <- rev(lefts);
-    for (ii in seq(along=lefts)) {
+    for (ii in seq_along(lefts)) {
       fit <- mergeTwoSegments(fit, left=lefts[ii], update=FALSE);
     } # for (ii ...)
     verbose && exit(verbose);

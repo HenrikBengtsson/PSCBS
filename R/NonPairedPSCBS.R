@@ -179,7 +179,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
     rho <- data$rho;
 
     isSplitter <- isSegmentSplitter(fit);
-    for (ss in seq(length=nbrOfSegments)[!isSplitter]) {
+    for (ss in seq_len(nbrOfSegments)[!isSplitter]) {
       verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
       seg <- segs[ss,];
       verbose && print(verbose, seg);
@@ -343,7 +343,7 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
   # (d) Merge
   args <- formals;
   args2 <- append(params, userArgs);
-  for (kk in seq(along=args2)) {
+  for (kk in seq_along(args2)) {
     value <- args2[[kk]];
     if (!is.null(value)) {
       key <- names(args2)[kk];

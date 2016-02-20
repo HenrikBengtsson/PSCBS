@@ -100,7 +100,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   from <- from[ok];
   to <- to[ok];
   keep <- logical(nrow(data));
-  for (rr in seq(along=from)) {
+  for (rr in seq_along(from)) {
     keep[from[rr]:to[rr]] <- TRUE;
   }
   keep <- which(keep);
@@ -257,7 +257,7 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
 
   # "Invalidate" remaining entries
   if (update) {
-    idxsTodo <- setdiff(seq(along=fields), idxsUsed);
+    idxsTodo <- setdiff(seq_along(fields), idxsUsed);
     segT[,idxsTodo] <- NA;
   }
 

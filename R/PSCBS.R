@@ -138,7 +138,7 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
     gapsAfter <- gapsAfter[!is.na(chrs[gapsAfter])];
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
-      idxs <- seq(length=n);
+      idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
       idxs <- insert(idxs, at=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
@@ -154,7 +154,7 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
     gapsAfter <- gapsAfter[onSameChr];
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
-      idxs <- seq(length=n);
+      idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
       idxs <- insert(idxs, at=gapsAfter+1L, values=values);
       segs <- segs[idxs,];

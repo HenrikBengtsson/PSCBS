@@ -200,10 +200,10 @@ setMethodS3("highlightCalls", "CBS", function(fit, pch=20, callCols=c(loss="red"
   dataT <- NULL;
 
   # For each non-neutral segment
-  for (ss in seq(length=nbrOfSegments)) {
+  for (ss in seq_len(nbrOfSegments)) {
     seg <- segsT[ss,];
 
-    for (tt in seq(along=callTypes)) {
+    for (tt in seq_along(callTypes)) {
       field <- callFields[tt];
       type <- callTypes[tt];
 
@@ -263,7 +263,7 @@ setMethodS3("highlightLocusCalls", "CBS", function(fit, callPchs=c(negOutlier=25
   nbrOfLoci <- nbrOfLoci(fitT);
 
   # For each non-neutral segment
-  for (tt in seq(along=callTypes)) {
+  for (tt in seq_along(callTypes)) {
     field <- callFields[tt];
     type <- callTypes[tt];
 
@@ -354,14 +354,14 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", 
   offsets <- chrStats[,"start"] - chrStats[1,"start"];
 
   # Centroid locations in the tiled space
-  offsetsT <- offsets[seq(length=nrow(genomeData))];
+  offsetsT <- offsets[seq_len(nrow(genomeData))];
 
   xx <- genomeData[,what,drop=FALSE];
   xx <- as.matrix(xx);
   xx <- offsetsT + xx;
 
   ats <- xScale * xx;
-  for (cc in seq(length=ncol(xx))) {
+  for (cc in seq_len(ncol(xx))) {
     abline(v=ats[,cc], col=col, lty=lty, ...);
   }
 
@@ -406,7 +406,7 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
     col <- callCols[type];
     keyA <- sprintf("%sFraction", type);
     keyB <- sprintf("%sCall", type);
-    for (kk in seq(length=nbrOfRegions)) {
+    for (kk in seq_len(nbrOfRegions)) {
       xs <- xx[kk,];
       score <- callStats[kk, keyA];
       if (is.finite(score) && score > 0) {

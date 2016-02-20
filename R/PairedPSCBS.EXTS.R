@@ -207,7 +207,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
   verbose && print(verbose, chromosomes);
 
-  for (cc in seq(length=nbrOfChromosomes)) {
+  for (cc in seq_len(nbrOfChromosomes)) {
     chr <- chromosomes[cc];
     chrTag <- sprintf("chr%02d", chr);
     verbose && enter(verbose, sprintf("Chromosome %d ('%s') of %d", cc, chrTag, nbrOfChromosomes));
@@ -223,7 +223,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
     tcnIds <- sort(unique(segsCC[["tcnId"]]));
     I <- length(tcnIds);
-    for (ii in seq(length=I)) {
+    for (ii in seq_len(I)) {
       tcnId <- tcnIds[ii];
       verbose && enter(verbose, sprintf("TCN segment #%d ('%s') of %d", ii, tcnId, I));
 
@@ -255,7 +255,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       # Sanity check
       stopifnot(diff(segRowsRange)+1L == nbrOfTCNsBefore);
 
-      for (jj in seq(length=J)) {
+      for (jj in seq_len(J)) {
         verbose && enter(verbose, sprintf("DH segment #%d of %d", jj, J));
         seg <- segsII[jj,,drop=FALSE];
         tcnSegRow <- unlist(tcnSegRowsII[jj,,drop=FALSE], use.names=FALSE);

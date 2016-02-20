@@ -84,7 +84,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
     S <- array(NA_real_, dim=dim, dimnames=dimnames);
     verbose && str(verbose, S);
 
-    for (kk in seq(along=fields)) {
+    for (kk in seq_along(fields)) {
       field <- fields[kk];
       verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)));
 
@@ -95,7 +95,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
       stopifnot(nrow(Xkk) == dim(X)[1L]);
       stopifnot(ncol(Xkk) == B);
 
-      for (jj in seq(length=dim(X)[1L])) {
+      for (jj in seq_len(dim(X)[1L])) {
         verbose && enter(verbose, sprintf("%s #%d of %d", whatC, jj, dim(X)[1L]));
         Xkkjj <- Xkk[jj,,drop=TRUE]; # A vector of length B
         S[jj,,kk] <- statsFcn(Xkkjj);
@@ -154,7 +154,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
       if (any(probs < 0.10) && any(probs > 0.90)) {
         tryCatch({
           fields <- dimnames(S)[[3L]];
-          for (kk in seq(along=fields)) {
+          for (kk in seq_along(fields)) {
             field <- fields[kk];
             verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)));
 
@@ -564,7 +564,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   isSplitter <- (is.na(chrs) & is.na(tcnIds) & is.na(dhIds));
 
   # Get all segment indices except for "splitters"
-  jjs <- seq(length=nbrOfSegments);
+  jjs <- seq_len(nbrOfSegments);
   jjs <- jjs[!isSplitter];
 
   for (jj in jjs) {
@@ -747,7 +747,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     idxsDHBB <- NULL;
 
     # Bootstrap B times
-    for (bb in seq(length=B)) {
+    for (bb in seq_len(B)) {
       # (1) Bootstrap DHs
       if (shouldHaveDHs) {
         # (a) Resample heterozygous SNPs (=> resampled DH units)

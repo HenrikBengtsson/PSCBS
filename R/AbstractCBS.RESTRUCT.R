@@ -113,7 +113,7 @@ setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
   segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
   knownSegments <- fit$params$knownSegments;
 
-  for (cc in seq(length=n)) {
+  for (cc in seq_len(n)) {
     chr <- from[cc];
     chrN <- to[cc];
     data$chromosome[data$chromosome == chr] <- chrN;
@@ -185,7 +185,7 @@ setMethodS3("extractRegions", "AbstractCBS", function(this, regions, H=1, ..., v
 
 
   # Identify segments to keep
-  Hs <- seq(length=H);
+  Hs <- seq_len(H);
   regions <- regions - 1L;
   regions <- as.list(regions);
   segments <- lapply(regions, FUN=function(region) region + Hs);
@@ -454,7 +454,7 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., asMi
   }
 
   # Identify segments to drop
-  Hs <- seq(length=H);
+  Hs <- seq_len(H);
   regions <- regions - 1L;
   regions <- as.list(regions);
   regions <- lapply(regions, FUN=function(region) region + Hs);
@@ -464,7 +464,7 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., asMi
   verbose && str(verbose, regions);
 
   # Identify segments to keep
-  allRegions <- seq(length=nbrOfSegments);
+  allRegions <- seq_len(nbrOfSegments);
   keepSegments <- setdiff(allRegions, regions);
   verbose && cat(verbose, "Final set of segments to be kept:");
   verbose && str(verbose, keepSegments);
