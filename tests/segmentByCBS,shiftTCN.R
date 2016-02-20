@@ -52,7 +52,7 @@ plotTracks(fit, Clim=Clim)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 fitList <- list()
 chrs <- getChromosomes(fit)
-for (kk in seq(along=chrs)) {
+for (kk in seq_along(chrs)) {
   chr <- chrs[kk]
   fitKK <- extractChromosome(fit, chr)
   if (kk %% 2 == 0) {
@@ -79,7 +79,7 @@ plotTracks(fit, Clim=Clim)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 
 fitList <- list()
-for (kk in seq(length=nrow(knownSegments))) {
+for (kk in seq_len(nrow(knownSegments))) {
   seg <- knownSegments[kk,]
   start <- seg$start
   end <- seg$end
