@@ -156,7 +156,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
   # If 'rho' is not available, recalculate it from tumor BAFs.
   # NOTE: This should throw an error in the future. /HB 2013-10-25
   if (!hasDH) {
-    rho <- rep(NA_real_, length=nbrOfLoci);
+    rho <- rep(NA_real_, times=nbrOfLoci);
     rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
     warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
   }

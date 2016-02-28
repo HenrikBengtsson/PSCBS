@@ -264,7 +264,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   if (is.null(data$rho)) {
     isSnp <- (!is.na(betaTN) & !is.na(muN));
     isHet <- isSnp & (muN == 1/2);
-    rho <- rep(NA_real_, length=nbrOfLoci);
+    rho <- rep(NA_real_, times=nbrOfLoci);
     rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
     warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
   }

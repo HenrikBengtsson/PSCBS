@@ -639,7 +639,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     isHet <- isSnp & (data$muN == 1/2)
     verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
                                        sum(isHet), 100*sum(isHet)/nbrOfSnps)
-    rho <- rep(NA_real_, length=nbrOfLoci)
+    rho <- rep(NA_real_, times=nbrOfLoci)
     rho[isHet] <- 2*abs(data$betaTN[isHet]-1/2)
     verbose && cat(verbose, "Normalized DHs:")
     verbose && str(verbose, rho)
