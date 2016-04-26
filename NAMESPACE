@@ -58,7 +58,7 @@ importFrom("utils",
            "packageDescription")
 
 importFrom("listenv", "listenv")
-importFrom("future", "%<=%")
+importFrom("future", "%<-%")
 importFrom("parallel", "nextRNGStream")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
