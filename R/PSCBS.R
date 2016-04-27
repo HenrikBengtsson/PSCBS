@@ -38,7 +38,7 @@ setConstructorS3("PSCBS", function(fit=list(), ...) {
 
 
 setMethodS3("as.data.frame", "PSCBS", function(x, ...) {
-  getSegments(x, splitter=TRUE, ...);
+  getSegments(x, splitters=TRUE, ...);
 }, protected=TRUE)
 
 
