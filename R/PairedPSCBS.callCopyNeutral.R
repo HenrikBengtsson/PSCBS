@@ -179,6 +179,46 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 }, protected=TRUE) # calcStatsForCopyNeutralABs()
 
 
+
+###########################################################################/**
+# @RdocMethod estimateDeltaCN
+# @alias estimateDeltaCN
+# @alias estimateDeltaCN.CBS
+#
+# @title "Estimates the length of one total copy-number (TCN) unit"
+#
+# \description{
+#  @get "title"
+# }
+#
+# @synopsis
+#
+# \arguments{
+#  \item{scale}{A @numeric scale factor in (0,Inf) used for rescaling
+#   (multiplying) the final estimate with.}
+#  \item{...}{Not used.}
+# }
+#
+# \value{
+#  Returns a positive scalar @numeric.
+# }
+#
+# \details{
+#   For parent-specific copy-number (PSCN) data, the TCN unit length is
+#   estimated as \eqn{(1-kappa)/2}, where \eqn{kappa} is estimated from
+#   data (by @see "PSCBS::estimateKappa").
+#
+#   For total copy-number (TCN) data (only),
+# }
+#
+# @author "HB"
+#
+# \seealso{
+#   @seeclass
+# }
+#
+# @keyword internal
+#*/###########################################################################
 setMethodS3("estimateDeltaCN", "PairedPSCBS", function(fit, scale=1, kappa=estimateKappa(fit), ...) {
   # Argument 'scale':
   disallow <- c("NA", "NaN", "Inf");

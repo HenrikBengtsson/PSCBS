@@ -96,7 +96,6 @@ callGNL
 renameChromosomes renameChromosomes.AbstractCBS
 report
 writeSegments.DNAcopy
-estimateDeltaCN estimateDeltaCN.PairedPSCBS
 shiftTCN shiftTCN.AbstractCBS shiftTCN.CBS
 shiftTCN.PairedPSCBS
 getChromosomeOffsets.AbstractCBS getChromosomeRanges.PairedPSCBS
@@ -124,7 +123,7 @@ getChangePoints.CBS getChangePoints.PSCBS
 clearBootstrapSummaries clearBootstrapSummaries.PairedPSCBS
 findBootstrapSummaries findBootstrapSummaries.PairedPSCBS
 hasBootstrapSummaries hasBootstrapSummaries.PairedPSCBS
-clearCalls clearCalls.AbstractCBS estimateDeltaCN.CBS
+clearCalls clearCalls.AbstractCBS 
 extractSegmentDataByLocus extractSegmentDataByLocus.PairedPSCBS
 updateMeansC1C2 updateMeansC1C2.PairedPSCBS
 encodeCalls encodeCalls.data.frame
