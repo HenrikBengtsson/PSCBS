@@ -1,9 +1,27 @@
 setMethodS3("extractLocusLevelC1C2", "PairedPSCBS", function(fit, ...) {
+  # Extract locus-level data
   data <- getLocusData(fit);
   C <- data$CT;
   rho <- data$rho;
+
+  # Swapped (C1,C2) <-> (C2,C1) for some segments?
+  fields <- colnames(getSegments(fit));
+  if (is.element("c1c2Swap", fields)) {
+    # FIXME: When PSCBS is updated.
+    # WORKAROUND: extractSegmentDataByLocus() in PSCBS v0.40.4 requires:
+    # that fields "chromosome", "tcnStart", "tcnEnd" are always requested
+    # /2014-03-21
+    c1c2Swap <- extractSegmentDataByLocus(fit, fields=c("c1c2Swap",
+                                     "chromosome", "tcnStart", "tcnEnd"));
+    c1c2Swap <- c1c2Swap[["c1c2Swap"]];
+    if (any(c1c2Swap)) {
+      rho[c1c2Swap] <- -rho[c1c2Swap];
+    }
+  }
+
   C1 <- 1/2*(1-rho)*C;
-  C2 <- C-C1;
+  C2 <- C - C1;
+
   data.frame(C1=C1, C2=C2);
 }, private=TRUE) # extractLocusLevelC1C2()
 
