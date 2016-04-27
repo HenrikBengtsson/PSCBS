@@ -1,6 +1,10 @@
 Package: PSCBS
 ==============
 
+Version: 0.61.0-9000 [2016-04-27]
+o CLEANUP: Minor internal cleanup and restructuring.
+
+
 Version: 0.61.0 [2016-02-03]
 o Package now requires R (>= 3.1.2) released October 2014, because
   of its dependency on the listenv package.

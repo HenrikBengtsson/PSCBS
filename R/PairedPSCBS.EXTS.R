@@ -124,10 +124,46 @@ setMethodS3("extractCNs", "PairedPSCBS", function(fit, splitters=TRUE, ...) {
 
 
 setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
-  xy <- extractC1C2(..., splitters=TRUE, addGaps=TRUE);
-  X <- xy[,1:2,drop=FALSE];
-  dX <- colDiffs(X);
-  dX;
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Extract data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  X <- extractC1C2(..., splitters=TRUE, addGaps=TRUE);
+
+  # (C1,C2)
+  C1C2 <- X[,1:2,drop=FALSE];
+
+  # Number of TCN and DH data points
+  counts <- X[,3:4, drop=FALSE];
+
+  # Not needed anymore
+  X <- NULL;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Calculate (dC1,dC2)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # (dC1, dC2)
+  dC1C2 <- matrixStats::colDiffs(C1C2);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Change-point weights
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Region weights from DH counts
+  w <- counts[,2,drop=TRUE];
+  w <- sqrt(w);
+  w <- w / sum(w, na.rm=TRUE);
+
+  # (a) Smallest of the two flanking (DH) counts
+  cpw <- cbind(w[1:(length(w)-1)], w[2:length(w)]);
+  cpw <- rowMins(cpw, na.rm=TRUE);
+  cpw[is.infinite(cpw)] <- NA;
+  cpw <- sqrt(cpw);
+  cpwMin <- cpw / sum(cpw, na.rm=TRUE);
+
+  # (b) Sum of region weights
+  cpw <- w[1:(length(w)-1)] + w[2:length(w)];
+  cpwAvg <- cpw / sum(cpw, na.rm=TRUE);
+
+  cbind(dC1=dC1C2[,1], dC2=dC1C2[,2], wMin=cpwMin, wAvg=cpwAvg);
 }, protected=TRUE)
 
 
