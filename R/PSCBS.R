@@ -140,7 +140,7 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
     if (nGaps > 0L) {
       idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
 
@@ -156,7 +156,7 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
     if (nGaps > 0L) {
       idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
   }
