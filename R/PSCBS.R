@@ -219,6 +219,33 @@ setMethodS3("getChangePoints", "PSCBS", function(fit, ...) {
 }, private=TRUE) # getChangePoints()
 
 
+setMethodS3("normalizeTotalCNs", "PSCBS", function(fit, targetTCN=2, ...) {
+  ## Fit using locus-level data
+  data <- getLocusData(fit, ...)
+  C <- data$CT
+  stopifnot(!is.null(C))
+  mu <- median(C, na.rm=TRUE)
+  scale <- targetTCN / mu
+
+  ## (a) Rescale locus-level data
+  C <- scale * C
+  data$CT <- C
+  rm(list="C")
+  fitN <- setLocusData(fit, data)
+
+  ## (b) Rescale segment-level data
+  segs <- getSegments(fit)
+  fields <- colnames(segs)
+  cnFields <- grep("^(tcn|c1|c2)", fields, value=TRUE)
+  cnFields <- grep("(Id|Start|End|NbrOf)", cnFields, value=TRUE, invert=TRUE)
+  for (field in cnFields) {
+    segs[[field]] <- scale * segs[[field]]
+  }
+  fitN <- setSegments(fitN, segs)
+
+  invisible(fitN)
+})
+
 
 ############################################################################
 # HISTORY:

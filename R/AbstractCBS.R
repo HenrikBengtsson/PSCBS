@@ -888,6 +888,36 @@ setMethodS3("setPloidy", "AbstractCBS", function(fit, ploidy=2L, update=TRUE, ..
 setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
 
 
+###########################################################################/**
+# @RdocMethod normalizeTotalCNs
+# @alias normalizeTotalCNs
+# @alias normalizeTotalCNs.PSCBS
+#
+# @title "Normalizes copy numbers such that the whole-genome average total copy number is two"
+#
+# \description{
+#  @get "title".
+# }
+#
+# @synopsis
+#
+# \arguments{
+#   \item{...}{Additional arguments passed to the normalization method.}
+# }
+#
+# \value{
+#   Returns a normalized AbstractCBS object of the same class as \code{fit}.
+# }
+#
+# @author
+#
+# \seealso{
+#   @seeclass.
+# }
+#*/###########################################################################
+setMethodS3("normalizeTotalCNs", "AbstractCBS", abstract=TRUE)
+
+
 ############################################################################
 # HISTORY:
 # 2013-11-05
