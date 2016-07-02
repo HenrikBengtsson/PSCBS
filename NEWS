@@ -6,7 +6,9 @@ o Added normalizeTotalCNs() for PSCBS objects.
 o REPORTS: Updated report template for PairedPSCBS object such
   that reports are also generated from DH-only data, i.e. when
   there are no BAF signals (which may happen with DNA-Seq data).
+o Added splitters=TRUE as the default for setSegments().
 o CLEANUP: Minor internal cleanup and restructuring.
+
 
 
 Version: 0.61.0 [2016-02-03]
