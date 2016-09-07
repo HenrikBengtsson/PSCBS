@@ -156,22 +156,22 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
   # (d) Merge
   args <- formals;
-  args2 <- append(params, userArgs);
-  for (kk in seq_along(args2)) {
+  args2 <- c(params, userArgs);
+  for (kk in seq(along=args2)) {
     value <- args2[[kk]];
     if (!is.null(value)) {
       key <- names(args2)[kk];
       if (!is.null(key)) {
         args[[key]] <- value;
       } else {
-        args <- append(args, list(value));
+        args <- c(args, list(value));
       }
     }
   } # for (key ...)
   verbose && str(verbose, args[names(args) != "verbose"]);
 
   verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
-  args <- append(list(data), args);
+  args <- c(list(data), args);
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, args[names(args) != "verbose"]);
   verbose && exit(verbose);
