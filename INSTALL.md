@@ -12,8 +12,6 @@ same.  To reset to non-parallel (synchronously) processing, use
 
 To configure this automatically whenever the package is loaded, see
 future vignette '[A Future for R: Controlling Default Future Strategy](https://cran.r-project.org/web/packages/future/vignettes/future-4-startup.html)'.
-```
-
 <% } %>
 
 
