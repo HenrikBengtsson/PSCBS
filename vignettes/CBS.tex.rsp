@@ -105,7 +105,7 @@ This document shows how to use the \pkg{PSCBS} package to run CBS on a tumor sam
 \keywords{<%@meta name="keywords"%>}
 
 \begin{center}
-\emph{This vignette is distributed as part of the \pkg{PSCBS} package, which is available on CRAN (\url{http://cran.r-project.org/}).
+\emph{This vignette is distributed as part of the \pkg{PSCBS} package, which is available on CRAN (\url{https://cran.r-project.org/}).
 The authors very much appreciate feedback on this document.}
 \end{center}
 
