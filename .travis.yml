@@ -17,8 +17,12 @@ matrix:
   include:
     - os: linux
       r: oldrel
+      r_packages:
+        - survival
     - os: linux
       r: release
+      r_packages:
+        - survival
       r_github_packages:
       - jimhester/covr
       after_success:
@@ -30,9 +34,6 @@ matrix:
       r: oldrel
     - os: osx
       r: release
-
-r_packages:
-  - survival
 
 bioc_packages:
   - BiocInstaller
