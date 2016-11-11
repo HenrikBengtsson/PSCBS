@@ -1,7 +1,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.61.0-9000 [2016-11-10]
+Version: 0.62.0 [2016-11-10]
 o Added normalizeTotalCNs() for PSCBS objects.
 o REPORTS: Updated report template for PairedPSCBS object such
   that reports are also generated from DH-only data, i.e. when
