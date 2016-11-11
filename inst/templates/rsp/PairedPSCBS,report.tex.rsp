@@ -317,12 +317,14 @@ chrsTags <- if (nbrOfChromosomes == 1) {
  \begin{center}
 <%
  fields <- c("CT", "betaN", "betaT", "rho", "c1", "c2", "betaTN", "rhoN", "c1N", "c2N");
+ fields <- intersect(fields, colnames(data))
 %>
 <% for (ff in fields) { %>
 <%
   symbol <- symbolList[[ff]];
   panelTitle <- switch(ff, CT="\\TCN", betaN="\\BAFN", betaT="\\BAFT", betaTN="\\BAFTN", "NNN");
   lim <- switch(ff, CT=ClimX, c1=ClimX, c2=ClimX, c1N=ClimX, c2N=ClimX, BlimX);
+  nbrOfSNPs <- sum(data$isSNP, na.rm=TRUE)
 %>
 \raisebox{4ex}{<%=symbol%>}
 <% for (by in c("all", "muN")) { %>
@@ -335,7 +337,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
           gg <- ggplot(data, aes_string(x=ff, y="..count.."));
 
           if (by == "all") {
-            if (ff == "CT" && any(!data$isSNP, na.rm=TRUE)) {
+            if (ff == "CT" && nbrOfSNPs > 0 && any(!data$isSNP, na.rm=TRUE)) {
               gg <- gg + aes(group=type, colour=type);
             }
           } else if (by == "muN") {
@@ -385,6 +387,11 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 % BEFORE AND AFTER TUMORBOOST
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 <% beforeAndAfterTumorBoost <- function(fit, ...) { %>
+<%
+data <- getLocusData(fit, fields="full");
+## Nothing to do?
+if (!all(is.element(c("betaN", "betaT", "type"), colnames(data)))) return()
+%>
 <% if (!REPORT_TUMORBOOST) return(); %>
 \clearpage
 \section{Before and after TumorBoost}
@@ -393,7 +400,6 @@ chrsTags <- if (nbrOfChromosomes == 1) {
  \begin{center}
 <%
 require("ggplot2") || throw("Package not loaded: ggplot2");
-data <- getLocusData(fit, fields="full");
 chromosomes <- getChromosomes(fit);
 nbrOfChromosomes <- length(chromosomes);
 chromosomesH <- seqToHumanReadable(chromosomes);
@@ -646,8 +652,11 @@ assign("renamePDF", function() {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HISTORY:
+% 2016-05-11
+% o Updated to handle PairedPSCBS objects with only 'rho' but no
+%   'betaN' and 'betaT'.
 % 2014-05-24
-# o Replaced a deprecated opts() of ggplot2 with theme().
+% o Replaced a deprecated opts() of ggplot2 with theme().
 % 2013-10-18
 % o BUG FIX: Report template assumed that R.utils was attached.
 % 2012-11-03

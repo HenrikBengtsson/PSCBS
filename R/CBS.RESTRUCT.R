@@ -200,7 +200,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   from <- from[ok];
   to <- to[ok];
   keep <- logical(nrow(data));
-  for (rr in seq(along=from)) {
+  for (rr in seq_along(from)) {
     keep[from[rr]:to[rr]] <- TRUE;
   }
   keep <- which(keep);
@@ -317,7 +317,7 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
   idxsUsed <- c(idxsUsed, idxs);
 
   # "Invalidate" remaining entries
-  idxsTodo <- setdiff(seq(along=fields), idxsUsed);
+  idxsTodo <- setdiff(seq_along(fields), idxsUsed);
   segT[,idxsTodo] <- NA;
 
   # Update segment table

@@ -141,7 +141,7 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
   stopifnot(all(is.finite(shifts)));
 
   # Adjust indices
-  for (cc in seq(along=chromosomes)) {
+  for (cc in seq_along(chromosomes)) {
     chromosome <- chromosomes[cc];
     shift <- shifts[cc];
     # Nothing to do?

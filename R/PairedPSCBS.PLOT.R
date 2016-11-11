@@ -156,7 +156,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
   # If 'rho' is not available, recalculate it from tumor BAFs.
   # NOTE: This should throw an error in the future. /HB 2013-10-25
   if (!hasDH) {
-    rho <- rep(NA_real_, length=nbrOfLoci);
+    rho <- rep(NA_real_, times=nbrOfLoci);
     rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
     warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
   }
@@ -214,7 +214,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
     colMu <- c("gray", "black")[(muN == 1/2) + 1]
   }
 
-  for (tt in seq(along=tracks)) {
+  for (tt in seq_along(tracks)) {
     track <- tracks[tt];
     verbose && enter(verbose, sprintf("Track #%d ('%s') of %d",
                                              tt, track, length(tracks)));
@@ -342,7 +342,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
     # For each panel of tracks, annotate with calls?
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (length(callColumns) > 0) {
-      for (cc in seq(along=callColumns)) {
+      for (cc in seq_along(callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
         verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
@@ -361,7 +361,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
 
         side <- 2*((cc+1) %% 2) + 1;
         # For each segment called...
-        for (ss in seq(length=nrow(segsT))) {
+        for (ss in seq_len(nrow(segsT))) {
           x0 <- segsT[ss,1,drop=TRUE];
           x1 <- segsT[ss,2,drop=TRUE];
           abline(v=c(x0,x1), lty=3, col="gray");
@@ -372,7 +372,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
       } # for (cc in ...)
 
       # Add call parameter estimates, e.g. deltaAB
-      for (cc in seq(along=callColumns)) {
+      for (cc in seq_along(callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
         h <- NULL;
@@ -540,7 +540,7 @@ setMethodS3("drawConfidenceBands", "PairedPSCBS", function(fit, what=c("tcn", "d
   colQ["alpha",] <- alpha*colQ["alpha",];
   colQ <- rgb(red=colQ["red",], green=colQ["green",], blue=colQ["blue",], alpha=colQ["alpha",], maxColorValue=255);
 
-  for (kk in seq(length=nrow(segsT))) {
+  for (kk in seq_len(nrow(segsT))) {
     rect(xleft=segsT[kk,1], xright=segsT[kk,2], ybottom=segsT[kk,3], ytop=segsT[kk,4], col=colQ, border=FALSE);
   }
 }, private=TRUE)
@@ -632,7 +632,7 @@ setMethodS3("arrowsC1C2", "PairedPSCBS", function(fit, length=0.05, ...) {
   xy <- xy[,1:2,drop=FALSE];
   x <- xy[,1,drop=TRUE];
   y <- xy[,2,drop=TRUE];
-  s <- seq(length=length(x)-1);
+  s <- seq_len(length(x)-1);
   arrows(x0=x[s],y0=y[s], x1=x[s+1],y1=y[s+1], code=2, length=length, ...);
 }, private=TRUE)
 
@@ -642,7 +642,7 @@ setMethodS3("arrowsDeltaC1C2", "PairedPSCBS", function(fit, length=0.05, ...) {
   xy <- xy[,1:2,drop=FALSE];
   x <- xy[,1,drop=TRUE];
   y <- xy[,2,drop=TRUE];
-  s <- seq(length=length(x)-1);
+  s <- seq_len(length(x)-1);
   arrows(x0=x[s],y0=y[s], x1=x[s+1],y1=y[s+1], code=2, length=length, ...);
 }, private=TRUE)
 
@@ -689,7 +689,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.null(chrStarts)) {
     xRange <- matrix(0, nrow=length(chromosomes), ncol=2);
-    for (kk in seq(along=chromosomes)) {
+    for (kk in seq_along(chromosomes)) {
       chromosome <- chromosomes[kk];
       idxs <- which(data$chromosome == chromosome);
       x <- data$x[idxs];
@@ -721,7 +721,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   # Sanity check
   stopifnot(length(segFields) > 0);
 
-  for (kk in seq(along=chromosomes)) {
+  for (kk in seq_along(chromosomes)) {
     chromosome <- chromosomes[kk];
     chrTag <- sprintf("Chr%02d", chromosome);
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d",
@@ -809,7 +809,7 @@ setMethodS3("getChromosomeRanges", "PairedPSCBS", function(fit, ...) {
   colnames(res) <- c("start", "end", "length");
 
   # Get start and end of each chromosome.
-  for (ii in seq(length=nrow(res))) {
+  for (ii in seq_len(nrow(res))) {
     chr <- chromosomes[ii];
     segsII <- subset(segs, chromosome == chr);
     res[ii,"start"] <- min(segsII$tcnStart, na.rm=TRUE);

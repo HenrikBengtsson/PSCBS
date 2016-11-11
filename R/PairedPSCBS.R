@@ -49,10 +49,19 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
 
     # Genotype calls
     if (!is.element("muN", names)) {
-      callNaiveGenotypes <- .use("callNaiveGenotypes", package="aroma.light");
-      data$muN <- callNaiveGenotypes(data$betaN);
+      if (is.element("rho", names)) {
+        data$muN <- rep(NA_real_, times=length(data$rho))
+        data$muN[is.finite(data$rho)] <- 1/2
+      } else if (is.element("betaN", names)) {
+        callNaiveGenotypes <- .use("callNaiveGenotypes", package="aroma.light");
+        data$muN <- callNaiveGenotypes(data$betaN);
+      } else {
+        throw("Cannot identify heterozygous SNPs or genotypes")
+      }
     }
-    data$isHet <- (data$muN == 1/2);
+
+    data$isHet <- (data$muN == 1/2)
+
     # BACKWARD COMPATIBILITY: If 'rho' does not exists, calculate
     # it on the fly from 'betaT'.
     # NOTE: This should give an error in the future. /HB 2013-10-25
@@ -65,17 +74,24 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
     data$c2 <- data$CT - data$c1;
 
     # TumorBoost BAFs
-    if (!is.element("betaTN", names)) {
-      normalizeTumorBoost <- .use("normalizeTumorBoost", package="aroma.light");
-      data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
-    }
-    data$rhoN <- 2*abs(data$betaTN-1/2);
-    data$rhoN[!data$isHet] <- NA_real_;
-    data$c1N <- 1/2*(1-data$rhoN)*data$CT;
-    data$c2N <- data$CT - data$c1N;
+    if (!is.element("rhoN", names)) {
+      if (!is.element("betaTN", names) && is.element("betaN", names)) {
+        normalizeTumorBoost <- .use("normalizeTumorBoost", package="aroma.light");
+        data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
+      }
 
-    data$isSNP <- (!is.na(data$betaT) | !is.na(data$betaN));
-    data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus");
+      if (is.element("betaTN", names)) {
+        data$rhoN <- 2*abs(data$betaTN-1/2);
+        data$rhoN[!data$isHet] <- NA_real_;
+        data$c1N <- 1/2*(1-data$rhoN)*data$CT;
+        data$c2N <- data$CT - data$c1N;
+      }
+
+      if (all(is.element(c("betaN", "betaT"), names))) {
+        data$isSNP <- (!is.na(data$betaT) | !is.na(data$betaN));
+        data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus");
+      }
+    }
 
     # Labels
     data$muNx <- c("AA", "AB", "BB")[2*data$muN + 1L];
@@ -140,7 +156,7 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
   # (d) Merge
   args <- formals;
-  args2 <- append(params, userArgs);
+  args2 <- c(params, userArgs);
   for (kk in seq(along=args2)) {
     value <- args2[[kk]];
     if (!is.null(value)) {
@@ -148,14 +164,14 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
       if (!is.null(key)) {
         args[[key]] <- value;
       } else {
-        args <- append(args, list(value));
+        args <- c(args, list(value));
       }
     }
   } # for (key ...)
   verbose && str(verbose, args[names(args) != "verbose"]);
 
   verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
-  args <- append(list(data), args);
+  args <- c(list(data), args);
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, args[names(args) != "verbose"]);
   verbose && exit(verbose);

@@ -60,6 +60,7 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
  \tab \code{nbrOfChromosomes} \tab  -\cr
  \tab \code{nbrOfLoci} \tab  -\cr
  \tab \code{nbrOfSegments} \tab  -\cr
+ \tab \code{normalizeTotalCNs} \tab  -\cr
  \tab \code{ploidy} \tab  -\cr
  \tab \code{ploidy<-} \tab  -\cr
  \tab \code{plotTracks} \tab  -\cr

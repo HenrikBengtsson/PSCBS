@@ -81,7 +81,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
   nbrOfChromosomes <- length(chromosomes);
 
   fitList <- vector("list", length=nbrOfChromosomes);
-  for (cc in seq(length=nbrOfChromosomes)) {
+  for (cc in seq_len(nbrOfChromosomes)) {
     chr <- chromosomes[cc];
     verbose && enter(verbose, sprintf("Chromosome #%d ('Chr%s') of %d",
                                             cc, chr, length(chromosomes)));
@@ -173,7 +173,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Create stub for a segment table
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    idxs <- seq(length=nbrOfSegsP);
+    idxs <- seq_len(nbrOfSegsP);
     segsP <- segs[idxs,];
 
     # Sanity checks

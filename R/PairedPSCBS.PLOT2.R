@@ -90,7 +90,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   # If 'rho' is not available, recalculate it from tumor BAFs.
   # NOTE: This should throw an error in the future. /HB 2013-10-25
   if (!hasDH) {
-    rho <- rep(NA_real_, length=nbrOfLoci);
+    rho <- rep(NA_real_, times=nbrOfLoci);
     rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
     warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
   }
@@ -159,7 +159,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # For each panel...
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  for (pp in seq(length=nbrOfPanels)) {
+  for (pp in seq_len(nbrOfPanels)) {
     panel <- panels[pp];
     verbose && enter(verbose, sprintf("Panel #%d ('%s') of %d",
                                              pp, panel, length(panels)));
@@ -210,7 +210,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
     verbose && print(verbose, tracks);
     nbrOfTracks <- length(tracks);
 
-    for (tt in seq(length=nbrOfTracks)) {
+    for (tt in seq_len(nbrOfTracks)) {
       track <- tracks[tt];
       verbose && enter(verbose, sprintf("Scatter track #%d ('%s') of %d",
                                                 tt, track, nbrOfTracks));
@@ -275,7 +275,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
     verbose && print(verbose, tracks);
     nbrOfTracks <- length(tracks);
 
-    for (tt in seq(length=nbrOfTracks)) {
+    for (tt in seq_len(nbrOfTracks)) {
       track <- tracks[tt];
       verbose && enter(verbose, sprintf("Level track #%d ('%s') of %d",
                                                  tt, track, nbrOfTracks));
@@ -322,7 +322,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
     # For each panel of tracks, annotate with calls?
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (length(callColumns) > 0) {
-      for (cc in seq(along=callColumns)) {
+      for (cc in seq_along(callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
         verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
@@ -341,7 +341,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
         side <- 2*((cc+1) %% 2) + 1;
         # For each segment called...
-        for (ss in seq(length=nrow(segsT))) {
+        for (ss in seq_len(nrow(segsT))) {
           x0 <- segsT[ss,1,drop=TRUE];
           x1 <- segsT[ss,2,drop=TRUE];
           abline(v=c(x0,x1), lty=3, col="gray");

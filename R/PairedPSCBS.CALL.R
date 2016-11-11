@@ -84,7 +84,7 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
   callsL <- as.data.frame(callsL);
 
   # For each segment...
-  for (ss in seq(length=nrow(segs))) {
+  for (ss in seq_len(nrow(segs))) {
     seg <- segs[ss,];
     idxs <- which(chromosome == seg$chromosome &
                   seg$tcnStart <= x & x <= seg$tcnEnd);
@@ -93,7 +93,7 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
 ##    stopifnot(length(idxs) == seg$tcnNbrOfLoci);
 
     callsSS <- seg[callCols];
-    for (cc in seq(length=nbrOfCalls)) {
+    for (cc in seq_len(nbrOfCalls)) {
       callsL[idxs,cc] <- callsSS[,cc];
     }
   } # for (ss ...)

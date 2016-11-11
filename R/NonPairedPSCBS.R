@@ -179,7 +179,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
     rho <- data$rho;
 
     isSplitter <- isSegmentSplitter(fit);
-    for (ss in seq(length=nbrOfSegments)[!isSplitter]) {
+    for (ss in seq_len(nbrOfSegments)[!isSplitter]) {
       verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
       seg <- segs[ss,];
       verbose && print(verbose, seg);
@@ -342,7 +342,7 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
 
   # (d) Merge
   args <- formals;
-  args2 <- append(params, userArgs);
+  args2 <- c(params, userArgs);
   for (kk in seq(along=args2)) {
     value <- args2[[kk]];
     if (!is.null(value)) {
@@ -350,14 +350,14 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
       if (!is.null(key)) {
         args[[key]] <- value;
       } else {
-        args <- append(args, list(value));
+        args <- c(args, list(value));
       }
     }
   } # for (key ...)
   verbose && str(verbose, args[names(args) != "verbose"]);
 
   verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
-  args <- append(list(data), args);
+  args <- c(list(data), args);
   verbose && cat(verbose, "Arguments:");
   verbose && str(verbose, args[names(args) != "verbose"]);
   verbose && exit(verbose);

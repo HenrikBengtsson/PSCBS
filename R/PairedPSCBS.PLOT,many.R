@@ -264,7 +264,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   if (is.null(data$rho)) {
     isSnp <- (!is.na(betaTN) & !is.na(muN));
     isHet <- isSnp & (muN == 1/2);
-    rho <- rep(NA_real_, length=nbrOfLoci);
+    rho <- rep(NA_real_, times=nbrOfLoci);
     rho[isHet] <- 2*abs(betaTN[isHet]-1/2);
     warning(sprintf("Locus-level DH signals ('rho') were not available in the %s object and therefore recalculated from the TumorBoost-normalized tumor BAFs ('betaTN').", class(fit)[1L]));
   }
@@ -294,7 +294,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     gh$callsByLocus <- callData;
   }
 
-  for (tt in seq(along=tracks)) {
+  for (tt in seq_along(tracks)) {
     track <- tracks[tt];
     verbose && enter(verbose, sprintf("Track #%d ('%s') of %d",
                                              tt, track, length(tracks)));
@@ -308,7 +308,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     # Color scatter plot according to calls?
     if (!is.null(calls) && callLoci && length(callColumns) > 0L) {
       colsT <- rep(colS[1L], times=nrow(callData));
-      for (cc in seq(along=callColumns)) {
+      for (cc in seq_along(callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
         verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
@@ -453,7 +453,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     # For each panel of tracks, annotate segments with calls?
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     if (!is.null(calls) && !callLoci && length(callColumns) > 0L) {
-      for (cc in seq(along=callColumns)) {
+      for (cc in seq_along(callColumns)) {
         callColumn <- callColumns[cc];
         callLabel <- callLabels[cc];
         verbose && enter(verbose, sprintf("Call #%d ('%s') of %d",
@@ -472,7 +472,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
 
         side <- 2*((cc+1) %% 2) + 1;
         # For each segment called...
-        for (ss in seq(length=nrow(segsT))) {
+        for (ss in seq_len(nrow(segsT))) {
           x0 <- segsT[ss,1,drop=TRUE];
           x1 <- segsT[ss,2,drop=TRUE];
           abline(v=c(x0,x1), lty=3, col="gray");
@@ -493,7 +493,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
       ltyCL <- sapply(tracksT, FUN=getCallLevelLty);
 
       trackT <- track;
-      for (cc in seq(along=allCallColumns)) {
+      for (cc in seq_along(allCallColumns)) {
         callColumn <- allCallColumns[cc];
         callLabel <- allCallLabels[cc];
 

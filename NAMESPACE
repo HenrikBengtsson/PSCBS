@@ -58,7 +58,7 @@ importFrom("utils",
            "packageDescription")
 
 importFrom("listenv", "listenv")
-importFrom("future", "%<=%")
+importFrom("future", "%<-%")
 importFrom("parallel", "nextRNGStream")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -75,6 +75,7 @@ export("load") # Re-export from R.oo
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # From 006.fixVarArgs.R
 S3method("append", "default")
+
 
 # AbstractCBS
 S3method("adjustPloidyScale", "AbstractCBS")
@@ -114,6 +115,8 @@ S3method("nbrOfChangePoints", "AbstractCBS")
 S3method("nbrOfChromosomes", "AbstractCBS")
 S3method("nbrOfLoci", "AbstractCBS")
 S3method("nbrOfSegments", "AbstractCBS")
+S3method("normalizeTotalCNs", "AbstractCBS")
+S3method("normalizeTotalCNs", "PSCBS")
 S3method("ploidy", "AbstractCBS")
 S3method("ploidy<-", "AbstractCBS")
 S3method("plotTracks", "AbstractCBS")

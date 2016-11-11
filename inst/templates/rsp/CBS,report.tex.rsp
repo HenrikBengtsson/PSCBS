@@ -449,8 +449,8 @@ fitT <- extractChromosome(fit, chromosome=chr);
 % \clearpage
 \section*{Session information}
 <%=toLatex(sessionInfo())%>
-This report was automatically generated using \code{rsp()} of the R.rsp package.
-The template for this report was created by Henrik Bengtsson on April 20, 2012.
+This report was automatically generated using the R.rsp package.
+The template for this report was created by Henrik Bengtsson.
 \end{document}
 
 <% } # cbsReport() %>

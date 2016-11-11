@@ -1,12 +1,22 @@
 Package: PSCBS
 ==============
 
+Version: 0.62.0 [2016-11-10]
+o Added normalizeTotalCNs() for PSCBS objects.
+o REPORTS: Updated report template for PairedPSCBS object such
+  that reports are also generated from DH-only data, i.e. when
+  there are no BAF signals (which may happen with DNA-Seq data).
+o Added splitters=TRUE as the default for setSegments().
+o CLEANUP: Minor internal cleanup and restructuring.
+
+
+
 Version: 0.61.0 [2016-02-03]
 o Package now requires R (>= 3.1.2) released October 2014, because
   of its dependency on the listenv package.
 o segmentByPairedPSCBS() gained argument 'rho' for paired PSCBS
   segmentation on total CNs (TCNs) and decrease-of-heterozygosity
-  signals (DHs) as an alternative to for instance TCN and 
+  signals (DHs) as an alternative to for instance TCN and
   allele B fractions (BAFs).
 o BUG FIX: Segmentation using futures where not fully reproducible
   when known segments where specified.  Fixed by changing how the

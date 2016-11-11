@@ -61,7 +61,7 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
   delta <- NA_real_;
 
   # For each segment...
-  for (ss in seq(length=nbrOfSegments)) {
+  for (ss in seq_len(nbrOfSegments)) {
     verbose && enter(verbose, sprintf("Segment #%d of %d", ss, nbrOfSegments));
 
     fitT <- extractSegment(fit, ss);

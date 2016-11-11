@@ -44,11 +44,10 @@ oplan <- plan()
 strategies <- c("eager", "lazy")
 if (supportsMulticore()) strategies <- c(strategies, "multicore")
 
-## Test 'async' futures?
-pkg <- "async"
+## Test 'future.BatchJobs' futures?
+pkg <- "future.BatchJobs"
 if (require(pkg, character.only=TRUE)) {
-  backend("local")
-  strategies <- c(strategies, "batchjobs")
+  strategies <- c(strategies, "batchjobs_local")
 }
 
 message("Future strategies to test: ", paste(sQuote(strategies), collapse=", "))

@@ -520,7 +520,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
     sds <- rep(naValue, times=nbrOfSegments);
 
     naValue <- NA_real_;
-    for (ss in seq(length=nbrOfSegments)) {
+    for (ss in seq_len(nbrOfSegments)) {
       seg <- segs[ss,];
 
       # Identify loci in current segment
@@ -619,7 +619,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   callsL <- as.data.frame(callsL);
 
   # For each segment...
-  for (ss in seq(length=nrow(segs))) {
+  for (ss in seq_len(nrow(segs))) {
     seg <- segs[ss,];
     idxs <- which(chromosome == seg$chromosome &
                   seg$start <= x & x <= seg$end);
@@ -628,7 +628,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
 ##    stopifnot(length(idxs) == seg$nbrOfLoci);
 
     callsSS <- seg[callCols];
-    for (cc in seq(length=nbrOfCalls)) {
+    for (cc in seq_len(nbrOfCalls)) {
       callsL[idxs,cc] <- callsSS[,cc];
     }
   } # for (ss ...)
@@ -746,7 +746,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   segsT <- NULL;
   verbose && cat(verbose, "Number of segments (before): ", nrow(segs));
 
-  for (rr in seq(length=nrow(regions))) {
+  for (rr in seq_len(nrow(regions))) {
     regionRR <- regions[rr,];
     chrRR <- regionRR[,"chromosome"];
     startRR <- regionRR[,"start"];
@@ -1021,7 +1021,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   regions$start <- pmin(regions$start, regions$end);
 
   # Shrink regions
-  for (rr in seq(length=nrow(regions))) {
+  for (rr in seq_len(nrow(regions))) {
     chr <- regions[rr,"chromosome"];
     x0 <- regions[rr,"start"];
     x1 <- regions[rr,"end"];
@@ -1048,7 +1048,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   regions$end <- pmax(regions$end, regions$start);
 
   # Shrink regions
-  for (rr in seq(length=nrow(regions))) {
+  for (rr in seq_len(nrow(regions))) {
     chr <- regions[rr,"chromosome"];
     x0 <- regions[rr,"start"];
     x1 <- regions[rr,"end"];
@@ -1166,7 +1166,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
   chromosomes <- getChromosomes(fit);
   fitList <- list();
-  for (cc in seq(along=chromosomes)) {
+  for (cc in seq_along(chromosomes)) {
     chromosome <- chromosomes[cc];
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", cc, chromosome, length(chromosomes)));
 

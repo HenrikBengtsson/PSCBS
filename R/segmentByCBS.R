@@ -114,7 +114,7 @@
 # }
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq(along=y), w=NULL, undo=0, avg=c("mean", "median"), ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq_along(y), w=NULL, undo=0, avg=c("mean", "median"), ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   # Local copies of DNAcopy functions
   getbdry <- .use("getbdry", package="DNAcopy");
   CNA <- .use("CNA", package="DNAcopy");
@@ -181,7 +181,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Argument 'x':
   if (is.null(x)) {
-    x <- seq(length=nbrOfLoci);
+    x <- seq_len(nbrOfLoci);
   } else {
     disallow <- c("Inf");
     x <- Arguments$getDoubles(x, length=length2, disallow=disallow);
@@ -189,7 +189,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Argument 'index':
   if (is.null(index)) {
-    index <- seq(along=y);
+    index <- seq_along(y);
   } else {
     index <- Arguments$getIndices(index);
   }
@@ -305,7 +305,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   verbose && enter(verbose, "Ordering data along genome", level=-50);
   o <- order(data$chrom, data$x, decreasing=FALSE, na.last=TRUE);
   # Any change?
-  if (any(o != seq(along=o))) {
+  if (any(o != seq_along(o))) {
     data <- data[o,,drop=FALSE];
   }
   o <- NULL; # Not needed anymore
@@ -333,7 +333,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     }
 
     fitList <- listenv()
-    for (kk in seq(length=nbrOfChromosomes)) {
+    for (kk in seq_len(nbrOfChromosomes)) {
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
@@ -357,7 +357,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         verbose && print(verbose, knownSegmentsKK, level=-5);
       }
 
-      fitList[[chrTag]] %<=% {
+      fitList[[chrTag]] %<-% {
         fit <- segmentByCBS(y=y,
                   chromosome=chrom, x=x,
                   w=w,
@@ -487,7 +487,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     }
 
     fitList <- listenv()
-    for (jj in seq(length=nbrOfSegments)) {
+    for (jj in seq_len(nbrOfSegments)) {
       seg <- knownSegments[jj,];
       chromosomeJJ <- seg$chromosome;
       xStart <- seg$start;
@@ -530,7 +530,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
       seedJJ <- seeds[[jj]]
 
-      fitList[[segTag]] %<=% {
+      fitList[[segTag]] %<-% {
         fit <- segmentByCBS(y=y,
                   chromosome=chrom, x=x,
                   w=w,

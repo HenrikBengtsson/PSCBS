@@ -132,7 +132,7 @@ setMethodS3("as.character", "CBS", function(x, ...) {
   callCols <- grep("Call$", colnames(segs), value=TRUE);
   callTypes <- gsub("Call$", "", callCols);
   s <- c(s, sprintf("Types of segment calls: [%d] %s", length(callTypes), hpaste(callTypes)));
-  for (kk in seq(along=callCols)) {
+  for (kk in seq_along(callCols)) {
     key <- callCols[kk];
     type <- callTypes[kk];
     n <- sum(segs[,key], na.rm=TRUE);
@@ -294,9 +294,9 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
     gapsAfter <- gapsAfter[!is.na(chrs[gapsAfter])];
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
-      idxs <- seq(length=n);
+      idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
 
@@ -310,9 +310,9 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
     gapsAfter <- gapsAfter[onSameChr];
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
-      idxs <- seq(length=n);
+      idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
   }
@@ -374,7 +374,7 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  for (ss in seq(length=nbrOfSegments)) {
+  for (ss in seq_len(nbrOfSegments)) {
     verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
     segRow <- segRows[ss,];
     seg <- segs[ss,];
@@ -505,7 +505,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("asis", "mean", "medi
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  for (ss in seq(length=nbrOfSegments)) {
+  for (ss in seq_len(nbrOfSegments)) {
     verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
     segRow <- segRows[ss,];
     seg <- segs[ss,];
@@ -619,7 +619,7 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
 
   # (d) Merge
   args <- formals;
-  args2 <- append(params, userArgs);
+  args2 <- c(params, userArgs);
   for (kk in seq(along=args2)) {
     value <- args2[[kk]];
     if (!is.null(value)) {
@@ -627,13 +627,13 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
       if (!is.null(key)) {
         args[[key]] <- value;
       } else {
-        args <- append(args, list(value));
+        args <- c(args, list(value));
       }
     }
   } # for (key ...)
   verbose && str(verbose, args[names(args) != "verbose"]);
 
-  args <- append(list(data), args);
+  args <- c(list(data), args);
   verbose && cat(verbose, "Arguments with data:");
   verbose && str(verbose, args[names(args) != "verbose"]);
   verbose && exit(verbose);

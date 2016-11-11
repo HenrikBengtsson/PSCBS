@@ -220,7 +220,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   isSplitter <- (is.na(chrs) & is.na(tcnIds) & is.na(dhIds));
 
   # Get all segment indices except for "splitters"
-  jjs <- seq(length=nbrOfSegments);
+  jjs <- seq_len(nbrOfSegments);
   jjs <- jjs[!isSplitter];
 
 

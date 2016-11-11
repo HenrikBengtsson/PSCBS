@@ -250,8 +250,6 @@
 \alias{renameChromosomes.AbstractCBS}
 \alias{report}
 \alias{writeSegments.DNAcopy}
-\alias{estimateDeltaCN}
-\alias{estimateDeltaCN.PairedPSCBS}
 \alias{shiftTCN}
 \alias{shiftTCN.AbstractCBS}
 \alias{shiftTCN.CBS}
@@ -301,7 +299,6 @@
 \alias{hasBootstrapSummaries.PairedPSCBS}
 \alias{clearCalls}
 \alias{clearCalls.AbstractCBS}
-\alias{estimateDeltaCN.CBS}
 \alias{extractSegmentDataByLocus}
 \alias{extractSegmentDataByLocus.PairedPSCBS}
 \alias{updateMeansC1C2}

@@ -25,7 +25,7 @@
 }
 
 \usage{
-\method{segmentByCBS}{default}(y, chromosome=0L, x=NULL, index=seq(along = y), w=NULL, undo=0,
+\method{segmentByCBS}{default}(y, chromosome=0L, x=NULL, index=seq_along(y), w=NULL, undo=0,
   avg=c("mean", "median"), ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL,
   verbose=FALSE)
 }

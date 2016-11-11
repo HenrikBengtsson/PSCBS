@@ -97,7 +97,7 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
     rho <- data$rho;
 
     isSplitter <- isSegmentSplitter(fit);
-    for (ss in seq(length=nbrOfSegments)[!isSplitter]) {
+    for (ss in seq_len(nbrOfSegments)[!isSplitter]) {
       verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
       seg <- segs[ss,];
       verbose && print(verbose, seg);

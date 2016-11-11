@@ -54,7 +54,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   chromosomes <- getChromosomes(fit);
 
   fitList <- list();
-  for (jj in seq(along=chromosomes)) {
+  for (jj in seq_along(chromosomes)) {
     chr <- chromosomes[jj];
     verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", jj, chr, length(chromosomes)));
 
@@ -85,7 +85,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
     # Extract the individual known segments on this chromosome
     fitListJJ <- list();
-    for (kk in seq(length=nrow(knownSegmentsJJ))) {
+    for (kk in seq_len(nrow(knownSegmentsJJ))) {
       verbose && enter(verbose, sprintf("Known segment #%d of %d", kk, nrow(knownSegmentsJJ)));
       seg <- knownSegmentsJJ[kk,];
       verbose && print(verbose, seg);
@@ -158,7 +158,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
   # "DP" change-point indices (excluding the two outer/boundary ones)
   segRows <- fit[[segRowsKey]];
-  segIdxs <- seq(length=nrow(segRows)-1L);
+  segIdxs <- seq_len(nrow(segRows)-1L);
   cpIdxs <- segRows$endRow[segIdxs];
 
   verbose && exit(verbose);
@@ -213,14 +213,14 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
     match(idxs, table=cpIdxs);
   });
   # Sanity check
-  stopifnot(identical(seq(along=cpIdxs), jumpIdxList[[length(jumpIdxList)]]));
+  stopifnot(identical(seq_along(cpIdxs), jumpIdxList[[length(jumpIdxList)]]));
 
   chrs <- segs$chromosome;
   starts <- segs[[segKeys[1]]];
   ends <- segs[[segKeys[2]]];
   nsegs <- nrow(segs);
   segList <- vector("list", length=length(jumpIdxList));
-  for (kk in seq(along=segList)) {
+  for (kk in seq_along(segList)) {
     verbose && enter(verbose, sprintf("Sequence #%d of %d", kk, length(segList)));
     idxs <- jumpIdxList[[kk]];
     verbose && cat(verbose, "Change point indices:");

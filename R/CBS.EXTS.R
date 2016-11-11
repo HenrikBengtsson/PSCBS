@@ -76,7 +76,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   # Add chromosome splitter
   ats <- which(diff(output$chromosome) != 0) + 1L;
   if (length(ats) > 0) {
-    idxs <- seq(length=nrow(output));
+    idxs <- seq_len(nrow(output));
     values <- rep(NA_integer_, times=length(ats));
     expand <- insert(idxs, ats=ats, values=values); # R.utils::insert()
     output <- output[expand,];
@@ -169,7 +169,7 @@ setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
   stopifnot(all(is.finite(shifts)));
 
   # Adjust indices
-  for (cc in seq(along=chromosomes)) {
+  for (cc in seq_along(chromosomes)) {
     chromosome <- chromosomes[cc];
     shift <- shifts[cc];
     # Nothing to do?
@@ -235,7 +235,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
   avgY <- estList$y;
 
   yS <- y;
-  for (ss in seq(length=nbrOfSegments)) {
+  for (ss in seq_len(nbrOfSegments)) {
     seg <- segs[ss,];
     idxs <- which(seg$chromosome == chromosome &
                   seg$start <= x & x <= seg$end);
@@ -411,7 +411,7 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
   colnames(res) <- c("start", "end", "length");
 
   # Get start and end of each chromosome.
-  for (ii in seq(length=nrow(res))) {
+  for (ii in seq_len(nrow(res))) {
     chr <- chromosomes[ii];
     segsII <- subset(segs, chromosome == chr);
     res[ii,"start"] <- min(segsII$start, na.rm=TRUE);

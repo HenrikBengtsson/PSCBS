@@ -38,7 +38,7 @@ setConstructorS3("PSCBS", function(fit=list(), ...) {
 
 
 setMethodS3("as.data.frame", "PSCBS", function(x, ...) {
-  getSegments(x, splitter=TRUE, ...);
+  getSegments(x, splitters=TRUE, ...);
 }, protected=TRUE)
 
 
@@ -138,9 +138,9 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
     gapsAfter <- gapsAfter[!is.na(chrs[gapsAfter])];
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
-      idxs <- seq(length=n);
+      idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
 
@@ -154,9 +154,9 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
     gapsAfter <- gapsAfter[onSameChr];
     nGaps <- length(gapsAfter);
     if (nGaps > 0L) {
-      idxs <- seq(length=n);
+      idxs <- seq_len(n);
       values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, at=gapsAfter+1L, values=values);
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
       segs <- segs[idxs,];
     }
   }
@@ -218,6 +218,33 @@ setMethodS3("getChangePoints", "PSCBS", function(fit, ...) {
   cps;
 }, private=TRUE) # getChangePoints()
 
+
+setMethodS3("normalizeTotalCNs", "PSCBS", function(fit, targetTCN=2, ...) {
+  ## Fit using locus-level data
+  data <- getLocusData(fit, ...)
+  C <- data$CT
+  stopifnot(!is.null(C))
+  mu <- median(C, na.rm=TRUE)
+  scale <- targetTCN / mu
+
+  ## (a) Rescale locus-level data
+  C <- scale * C
+  data$CT <- C
+  rm(list="C")
+  fitN <- setLocusData(fit, data)
+
+  ## (b) Rescale segment-level data
+  segs <- getSegments(fit)
+  fields <- colnames(segs)
+  cnFields <- grep("^(tcn|c1|c2)", fields, value=TRUE)
+  cnFields <- grep("(Id|Start|End|NbrOf)", cnFields, value=TRUE, invert=TRUE)
+  for (field in cnFields) {
+    segs[[field]] <- scale * segs[[field]]
+  }
+  fitN <- setSegments(fitN, segs)
+
+  invisible(fitN)
+})
 
 
 ############################################################################

@@ -124,10 +124,46 @@ setMethodS3("extractCNs", "PairedPSCBS", function(fit, splitters=TRUE, ...) {
 
 
 setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
-  xy <- extractC1C2(..., splitters=TRUE, addGaps=TRUE);
-  X <- xy[,1:2,drop=FALSE];
-  dX <- colDiffs(X);
-  dX;
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Extract data
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  X <- extractC1C2(..., splitters=TRUE, addGaps=TRUE);
+
+  # (C1,C2)
+  C1C2 <- X[,1:2,drop=FALSE];
+
+  # Number of TCN and DH data points
+  counts <- X[,3:4, drop=FALSE];
+
+  # Not needed anymore
+  X <- NULL;
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Calculate (dC1,dC2)
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # (dC1, dC2)
+  dC1C2 <- matrixStats::colDiffs(C1C2);
+
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Change-point weights
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Region weights from DH counts
+  w <- counts[,2,drop=TRUE];
+  w <- sqrt(w);
+  w <- w / sum(w, na.rm=TRUE);
+
+  # (a) Smallest of the two flanking (DH) counts
+  cpw <- cbind(w[1:(length(w)-1)], w[2:length(w)]);
+  cpw <- rowMins(cpw, na.rm=TRUE);
+  cpw[is.infinite(cpw)] <- NA;
+  cpw <- sqrt(cpw);
+  cpwMin <- cpw / sum(cpw, na.rm=TRUE);
+
+  # (b) Sum of region weights
+  cpw <- w[1:(length(w)-1)] + w[2:length(w)];
+  cpwAvg <- cpw / sum(cpw, na.rm=TRUE);
+
+  cbind(dC1=dC1C2[,1], dC2=dC1C2[,2], wMin=cpwMin, wAvg=cpwAvg);
 }, protected=TRUE)
 
 
@@ -207,7 +243,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   verbose && cat(verbose, "Number of chromosomes: ", nbrOfChromosomes);
   verbose && print(verbose, chromosomes);
 
-  for (cc in seq(length=nbrOfChromosomes)) {
+  for (cc in seq_len(nbrOfChromosomes)) {
     chr <- chromosomes[cc];
     chrTag <- sprintf("chr%02d", chr);
     verbose && enter(verbose, sprintf("Chromosome %d ('%s') of %d", cc, chrTag, nbrOfChromosomes));
@@ -223,7 +259,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
     tcnIds <- sort(unique(segsCC[["tcnId"]]));
     I <- length(tcnIds);
-    for (ii in seq(length=I)) {
+    for (ii in seq_len(I)) {
       tcnId <- tcnIds[ii];
       verbose && enter(verbose, sprintf("TCN segment #%d ('%s') of %d", ii, tcnId, I));
 
@@ -255,7 +291,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       # Sanity check
       stopifnot(diff(segRowsRange)+1L == nbrOfTCNsBefore);
 
-      for (jj in seq(length=J)) {
+      for (jj in seq_len(J)) {
         verbose && enter(verbose, sprintf("DH segment #%d of %d", jj, J));
         seg <- segsII[jj,,drop=FALSE];
         tcnSegRow <- unlist(tcnSegRowsII[jj,,drop=FALSE], use.names=FALSE);

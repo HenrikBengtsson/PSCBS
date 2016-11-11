@@ -248,7 +248,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Argument 'x':
   if (is.null(x)) {
-    x <- seq(length=nbrOfLoci);
+    x <- seq_len(nbrOfLoci);
   } else {
     disallow <- c("Inf");
     x <- Arguments$getDoubles(x, length=length2, disallow=disallow);
@@ -436,7 +436,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   verbose && enter(verbose, "Ordering data along genome");
   o <- order(data$chromosome, data$x, decreasing=FALSE, na.last=TRUE);
   # Any change?
-  if (any(o != seq(along=o))) {
+  if (any(o != seq_along(o))) {
     data <- data[o,,drop=FALSE];
   }
   o <- NULL; # Not needed anymore
@@ -444,7 +444,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   verbose && exit(verbose);
 
   # Attach 'index' (guaranteed to be ordered)
-  data$index <- seq(length=nrow(data));
+  data$index <- seq_len(nrow(data));
 
   # Sanity check
   stopifnot(nrow(data) == nbrOfLoci);
@@ -489,7 +489,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     }
 
     fitList <- listenv()
-    for (kk in seq(length=nbrOfChromosomes)) {
+    for (kk in seq_len(nbrOfChromosomes)) {
       chromosomeKK <- chromosomes[kk];
       chrTag <- sprintf("Chr%02d", chromosomeKK);
       verbose && enter(verbose, sprintf("Chromosome #%d ('%s') of %d", kk, chrTag, nbrOfChromosomes));
@@ -509,7 +509,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         verbose && print(verbose, knownSegmentsKK);
       }
 
-      fitList[[chrTag]] %<=% {
+      fitList[[chrTag]] %<-% {
         fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
                   betaT=betaTN, betaN=betaN, muN=muN, rho=rho,
                   chromosome=chromosome, x=x,
@@ -639,7 +639,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     isHet <- isSnp & (data$muN == 1/2)
     verbose && printf(verbose, "Number of heterozygous SNPs: %d (%.2f%%)\n",
                                        sum(isHet), 100*sum(isHet)/nbrOfSnps)
-    rho <- rep(NA_real_, length=nbrOfLoci)
+    rho <- rep(NA_real_, times=nbrOfLoci)
     rho[isHet] <- 2*abs(data$betaTN[isHet]-1/2)
     verbose && cat(verbose, "Normalized DHs:")
     verbose && str(verbose, rho)
@@ -760,14 +760,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
     # Segments
     segs <- tcnSegments;
-    segs[,"tcnId"] <- seq(length=nbrOfSegs);
+    segs[,"tcnId"] <- seq_len(nbrOfSegs);
     segs[,"dhId"] <- rep(1L, times=nbrOfSegs);
     segs[,c("tcnNbrOfSNPs", "tcnNbrOfHets", "dhNbrOfLoci")] <- 0L;
     segs[,"dhStart"] <- segs[,"tcnStart"];
     segs[,"dhEnd"] <- segs[,"tcnEnd"];
 
     # For each TCN segment...
-    for (kk in seq(length=nbrOfSegs)) {
+    for (kk in seq_len(nbrOfSegs)) {
       tcnId <- kk;
 
       xStart <- tcnSegments[kk,"tcnStart"];
@@ -847,7 +847,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
     # For each TCN segment...
     segs <- vector("list", length=nbrOfSegs);
-    for (kk in seq(length=nbrOfSegs)) {
+    for (kk in seq_len(nbrOfSegs)) {
       tcnId <- kk;
 
       xStart <- tcnSegments[kk,"tcnStart"];
@@ -1063,7 +1063,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       # Combine TCN and DH segmentation results
       tcndhSegments <- cbind(
         tcnId=rep(kk, times=nrow(dhSegments)),
-        dhId=seq(length=nrow(dhSegments)),
+        dhId=seq_len(nrow(dhSegments)),
         tcnSegmentsKK,
         dhSegments
       );
@@ -1095,7 +1095,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Move 'chromosome' column to the first column
   idx <- match("chromosome", names(segs));
-  idxs <- c(idx, seq(length=ncol(segs))[-idx]);
+  idxs <- c(idx, seq_len(ncol(segs))[-idx]);
   segs <- segs[,idxs,drop=FALSE];
   verbose && print(verbose, segs);
 
@@ -1127,7 +1127,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   );
 
   # Should we drop attributes? /HB 2010-09-24
-  stopifnot(all(data$index == seq(length=nrow(data))));
+  stopifnot(all(data$index == seq_len(nrow(data))));
   data$index <- NULL; # Drop, because it is guaranteed to be ordered
   class(data) <- c("PairedPSCNData", class(data));
 

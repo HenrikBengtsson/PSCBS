@@ -76,7 +76,7 @@ setMethodS3("extractWIG", "PSCBS", function(fit, signal=c("tcn", "dh"), ..., col
 
 # \references{
 #  [1] Wiggle Track Format (WIG), UCSC Genome Browser
-#      \url{http://genome.ucsc.edu/goldenPath/help/wiggle.html}
+#      \url{https://genome.ucsc.edu/goldenPath/help/wiggle.html}
 # }
 setMethodS3("writeWIG", "AbstractCBS", function(fit, name=getSampleName(fit), tags=NULL, ext="wig", path=NULL, overwrite=FALSE, skip=FALSE, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

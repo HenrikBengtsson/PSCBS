@@ -1,9 +1,27 @@
 setMethodS3("extractLocusLevelC1C2", "PairedPSCBS", function(fit, ...) {
+  # Extract locus-level data
   data <- getLocusData(fit);
   C <- data$CT;
   rho <- data$rho;
+
+  # Swapped (C1,C2) <-> (C2,C1) for some segments?
+  fields <- colnames(getSegments(fit));
+  if (is.element("c1c2Swap", fields)) {
+    # FIXME: When PSCBS is updated.
+    # WORKAROUND: extractSegmentDataByLocus() in PSCBS v0.40.4 requires:
+    # that fields "chromosome", "tcnStart", "tcnEnd" are always requested
+    # /2014-03-21
+    c1c2Swap <- extractSegmentDataByLocus(fit, fields=c("c1c2Swap",
+                                     "chromosome", "tcnStart", "tcnEnd"));
+    c1c2Swap <- c1c2Swap[["c1c2Swap"]];
+    if (any(c1c2Swap)) {
+      rho[c1c2Swap] <- -rho[c1c2Swap];
+    }
+  }
+
   C1 <- 1/2*(1-rho)*C;
-  C2 <- C-C1;
+  C2 <- C - C1;
+
   data.frame(C1=C1, C2=C2);
 }, private=TRUE) # extractLocusLevelC1C2()
 
@@ -18,13 +36,13 @@ setMethodS3("extractLocusLevelTCN", "PairedPSCBS", function(fit, ...) {
 setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets", "SNPs", "all"), ..., verbose=FALSE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'what':
   what <- match.arg(what);
 
 
   segs <- getSegments(fit, splitters=TRUE);
-  stopifnot(!is.null(segs)); 
+  stopifnot(!is.null(segs));
   nbrOfSegments <- nrow(segs);
 
   # Argument 'idx':
@@ -35,15 +53,15 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   if (verbose) {
     pushState(verbose);
     on.exit(popState(verbose));
-  } 
+  }
 
 
 
   verbose && enter(verbose, "Extracting a specific DH segment");
 
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the data and segmentation results
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit);
   stopifnot(!is.null(data));
 
@@ -66,7 +84,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Subsetting data");
-  units <- seq(length=nrow(data));
+  units <- seq_len(nrow(data));
 
   # Keep only chromosome of interest
   chr <- as.numeric(seg[,"chromosome"]);
@@ -143,7 +161,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
 #   from the aroma.cn package.  The below history has been updated to
 #   document changes in this method too.
 # 2012-02-23
-# o Made extractDhSegment() protected. 
+# o Made extractDhSegment() protected.
 # 2011-10-08
 # o ROBUSTIFICATION: Uses drop=FALSE in mergeTwoSegments() for PairedPSCBS.
 # 2010-10-26 [HB]

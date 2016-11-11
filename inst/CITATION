@@ -1,4 +1,4 @@
-citHeader("Please cite one or more of the below references");
+citHeader("Please cite PSCBS using one or more of the following references:");
 
 citEntry(
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -12,7 +12,7 @@ citEntry(
   volume = "27",
   number = "15",
   doi = "10.1093/bioinformatics/btr329",
-  url = "http://bioinformatics.oxfordjournals.org/content/27/15/2038",
+  url = "https://bioinformatics.oxfordjournals.org/content/27/15/2038",
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Plain-text citation:
@@ -39,7 +39,7 @@ citEntry(
   volume = "11",
   number = "245",
   doi = "10.1186/1471-2105-11-245",
-  url = "http://www.biomedcentral.com/1471-2105/11/245/",
+  url = "https://www.biomedcentral.com/1471-2105/11/245/",
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Plain-text citation:

@@ -196,13 +196,13 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   type <- NULL; rm(list="type"); # To please R CMD check
   fit <- subset(fit, type == "peak");
   if (nrow(fit) < 2L) {
-    throw(sprintf("Less that two modes were found in the empirical density of C1: %d", nrow(fit)));
+    throw(sprintf("Less than two modes were found in the empirical density of C1: %d", nrow(fit)));
   }
   nModes <- nrow(fit);
 
   fit <- subset(fit, density >= minDensity);
   if (nrow(fit) < 2L) {
-    throw(sprintf("Less that two modes were found in the empirical density of C1 after removing %d modes that are too weak (density < %g): %d", nModes - nrow(fit), minDensity, nrow(fit)));
+    throw(sprintf("Less than two modes were found in the empirical density of C1 after removing %d modes that are too weak (density < %g): %d", nModes - nrow(fit), minDensity, nrow(fit)));
   }
   nModes <- nrow(fit);
   verbose && cat(verbose, "All peaks:");
