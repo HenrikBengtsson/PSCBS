@@ -1,8 +1,9 @@
 Package: PSCBS
 ==============
 
-Version: 0.62.0-9000 [2016-11-11]
-o ...
+Version: 0.62.0-9000 [2016-11-23]
+o estimateDeltaCN() for PairedPSCBS gained argument 'flavor' and
+  new estimator `flavor = "delta(mode)".
 
 
 Version: 0.62.0 [2016-11-10]
