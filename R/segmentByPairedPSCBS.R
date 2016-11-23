@@ -790,7 +790,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
       nbrOfTCNLociKK <- tcnSegments[kk,"tcnNbrOfLoci"];
       verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK);
-      rows <- seq(from=rowStart, length=nbrOfTCNLociKK);
+      rows <- seq(from=rowStart, length.out=nbrOfTCNLociKK);
       dataKK <- data[rows,,drop=FALSE];
       nbrOfLociKK <- nrow(dataKK);
 

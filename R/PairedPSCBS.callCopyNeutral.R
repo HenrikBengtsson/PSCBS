@@ -275,7 +275,7 @@ setMethodS3("estimateDeltaCN", "PairedPSCBS", function(fit, scale=1, flavor=c("1
     d <- density(x, weights=w, adjust=adjust);
 ##    plotDensity(d);
     tolMax <- max(d$y, na.rm=TRUE);
-    tols <- seq(from=tolMax, to=0, length=100);
+    tols <- seq(from=tolMax, to=0, length.out=100);
     stats <- data.frame(tolerance=tols, delta=NA_real_, count=NA_integer_);
     for (kk in seq_along(tols)) {
       tol <- tols[kk];

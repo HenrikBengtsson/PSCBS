@@ -620,7 +620,7 @@ setMethodS3("resegment", "CBS", function(fit, ..., verbose=FALSE) {
   # (d) Merge
   args <- formals;
   args2 <- c(params, userArgs);
-  for (kk in seq(along=args2)) {
+  for (kk in seq_along(args2)) {
     value <- args2[[kk]];
     if (!is.null(value)) {
       key <- names(args2)[kk];
