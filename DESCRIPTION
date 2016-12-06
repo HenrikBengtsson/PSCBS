@@ -15,7 +15,7 @@ Imports:
   parallel
 Suggests:
   Hmisc (>= 3.16-0),
-  R.rsp (>= 0.30.0),
+  R.rsp (>= 0.40.0),
   R.devices (>= 2.15.1),
   ggplot2 (>= 1.0.1),
   aroma.light (>= 2.2.1)
