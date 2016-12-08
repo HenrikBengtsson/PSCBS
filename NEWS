@@ -1,9 +1,10 @@
 Package: PSCBS
 ==============
 
-Version: 0.62.0-9000 [2016-11-23]
+Version: 0.62.0-9000 [2016-12-07]
 o estimateDeltaCN() for PairedPSCBS gained argument 'flavor' and
   new estimator `flavor = "delta(mode)".
+o Added isLocallyPhased() for PSCBS.
 
 
 Version: 0.62.0 [2016-11-10]

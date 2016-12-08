@@ -309,6 +309,8 @@
 \alias{callGLAO.CBS}
 \alias{unTumorBoost}
 \alias{unTumorBoost.PairedPSCBS}
+\alias{isLocallyPhased}
+\alias{isLocallyPhased.PSCBS}
 
 \description{
   This page contains aliases for all "non-documented" objects that
