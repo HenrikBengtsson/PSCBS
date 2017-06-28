@@ -1213,9 +1213,6 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
 
 
 setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "density(dTCN)", "dTCN"), adjust=0.3, ..., verbose=FALSE) {
-  # This will load the 'aroma.light' namespace, if not already done.
-  findPeaksAndValleys <- .use("findPeaksAndValleys", package="aroma.light");
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

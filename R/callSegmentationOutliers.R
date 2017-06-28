@@ -57,10 +57,6 @@
 # @keyword IO
 #*/###########################################################################
 setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=NULL, method="DNAcopy::smooth.CNA", ..., verbose=FALSE) {
-  # Local copies of DNAcopy functions
-  CNA <- .use("CNA", package="DNAcopy");
-  smooth.CNA <- .use("smooth.CNA", package="DNAcopy");
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

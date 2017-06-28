@@ -38,9 +38,6 @@ importFrom("matrixStats",
            "binMeans", "colCumsums", "colDiffs", "colMins", "colMaxs",
            "rowAlls", "rowAnys", "rowMins", "weightedMedian")
 
-importFrom("DNAcopy",
-           "segments.summary", "smooth.CNA", "CNA", "segment", "getbdry")
-
 importFrom("graphics",
            "abline", "arrows", "axis", "box", "lines",
            "mtext", "par", "plot", "points", "rect", "text")
@@ -56,6 +53,12 @@ importFrom("utils",
            "capture.output", "file_test", "getFromNamespace",
            "head", "packageVersion", "str", "tail", "write.table",
            "packageDescription")
+
+importFrom("aroma.light",
+           "callNaiveGenotypes", "findPeaksAndValleys", "normalizeTumorBoost")
+	   
+importFrom("DNAcopy",
+           "segments.summary", "smooth.CNA", "CNA", "segment", "getbdry")
 
 importFrom("listenv", "listenv")
 importFrom("future", "%<-%")
@@ -357,5 +360,6 @@ S3method("getLocusData", "PSCBS")
 S3method("getLocusSignalNames", "PSCBS")
 S3method("getSegments", "PSCBS")
 S3method("getSegmentTrackPrefixes", "PSCBS")
+S3method("isLocallyPhased", "PSCBS")
 S3method("isSegmentSplitter", "PSCBS")
 S3method("writeSegments", "PSCBS")

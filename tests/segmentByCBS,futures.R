@@ -35,19 +35,12 @@ str(knownSegments)
 
 message("*** segmentByCBS() via futures ...")
 
-message("*** segmentByCBS() via 'lazy' futures without attaching 'future' ...")
-future::plan("lazy")
-print(future::plan)
-fitL <- segmentByCBS(data, seed=0xBEEF, verbose=TRUE)
-print(fitL)
-
 
 message("*** segmentByCBS() via futures with 'future' attached ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("eager", "lazy")
-if (supportsMulticore()) strategies <- c(strategies, "multicore")
+strategies <- c("sequential", "multiprocess")
 
 ## Test 'future.BatchJobs' futures?
 pkg <- "future.BatchJobs"
@@ -64,7 +57,6 @@ for (strategy in strategies) {
   fit <- segmentByCBS(data, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
   stopifnot(all.equal(fit, fits[[1]]))
-  stopifnot(all.equal(fit, fitL))
 }
 
 

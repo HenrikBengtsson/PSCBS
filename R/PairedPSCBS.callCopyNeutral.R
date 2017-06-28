@@ -196,6 +196,9 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 # \arguments{
 #  \item{scale}{A @numeric scale factor in (0,Inf) used for rescaling
 #   (multiplying) the final estimate with.}
+#  \item{flavor}{Specifies which type of estimator should be used.}
+#  \item{kappa}{Estimate of background signal (used by the \code{"1-kappa"} method).}
+#  \item{adjust, quantile}{Tuning parameters (used by the \code{"delta(mode)"} method).}
 #  \item{...}{Not used.}
 # }
 #
@@ -219,17 +222,71 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("estimateDeltaCN", "PairedPSCBS", function(fit, scale=1, kappa=estimateKappa(fit), ...) {
+setMethodS3("estimateDeltaCN", "PairedPSCBS", function(fit, scale=1, flavor=c("1-kappa", "delta(mode)"), kappa=estimateKappa(fit), adjust=0.2, quantile=0.95, ...) {
   # Argument 'scale':
   disallow <- c("NA", "NaN", "Inf");
   scale <- Arguments$getDouble(scale, range=c(0,Inf), disallow=disallow);
 
-  # Argument 'kappa':
-  disallow <- c("NA", "NaN", "Inf");
-  kappa <- Arguments$getDouble(kappa, range=c(0,1), disallow=disallow);
+  # Argument 'flavor':
+  flavor <- match.arg(flavor);
 
-  # Half a TCN unit length
-  delta <- (1-kappa)/2;
+
+  if (flavor == "1-kappa") {
+    # Argument 'kappa':
+    disallow <- c("NA", "NaN", "Inf");
+    kappa <- Arguments$getDouble(kappa, range=c(0,1), disallow=disallow);
+    
+    # Half a TCN unit length
+    delta <- (1-kappa)/2;
+  } else if (flavor == "delta(mode)") {
+    # To please R CMD check
+    rohCall <- abCall <- type <- NULL;
+    rm(list=c("rohCall", "abCall", "type"));
+
+    segs <- getSegments(fit);
+    segs <- subset(segs, !rohCall);
+    segs <- subset(segs, !abCall);
+    sigmas <- list();
+    for (name in c("c1", "c2", "tcn")) {
+      # FIXME/AD HOC: Here we assume certain fields
+      fields <- sprintf("%s_%s%%", name, c(5,95));
+      if (all(is.element(fields, names(segs)))) {
+        sigma <- segs[,fields[2]] - segs[,fields[1]];
+      } else {
+        if (name == "tcn") {
+          n <- segs[,"tcnNbrOfLoci"];
+        } else {
+          n <- segs[,"dhNbrOfLoci"];
+          n <- segs[,"tcnNbrOfLoci"];
+        }
+        n <- segs[,"tcnEnd"] - segs[,"tcnStart"];
+        sigma <- 1/sqrt(n);
+      }
+      sigmas[[name]] <- sigma;
+    }
+    segs <- segs[,c("c1Mean", "c2Mean", "tcnMean")];
+    x <- unlist(segs, use.names=FALSE);
+    w <- 1/unlist(sigmas, use.names=FALSE);
+    keep <- is.finite(x) & is.finite(w);
+    x <- x[keep]; w <- w[keep];
+    w <- w / sum(w);
+    d <- density(x, weights=w, adjust=adjust);
+##    plotDensity(d);
+    tolMax <- max(d$y, na.rm=TRUE);
+    tols <- seq(from=tolMax, to=0, length.out=100);
+    stats <- data.frame(tolerance=tols, delta=NA_real_, count=NA_integer_);
+    for (kk in seq_along(tols)) {
+      tol <- tols[kk];
+      px <- subset(findPeaksAndValleys(d, tol=tol), type == "peak")$x;
+      nx <- length(px);
+      dx <- mean(diff(px));
+      stats[kk,"delta"] <- dx;
+      stats[kk,"count"] <- nx;
+    }
+    stats <- subset(stats, is.finite(delta));
+##    print(stats);
+    delta <- median(stats[,"delta"]);
+  }
 
   # Rescale
   delta <- scale * delta;

@@ -41,8 +41,7 @@ message("*** segmentByPairedPSCBS() via futures ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("eager", "lazy")
-if (supportsMulticore()) strategies <- c(strategies, "multicore")
+strategies <- c("sequential", "multiprocess")
 
 ## Test 'future.BatchJobs' futures?
 pkg <- "future.BatchJobs"
@@ -75,7 +74,6 @@ for (strategy in strategies) {
   plan(strategy)
   fit <- segmentByPairedPSCBS(dataT, knownSegments=knownSegments, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
-## FIXME: 2015-12-09
   stopifnot(all.equal(fit, fits[[1]]))
 }
 

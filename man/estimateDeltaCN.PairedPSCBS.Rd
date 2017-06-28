@@ -20,12 +20,16 @@
 }
 
 \usage{
-\method{estimateDeltaCN}{PairedPSCBS}(fit, scale=1, kappa=estimateKappa(fit), ...)
+\method{estimateDeltaCN}{PairedPSCBS}(fit, scale=1, flavor=c("1-kappa", "delta(mode)"),
+  kappa=estimateKappa(fit), adjust=0.2, quantile=0.95, ...)
 }
 
 \arguments{
  \item{scale}{A \code{\link[base]{numeric}} scale factor in (0,Inf) used for rescaling
   (multiplying) the final estimate with.}
+ \item{flavor}{Specifies which type of estimator should be used.}
+ \item{kappa}{Estimate of background signal (used by the \code{"1-kappa"} method).}
+ \item{adjust, quantile}{Tuning parameters (used by the \code{"delta(mode)"} method).}
  \item{...}{Not used.}
 }
 
