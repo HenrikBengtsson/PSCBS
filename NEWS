@@ -3,6 +3,10 @@ Package: PSCBS
 
 Version: 0.62.0-9000 [2017-06-27]
 
+SIGNIFICANT CHANGES:
+
+ o Package now depends on R (>= 3.2.0) and Bioconductor (>= 3.1) packages.
+
 NEW FEATURES:
 
  o estimateDeltaCN() for PairedPSCBS gained argument 'flavor' and new estimator
@@ -15,6 +19,7 @@ CODE REFACTORING:
  o Now package imports aroma.light instead of only suggesting it.
 
  o Package tests no longer test against the deprecated lazy strategy of future.
+
 
 Version: 0.62.0 [2016-11-10]
 
