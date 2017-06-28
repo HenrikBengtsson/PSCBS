@@ -31,10 +31,6 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=NULL, ..., minDensity=1e-10, flavor=c("firstPeak", "maxPeak"), verbose=FALSE) {
-  # This will load the 'aroma.light' namespace, if not already done.
-  findPeaksAndValleys <- .use("findPeaksAndValleys", package="aroma.light");
-
-
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

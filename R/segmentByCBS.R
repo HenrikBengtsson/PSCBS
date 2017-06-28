@@ -115,11 +115,6 @@
 # @keyword IO
 #*/###########################################################################
 setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq_along(y), w=NULL, undo=0, avg=c("mean", "median"), ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
-  # Local copies of DNAcopy functions
-  getbdry <- .use("getbdry", package="DNAcopy");
-  CNA <- .use("CNA", package="DNAcopy");
-  segment <- .use("segment", package="DNAcopy");
-
   R_SANITY_CHECK <- TRUE;
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

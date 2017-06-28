@@ -1,7 +1,7 @@
 Package: PSCBS
 ==============
 
-Version: 0.62.0-9000 [2016-12-07]
+Version: 0.62.0-9000 [2017-06-27]
 
 NEW FEATURES:
 
@@ -10,6 +10,11 @@ NEW FEATURES:
 
  o Added isLocallyPhased() for PSCBS.
 
+CODE REFACTORING:
+
+ o Now package imports aroma.light instead of only suggesting it.
+
+ o Package tests no longer test against the deprecated lazy strategy of future.
 
 Version: 0.62.0 [2016-11-10]
 

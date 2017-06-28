@@ -223,8 +223,6 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 # @keyword internal
 #*/###########################################################################
 setMethodS3("estimateDeltaCN", "PairedPSCBS", function(fit, scale=1, flavor=c("1-kappa", "delta(mode)"), kappa=estimateKappa(fit), adjust=0.2, quantile=0.95, ...) {
-  findPeaksAndValleys <- .use("findPeaksAndValleys", package="aroma.light")
-  
   # Argument 'scale':
   disallow <- c("NA", "NaN", "Inf");
   scale <- Arguments$getDouble(scale, range=c(0,Inf), disallow=disallow);

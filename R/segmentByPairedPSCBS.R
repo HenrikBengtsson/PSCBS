@@ -328,7 +328,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   if (is.null(muN) && !is.null(betaN)) {
     verbose && enter(verbose, "Calling genotypes from normal allele B fractions");
     verbose && str(verbose, betaN);
-    callNaiveGenotypes <- .use("callNaiveGenotypes", package="aroma.light");
     muN <- callNaiveGenotypes(betaN, censorAt=c(0,1));
     verbose && cat(verbose, "Called genotypes:");
     verbose && str(verbose, muN);
@@ -348,7 +347,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (tbn) {
     verbose && enter(verbose, "Normalizing betaT using betaN (TumorBoost)");
-    normalizeTumorBoost <- .use("normalizeTumorBoost", package="aroma.light");
     betaTN <- normalizeTumorBoost(betaT=betaT, betaN=betaN, muN=muN, preserveScale=preserveScale);
     verbose && cat(verbose, "Normalized BAFs:");
     verbose && str(verbose, betaTN);

@@ -53,7 +53,6 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
         data$muN <- rep(NA_real_, times=length(data$rho))
         data$muN[is.finite(data$rho)] <- 1/2
       } else if (is.element("betaN", names)) {
-        callNaiveGenotypes <- .use("callNaiveGenotypes", package="aroma.light");
         data$muN <- callNaiveGenotypes(data$betaN);
       } else {
         throw("Cannot identify heterozygous SNPs or genotypes")
@@ -76,7 +75,6 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
     # TumorBoost BAFs
     if (!is.element("rhoN", names)) {
       if (!is.element("betaTN", names) && is.element("betaN", names)) {
-        normalizeTumorBoost <- .use("normalizeTumorBoost", package="aroma.light");
         data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
       }
 
