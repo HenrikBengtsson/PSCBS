@@ -4,31 +4,31 @@
 
 |setting  |value                        |
 |:--------|:----------------------------|
-|version  |R version 3.3.2 (2016-10-31) |
+|version  |R version 3.4.0 (2017-04-21) |
 |system   |x86_64, linux-gnu            |
 |ui       |X11                          |
 |language |en                           |
 |collate  |en_US.UTF-8                  |
-|tz       |US/Pacific                   |
-|date     |2016-11-10                   |
+|tz       |America/Los_Angeles          |
+|date     |2017-06-27                   |
 
 ## Packages
 
 |package     |*  |version |date       |source         |
 |:-----------|:--|:-------|:----------|:--------------|
-|aroma.light |   |3.4.0   |2016-10-31 |cran (@3.4.0)  |
-|DNAcopy     |   |1.48.0  |2016-10-31 |cran (@1.48.0) |
-|future      |   |1.1.1   |2016-10-11 |cran (@1.1.1)  |
-|ggplot2     |   |2.1.0   |2016-03-01 |CRAN (R 3.3.1) |
-|Hmisc       |   |4.0-0   |2016-11-01 |cran (@4.0-0)  |
-|listenv     |   |0.6.0   |2015-12-28 |CRAN (R 3.3.1) |
-|matrixStats |   |0.51.0  |2016-10-09 |cran (@0.51.0) |
-|PSCBS       |   |0.61.0  |2016-02-04 |CRAN (R 3.3.1) |
-|R.cache     |   |0.12.0  |2015-11-12 |CRAN (R 3.3.1) |
+|aroma.light |   |3.6.0   |2017-05-18 |cran (@3.6.0)  |
+|DNAcopy     |   |1.50.1  |2017-05-18 |cran (@1.50.1) |
+|future      |   |1.5.0   |2017-05-26 |cran (@1.5.0)  |
+|ggplot2     |   |2.2.1   |2016-12-30 |cran (@2.2.1)  |
+|Hmisc       |   |4.0-3   |2017-05-02 |cran (@4.0-3)  |
+|listenv     |   |0.6.0   |2015-12-28 |cran (@0.6.0)  |
+|matrixStats |   |0.52.2  |2017-04-14 |cran (@0.52.2) |
+|PSCBS       |   |0.62.0  |2016-11-11 |cran (@0.62.0) |
+|R.cache     |   |0.12.0  |2015-11-12 |cran (@0.12.0) |
 |R.devices   |   |2.15.1  |2016-11-10 |cran (@2.15.1) |
-|R.methodsS3 |   |1.7.1   |2016-02-16 |CRAN (R 3.3.1) |
+|R.methodsS3 |   |1.7.1   |2016-02-16 |cran (@1.7.1)  |
 |R.oo        |   |1.21.0  |2016-11-01 |cran (@1.21.0) |
-|R.rsp       |   |0.30.0  |2016-05-15 |CRAN (R 3.3.1) |
+|R.rsp       |   |0.41.0  |2017-04-16 |cran (@0.41.0) |
 |R.utils     |   |2.5.0   |2016-11-07 |cran (@2.5.0)  |
 
 # Check results
@@ -38,16 +38,16 @@
 |package          |version | errors| warnings| notes|
 |:----------------|:-------|------:|--------:|-----:|
 |ACNE             |0.8.1   |      0|        0|     0|
-|aroma.affymetrix |3.0.0   |      0|        0|     0|
+|aroma.affymetrix |3.1.0   |      0|        0|     0|
 |aroma.cn         |1.6.1   |      0|        0|     0|
-|aroma.core       |3.0.0   |      0|        0|     1|
+|aroma.core       |3.1.0   |      0|        0|     1|
 |calmate          |0.12.1  |      0|        0|     0|
 |MPAgenomics      |1.1.2   |      0|        0|     2|
 |NSA              |0.0.32  |      0|        0|     6|
-|PECA             |1.10.0  |      0|        0|     1|
-|PureCN           |1.2.3   |      0|        0|     1|
-|Repitools        |1.20.0  |      0|        0|     2|
-|TIN              |1.6.0   |      0|        0|     2|
+|PECA             |1.12.0  |      0|        0|     1|
+|PureCN           |1.6.3   |      0|        0|     1|
+|Repitools        |1.22.0  |      0|        0|     3|
+|TIN              |1.8.0   |      0|        0|     2|
 
 ## ACNE (0.8.1)
 Maintainer: Henrik Bengtsson <henrikb@braju.com>  
@@ -55,7 +55,7 @@ Bug reports: https://github.com/HenrikBengtsson/ACNE/issues
 
 0 errors | 0 warnings | 0 notes
 
-## aroma.affymetrix (3.0.0)
+## aroma.affymetrix (3.1.0)
 Maintainer: Henrik Bengtsson <henrikb@braju.com>  
 Bug reports: https://github.com/HenrikBengtsson/aroma.affymetrix/issues
 
@@ -67,7 +67,7 @@ Bug reports: https://github.com/HenrikBengtsson/aroma.cn/issues
 
 0 errors | 0 warnings | 0 notes
 
-## aroma.core (3.0.0)
+## aroma.core (3.1.0)
 Maintainer: Henrik Bengtsson <henrikb@braju.com>  
 Bug reports: https://github.com/HenrikBengtsson/aroma.core/issues
 
@@ -202,7 +202,7 @@ Rd file 'NSANormalization.Rd':
 These lines will be truncated in the PDF manual.
 ```
 
-## PECA (1.10.0)
+## PECA (1.12.0)
 Maintainer: Tomi Suomi <tomi.suomi@utu.fi>
 
 0 errors | 0 warnings | 1 note 
@@ -216,39 +216,23 @@ Rd file 'PECA.Rd':
 These lines will be truncated in the PDF manual.
 ```
 
-## PureCN (1.2.3)
+## PureCN (1.6.3)
 Maintainer: Markus Riester <markus.riester@novartis.com>
 
 0 errors | 0 warnings | 1 note 
 
 ```
-checking R code for possible problems ... NOTE
-Found the following calls to data() loading into the global environment:
-File ‘PureCN/R/bootstrapResults.R’:
-  data(purecn.example.output)
-File ‘PureCN/R/callAlterations.R’:
-  data(purecn.example.output)
-  data(purecn.example.output)
-File ‘PureCN/R/callLOH.R’:
-  data(purecn.example.output)
-File ‘PureCN/R/createCurationFile.R’:
-  data(purecn.example.output)
-File ‘PureCN/R/curateResults.R’:
-  data(purecn.example.output)
-  data(purecn.example.output)
-File ‘PureCN/R/plotAbs.R’:
-  data(purecn.example.output)
-File ‘PureCN/R/predictSomatic.R’:
-  data(purecn.example.output)
-File ‘PureCN/R/readCurationFile.R’:
-  data(purecn.example.output)
-See section ‘Good practice’ in ‘?data’.
+checking installed package size ... NOTE
+  installed size is  5.6Mb
+  sub-directories of 1Mb or more:
+    doc       1.6Mb
+    extdata   2.7Mb
 ```
 
-## Repitools (1.20.0)
+## Repitools (1.22.0)
 Maintainer: Mark Robinson <mark.robinson@imls.uzh.ch>
 
-0 errors | 0 warnings | 2 notes
+0 errors | 0 warnings | 3 notes
 
 ```
 checking R code for possible problems ... NOTE
@@ -296,9 +280,18 @@ Rd file 'writeWig.Rd':
      writeWig(rs, seq.len = NULL, design=NULL, sample=20, drop.zero=TRUE, normalize=TRUE, verbose=TRUE)
 
 These lines will be truncated in the PDF manual.
+
+checking compiled code ... NOTE
+File ‘Repitools/libs/Repitools.so’:
+  Found no call to: ‘R_useDynamicSymbols’
+
+It is good practice to register native routines and to disable symbol
+search.
+
+See ‘Writing portable packages’ in the ‘Writing R Extensions’ manual.
 ```
 
-## TIN (1.6.0)
+## TIN (1.8.0)
 Maintainer: Bjarne Johannessen <bjajoh@rr-research.no>
 
 0 errors | 0 warnings | 2 notes
