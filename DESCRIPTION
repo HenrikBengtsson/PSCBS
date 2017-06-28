@@ -1,5 +1,5 @@
 Package: PSCBS
-Version: 0.63.0
+Version: 0.63.0-9000
 Depends:
   R (>= 3.2.0),
   utils
@@ -24,7 +24,7 @@ SuggestsNote:
   Recommended:
   Hmisc
 VignetteBuilder: R.rsp
-Date: 2017-06-27
+Date: 2017-06-28
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
