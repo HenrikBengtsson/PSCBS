@@ -42,3 +42,4 @@ ByteCompile: TRUE
 biocViews: aCGH, CopyNumberVariants, SNP, Microarray, OneChannel, TwoChannel, Genetics
 URL: https://github.com/HenrikBengtsson/PSCBS
 BugReports: https://github.com/HenrikBengtsson/PSCBS/issues
+RoxygenNote: 6.0.1
