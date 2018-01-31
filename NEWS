@@ -1,10 +1,15 @@
 Package: PSCBS
 ==============
 
-Version: 0.63.0-9000 [2017-06-28]
+Version: 0.63.0-9000 [2018-01-31]
 
  o ...
 
+PERFORMANCE:
+
+ o segmentByCBS() no longer perform garbage collection, which happened
+   indirectly via a system.time() call that does GC by default.
+ 
 
 Version: 0.63.0 [2017-06-27]
 

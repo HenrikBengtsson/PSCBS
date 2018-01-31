@@ -806,7 +806,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # function is not masked in the search() path.
     t <- system.time({
       fit <- do.call(methodName, args);
-    });
+    }, gcFirst = FALSE);
     # Drop the 'call' (because it will be huge due to the do.call() call)
     fit$call <- NULL;
   });

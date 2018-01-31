@@ -24,7 +24,6 @@ SuggestsNote:
   Recommended:
   Hmisc
 VignetteBuilder: R.rsp
-Date: 2017-06-28
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
   person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
