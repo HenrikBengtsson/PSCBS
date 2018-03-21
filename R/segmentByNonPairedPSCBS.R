@@ -109,7 +109,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
 
   # Argument 'flavor':
   flavor <- match.arg(flavor);
-  knownFlavors <- eval(formals(segmentByPairedPSCBS.default)$flavor);
+  knownFlavors <- eval(formals(segmentByPairedPSCBS.default)$flavor, enclos = baseenv());
   if (!is.element(flavor, knownFlavors)) {
     throw("Segmentation flavor is not among the supported ones (", paste(sprintf("\"%s\"", knownFlavors), collapse=", "), "): ", flavor);
   }

@@ -223,7 +223,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
   # Argument 'probs':
   probs <- Arguments$getNumerics(probs, range=c(0,1));
   # Always estimate the default quantiles
-  probs0 <- eval(formals(bootstrapTCNandDHByRegion.PairedPSCBS)$probs);
+  probs0 <- eval(formals(bootstrapTCNandDHByRegion.PairedPSCBS)$probs, enclos = baseenv());
   probs <- unique(sort(c(probs, probs0)));
 
   # Argument 'statsFcn':
