@@ -191,7 +191,8 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     verbose && exit(verbose);
   } # for (cc ...)
 
-  fitP <- Reduce(append, fitList);
+  ## formerly append(..., addSplit = TRUE)
+  fitP <- Reduce(function(a, b) c(a, NA, b), fitList)
 
   verbose && enter(verbose, "Updating segment means and boundaries");
   fitP <- updateBoundaries(fitP, verbose=less(verbose, 50));

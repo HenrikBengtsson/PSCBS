@@ -18,8 +18,8 @@ w <- runif(J)
 w[650:800] <- 0.001
 
 
-subplots(6, ncol=1)
-par(mar=c(2,1,1,1)+0.1);
+R.utils::subplots(6, ncol=1)
+par(mar=c(2,1,1,1)+0.1)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Segmentation

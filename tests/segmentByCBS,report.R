@@ -37,10 +37,7 @@ signalType(fit) <- "ratio"
 # Fake a multi-chromosome segmentation
 fit1 <- fit
 fit2 <- renameChromosomes(fit, from=1, to=2)
-fit <- append(fit1, fit2)
-
-fit3 <- c(fit1, NA, fit2)
-stopifnot(identical(fit3, fit))
+fit <- c(fit1, NA, fit2)
 
 report(fit, sampleName="CBS", studyName="CBS-Ex", verbose=-10)
 

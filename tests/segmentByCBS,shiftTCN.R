@@ -60,7 +60,7 @@ for (kk in seq_along(chrs)) {
   }
   fitList[[kk]] <- fitKK
 } # for (kk ...)
-fitT <- Reduce(append, fitList)
+fitT <- Reduce(function(a, b) c(a, NA, b), fitList)
 # Sanity check
 stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit))
 
@@ -94,7 +94,7 @@ for (kk in seq_len(nrow(knownSegments))) {
   }
   fitList[[kk]] <- fitKK
 } # for (kk ...)
-fitT <- Reduce(append, fitList)
+fitT <- Reduce(function(a, b) c(a, NA, b), fitList)
 # Sanity check
 stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit))
 

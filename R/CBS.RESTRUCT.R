@@ -47,6 +47,8 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 # }
 #*/###########################################################################
 setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
+  .Deprecated(new = if (addSplit) "c(x, NA, other)" else "c(x, other)")
+  
   # To please R CMD check
   this <- x;
 

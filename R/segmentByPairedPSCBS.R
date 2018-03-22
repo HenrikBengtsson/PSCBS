@@ -543,7 +543,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
     verbose && enter(verbose, "Merging (independently) segmented chromosome");
     fitList <- as.list(fitList)
-    fit <- Reduce(append, fitList);
+    ## formerly append(..., addSplit = TRUE)
+    fit <- Reduce(function(a, b) c(a, NA, b), fitList);
     fitList <- NULL; # Not needed anymore
     verbose && str(verbose, fit);
     verbose && exit(verbose);

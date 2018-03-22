@@ -29,6 +29,8 @@
 # }
 #*/###########################################################################
 setMethodS3("append", "PSCBS", function(x, other, addSplit=TRUE, ...) {
+  .Deprecated(new = if (addSplit) "c(x, NA, other)" else "c(x, other)")
+  
   # To please R CMD check
   this <- x;
 
