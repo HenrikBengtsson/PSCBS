@@ -18,10 +18,10 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 
 ###########################################################################/**
 # @set "class=CBS"
-# @RdocMethod append
-# @aliasmethod c
+# @RdocMethod c
+# @alias c.PSCBS
 #
-# @title "Appends one segmentation result to another"
+# @title "Concatenates segmentation results"
 #
 # \description{
 #   @get "title".
@@ -30,14 +30,12 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{x, other}{The two @see "CBS" objects to be combined.}
-#  \item{other}{A @see "PSCBS" object.}
+#  \item{\dots}{One or more @see "AbstractCBS" objects to be combined.}
 #  \item{addSplit}{If @TRUE, a "divider" is added between chromosomes.}
-#  \item{...}{Not used.}
 # }
 #
 # \value{
-#   Returns a @see "CBS" object of the same class as argument \code{x}.
+#   Returns an @see "AbstractCBS" object of the same class in \dots.
 # }
 #
 # @author "HB"
@@ -46,75 +44,6 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
-  .Deprecated(new = if (addSplit) "c(x, other, addSplit = TRUE)" else "c(x, other)")
-  
-  # To please R CMD check
-  this <- x;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Validate arguments
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'other':
-  other <- Arguments$getInstanceOf(other, class(this)[1]);
-  for (field in c("data", "output")) {
-    dataA <- this[[field]]
-    dataB <- other[[field]]
-    namesA <- colnames(dataA)
-    namesB <- colnames(dataB)
-    if (!all(namesA == namesB)) {
-      throw(sprintf("Cannot merge %s objects. Arguments 'other' and 'this' has different sets of columns in field '%s': {%s} [n=%d] != {%s} [n=%d]", class(this)[1], field, paste(namesA, collapse=", "), length(namesA), paste(namesB, collapse=", "), length(namesB)))
-    }
-  }
-
-  # Argument 'addSplit':
-  addSplit <- Arguments$getLogical(addSplit);
-
-
-  # Allocate results
-  res <- this;
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Locus data
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- getLocusData(this);
-  res$data <- rbind(data, getLocusData(other));
-
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Segmentation data
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  indexOffset <- nrow(data);
-  fields <- c("output", "segRows");
-  for (field in fields[-1]) {
-    other[[field]] <- other[[field]] + indexOffset;
-  }
-
-  splitter <- if (addSplit) NA else NULL;
-  for (field in fields) {
-    res[[field]] <- rbind(this[[field]], splitter, other[[field]]);
-    rownames(res[[field]]) <- NULL;
-  }
-
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Parameters
-  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ksT <- this$params$knownSegments;
-  ksT$length <- NULL;  # In case it's been added
-  ksO <- other$params$knownSegments;
-  ksO$length <- NULL;  # In case it's been added
-  res$params$knownSegments <- rbind(ksT, ksO);
-
-
-  # Sanity check
-  ns <- sapply(res[fields], FUN=nrow);
-  stopifnot(all(ns == ns[1]));
-
-  res;
-}) # append()
-
-
-
 setMethodS3("c", "CBS", function(..., addSplit = TRUE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments

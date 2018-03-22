@@ -90,8 +90,12 @@
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("append", "AbstractCBS", abstract=TRUE);
-
+setMethodS3("append", "AbstractCBS", function(x, other, addSplit = TRUE, ...) {
+  new <- if (addSplit) "c(x, other, addSplit = TRUE)" else "c(x, other)"
+  old <- sprintf("append.%s()", class(x)[1])
+  .Deprecated(new = new, old = old)
+  c(x, other, addSplit = addSplit)  
+})
 
 
 setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {

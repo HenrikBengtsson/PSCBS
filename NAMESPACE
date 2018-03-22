@@ -149,7 +149,6 @@ S3method("writeWIG", "AbstractCBS")
 
 # CBS
 S3method("all.equal", "CBS")
-S3method("append", "CBS")
 S3method("as.character", "CBS")
 S3method("as.data.frame", "CBS")
 S3method("as.DNAcopy", "CBS")
@@ -233,7 +232,6 @@ S3method("segmentByNonPairedPSCBS", "data.frame")
 S3method("segmentByPairedPSCBS", "data.frame")
 
 # default
-S3method("append", "default")
 S3method("callAllelicBalance", "default")
 S3method("callSegmentationOutliers", "default")
 S3method("dropSegmentationOutliers", "default")
@@ -351,7 +349,6 @@ S3method("updateMeansC1C2", "PairedPSCBS")
 S3method("updateMeansTogether", "PairedPSCBS")
 
 # PSCBS
-S3method("append", "PSCBS")
 S3method("as.data.frame", "PSCBS")
 S3method("c", "PSCBS")
 S3method("drawChangePoints", "PSCBS")

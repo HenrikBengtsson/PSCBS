@@ -47,7 +47,6 @@ CBS(...)
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{append} \tab  -\cr
  \tab \code{as} \tab  -\cr
  \tab \code{c} \tab  -\cr
  \tab \code{estimateStandardDeviation} \tab  -\cr

@@ -20,7 +20,7 @@
 }
 
 \usage{
-\method{append}{AbstractCBS}(...)
+\method{append}{AbstractCBS}(x, other, addSplit=TRUE, ...)
 }
 
 \arguments{
