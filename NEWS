@@ -3,7 +3,9 @@ Package: PSCBS
 
 Version: 0.63.0-9000 [2018-03-22]
 
- o ...
+NEW FEATURES:
+
+ o Added c() for CBS and PSCBS objects.
 
 PERFORMANCE:
 

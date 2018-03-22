@@ -144,7 +144,9 @@ fit4 <- fit
 # Simulate multiple chromosomes
 fit1 <- fit
 fit2 <- renameChromosomes(fit, from=1, to=2)
-fitM <- append(fit1, fit2)
+fitM0 <- c(fit1, NA, fit2)
+fitM <- append(fit1, fit2)  ## append() to be deprecated
+stopifnot(identical(fitM, fitM0))
 
 # Tile chromosomes
 fitT <- tileChromosomes(fitM)

@@ -39,6 +39,9 @@ fit1 <- fit
 fit2 <- renameChromosomes(fit, from=1, to=2)
 fit <- append(fit1, fit2)
 
+fit3 <- c(fit1, NA, fit2)
+stopifnot(identical(fit3, fit))
+
 report(fit, sampleName="CBS", studyName="CBS-Ex", verbose=-10)
 
 } # if (Sys.getenv("_R_CHECK_FULL_"))

@@ -19,6 +19,7 @@ setMethodS3("shiftTCN", "CBS", function(fit, shift, update=TRUE, ...) {
 ###########################################################################/**
 # @set "class=CBS"
 # @RdocMethod append
+# @aliasmethod c
 #
 # @title "Appends one segmentation result to another"
 #
@@ -109,6 +110,71 @@ setMethodS3("append", "CBS", function(x, other, addSplit=TRUE, ...) {
 
   res;
 }) # append()
+
+
+
+setMethodS3("c", "CBS", function(...) {
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  # Validate arguments
+  # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+  args <- list(...)
+
+  ## Nothing todo?
+  nargs <- length(args)
+  if (nargs == 1) return(args[[1]])
+
+  isNA <- function(x) is.logical(x) && length(x) == 1L && is.na(x)
+
+  res <- args[[1]]
+  fields <- c("output", "segRows")
+  
+  for (ii in 2:nargs) {
+    arg <- args[[ii]]
+
+    if (isNA(arg)) {
+      ## Add "splitter"
+      for (field in fields) {
+        res[[field]] <- rbind(res[[field]], NA)
+      }
+    } else {
+      ## Locus-level data
+      data <- getLocusData(res)
+      data_arg <- getLocusData(arg)
+      if (!all(colnames(data_arg) == colnames(data))) {
+        throw(sprintf("Cannot concatenate %s and %s objects, because they have different sets of columns in field %s: {%s} [n=%d] != {%s} [n=%d]", sQuote(class(res)[1]), sQuote(class(arg)[1]), sQuote(field), paste(sQuote(colnames(data)), collapse=", "), ncol(data), paste(sQuote(colnames(data_arg)), collapse=", "), ncol(data_arg)))
+      }
+
+      indexOffset <- nrow(data)
+      
+      data <- rbind(data, getLocusData(arg))
+      res[["data"]] <- data
+      
+      # Segmentation data
+      for (field in fields[-1]) {
+        arg[[field]] <- arg[[field]] + indexOffset
+      }
+      for (field in fields) {
+        res[[field]] <- rbind(res[[field]], arg[[field]])
+      }
+
+      # Known segments
+      ksT <- res$params$knownSegments
+      ksT$length <- NULL  # In case it's been added
+      ksO <- arg$params$knownSegments
+      ksO$length <- NULL  # In case it's been added
+      res$params$knownSegments <- rbind(ksT, ksO)
+    }
+  } ## for (ii ...)
+
+  ## Drop row names, iff they've been added
+  for (field in fields) rownames(res[[field]]) <- NULL
+  
+  # Sanity check
+  ns <- sapply(res[fields], FUN = nrow)
+  stopifnot(all(ns == ns[1]))
+
+  res
+}) # c()
 
 
 

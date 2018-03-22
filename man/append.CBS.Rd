@@ -11,6 +11,10 @@
 \alias{append.CBS}
 \alias{CBS.append}
 \alias{append,CBS-method}
+\alias{CBS.c}
+\alias{c.CBS}
+\alias{c,CBS-method}
+
 
 \title{Appends one segmentation result to another}
 

@@ -11,6 +11,10 @@
 \alias{append.PSCBS}
 \alias{PSCBS.append}
 \alias{append,PSCBS-method}
+\alias{PSCBS.c}
+\alias{c.PSCBS}
+\alias{c,PSCBS-method}
+
 
 \title{Appends one segmentation result to another}
 

@@ -49,6 +49,7 @@ CBS(...)
 \tabular{rll}{
  \tab \code{append} \tab  -\cr
  \tab \code{as} \tab  -\cr
+ \tab \code{c} \tab  -\cr
  \tab \code{estimateStandardDeviation} \tab  -\cr
  \tab \code{plotTracks} \tab  -\cr
  \tab \code{pruneBySdUndo} \tab  -\cr
