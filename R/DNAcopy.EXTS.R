@@ -192,10 +192,6 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  # Argument 'FUN':
-  FUN <- match.arg(FUN);
-  FUN <- get(FUN, mode="function");
-
   # Argument 'sample':
   sample <- Arguments$getIndex(sample, max=nbrOfSamples(fit));
 
