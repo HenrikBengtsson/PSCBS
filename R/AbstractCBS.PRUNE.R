@@ -128,8 +128,8 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   verbose && exit(verbose);
 
   verbose && enter(verbose, "Merge");
-  ## former append(a, b, addSplit = FALSE)
-  fitT <- Reduce(c, fitList)
+  ## former Reduce() w/ append(a, b, addSplit = FALSE)
+  fitT <- do.call(c, args = c(fitList, addSplit = FALSE))
   # Sanity check
 ##  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit)); # Not true anymore
   verbose && exit(verbose);

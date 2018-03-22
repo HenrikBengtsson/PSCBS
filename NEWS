@@ -16,7 +16,7 @@ DEPRECATED AND DEFUNCT:
 
  o Removed bootstrapDHByRegion() which was defunct since 0.44.0 (Feb 2015).
 
- o append(x, y) for CBS and PSCBS objects is deprecated; use c(x, NA, y).
+ o append(x, y) for CBS and PSCBS objects is deprecated; use c(x, y) instead.
 
 
 Version: 0.63.0 [2017-06-27]

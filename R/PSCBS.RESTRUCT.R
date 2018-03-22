@@ -29,7 +29,7 @@
 # }
 #*/###########################################################################
 setMethodS3("append", "PSCBS", function(x, other, addSplit=TRUE, ...) {
-  .Deprecated(new = if (addSplit) "c(x, NA, other)" else "c(x, other)")
+  .Deprecated(new = if (addSplit) "c(x, other, addSplit = TRUE)" else "c(x, other)")
   
   # To please R CMD check
   this <- x;
@@ -94,7 +94,7 @@ setMethodS3("append", "PSCBS", function(x, other, addSplit=TRUE, ...) {
 }) # append()
 
 
-setMethodS3("c", "PSCBS", function(...) {
+setMethodS3("c", "PSCBS", function(..., addSplit = TRUE) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -113,6 +113,10 @@ setMethodS3("c", "PSCBS", function(...) {
     arg <- args[[ii]]
 
     if (isNA(arg)) {
+      if (addSplit) {
+        warning("Detected explicit NA in call to c(..., addSplit = TRUE). Ignoring")
+        next
+      }
       ## Add "splitter"
       for (field in fields) {
         res[[field]] <- rbind(res[[field]], NA)
@@ -134,8 +138,9 @@ setMethodS3("c", "PSCBS", function(...) {
       for (field in fields[-1]) {
         arg[[field]] <- arg[[field]] + indexOffset
       }
+      splitter <- if (addSplit) NA else NULL
       for (field in fields) {
-        res[[field]] <- rbind(res[[field]], arg[[field]])
+        res[[field]] <- rbind(res[[field]], splitter, arg[[field]])
       }
 
       # Known segments

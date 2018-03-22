@@ -390,8 +390,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
     verbose && enter(verbose, "Merging (independently) segmented chromosome", level=-50);
     fitList <- as.list(fitList)
-    ## former append(a, b, addSplit = TRUE)
-    fit <- Reduce(function(a, b) c(a, NA, b), fitList)
+    ## former Reduce() w/ append(..., addSplit = TRUE)
+    fit <- do.call(c, args = c(fitList, addSplit = TRUE))
     # Not needed anymore
     fitList <- NULL;
 
@@ -574,7 +574,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     verbose && cat(verbose, "Number of segments: ", length(fitList), level=-10);
     fitList <- as.list(fitList)
     verbose && str(verbose, fitList, level=-50)
-    fit <- Reduce(c, fitList)  ## former append(..., addSplit = FALSE)
+    ## former Reduce() w/ append(..., addSplit = FALSE)
+    fit <- do.call(c, args = c(fitList, addSplit = FALSE))
     # Not needed anymore
     fitList <- NULL;
 
