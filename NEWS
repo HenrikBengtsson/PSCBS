@@ -18,6 +18,10 @@ DEPRECATED AND DEFUNCT:
 
  o append(x, y) for CBS and PSCBS objects is deprecated; use c(x, y) instead.
 
+ o Usage of argument 'preserveScale' for segmentByPairedPSCBS() is now
+   deprecated.  It's value is now fixed to FALSE, which has been the default
+   since PSCBS 0.50.0 (Oct 2015).
+   
 
 Version: 0.63.0 [2017-06-27]
 

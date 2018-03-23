@@ -62,8 +62,6 @@
 #     calling algorithm to be used.}
 #   \item{tbn}{If @TRUE, \code{betaT} is normalized before segmentation
 #     using the TumorBoost method [2], otherwise not.}
-#   \item{preserveScale}{Passed to @see "aroma.light::normalizeTumorBoost",
-#     which is only called if \code{tbn} is @TRUE.}
 #   \item{joinSegments}{If @TRUE, there are no gaps between neighboring
 #     segments.
 #     If @FALSE, the boundaries of a segment are defined by the support
@@ -82,6 +80,8 @@
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
+#   \item{preserveScale}{\emph{Deprecated and ignored;
+#                        will give a warning is specified.}}
 # }
 #
 # \value{
@@ -152,7 +152,7 @@
 #
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT=NULL, betaN=NULL, muN=NULL, rho=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho), preserveScale=getOption("PSCBS/preserveScale", FALSE), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT=NULL, betaN=NULL, muN=NULL, rho=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE, preserveScale=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -226,14 +226,6 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       }
     }
   }
-
-  # Argument 'preserveScale':
-  if (tbn && missing(preserveScale)) {
-    if (!is.element("PSCBS/preserveScale", names(options()))) {
-      warning("Argument 'preserveScale' for segmentByPairedPSCBS() now defaults to FALSE. Prior to PSCBS v0.50.0 (October 2015) the default was TRUE.  To avoid this warning, explicitly specify this argument when calling segmentByPairedPSCBS() or make sure to set option 'PSCBS/preserveScale' to either TRUE or FALSE.  This warning will be removed in a future version.");
-    }
-  }
-  preserveScale <- Arguments$getLogical(preserveScale);
 
   # Argument 'chromosome':
   if (is.null(chromosome)) {
@@ -318,7 +310,11 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     on.exit(popState(verbose));
   }
 
-
+  # Argument 'preserveScale' is deprecated
+  if (!missing(preserveScale)) {
+    .Deprecated(msg = "Argument 'preserveScale' for segmentByPairedPSCBS() is deprecated and ignored; as of PSCBS 0.64.0 (Mar 2018) it is effectively fixed to FALSE, which has been the default since PSCBS 0.50.0 (Oct 2015). To avoid this warning, do not specify 'preserveScale' when calling segmentByPairedPSCBS().")
+  }
+  
   verbose && enter(verbose, "Segmenting paired tumor-normal signals using Paired PSCBS");
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -347,7 +343,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (tbn) {
     verbose && enter(verbose, "Normalizing betaT using betaN (TumorBoost)");
-    betaTN <- normalizeTumorBoost(betaT=betaT, betaN=betaN, muN=muN, preserveScale=preserveScale);
+    betaTN <- normalizeTumorBoost(betaT=betaT, betaN=betaN, muN=muN, preserveScale=FALSE);
     verbose && cat(verbose, "Normalized BAFs:");
     verbose && str(verbose, betaTN);
 
