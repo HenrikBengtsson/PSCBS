@@ -28,9 +28,9 @@ Version: 1.8.1
 
 *   checking installed package size ... NOTE
     ```
-      installed size is 1029.1Mb
+      installed size is  6.6Mb
       sub-directories of 1Mb or more:
-        doc      1024.2Mb
-        extdata     3.3Mb
+        doc       1.6Mb
+        extdata   3.3Mb
     ```
 
