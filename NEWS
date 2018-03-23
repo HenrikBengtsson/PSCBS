@@ -12,6 +12,12 @@ PERFORMANCE:
  o segmentByCBS() no longer perform garbage collection, which happened
    indirectly via a system.time() call that does GC by default.
 
+BUG FIXES:
+
+ o plotTrack() for CBS objects would produce error "Argument 'Clim' is not a
+   vector: NULL" when the signal type was unknown.  Now it will assume
+   (non-logged) copy-number ratios so it can choose a default 'Clim' range.
+
 DEPRECATED AND DEFUNCT:
 
  o Removed bootstrapDHByRegion() which was defunct since 0.44.0 (Feb 2015).

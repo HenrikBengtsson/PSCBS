@@ -48,7 +48,11 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
     Clim <- switch(signalType,
       "log2ratio" = c(-2,2) + c(-1,1)*ploidy/2,
       "ratio"     = c(0,3*ploidy),
-      NULL
+      {
+        x_name <- as.character(substitute(x))
+        warning(sprintf("Setting default 'Clim' assuming the signal type is %s because signalType(%s) is unknown (%s). Use signalType(%s) <- %s to avoid this warning.", sQuote("ratio"), x_name, sQuote(signalType), x_name, sQuote("ratio")))
+        c(0, 3 * ploidy)
+      }
     );
 ##  NOTE: Don't understand why, but with this 'R CMD build' gives:
 ##    "Error: processing vignette 'CBS.tex.rsp' failed with diagnostics:
