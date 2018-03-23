@@ -16,4 +16,4 @@ availableCores <- function() {
 }
 
 revdep_check(bioc = TRUE, num_workers = availableCores(),
-             timeout = as.difftime(30, units = "mins"), quiet = FALSE)
+             timeout = as.difftime(10, units = "mins"), quiet = FALSE)
