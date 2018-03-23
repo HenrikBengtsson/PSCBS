@@ -245,17 +245,3 @@ setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=
 
   pathname;
 }) # writeSegments()
-
-
-
-
-
-############################################################################
-# HISTORY:
-# 2011-12-03
-# o Added arguments 'name', 'tags' and 'exts' to writeSegments() and
-#   writeLocusData() and dropped 'filename'.
-# 2011-09-04
-# o Added writeSegments() for CBS.
-# o Added writeLocusData() for CBS.
-############################################################################

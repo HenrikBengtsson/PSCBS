@@ -28,18 +28,3 @@
     message("Added pre-memoized calculations: ", getAbsolutePath(pathD));
   }
 } # .prememoize()
-
-############################################################################
-# HISTORY:
-# 2013-09-27
-# o Now .prememorize() also copies pre-generated calculations in
-#   interactive session.  It is also called every time the package
-#   is attached, which means it will also gain first-time users.
-# o Added .setupCacheRootPath() until R.cache exports it.
-# o Added argument 'verbose' to .prememoize().
-# 2013-09-26
-# o CLEANUP: Now .prememoize() no longer attaches 'R.cache', but only
-#   loads its namespace.
-# 2012-11-05
-# o Created.
-############################################################################

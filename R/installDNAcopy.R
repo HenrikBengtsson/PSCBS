@@ -55,12 +55,3 @@ setMethodS3("installDNAcopy", "default", function(..., force=FALSE) {
 
   return(invisible());
 }) # installDNAcopy()
-
-
-############################################################################
-# HISTORY:
-# 2013-09-10
-# o Now 'R CMD check' no longer complaints about DNAcopy.
-# 2011-05-31
-# o Created.
-############################################################################

@@ -50,14 +50,3 @@ setMethodS3("drawKnownSegments", "AbstractCBS", function(fit, col="#aaaaaa", ...
   xs <- sort(unique(c(xStarts, xEnds)));
   abline(v=xScale*xs, col=col, ...);
 }, protected=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2013-03-21
-# o Added drawKnownSegments().
-# 2011-12-03
-# o Added drawChangePoints().
-# 2011-10-02
-# o Created.
-############################################################################

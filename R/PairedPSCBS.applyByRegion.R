@@ -290,18 +290,3 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
 
   list(data=data, output=output);
 } # .addCACBWithStatitics()
-
-
-
-#############################################################################
-# HISTORY:
-# 2013-10-21
-# o Added argument 'subset' to applyByRegion() for PairedPSCBS.
-# 2011-06-14
-# o Updated code to recognize new column names.
-# 2011-01-27
-# o Added .addCACBWithStatitics().
-# o Added .addC1C2WithStatitics().
-# o Added applyByRegion().
-# o Created.
-#############################################################################

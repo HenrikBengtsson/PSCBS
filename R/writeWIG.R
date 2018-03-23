@@ -134,10 +134,3 @@ setMethodS3("writeWIG", "AbstractCBS", function(fit, name=getSampleName(fit), ta
 
   pathname
 })
-
-
-############################################################################
-# HISTORY:
-# 2015-09-08
-# o Added extractWIG() and writeWIG() for CBS objects.
-############################################################################

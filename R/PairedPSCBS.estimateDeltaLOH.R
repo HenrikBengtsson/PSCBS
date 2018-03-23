@@ -222,37 +222,3 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   delta;
 }, private=TRUE) # estimateDeltaLOHByMinC1AtNonAB()
-
-
-
-############################################################################
-# HISTORY:
-# 2012-08-30
-# o Now estimateKappaByC1Density() relies on matrixStats (and no longer
-#   aroma.light) to implement weightedMedian().
-# 2012-01-13
-# o Corrected some of verbose messages of estimateDeltaLOHByMinC1ForNonAB()
-#   for PairedPSCBS objects.
-# 2011-07-07
-# o GENERALIZATION: Now estimateDeltaLOHByMinC1ForNonAB() returns -Inf
-#   if all segments are called AB.
-# 2011-07-06
-# o ROBUSTNESS: Added a sanity check to estimateDeltaLOHByMinC1AtNonAB()
-#   asserting that there exist segments that are not in allelic balance,
-#   which are needed for estimating $\mu_0$.
-# 2011-06-14
-# o Updated code to recognize new column names.
-# 2011-05-29
-# o Renamed all arguments, variables, function named 'tau' to 'delta'.
-# 2011-04-27
-# o Added argument 'maxC' to estimateTauLOHByMinC1ForNonAB().
-# 2011-04-14
-# o Added argument 'max' to estimateTauAB() and estimateTauLOH().
-# 2011-04-11
-# o Added argument 'midpoint' to estimateTauLOHByMinC1AtNonAB().
-# o Dropped argument 'tauMax'; it was a misunderstanding.
-# 2011-04-09
-# o Added estimateTauLOHByMinC1AtNonAB().
-# o Added estimateTauLOH().
-# o Created.
-############################################################################

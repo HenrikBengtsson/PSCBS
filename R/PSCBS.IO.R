@@ -146,11 +146,3 @@ setMethodS3("writeSegments", "PSCBS", function(fit, name=getSampleName(fit), tag
 
   pathname;  
 }) # writeSegments()
-
-
-
-############################################################################
-# HISTORY:
-# 2011-12-03
-# o Added writeSegments() for PSCBS.
-############################################################################

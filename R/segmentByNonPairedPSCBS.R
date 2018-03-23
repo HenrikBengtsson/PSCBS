@@ -268,20 +268,3 @@ setMethodS3("segmentByNonPairedPSCBS", "data.frame", function(CT, ...) {
 setMethodS3("segmentByNonPairedPSCBS", "PairedPSCBS", function(...) {
   resegment(...);
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2013-07-19
-# o ROBUSTNESS: Added a sanity check on the estimates of (tauA, tauB)
-#   when they are estimated from data in segmentByNonPairedPSCBS().
-# 2012-11-05
-# o DOCUMENTATION FIX: example(segmentByNonPairedPSCBS) was for the
-#   paired case.
-# 2012-08-20
-# o BUG FIX: segmentByNonPairedPSCBS() forgot to specify namespace
-#   aroma.light when trying to call findPeaksAndValleys().
-# 2012-04-20
-# o Created from segmentByPairedPSCBS.R.
-############################################################################

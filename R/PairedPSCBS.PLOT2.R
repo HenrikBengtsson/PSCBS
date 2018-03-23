@@ -359,17 +359,3 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
   invisible();
 }, protected=TRUE) # plotTracks2()
-
-
-
-############################################################################
-# HISTORY:
-# 2011-09-30
-# o BUG FIX: plotTracks2(..., panels="dh") gave an error due to a
-#   forgotten assigment.
-# 2011-06-14
-# o Updated code to recognize new column names.
-# 2011-01-19
-# o Added plotTracks2().  Completely rewritten plotTracks().
-# o Created.
-############################################################################

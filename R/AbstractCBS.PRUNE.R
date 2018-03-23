@@ -507,25 +507,3 @@ setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbos
 
   fitDP;
 }, protected=TRUE) # pruneByDP()
-
-
-
-
-############################################################################
-# HISTORY:
-# 2012-09-21
-# o Now seqOfSegmentsByDP() return a 'modelFit' attribute.
-# 2012-09-20
-# o BUG FIX: seqOfSegmentsByDP() for AbstractCBS would not handle empty
-#   segments, which could occur if 'knownSegments' for instance included
-#   centromere gaps.
-# 2012-09-14
-# o Added pruneByDP(..., nbrOfSegments) for AbstractCBS.
-# o Added seqOfSegmentsByDP() which is a matrix version of dpseg() from
-#   GFLseg v0.1.6 by Morgane Pierre-Jean and Pierre Neuvial, which in turn
-#   ported it from the Matlab GPL source code by the original authors ???.
-# o Generalized seqOfSegmentsByDP() to work for AbstractCBS.
-# 2012-09-13
-# o Added seqOfSegmentsByDP() for PairedPSCBS.
-# o Created.
-############################################################################

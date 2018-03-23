@@ -7,11 +7,3 @@ setMethodS3("drawLevels", "DNAcopy", function(fit, field=c("seg.mean", "tcn.mean
     lines(x=xScale*x, y=y, col=col, lwd=lwd, ...);
   });
 })
-
-
-
-############################################################################
-# HISTORY:
-# 2010-07-09
-# o Created from drawLevels() for CopyNumberRegions in aroma.core.
-############################################################################

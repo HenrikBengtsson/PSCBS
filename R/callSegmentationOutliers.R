@@ -225,25 +225,3 @@ setMethodS3("dropSegmentationOutliers", "data.frame", function(y, ...) {
 
   data;
 })
-
-
-############################################################################
-# HISTORY:
-# 2014-02-04
-# o Now retrieving local copies on DNAcopy functions up front.
-# 2013-12-04
-# o DOCUMENTATION: Now {call|drop}SegmentationOutliers() are documented
-#   as generic functions.
-# o Now {call|drop}SegmentationOutliers() drops allocated memory faster.
-# o Added Rdoc for dropSegmentationOutliers().
-# 2011-11-23
-# o Added callSegmentationOutliers() and dropSegmentationOutliers()
-#   for data frames.
-# 2011-05-31
-# o Now explicitly using DNAcopy::nnn() to call DNAcopy functions.
-# 2010-11-27
-# o Added dropSegmentationOutliers() which sets outliers to missing values.
-# o Added callSegmentationOutliers(), which utilizes the detection method
-#   of DNAcopy::smooth.CNA() as suggested by ABO.
-# o Created.
-############################################################################

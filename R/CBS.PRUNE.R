@@ -215,17 +215,3 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
 setMethodS3("seqOfSegmentsByDP", "CBS", function(fit, by=c("y"), ...) {
   NextMethod("seqOfSegmentsByDP", by=by);
 })
-
-
-############################################################################
-# HISTORY:
-# 2012-09-13
-# o Added seqOfSegmentsByDP() for CBS.
-# 2011-12-06
-# o BUG FIX: pruneBySdUndo() for CBS did not work with more than one array.
-# 2011-11-16
-# o Added Rdoc comments.
-# 2011-11-15
-# o Added pruneBySdUndo() for CBS.
-# o Created.
-############################################################################

@@ -233,31 +233,3 @@ setMethodS3("pruneByHClust", "AbstractCBS", function(fit, ..., size=NULL, distMe
 
   fit;
 }, protected=TRUE) # pruneByHClust()
-
-
-############################################################################
-# HISTORY:
-# 2014-01-12
-# o CLEANUP: Renamed variable 'h' to 'tree' in pruneByHClust(), because
-#   it could easily be misinterpreted as argument 'h' to cutree().
-# 2013-09-18
-# o WORKAROUND: For R v2.15.3 and before, we need to attach the 'methods'
-#   package, otherwise we get 'Error in rowAlls(ok) : could not find
-#   function "loadMethod"' below.  This seems to be a bug in R.
-# 2013-02-05
-# o Now pruneByHClust() drops any existing segment calls and quantile
-#   mean-level estimates.
-# 2011-12-06
-# o Now pruneByHClust(..., update=TRUE) for AbstractCBS updates the
-#   mean levels of the merged segments at the end.
-# 2011-11-28
-# o Added abstract updateMeansTogether() for AbstractCBS.
-# o Dropped kmeansCNs() stub.
-# o Added Rdoc comments.
-# o Now hclustCNs() also handles segments with missing (C1,C2) levels,
-#   which for instance can happen after calling ROH.
-# 2011-10-14
-# o Implemented hclustCNs() and pruneByHClust() for AbstractCBS.
-# o Implemented extractCNs() for PairedPSCBS.
-# o Created.
-############################################################################

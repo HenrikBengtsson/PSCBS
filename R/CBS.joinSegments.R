@@ -163,19 +163,3 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
 
   fit;
 }, private=TRUE) # joinSegments()
-
-
-############################################################################
-# HISTORY:
-# 2013-11-14
-# o DOCUMENTATION: Added Rd help for joinSegments().
-# o CLEANUP: Removed stray variables.
-# 2011-11-17
-# o Added more sanity checks to joinSegments().
-# 2011-09-04
-# o Updated joinSegments() to be aware of new column names in CBS.
-# 2011-06-14
-# o Updated code to recognize new column names.
-# 2010-11-21
-# o Extracted from segmentByPairedPSCBS.R
-############################################################################

@@ -243,33 +243,3 @@ setMethodS3("writeSegments", "DNAcopy", function(fit, samples=seq_len(nbrOfSampl
 
   pathnames;
 }) # writeSegments()
-
-
-############################################################################
-# HISTORY:
-# 2012-05-30
-# o Added writeSegments() for DNAcopy objects.
-# 2011-09-04
-# o as.DNAcopy() did not drop "splitters" for the segment table.
-# 2011-09-03
-# o Added as.DNAcopy() for CBS to coerce a CBS object to a DNAcopy object.
-# 2011-09-02
-# o Added internal extractSegmentMeansByLocus() for DNAcopy, which is
-#   used by estimateStandardDeviation(..., method="res").
-# o Added estimateStandardDeviation() for DNAcopy.
-# o ROBUSTNESS: Now getSampleNames() drops columns 'chrom' and 'maploc',
-#   instead of assuming their positions.
-# o ROBUSTNESS: Now nbrOfSamples() utilizes getSampleNames().
-# o Added nbrOfSegments(), nbrOfLoci(), nbrOfSamples(), getSampleNames()
-#   and getChromosomes() for DNAcopy.
-# HISTORY FROM PRIVATE SCRIPTS:
-# 2011-07-20
-# o Added support for estimateStandardDeviation(..., method="res").
-# o Added extractSegmentMeansByLocus().
-# 2011-07-18
-# o Added getSampleNames().
-# o Added plotTracks() for DNAcopy.
-# o Added nbrOfSegments(), nbrOfLoci() and nbrOfSamples().
-# 2011-07-17
-# o Added estimateStandardDeviation() to DNAcopy objects.
-############################################################################

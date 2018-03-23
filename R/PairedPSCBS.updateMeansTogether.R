@@ -107,18 +107,3 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., av
 
   res;
 }, private=TRUE) # updateMeansTogether()
-
-
-
-############################################################################
-# HISTORY:
-# 2011-11-28
-# o Dropped kmeansCNs() stub.
-# o Added Rdoc comments.
-# o Now hclustCNs() also handles segments with missing (C1,C2) levels,
-#   which for instance can happen after calling ROH.
-# 2011-10-14
-# o Implemented hclustCNs() and pruneByHClust() for AbstractCBS.
-# o Implemented extractCNs() for PairedPSCBS.
-# o Created.
-############################################################################

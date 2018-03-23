@@ -152,36 +152,3 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
 
   fitS;
 }, protected=TRUE) # extractDhSegment()
-
-
-############################################################################
-# HISTORY:
-# 2012-02-24
-# o Added extractDhSegment() for PairedPSCBS, which was copied "as is"
-#   from the aroma.cn package.  The below history has been updated to
-#   document changes in this method too.
-# 2012-02-23
-# o Made extractDhSegment() protected.
-# 2011-10-08
-# o ROBUSTIFICATION: Uses drop=FALSE in mergeTwoSegments() for PairedPSCBS.
-# 2010-10-26 [HB]
-# o Added extractDhSegment() for PairedPSCBS.
-# 2011-10-02
-# o DOCUMENTATION: Added Rdoc help to mergeTwoSegments() & dropByRegions().
-# o Added verbose statements to the above to functions.
-# 2011-06-14
-# o Updated code to recognize new column names.
-# 2011-01-18
-# o BUG FIX: Fields 'tcnSegRows' and 'dhSegRows' were not updated by
-#   mergeTwoSegments() for PairedPSCBS.
-# 2011-01-14
-# o Moved extractByRegions() and estimateStdDevForHeterozygousBAF() to
-#   psCBS v0.9.36.
-# o Now extractByRegions() utilizes the 'segRows' field.
-# o Added estimateStdDevForHeterozygousBAF().
-# 2011-01-12
-# o Added updateMeans() for PairedPSCBS.
-# o Added dropByRegions().
-# o Added extractByRegions() and extractByRegion().
-# o Created.
-############################################################################

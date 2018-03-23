@@ -59,13 +59,3 @@ setMethodS3("getSmoothLocusData", "CBS", function(fit, by, ...) {
 
   dataS;
 }, protected=TRUE) # getSmoothLocusData()
-
-
-############################################################################
-# HISTORY:
-# 2013-10-09
-# o Now getSmoothLocusData() for CBS also returns column 'count'.
-# 2013-04-18
-# o Added getSmoothLocusData() for CBS.
-# o Created.
-############################################################################

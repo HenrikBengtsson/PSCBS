@@ -89,12 +89,3 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mea
 
   res;
 }, private=TRUE) # updateMeansTogether()
-
-
-
-############################################################################
-# HISTORY:
-# 2011-11-28
-# o Added updateMeansTogether() for CBS.
-# o Created from PairedPSCBS.updateMeansTogether.R.
-############################################################################

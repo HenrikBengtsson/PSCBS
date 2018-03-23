@@ -103,18 +103,3 @@ setMethodS3("findLargeGaps", "data.frame", function(chromosome, ...) {
   data <- chromosome;
   findLargeGaps(chromosome=data$chromosome, x=data$x, ...);
 }) # findLargeGaps()
-
-
-
-###############################################################################
-# HISTORY:
-# 2015-04-25
-# o BUG FIX: findLargeGaps() could return NULL.  Now it always returns
-#   a data.frame.
-# 2012-02-22
-# o BUG FIX: findLargeGaps() did not handle missing values for
-#   argument 'chromosome'.
-# 2011-11-22
-# o Added findLargeGaps().
-# o Created.
-###############################################################################

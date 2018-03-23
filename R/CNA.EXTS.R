@@ -16,11 +16,3 @@ setMethodS3("segmentByCBS", "CNA", function(y, ...) {
 
   fit;
 }) # segmentByCBS()
-
-
-#############################################################################
-# HISTORY:
-# 2011-09-04
-# o Added segmentByCBS for CNA objects.
-# o Created.
-#############################################################################

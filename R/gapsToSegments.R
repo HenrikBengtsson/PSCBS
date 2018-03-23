@@ -128,22 +128,3 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
 
   knownSegments;
 }) # gapsToSegments()
-
-
-###############################################################################
-# HISTORY:
-# 2012-09-13
-# o Added argument 'dropGaps' to gapsToSegments().
-# 2012-07-22
-# o Added argument 'minLength' to gapsToSegments().
-# 2011-12-12
-# o BUG FIX: Now gapsToSegments() gave invalid segments for chromosomes
-#   with more than one gap.
-# o ROBUSTNESS: Now gapsToSegments() validates argument 'gaps' and
-#   asserts that it returns non-overlapping segments.
-# 2011-11-22
-# o Made gapsToSegments() a method for 'data.frame' class.
-# o Renamed gapsToKnownSegments() to gapsToSegments().
-# 2011-10-xx
-# o Created.
-###############################################################################

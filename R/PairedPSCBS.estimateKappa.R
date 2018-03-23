@@ -232,34 +232,3 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
 
   kappa;
 }, protected=TRUE) # estimateKappaByC1Density()
-
-
-
-
-#############################################################################
-# HISTORY:
-# 2014-03-26
-# o Now estimateKappaByC1Density() give more informative error messages
-#   if it failed to identify modes for estimating the parameter.
-# o Added argument 'from' to estimateKappaByC1Density().
-# 2013-09-26
-# o CLEANUP: Now estimateKappaByC1Density() no longer attached
-#   'aroma.light', but only loads its namespace.
-# 2013-05-07
-# o Now estimateKappaByC1Density() adjusts for ploidy, iff set.
-# 2013-03-05
-# o Added argument 'typeOfWeights' to estimateKappaByC1Density() for
-#   PairedPSCBS, making it possible to specify what type of weights the
-#   density estimate should use.
-# 2012-08-30
-# o ROBUSTNESS: estimateKappaByC1Density() did not make sure that
-#   weightedMedian() was actually available.  Now it requires matrixStats.
-# 2011-06-14
-# o Updated code to recognize new column names.
-# 2011-04-08
-# o Added Rdoc for estimateKappaByC1Density().
-# 2011-02-03
-# o Added estimateKappa().
-# o Added estimateKappaByC1Density().
-# o Created.
-#############################################################################
