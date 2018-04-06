@@ -71,7 +71,7 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
 
 
  \bold{Methods inherited from list}:\cr
-all.equal, as.data.frame, attachLocally, callHooks, relist, within
+Ops,nonStructure,vector-method, Ops,structure,vector-method, Ops,vector,nonStructure-method, Ops,vector,structure-method, all.equal, as.data.frame, attachLocally, callHooks, coerce,ANY,list-method, relist, type.convert, within
 
 
 }
