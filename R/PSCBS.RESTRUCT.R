@@ -11,7 +11,7 @@ setMethodS3("c", "PSCBS", function(..., addSplit = TRUE) {
   isNA <- function(x) is.logical(x) && length(x) == 1L && is.na(x)
 
   res <- args[[1]]
-  fields <- c("output", "tcnSegRows", "dhSegRows");
+  fields <- c("output", "tcnSegRows", "dhSegRows")
   
   for (ii in 2:nargs) {
     arg <- args[[ii]]
@@ -69,66 +69,66 @@ setMethodS3("c", "PSCBS", function(..., addSplit = TRUE) {
 
 setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
   # To please R CMD check
-  this <- x;
+  this <- x
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'chromosomes':
-  disallow <- c("NaN", "Inf");
-  chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow);
-  stopifnot(all(is.element(chromosomes, getChromosomes(this))));
+  disallow <- c("NaN", "Inf")
+  chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow)
+  stopifnot(all(is.element(chromosomes, getChromosomes(this))))
 
   # Always extract in order
-  chromosomes <- unique(chromosomes);
-  chromosomes <- sort(chromosomes);
+  chromosomes <- unique(chromosomes)
+  chromosomes <- sort(chromosomes)
 
   # Allocate results
-  res <- this;
+  res <- this
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locus data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   chromosome <- NULL; rm(list="chromosome"); # To please R CMD check
-  res$data <- subset(res$data, chromosome %in% chromosomes);
+  res$data <- subset(res$data, chromosome %in% chromosomes)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Segmentation data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify rows to subset
-  rows <- which(is.element(res$output$chromosome, chromosomes));
+  rows <- which(is.element(res$output$chromosome, chromosomes))
   for (field in c("output", "tcnSegRows", "dhSegRows")) {
-    res[[field]] <- res[[field]][rows,,drop=FALSE];
+    res[[field]] <- res[[field]][rows,,drop=FALSE]
   }
 
   # Identify chromosome offsets
-  chrStarts <- match(getChromosomes(this), this$data$chromosome);
-  chrEnds <- c(chrStarts[-1]-1L, nrow(this$data));
-  chrLengths <- chrEnds - chrStarts + 1L;
+  chrStarts <- match(getChromosomes(this), this$data$chromosome)
+  chrEnds <- c(chrStarts[-1]-1L, nrow(this$data))
+  chrLengths <- chrEnds - chrStarts + 1L
 
-  chrLengthsExcl <- chrLengths;
+  chrLengthsExcl <- chrLengths
 
-  keep <- match(chromosomes, getChromosomes(this));
-  chrLengthsExcl[keep] <- 0L;
-  cumChrLengthsExcl <- cumsum(chrLengthsExcl);
+  keep <- match(chromosomes, getChromosomes(this))
+  chrLengthsExcl[keep] <- 0L
+  cumChrLengthsExcl <- cumsum(chrLengthsExcl)
 
-  shifts <- cumChrLengthsExcl[keep];
-  stopifnot(all(is.finite(shifts)));
+  shifts <- cumChrLengthsExcl[keep]
+  stopifnot(all(is.finite(shifts)))
 
   # Adjust indices
   for (cc in seq_along(chromosomes)) {
-    chromosome <- chromosomes[cc];
-    shift <- shifts[cc];
+    chromosome <- chromosomes[cc]
+    shift <- shifts[cc]
     # Nothing to do?
-    if (shift == 0) next;
+    if (shift == 0) next
     for (field in c("tcnSegRows", "dhSegRows")) {
-      segRows <- res[[field]];
-      rows <- which(res$output$chromosome == chromosome);
-      segRows[rows,] <- segRows[rows,] - shift;
-      res[[field]] <- segRows;
+      segRows <- res[[field]]
+      rows <- which(res$output$chromosome == chromosome)
+      segRows[rows,] <- segRows[rows,] - shift
+      res[[field]] <- segRows
     }
   }
 
-  res;
+  res
 }, protected=TRUE)

@@ -33,29 +33,29 @@
 #*/###########################################################################
 setMethodS3("getSmoothLocusData", "CBS", function(fit, by, ...) {
   # Argument 'by':
-  by <- Arguments$getNumeric(by, range=c(0,Inf));
+  by <- Arguments$getNumeric(by, range=c(0,Inf))
 
-  chromosomes <- getChromosomes(fit);
-  data <- getLocusData(fit);
+  chromosomes <- getChromosomes(fit)
+  data <- getLocusData(fit)
 
   chromosome <- NULL; rm(list="chromosome"); # To please R CMD check
 
-  dataS <- NULL;
+  dataS <- NULL
   for (kk in seq_along(chromosomes)) {
-    chr <- chromosomes[kk];
-    dataT <- subset(data, chromosome == chr);
-    x <- dataT$x;
-    y <- dataT$y;
-    rx <- range(x, na.rm=TRUE);
-    bx <- seq(from=rx[1], to=rx[2], by=by);
-    xS <- bx[-1] - by/2;
-    yS <- binMeans(y=y, x=x, bx=bx);
-    count <- attr(yS, "count");
-    yS[count == 0L] <- NA_real_;
-    attr(yS, "count") <- NULL;
-    dataTS <- data.frame(chromosome=chr, x=xS, count=count, y=yS);
-    dataS <- rbind(dataS, dataTS);
+    chr <- chromosomes[kk]
+    dataT <- subset(data, chromosome == chr)
+    x <- dataT$x
+    y <- dataT$y
+    rx <- range(x, na.rm=TRUE)
+    bx <- seq(from=rx[1], to=rx[2], by=by)
+    xS <- bx[-1] - by/2
+    yS <- binMeans(y=y, x=x, bx=bx)
+    count <- attr(yS, "count")
+    yS[count == 0L] <- NA_real_
+    attr(yS, "count") <- NULL
+    dataTS <- data.frame(chromosome=chr, x=xS, count=count, y=yS)
+    dataS <- rbind(dataS, dataTS)
   } # for (kk ...)
 
-  dataS;
+  dataS
 }, protected=TRUE) # getSmoothLocusData()
