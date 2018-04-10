@@ -428,7 +428,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
   verbose && exit(verbose)
 
 
-  verbose && enter(verbose, "Identify all copy-neutral segments");
+  verbose && enter(verbose, "Identify all copy-neutral segments")
   verbose && printf(verbose, "DeltaCN: +/-%g\n", delta)
   range <- ci + delta*c(-1,+1)
   verbose && printf(verbose, "Call (\"acceptance\") region: [%g,%g]\n", range[1], range[2])

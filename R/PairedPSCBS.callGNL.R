@@ -268,7 +268,7 @@ setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, d
   # Call states
   for (rr in seq_len(nrow(callRegions))) {
     state <- rownames(callRegions)[rr]
-    verbose && enter(verbose, "Identify all '", state, "' segments");
+    verbose && enter(verbose, "Identify all '", state, "' segments")
     range <- callRegions[rr,]
     verbose && printf(verbose, "Call (\"acceptance\") region: [%g,%g]\n", range[1], range[2])
 
