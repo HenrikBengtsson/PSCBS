@@ -68,7 +68,7 @@ setMethodS3("updateMeansTogether", "CBS", function(fit, idxList, ..., avg=c("mea
     gamma <- avgFUN(y[keep])
 
     # Sanity check
-    stopifnot(length(gamma) == 0 || !is.na(gamma))
+    .stop_if_not((length(gamma) == 0 || !is.na(gamma))
 
     mus <- c(mean=gamma)
 

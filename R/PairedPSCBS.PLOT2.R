@@ -267,7 +267,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
 
     # Keep only supported tracks
     tracksWithLevels <- c("tcn", "betaTN", "c1", "c2", "dh")
-    stopifnot(all(is.element(tracks, tracksWithLevels)))
+    .stop_if_not((all(is.element(tracks, tracksWithLevels)))
     tracks <- intersect(tracks, tracksWithLevels)
 
     verbose && cat(verbose, "Number tracks with levels: ", length(tracks))

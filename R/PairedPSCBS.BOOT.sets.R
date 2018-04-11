@@ -93,8 +93,8 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
     throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor))
   }
   # Sanity check (same as above, but just in case)
-  stopifnot(all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
-  stopifnot(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE))
+  .stop_if_not((all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
+  .stop_if_not((all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -113,7 +113,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   data <- NULL
 
   # Sanity checks
-  stopifnot(all(!is.na(chromosome) & !is.na(x)))
+  .stop_if_not((all(!is.na(chromosome) & !is.na(x)))
 
 
 
@@ -141,7 +141,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   verbose && cat(verbose, "Number of non-SNPs: ", nbrOfNonSNPs)
 
   # Sanity checks
-  stopifnot(length(intersect(snps, nonSNPs)) == 0L)
+  .stop_if_not((length(intersect(snps, nonSNPs)) == 0L)
 
   # Heterozygous SNPs
   hets <- which(isSnp &  isHet)
@@ -156,12 +156,12 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   }
 
   # Sanity checks
-  stopifnot(length(intersect(hets, homs)) == 0L)
-  stopifnot(nbrOfHets + nbrOfHoms == nbrOfSNPs)
+  .stop_if_not((length(intersect(hets, homs)) == 0L)
+  .stop_if_not((nbrOfHets + nbrOfHoms == nbrOfSNPs)
 
   # Sanity checks
-  stopifnot(length(isSnp) == nbrOfLoci)
-  stopifnot(length(isHet) == nbrOfLoci)
+  .stop_if_not((length(isSnp) == nbrOfLoci)
+  .stop_if_not((length(isHet) == nbrOfLoci)
 
   # Not needed anymore
   muN <- isSnp <- NULL
@@ -250,7 +250,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
 
     # Sanity check
     if (.validate) {
-      stopifnot(!is.na(chr) && !is.na(tcnId) && !is.na(dhId))
+      .stop_if_not((!is.na(chr) && !is.na(tcnId) && !is.na(dhId))
     }
 
     # Get the segment data
@@ -264,8 +264,8 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
       cat(verbose, "Number of DHs: ", nbrOfDHs)
     }
     if (.validate) {
-      stopifnot(!is.na(nbrOfTCNs))
-      stopifnot(!is.na(nbrOfDHs))
+      .stop_if_not((!is.na(nbrOfTCNs))
+      .stop_if_not((!is.na(nbrOfDHs))
     }
 
     tcnSegRowJJ <- unlist(tcnSegRows[jj,], use.names=FALSE)
@@ -317,7 +317,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
     verbose && str(verbose, idxsDH)
 
     # Sanity check
-    if (.validate) stopifnot(length(idxsDH) == nbrOfDHs)
+    if (.validate) .stop_if_not((length(idxsDH) == nbrOfDHs)
 
     verbose && exit(verbose)
 
@@ -338,7 +338,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
       str(verbose, idxsNonSNP)
     }
     # Sanity check
-    if (.validate) stopifnot(length(idxsSNP) + length(idxsNonSNP) == length(idxsAll))
+    if (.validate) .stop_if_not((length(idxsSNP) + length(idxsNonSNP) == length(idxsAll))
 
     # Identify heterozygous and homozygous SNPs
     idxsHet <- intersect(idxsSNP, hets)
@@ -378,9 +378,9 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
 
     # Sanity check
     if (.validate) {
-      stopifnot(length(idxsHet) + length(idxsHom) + length(idxsNonSNP) == nbrOfTCNs)
-      stopifnot(length(intersect(idxsDH, idxsHetNonDH)) == 0L)
-      stopifnot(length(idxsTCN) == nbrOfTCNs)
+      .stop_if_not((length(idxsHet) + length(idxsHom) + length(idxsNonSNP) == nbrOfTCNs)
+      .stop_if_not((length(intersect(idxsDH, idxsHetNonDH)) == 0L)
+      .stop_if_not((length(idxsTCN) == nbrOfTCNs)
     }
 
     verbose && exit(verbose)
@@ -394,7 +394,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
     shouldHaveDHs <- (nbrOfDHs > 0L && !is.na(dhMeans[jj]))
     if (!shouldHaveDHs) {
       idxsHetNonDH <- idxsDH
-      stopifnot(all(idxsHetNonDH > 0L))
+      .stop_if_not((all(idxsHetNonDH > 0L))
     }
     shouldHaveDHs <- NULL # Not needed anymore
 
@@ -422,16 +422,16 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
       for (key in names(loci)) {
         idxs <- loci[[key]]
         # Assert positive indices
-        stopifnot(all(idxs > 0L))
+        .stop_if_not((all(idxs > 0L))
         # Assert a unique set of indices
-        stopifnot(!any(duplicated(idxs)))
+        .stop_if_not((!any(duplicated(idxs)))
       }
       # Assert non-overlapping sets
       with(loci, {
-        stopifnot(length(intersect(dh,  hetNonDh)) == 0L)
-        stopifnot(length(intersect(het, hom)) == 0L)
-        stopifnot(length(intersect(het, nonSnp)) == 0L)
-        stopifnot(length(intersect(hom, nonSnp)) == 0L)
+        .stop_if_not((length(intersect(dh,  hetNonDh)) == 0L)
+        .stop_if_not((length(intersect(het, hom)) == 0L)
+        .stop_if_not((length(intersect(het, nonSnp)) == 0L)
+        .stop_if_not((length(intersect(hom, nonSnp)) == 0L)
       })
       loci <- NULL # Not needed anymore
     }
@@ -455,7 +455,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
     hetNonDh <- matrix(NA_integer_, nrow=nHetNonDHs, ncol=B)
 
 ##    resample <- function(x, size, ...) {
-##      stopifnot(size == length(x))
+##      .stop_if_not((size == length(x))
 ##      x
 ##    } # resample()
 
@@ -536,7 +536,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
         idxs <- loci[[key]]
         idxsB <- lociB[[key]]
         idxsB <- unique(sort(idxsB))
-        stopifnot(all(is.element(idxsB, idxs)))
+        .stop_if_not((all(is.element(idxsB, idxs)))
       }
       loci <- lociB <- NULL # Not needed anymore
     }
@@ -552,8 +552,8 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
   } # for (jj ...)
 
   # Sanity checks
-  stopifnot(is.list(locusSet))
-  stopifnot(length(locusSet) == nbrOfSegments)
+  .stop_if_not((is.list(locusSet))
+  .stop_if_not((length(locusSet) == nbrOfSegments)
 
   verbose && exit(verbose)
 

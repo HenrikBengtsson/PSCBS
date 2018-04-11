@@ -45,8 +45,8 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'gaps':
   keys <- colnames(gaps)
-  stopifnot(all(is.element(c("start", "end"), keys)))
-  stopifnot(all(gaps$start <= gaps$end, na.rm=TRUE))
+  .stop_if_not((all(is.element(c("start", "end"), keys)))
+  .stop_if_not((all(gaps$start <= gaps$end, na.rm=TRUE))
   hasChr <- is.element("chromosome", keys)
 
   ## Nothing more to do?
@@ -115,8 +115,8 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate generated 'knownSegments'
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  stopifnot(is.data.frame(knownSegments))
-  stopifnot(nrow(knownSegments) >= 1L)
+  .stop_if_not((is.data.frame(knownSegments))
+  .stop_if_not((nrow(knownSegments) >= 1L)
   for (chr in sort(unique(knownSegments$chromosome))) {
     dd <- subset(knownSegments, chromosome == chr)
 

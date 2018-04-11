@@ -153,7 +153,7 @@ setMethodS3("estimateKappaByC1Density", "PairedPSCBS", function(this, typeOfWeig
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segs <- this$output
   c1 <- segs$c1Mean
-  stopifnot(!is.null(c1))
+  .stop_if_not((!is.null(c1))
   n <- segs$dhNbrOfLoci
 
   # Drop missing values

@@ -90,7 +90,7 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
                   seg$tcnStart <= x & x <= seg$tcnEnd)
     idxs <- Arguments$getIndices(idxs, max=nbrOfLoci)
     # Sanity check
-##    stopifnot(length(idxs) == seg$tcnNbrOfLoci)
+##    .stop_if_not((length(idxs) == seg$tcnNbrOfLoci)
 
     callsSS <- seg[callCols]
     for (cc in seq_len(nbrOfCalls)) {
@@ -104,8 +104,8 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
   callsL[nok,] <- as.logical(NA)
 
   # Sanity check
-  stopifnot(nrow(callsL) == nbrOfLoci)
-  stopifnot(ncol(callsL) == nbrOfCalls)
+  .stop_if_not((nrow(callsL) == nbrOfLoci)
+  .stop_if_not((ncol(callsL) == nbrOfCalls)
 
   callsL
 }, private=TRUE) # extractCallsByLocus()

@@ -48,7 +48,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   data <- data[,keep,drop=FALSE]
 
   # Sanity check
-  stopifnot(ncol(data) == 3)
+  .stop_if_not((ncol(data) == 3)
 
   # Rename column names
   colnames(data) <- c("chrom", "maploc", sampleName)
@@ -220,7 +220,7 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
     ySS <- y[idxs]
     ok <- is.finite(ySS)
     # Sanity check
-    ## stopifnot(sum(ok) == seg$num.mark) # Not dealing with ties
+    ## .stop_if_not((sum(ok) == seg$num.mark) # Not dealing with ties
     mu <- avgY(ySS[ok])
     yS[idxs] <- mu
   } # for (ss ...)

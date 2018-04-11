@@ -134,7 +134,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     segId <- startStop <- NULL
 
     # Sanity check
-    stopifnot(max(segRows[,2]) <= length(y))
+    .stop_if_not((max(segRows[,2]) <= length(y))
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Prune change points
@@ -152,7 +152,7 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     # No segments pruned?
     if (nbrOfPrunedSegs == 0) {
       # Sanity check
-      stopifnot(identical(segLengthsP, segLengths))
+      .stop_if_not((identical(segLengthsP, segLengths))
 
       fitList[[cc]] <- fitT
       verbose && cat(verbose, "Nothing to changed. Skipping.")
@@ -179,8 +179,8 @@ setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., v
     # Sanity checks
     if (nbrOfPrunedSegs == 0) {
       segRows <- fitT$segRows
-      stopifnot(all.equal(segRowsP, segRows, check.attributes=FALSE))
-      stopifnot(all.equal(segsP, segs, check.attributes=FALSE))
+      .stop_if_not((all.equal(segRowsP, segRows, check.attributes=FALSE))
+      .stop_if_not((all.equal(segsP, segs, check.attributes=FALSE))
     }
 
     fitT$output <- segsP

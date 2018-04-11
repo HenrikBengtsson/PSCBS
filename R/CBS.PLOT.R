@@ -317,7 +317,7 @@ setMethodS3("drawChromosomes", "CBS", function(x, lty=3, xScale=1e-6, ..., byInd
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- tileChromosomes(fit)
   # Sanity check
-  stopifnot(!is.null(fitT$chromosomeStats))
+  .stop_if_not((!is.null(fitT$chromosomeStats))
 
   chrStats <- fitT$chromosomeStats
   chrStats <- chrStats[-nrow(chrStats),,drop=FALSE]
@@ -338,10 +338,10 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'genomeData':
-  stopifnot(inherits(genomeData, "data.frame"))
-  stopifnot(is.element("chromosome", colnames(genomeData)))
-  stopifnot(is.element("centroStart", colnames(genomeData)))
-  stopifnot(is.element("centroEnd", colnames(genomeData)))
+  .stop_if_not((inherits(genomeData, "data.frame"))
+  .stop_if_not((is.element("chromosome", colnames(genomeData)))
+  .stop_if_not((is.element("centroStart", colnames(genomeData)))
+  .stop_if_not((is.element("centroEnd", colnames(genomeData)))
 
   # Calculate the midpoints of the centromeres
   colnames(genomeData) <- tolower(gsub("centro", "", colnames(genomeData)))
@@ -352,7 +352,7 @@ setMethodS3("drawCentromeres", "CBS", function(fit, genomeData, what=c("start", 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   fitT <- tileChromosomes(fit)
   # Sanity check
-  stopifnot(!is.null(fitT$chromosomeStats))
+  .stop_if_not((!is.null(fitT$chromosomeStats))
 
   chrStats <- fitT$chromosomeStats
   offsets <- chrStats[,"start"] - chrStats[1,"start"]

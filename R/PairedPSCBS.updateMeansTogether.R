@@ -82,7 +82,7 @@ setMethodS3("updateMeansTogether", "PairedPSCBS", function(fit, idxList, ..., av
       gamma <- avgFUN(value[keep])
 
       # Sanity check
-      stopifnot(length(gamma) == 0 || !is.na(gamma))
+      .stop_if_not((length(gamma) == 0 || !is.na(gamma))
 
       mus[key] <- gamma
     } # for (what ...)

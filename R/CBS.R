@@ -229,7 +229,7 @@ setMethodS3("getLocusData", "CBS", function(fit, indices=NULL, addCalls=NULL, ..
     }
 
     # Sanity check
-    stopifnot(nrow(callsL) == nrow(data))
+    .stop_if_not((nrow(callsL) == nrow(data))
 
     data <- cbind(data, callsL)
   }
@@ -244,7 +244,7 @@ setMethodS3("getLocusData", "CBS", function(fit, indices=NULL, addCalls=NULL, ..
     rownames(data) <- NULL
 
     # Sanity check
-    stopifnot(nrow(data) == length(indices))
+    .stop_if_not((nrow(data) == length(indices))
   }
 
   data
@@ -414,7 +414,7 @@ setMethodS3("updateBoundaries", "CBS", function(fit, ..., verbose=FALSE) {
     verbose && str(verbose, units)
 
     # (d) Identify (chromosome, start, stop)
-    stopifnot(all(cSS == cSS[1]))
+    .stop_if_not((all(cSS == cSS[1]))
     cSS <- cSS[1]
     xRange <- range(xSS, na.rm=TRUE)
     verbose && cat(verbose, "Range:")
@@ -546,7 +546,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("asis", "mean", "medi
     }
 
     # Sanity check
-    stopifnot(nbrOfLoci == 0 || !is.na(gamma))
+    .stop_if_not((nbrOfLoci == 0 || !is.na(gamma))
 
     # (d) Update the segment statistics
     seg$mean <- gamma

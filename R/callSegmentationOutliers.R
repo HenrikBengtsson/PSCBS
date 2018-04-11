@@ -158,7 +158,7 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     dataKK <- NULL # Not needed anymore
 
     # Sanity check
-    stopifnot(length(yKKs) == nbrOfLociKK)
+    .stop_if_not((length(yKKs) == nbrOfLociKK)
     outliersKK <- which(yKKs != yKK)
     yKKs <- yKK <- NULL # Not needed anymore
 

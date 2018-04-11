@@ -186,7 +186,7 @@ setMethodS3("callAllelicBalanceByDH", "PairedPSCBS", function(fit, delta=estimat
   alphaTag <- sprintf("%g%%", 100*alpha)
   column <- sprintf("dh_%s", alphaTag)
   # Sanity checks
-  stopifnot(is.element(column, colnames(segs)))
+  .stop_if_not((is.element(column, colnames(segs)))
 
   # One-sided test
   verbose && enter(verbose, "Calling segments")

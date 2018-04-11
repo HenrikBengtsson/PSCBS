@@ -91,9 +91,9 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
   }
 
   ## Sanity checks
-  stopifnot(is.data.frame(gaps))
-  stopifnot(all(gaps$start <= gaps$end))
-  stopifnot(all(gaps$length >= 0))
+  .stop_if_not((is.data.frame(gaps))
+  .stop_if_not((all(gaps$start <= gaps$end))
+  .stop_if_not((all(gaps$length >= 0))
 
   gaps
 }) # findLargeGaps()

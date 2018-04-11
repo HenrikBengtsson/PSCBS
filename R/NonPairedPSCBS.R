@@ -212,7 +212,7 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
         gamma <- avgFUN(value[units])
 
         # Sanity check
-        stopifnot(length(units) == 0 || !is.na(gamma))
+        .stop_if_not((length(units) == 0 || !is.na(gamma))
 
         # Update the segment boundaries, estimates and counts
         key <- paste(what, "Mean", sep="")

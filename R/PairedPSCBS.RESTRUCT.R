@@ -29,7 +29,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
     # Sanity check
     ns2 <- segRows[,2] - segRows[,1] + 1L
     ns2 <- ns2[!isSplitter]
-    stopifnot(all(ns2 == ns))
+    .stop_if_not((all(ns2 == ns))
 
     segRows
   } # updateSegRows()
@@ -65,8 +65,8 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   params <- fit$params
 
   # Sanity checks
-  stopifnot(all(!is.na(data$chromosome) & !is.na(data$x)))
-  stopifnot(length(tcnSegRows) == length(dhSegRows))
+  .stop_if_not((all(!is.na(data$chromosome) & !is.na(data$x)))
+  .stop_if_not((length(tcnSegRows) == length(dhSegRows))
 
   # Sanity checks
   if (!params$joinSegments) {
@@ -121,7 +121,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   segRows <- updateSegRows(tcnSegRows, idxs=idxs)
   d <- tcnSegRows[idxs,] - segRows
   # Sanity check
-  stopifnot(identical(d[,1], d[,2]))
+  .stop_if_not((identical(d[,1], d[,2]))
   d <- d[,1]
   verbose && cat(verbose, "Row deltas:")
   verbose && str(verbose, d)
@@ -130,7 +130,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   verbose && str(verbose, tcnSegRows)
   # Sanity checks
   segRows <- tcnSegRows
-  stopifnot(suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT))
+  .stop_if_not((suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT))
   drow <- segRows[-1,1] - segRows[-nrow(segRows),2]
   if (!all(is.na(drow) | (drow > 0))) {
     print(segRows)
@@ -141,9 +141,9 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   verbose && str(verbose, dhSegRows)
   # Sanity checks
   segRows <- dhSegRows
-  stopifnot(suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT))
+  .stop_if_not((suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT))
   drow <- segRows[-1,1] - segRows[-nrow(segRows),2]
-  stopifnot(all(is.na(drow) | (drow > 0)))
+  .stop_if_not((all(is.na(drow) | (drow > 0)))
   if (!all(is.na(drow) | (drow > 0))) {
     print(segRows)
     throw("INTERNAL ERROR: Generated 'dhSegRows' is invalid, because it contains overlapping data chunks.")

@@ -686,7 +686,7 @@ setMethodS3("sampleCNs", "AbstractCBS", function(fit, size=NULL, ...) {
   if (!is.null(size)) {
     sizes <- getSegmentSizes(fit, ...)
     # Sanity check
-    stopifnot(length(sizes) == nrow(data))
+    .stop_if_not((length(sizes) == nrow(data))
     idxs <- sample(nrow(data), size=size, replace=TRUE, prob=sizes)
     data <- data[idxs,,drop=FALSE]
   }

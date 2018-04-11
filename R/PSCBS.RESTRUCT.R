@@ -61,7 +61,7 @@ setMethodS3("c", "PSCBS", function(..., addSplit = TRUE) {
   
   # Sanity check
   ns <- sapply(res[fields], FUN = nrow)
-  stopifnot(all(ns == ns[1]))
+  .stop_if_not((all(ns == ns[1]))
 
   res
 }) # c()
@@ -77,7 +77,7 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
   # Argument 'chromosomes':
   disallow <- c("NaN", "Inf")
   chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow)
-  stopifnot(all(is.element(chromosomes, getChromosomes(this))))
+  .stop_if_not((all(is.element(chromosomes, getChromosomes(this))))
 
   # Always extract in order
   chromosomes <- unique(chromosomes)
@@ -114,7 +114,7 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
   cumChrLengthsExcl <- cumsum(chrLengthsExcl)
 
   shifts <- cumChrLengthsExcl[keep]
-  stopifnot(all(is.finite(shifts)))
+  .stop_if_not((all(is.finite(shifts)))
 
   # Adjust indices
   for (cc in seq_along(chromosomes)) {

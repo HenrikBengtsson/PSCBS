@@ -3,7 +3,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'FUN':
-  stopifnot(is.function(FUN))
+  .stop_if_not((is.function(FUN))
 
   # Argument 'subset':
   if (!is.null(subset)) {
@@ -39,8 +39,8 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
   dataRows <- tcnSegRows
 
   # Sanity checks
-  stopifnot(all(!is.na(data$chromosome) & !is.na(data$x)))
-  stopifnot(length(tcnSegRows) == length(dhSegRows))
+  .stop_if_not((all(!is.na(data$chromosome) & !is.na(data$x)))
+  .stop_if_not((length(tcnSegRows) == length(dhSegRows))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -109,10 +109,10 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
     dataRRN <- resRR$data
     segRRN <- resRR$output
     # Sanity check
-    stopifnot(!is.null(dataRRN))
-    stopifnot(is.data.frame(dataRRN))
-    stopifnot(!is.null(segRRN))
-    stopifnot(is.data.frame(segRRN))
+    .stop_if_not((!is.null(dataRRN))
+    .stop_if_not((is.data.frame(dataRRN))
+    .stop_if_not((!is.null(segRRN))
+    .stop_if_not((is.data.frame(segRRN))
 
     if (append) {
       # Modified locus-level data
@@ -122,21 +122,21 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
       }
       dataN <- rbind(dataN, dataRRN)
       # Sanity checks
-      stopifnot(nrow(dataN) == max(dataRowsN, na.rm=TRUE))
+      .stop_if_not((nrow(dataN) == max(dataRowsN, na.rm=TRUE))
 
       # Update segment table?
       outputN <- rbind(outputN, segRRN)
       dataRowsN <- rbind(dataRowsN, dataRowsRRN)
       # Sanity check
-      stopifnot(nrow(outputN) == nrow(dataRowsN))
+      .stop_if_not((nrow(outputN) == nrow(dataRowsN))
       # Sanity checks
-      stopifnot(nrow(dataN) == max(dataRowsN, na.rm=TRUE))
+      .stop_if_not((nrow(dataN) == max(dataRowsN, na.rm=TRUE))
     } else {
       # Modified locus-level data
       verbose && enter(verbose, "Updating locus-level data")
       # Sanity check
-      stopifnot(dim(dataRRN) == dim(dataRR))
-      stopifnot(length(dataRowsRR) == nrow(dataRRN))
+      .stop_if_not((dim(dataRRN) == dim(dataRR))
+      .stop_if_not((length(dataRowsRR) == nrow(dataRRN))
       data[dataRowsRR,] <- dataRRN
       str(data[dataRowsRR,])
       verbose && exit(verbose)
@@ -144,7 +144,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
       # Modified segment data
       verbose && enter(verbose, "Updating segment data")
       # Sanity check
-      stopifnot(dim(segRRN) == dim(segRR))
+      .stop_if_not((dim(segRRN) == dim(segRR))
       segs[rr,] <- segRRN
       verbose && exit(verbose)
     }
@@ -163,9 +163,9 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
       colnames(dataRowsN) <- colnames(dataRows)
       dataRowsN <- as.data.frame(dataRowsN)
       # Sanity checks
-      stopifnot(!is.null(dataN))
-      stopifnot(!is.null(outputN))
-      stopifnot(!is.null(dataRowsN))
+      .stop_if_not((!is.null(dataN))
+      .stop_if_not((!is.null(outputN))
+      .stop_if_not((!is.null(dataRowsN))
 
       data <- dataN
       segs <- outputN

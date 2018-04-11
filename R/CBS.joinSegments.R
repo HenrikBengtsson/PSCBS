@@ -48,7 +48,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
       throw("Argument 'range' cannot be given when 'fit' contains multiple chromosomes.")
     }
     range <- Arguments$getDoubles(range, length=c(2,2))
-    stopifnot(range[2] >= range[1])
+    .stop_if_not((range[2] >= range[1])
   }
 
   # Argument 'verbose':
@@ -88,7 +88,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
 
       # Sanity check (will give an error if more than one chromosome)
       if (R_SANITY_CHECK) {
-        stopifnot(all(currStart >= prevEnd, na.rm=TRUE))
+        .stop_if_not((all(currStart >= prevEnd, na.rm=TRUE))
       }
 
       # Center CP
@@ -104,9 +104,9 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
 
     # Sanity checks
     if (R_SANITY_CHECK) {
-      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
-      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
-      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
+      .stop_if_not((all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
+      .stop_if_not((all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+      .stop_if_not((all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
     } # if (R_SANITY_CHECK)
 
     if (nbrOfSegs > 6) {
@@ -127,17 +127,17 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     if (nbrOfSegs > 0) {
       # Sanity checks
       if (R_SANITY_CHECK) {
-        stopifnot(xMin <= segs[1L,"start"])
-        stopifnot(segs[1L,"end"] <= xMax)
+        .stop_if_not((xMin <= segs[1L,"start"])
+        .stop_if_not((segs[1L,"end"] <= xMax)
       }
       segs[1L,"start"] <- xMin
       segs[nbrOfSegs,"end"] <- xMax
 
       # Sanity checks
       if (R_SANITY_CHECK) {
-        stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
-        stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
-        stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
+        .stop_if_not((all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
+        .stop_if_not((all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+        .stop_if_not((all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
       }
 
       if (nbrOfSegs > 6) {

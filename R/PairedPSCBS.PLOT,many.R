@@ -91,7 +91,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   if (!is.null(chromosomes)) {
     disallow <- c("NaN", "Inf")
     chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow)
-    stopifnot(is.element(chromosomes, getChromosomes(fit)))
+    .stop_if_not((all(is.element(chromosomes, getChromosomes(fit))))
   }
 
   # Argument 'tracks':
@@ -113,7 +113,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
     } else {
       scatterT <- strsplit(scatter, split=",", fixed=TRUE)
       tracksT <- strsplit(tracks, split=",", fixed=TRUE)
-      stopifnot(all(is.element(scatterT, tracksT)))
+      .stop_if_not((all(is.element(scatterT, tracksT)))
       # Not needed anymore
       scatterT <- tracksT <- NULL
     }

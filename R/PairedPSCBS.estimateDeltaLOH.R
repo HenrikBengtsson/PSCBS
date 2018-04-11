@@ -213,7 +213,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   verbose && printf(verbose, "There are %d segments with in total %d heterozygous SNPs with this level.\n", length(idxs), n)
 
   # Sanity check
-  stopifnot(muC1atNonAB < muC1atAB)
+  .stop_if_not((muC1atNonAB < muC1atAB)
 
   delta <- midpoint * (muC1atAB + muC1atNonAB)
   verbose && printf(verbose, "Midpoint between the two: %.3g\n", delta)

@@ -379,7 +379,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   chromosome <- x <- CT <- thetaT <- thetaN <- betaT <- betaTN <- betaN <- muN <- rho <- NULL
 
   # Sanity check
-  stopifnot(nrow(data) == nbrOfLoci)
+  .stop_if_not((nrow(data) == nbrOfLoci)
   verbose && exit(verbose)
 
 
@@ -399,7 +399,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   ok <- NULL # Not needed anymore
 
   # Sanity check
-  stopifnot(nrow(data) == nbrOfLoci)
+  .stop_if_not((nrow(data) == nbrOfLoci)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -417,7 +417,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     ok <- NULL # Not needed anymore
 
     # Sanity check
-    stopifnot(nrow(data) == nbrOfLoci)
+    .stop_if_not((nrow(data) == nbrOfLoci)
   }
 
 
@@ -441,7 +441,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   data$index <- seq_len(nrow(data))
 
   # Sanity check
-  stopifnot(nrow(data) == nbrOfLoci)
+  .stop_if_not((nrow(data) == nbrOfLoci)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -519,9 +519,9 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
         # Sanity checks
         if (nrow(knownSegmentsKK) == 0) {
-          stopifnot(nrow(fit$data) == length(CT))
-          stopifnot(all.equal(fit$data$CT, CT))
-          stopifnot(all.equal(fit$data$muN, muN))
+          .stop_if_not((nrow(fit$data) == length(CT))
+          .stop_if_not((all.equal(fit$data$CT, CT))
+          .stop_if_not((all.equal(fit$data$muN, muN))
         }
 
         # Update betaT (which is otherwise equals betaTN)
@@ -643,7 +643,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     verbose && exit(verbose)
   }
   ## Sanity check
-  stopifnot(!is.null(data$rho))
+  .stop_if_not((!is.null(data$rho))
 
 
 
@@ -701,11 +701,11 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Sanity check
   if (nrow(knownSegments) == 0) {
-    stopifnot(nrow(fit$data) == nrow(data))
-    stopifnot(all(fit$data$chromosome == data$chromosome))
-    stopifnot(all(fit$data$x == data$x))
-    stopifnot(all(fit$data$index == data$index))
-    stopifnot(all.equal(fit$data$y, data$CT))
+    .stop_if_not((nrow(fit$data) == nrow(data))
+    .stop_if_not((all(fit$data$chromosome == data$chromosome))
+    .stop_if_not((all(fit$data$x == data$x))
+    .stop_if_not((all(fit$data$index == data$index))
+    .stop_if_not((all.equal(fit$data$y, data$CT))
   }
 
   tcnSegments <- fit$output
@@ -713,8 +713,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   fit <- NULL # Not needed anymore
 
   # Sanity checks
-  stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
-  stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
+  .stop_if_not((all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
 
   verbose && exit(verbose)
 
@@ -820,7 +820,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
       # Sanity check
       if (nbrOfHetsKK > 0) {
-        stopifnot(all(dhSegRows[kk,1] <= dhSegRows[kk,2], na.rm=TRUE))
+        .stop_if_not((all(dhSegRows[kk,1] <= dhSegRows[kk,2], na.rm=TRUE))
       }
 
       # Calculate dhMean
@@ -863,7 +863,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         verbose && cat(verbose, "No signals to segment. Just a \"splitter\" segment. Skipping.")
 
         # Sanity check
-        stopifnot(kk >= 1)
+        .stop_if_not((kk >= 1)
 
         # Add a splitter segment
         segT <- segs[[kk-1]]
@@ -894,7 +894,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       verbose && cat(verbose, "Number of TCN loci in segment: ", nbrOfTCNLociKK)
 
       # Sanity check
-      stopifnot(!isEmptySegment || (isEmptySegment && (nbrOfTCNLociKK == 0)))
+      .stop_if_not((!isEmptySegment || (isEmptySegment && (nbrOfTCNLociKK == 0)))
 
       if (nbrOfTCNLociKK > 0) {
         # Extract locus data for TCN segment
@@ -902,7 +902,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     ##    if (nrow(knownSegments) == 0) {
     ##      gammaT <- tcnSegments[kk,"tcnMean"]
     ##      verbose && print(verbose, all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol))
-    ##      stopifnot(all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol))
+    ##      .stop_if_not((all.equal(mean(dataKK$CT, na.rm=TRUE), gammaT, tolerance=tol))
     ##    }
       } else {
         rows <- integer(0)
@@ -912,8 +912,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       nbrOfLociKK <- nrow(dataKK)
 
       # Sanity check
-      stopifnot(length(dataKK$CT) == nbrOfTCNLociKK)
-    ##  stopifnot(sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK)
+      .stop_if_not((length(dataKK$CT) == nbrOfTCNLociKK)
+    ##  .stop_if_not((sum(!is.na(dataKK$CT)) == nbrOfTCNLociKK)
 
       verbose && cat(verbose, "Locus data for TCN segment:")
       verbose && str(verbose, dataKK)
@@ -999,14 +999,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       tcnSegmentsKK <- tcnSegments[rows,,drop=FALSE]
       tcnSegRowsKK <- tcnSegRows[rows,,drop=FALSE]
       # Sanity check
-      stopifnot(nrow(tcnSegmentsKK) == nrow(dhSegments))
-      stopifnot(nrow(tcnSegRowsKK) == nrow(dhSegments))
-      stopifnot(is.na(tcnSegRowsKK[,1]) || is.na(dhSegRowsKK[,1]) || (tcnSegRowsKK[,1] <= dhSegRowsKK[,1]))
-      stopifnot(is.na(tcnSegRowsKK[,2]) || is.na(dhSegRowsKK[,2]) || (dhSegRowsKK[,2] <= tcnSegRowsKK[,2]))
+      .stop_if_not((nrow(tcnSegmentsKK) == nrow(dhSegments))
+      .stop_if_not((nrow(tcnSegRowsKK) == nrow(dhSegments))
+      .stop_if_not((is.na(tcnSegRowsKK[,1]) || is.na(dhSegRowsKK[,1]) || (tcnSegRowsKK[,1] <= dhSegRowsKK[,1]))
+      .stop_if_not((is.na(tcnSegRowsKK[,2]) || is.na(dhSegRowsKK[,2]) || (dhSegRowsKK[,2] <= tcnSegRowsKK[,2]))
       verbose && cat(verbose, "TCN segmentation rows:")
       verbose && print(verbose, tcnSegRowsKK)
-      stopifnot(all(tcnSegRowsKK[,1] == tcnSegRowsKK[1,1], na.rm=TRUE))
-      stopifnot(all(tcnSegRowsKK[,2] == tcnSegRowsKK[1,2], na.rm=TRUE))
+      .stop_if_not((all(tcnSegRowsKK[,1] == tcnSegRowsKK[1,1], na.rm=TRUE))
+      .stop_if_not((all(tcnSegRowsKK[,2] == tcnSegRowsKK[1,2], na.rm=TRUE))
 
       verbose && cat(verbose, "TCN and DH segmentation rows:")
       verbose && print(verbose, tcnSegRowsKK)
@@ -1028,20 +1028,20 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       verbose && print(verbose, tcnSegsExpanded)
 
       # Sanity checks
-      stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
-      stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
-      stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
-      stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
-      stopifnot(all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE))
-      stopifnot(all(tcnSegsExpanded[,1] <= dhSegRows[,1], na.rm=TRUE))
-      stopifnot(all(tcnSegsExpanded[,2] >= dhSegRows[,2], na.rm=TRUE))
+      .stop_if_not((all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
+      .stop_if_not((all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
+      .stop_if_not((all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
+      .stop_if_not((all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
+      .stop_if_not((all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE))
+      .stop_if_not((all(tcnSegsExpanded[,1] <= dhSegRows[,1], na.rm=TRUE))
+      .stop_if_not((all(tcnSegsExpanded[,2] >= dhSegRows[,2], na.rm=TRUE))
   ##    if (!all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE)) {
-  ##      stopifnot(all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE))
+  ##      .stop_if_not((all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE))
   ##    }
 
 
       # Sanity check
-      stopifnot(nrow(dhSegRows) == nrow(tcnSegsExpanded))
+      .stop_if_not((nrow(dhSegRows) == nrow(tcnSegsExpanded))
 
       # Append information on number of SNPs and hets in CN region
       tcnSegmentsKK <- cbind(
@@ -1053,7 +1053,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       verbose && print(verbose, tcnSegmentsKK)
 
       # Sanity check
-      stopifnot(nrow(tcnSegmentsKK) == nrow(dhSegments))
+      .stop_if_not((nrow(tcnSegmentsKK) == nrow(dhSegments))
 
       # Combine TCN and DH segmentation results
       tcndhSegments <- cbind(
@@ -1076,17 +1076,17 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   } # if (flavor == "tcn")
 
   # Sanity check
-  stopifnot(nrow(dhSegRows) == nrow(tcnSegsExpanded))
+  .stop_if_not((nrow(dhSegRows) == nrow(tcnSegsExpanded))
   rownames(tcnSegRows) <- rownames(dhSegRows) <- NULL
 
-  stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
-  stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
+  .stop_if_not((all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
   if (flavor != "tcn") {
-    stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
+    .stop_if_not((all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
   }
-  stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
-  stopifnot(all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE))
-##  stopifnot(all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE))
+  .stop_if_not((all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((all(tcnSegsExpanded[,1] <= tcnSegsExpanded[,2], na.rm=TRUE))
+##  .stop_if_not((all(tcnSegsExpanded[-nrow(tcnSegsExpanded),2] < tcnSegsExpanded[-1,1], na.rm=TRUE))
 
   # Move 'chromosome' column to the first column
   idx <- match("chromosome", names(segs))
@@ -1122,7 +1122,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   )
 
   # Should we drop attributes? /HB 2010-09-24
-  stopifnot(all(data$index == seq_len(nrow(data))))
+  .stop_if_not((all(data$index == seq_len(nrow(data))))
   data$index <- NULL # Drop, because it is guaranteed to be ordered
   class(data) <- c("PairedPSCNData", class(data))
 
@@ -1161,14 +1161,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     for (jj in 1:nrow(tcnSegRows)) {
       tcnSegRowJJ <- unlist(tcnSegRows[jj,,drop=TRUE], use.names=FALSE)
       dhSegRowJJ <- unlist(dhSegRows[jj,,drop=TRUE], use.names=FALSE)
-      stopifnot(
+      .stop_if_not((
         is.na(tcnSegRowJJ[1]) || is.na(dhSegRowJJ[1]) ||
         # A TCN segment must start at or before a DH segment...
         (tcnSegRowJJ[1] <= dhSegRowJJ[1]) ||
         # ...unless there was an outlier at the left edge.
         (is.na(CT[dhSegRowJJ[1]]) && (tcnSegRowJJ[1] - 1L <= dhSegRowJJ[1]))
       )
-      stopifnot(
+      .stop_if_not((
         is.na(tcnSegRowJJ[2]) || is.na(dhSegRowJJ[2]) ||
         # A TCN segment must end at or after a DH segment...
         (dhSegRowJJ[2] <= tcnSegRowJJ[2]) ||

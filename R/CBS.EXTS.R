@@ -123,7 +123,7 @@ setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
   # Argument 'chromosomes':
   disallow <- c("NaN", "Inf")
   chromosomes <- Arguments$getIntegers(chromosomes, range=c(0,Inf), disallow=disallow)
-  stopifnot(all(is.element(chromosomes, getChromosomes(this))))
+  .stop_if_not((all(is.element(chromosomes, getChromosomes(this))))
 
   # Always extract in order
   chromosomes <- unique(chromosomes)
@@ -166,7 +166,7 @@ setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
   cumChrLengthsExcl <- cumsum(chrLengthsExcl)
 
   shifts <- cumChrLengthsExcl[keep]
-  stopifnot(all(is.finite(shifts)))
+  .stop_if_not((all(is.finite(shifts)))
 
   # Adjust indices
   for (cc in seq_along(chromosomes)) {
@@ -245,7 +245,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
     ok <- is.finite(ySS)
 
     # Sanity check
-    ## stopifnot(sum(ok) == seg$nbrOfLoci) # Not dealing with ties
+    ## .stop_if_not((sum(ok) == seg$nbrOfLoci) # Not dealing with ties
 
     mu <- avgY(ySS[ok])
     yS[idxs] <- mu
@@ -421,7 +421,7 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
   res[,"length"] <- res[,"end"] - res[,"start"] + 1L
 
   # Sanity check
-  stopifnot(nrow(res) == length(chromosomes))
+  .stop_if_not((nrow(res) == length(chromosomes))
 
   res <- as.data.frame(res)
   res <- cbind(chromosome=chromosomes, res)

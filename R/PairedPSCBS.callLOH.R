@@ -145,7 +145,7 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
   alphaTag <- sprintf("%g%%", 100*alpha)
   column <- sprintf("c1_%s", alphaTag)
   # Sanity checks
-  stopifnot(is.element(column, colnames(segs)))
+  .stop_if_not((is.element(column, colnames(segs)))
 
   # One-sided test
   verbose && enter(verbose, "Calling segments")
@@ -209,7 +209,7 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
   alphaTag <- sprintf("%g%%", 100*alpha)
   column <- sprintf("dh_%s", alphaTag)
   # Sanity checks
-  stopifnot(is.element(column, colnames(segs)))
+  .stop_if_not((is.element(column, colnames(segs)))
 
   # One-sided test
   verbose && enter(verbose, "Calling segments")

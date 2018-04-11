@@ -50,7 +50,7 @@ setMethodS3("bootstrapCIs", "PairedPSCBS", function(fit, ...) {
 #*/###########################################################################
 setMethodS3("extractTCNAndDHs", "PairedPSCBS", function(fit, ...) {
   segs <- getSegments(fit, ...)
-  stopifnot(!is.null(segs))
+  .stop_if_not((!is.null(segs))
 
   data <- segs[,c("tcnMean", "dhMean", "tcnNbrOfLoci", "dhNbrOfLoci"), drop=FALSE]
   data
@@ -211,11 +211,11 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
   dhSegRows <- fit$dhSegRows[keep,,drop=FALSE]
 
   # Sanity check
-  stopifnot(nrow(dhSegRows) == nrow(tcnSegRows))
-  stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
-#  stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
-  stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
-  stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((nrow(dhSegRows) == nrow(tcnSegRows))
+  .stop_if_not((all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
+#  .stop_if_not((all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
+  .stop_if_not((all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
 
 
   nbrOfSegments <- nrow(segs)
@@ -289,7 +289,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       tcnSegRowsIIBefore <- tcnSegRowsII
       nbrOfTCNsBefore <- segsII[1,"tcnNbrOfLoci"]
       # Sanity check
-      stopifnot(diff(segRowsRange)+1L == nbrOfTCNsBefore)
+      .stop_if_not((diff(segRowsRange)+1L == nbrOfTCNsBefore)
 
       for (jj in seq_len(J)) {
         verbose && enter(verbose, sprintf("DH segment #%d of %d", jj, J))
@@ -297,20 +297,20 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
         tcnSegRow <- unlist(tcnSegRowsII[jj,,drop=FALSE], use.names=FALSE)
         dhSegRow <- unlist(dhSegRowsII[jj,,drop=FALSE], use.names=FALSE)
         # Sanity check
-        stopifnot(all(is.na(tcnSegRow)) || (tcnSegRow[1] <= tcnSegRow[2]))
-        stopifnot(all(is.na(dhSegRow)) || (dhSegRow[1] <= dhSegRow[2]))
+        .stop_if_not((all(is.na(tcnSegRow)) || (tcnSegRow[1] <= tcnSegRow[2]))
+        .stop_if_not((all(is.na(dhSegRow)) || (dhSegRow[1] <= dhSegRow[2]))
 
         # Sanity check
         idxsTCN <- tcnSegRow[1]:tcnSegRow[2]
         nbrOfTCNs <- sum(!is.na(CT[idxsTCN]))
-        stopifnot(nbrOfTCNs == nbrOfTCNsBefore)
+        .stop_if_not((nbrOfTCNs == nbrOfTCNsBefore)
 
         if (joinSegments) {
           # (a) The TCN segment should have identical (start,end) boundaries as the DH region
           xStart <- seg[["dhStart"]]
           xEnd <- seg[["dhEnd"]]
           verbose && printf(verbose, "[xStart,xEnd] = [%.0f,%.0f]\n", xStart, xEnd)
-          stopifnot(xStart <= xEnd)
+          .stop_if_not((xStart <= xEnd)
 
           # (b) Identify units
           units <- which(chromosome == chr & xStart <= x & x <= xEnd)
@@ -351,7 +351,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
         gamma <- avgTCN(CT[units])
         # Sanity check
-        stopifnot(length(units) == 0 || !is.na(gamma))
+        .stop_if_not((length(units) == 0 || !is.na(gamma))
 
         # Update the segment boundaries, estimates and counts
         seg[["tcnStart"]] <- xStart
@@ -362,7 +362,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
         seg[["tcnNbrOfHets"]] <- sum(isHet[units])
 
         # Sanity check
-        stopifnot(nrow(seg) == length(jj))
+        .stop_if_not((nrow(seg) == length(jj))
 
         segsII[jj,] <- seg
         tcnSegRowsII[jj,] <- tcnSegRow
@@ -371,7 +371,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       } # for (jj ...)
 
       # Sanity check
-      stopifnot(nrow(segsII) == length(rowsII))
+      .stop_if_not((nrow(segsII) == length(rowsII))
 
       verbose && cat(verbose, "TCN & DH segRows afterward:")
       verbose && print(verbose, cbind(tcn=tcnSegRowsII, dh=dhSegRowsII))
@@ -382,14 +382,14 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
       nbrOfTCNsAfter <- sum(segsII[,"tcnNbrOfLoci"], na.rm=TRUE)
       verbose && cat(verbose, "Number of TCNs before: ", nbrOfTCNsBefore)
       verbose && cat(verbose, "Number of TCNs after: ", nbrOfTCNsAfter)
-      stopifnot(nbrOfTCNsAfter >= nbrOfTCNsBefore)
+      .stop_if_not((nbrOfTCNsAfter >= nbrOfTCNsBefore)
 
       # Sanity check
-      stopifnot(nrow(dhSegRowsII) == nrow(tcnSegRowsII))
-      stopifnot(all(tcnSegRowsII[,1] <= tcnSegRowsII[,2], na.rm=TRUE))
-      stopifnot(all(tcnSegRowsII[-nrow(tcnSegRowsII),2] < tcnSegRowsII[-1,1], na.rm=TRUE))
-      stopifnot(all(dhSegRowsII[,1] <= dhSegRowsII[,2], na.rm=TRUE))
-      stopifnot(all(dhSegRowsII[-nrow(dhSegRowsII),2] < dhSegRowsII[-1,1], na.rm=TRUE))
+      .stop_if_not((nrow(dhSegRowsII) == nrow(tcnSegRowsII))
+      .stop_if_not((all(tcnSegRowsII[,1] <= tcnSegRowsII[,2], na.rm=TRUE))
+      .stop_if_not((all(tcnSegRowsII[-nrow(tcnSegRowsII),2] < tcnSegRowsII[-1,1], na.rm=TRUE))
+      .stop_if_not((all(dhSegRowsII[,1] <= dhSegRowsII[,2], na.rm=TRUE))
+      .stop_if_not((all(dhSegRowsII[-nrow(dhSegRowsII),2] < dhSegRowsII[-1,1], na.rm=TRUE))
 
       segsCC[rowsII,] <- segsII
       tcnSegRowsCC[rowsII,] <- tcnSegRowsII
@@ -400,11 +400,11 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
     } # for (ii ...)
 
     # Sanity check
-    stopifnot(nrow(segsCC) == length(rows))
+    .stop_if_not((nrow(segsCC) == length(rows))
 
     # Sanity check
-    stopifnot(nrow(dhSegRowsCC) == nrow(tcnSegRowsCC))
-    stopifnot(all(tcnSegRowsCC[,1] <= tcnSegRowsCC[,2], na.rm=TRUE))
+    .stop_if_not((nrow(dhSegRowsCC) == nrow(tcnSegRowsCC))
+    .stop_if_not((all(tcnSegRowsCC[,1] <= tcnSegRowsCC[,2], na.rm=TRUE))
 ####################
 if (!all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE)) {
 
@@ -425,9 +425,9 @@ print(tcnSegRowsII)
 }
 ####################
 
-    stopifnot(all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE))
-    stopifnot(all(dhSegRowsCC[,1] <= dhSegRowsCC[,2], na.rm=TRUE))
-    stopifnot(all(dhSegRowsCC[-nrow(dhSegRowsCC),2] < dhSegRowsCC[-1,1], na.rm=TRUE))
+    .stop_if_not((all(tcnSegRowsCC[-nrow(tcnSegRowsCC),2] < tcnSegRowsCC[-1,1], na.rm=TRUE))
+    .stop_if_not((all(dhSegRowsCC[,1] <= dhSegRowsCC[,2], na.rm=TRUE))
+    .stop_if_not((all(dhSegRowsCC[-nrow(dhSegRowsCC),2] < dhSegRowsCC[-1,1], na.rm=TRUE))
 
     segs[rows,] <- segsCC
     tcnSegRows[rows,] <- tcnSegRowsCC
@@ -438,11 +438,11 @@ print(tcnSegRowsII)
   } # for (cc ...)
 
   # Sanity check
-  stopifnot(nrow(dhSegRows) == nrow(tcnSegRows))
-  stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
-  stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
-  stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
-  stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((nrow(dhSegRows) == nrow(tcnSegRows))
+  .stop_if_not((all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
+  .stop_if_not((all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
+  .stop_if_not((all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
 
   verbose && enter(verbose, "Update (C1,C2) per segment")
   # Append (C1,C2) estimates
@@ -464,11 +464,11 @@ print(tcnSegRowsII)
   # Sanity check
   tcnSegRows <- fitS$tcnSegRows
   dhSegRows <- fitS$dhSegRows
-  stopifnot(nrow(dhSegRows) == nrow(tcnSegRows))
-  stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
-  stopifnot(all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
-  stopifnot(all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
-  stopifnot(all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((nrow(dhSegRows) == nrow(tcnSegRows))
+  .stop_if_not((all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
+  .stop_if_not((all(tcnSegRows[-nrow(tcnSegRows),2] < tcnSegRows[-1,1], na.rm=TRUE))
+  .stop_if_not((all(dhSegRows[,1] <= dhSegRows[,2], na.rm=TRUE))
+  .stop_if_not((all(dhSegRows[-nrow(dhSegRows),2] < dhSegRows[-1,1], na.rm=TRUE))
 
   # Update 'flavor'
   fitS$params$flavor <- gsub(",", "&", flavor, fixed=TRUE)

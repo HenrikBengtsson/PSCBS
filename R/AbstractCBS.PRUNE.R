@@ -38,7 +38,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
   chrOffsets <- getChromosomeOffsets(fit)
   # Sanity check
-  stopifnot(all(is.finite(chrOffsets)))
+  .stop_if_not((all(is.finite(chrOffsets)))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -131,7 +131,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   ## former Reduce() w/ append(a, b, addSplit = FALSE)
   fitT <- do.call(c, args = c(fitList, addSplit = FALSE))
   # Sanity check
-##  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit)) # Not true anymore
+##  .stop_if_not((nbrOfSegments(fitT) == nbrOfSegments(fit)) # Not true anymore
   verbose && exit(verbose)
   fitList <- NULL # Not needed anymore
 
@@ -179,7 +179,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   # Sanity checks
   jumpList <- res$jump
   lastJump <- jumpList[[length(jumpList)]]
-  stopifnot(identical(cpIdxs, as.integer(lastJump)))
+  .stop_if_not((identical(cpIdxs, as.integer(lastJump)))
 
   verbose && exit(verbose)
 
@@ -214,7 +214,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
     match(idxs, table=cpIdxs)
   })
   # Sanity check
-  stopifnot(identical(seq_along(cpIdxs), jumpIdxList[[length(jumpIdxList)]]))
+  .stop_if_not((identical(seq_along(cpIdxs), jumpIdxList[[length(jumpIdxList)]]))
 
   chrs <- segs$chromosome
   starts <- segs[[segKeys[1]]]
@@ -229,7 +229,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
     chrsKK <- chrs[idxs]
     chr <- chrsKK[1]
-#    stopifnot(all(chrsKK == chr))
+#    .stop_if_not((all(chrsKK == chr))
     chrsKK <- c(chrsKK, chrsKK[length(chrsKK)])
     startsKK <- starts[c(1L, idxs+1L)]
     endsKK <- ends[c(idxs, nsegs)]
@@ -257,7 +257,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
 
   # Sanity check
   lastSegs <- segList[[length(segList)]]
-#  stopifnot(identical(lastSegs, segs))
+#  .stop_if_not((identical(lastSegs, segs))
   verbose && str(verbose, segList)
 
   nbrOfCPsSeq <- sapply(jumpList, FUN=length)
@@ -272,8 +272,8 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   verbose && cat(verbose, "Sequence of number of \"discovered\" change points:")
   verbose && print(verbose, nbrOfChangePointsSeq)
 
-  stopifnot(nbrOfSegsSeq == nbrOfCPsSeq + 1L)
-  stopifnot(nbrOfSegsSeq[1L] == nbrOfRegions)
+  .stop_if_not((all(nbrOfSegsSeq == nbrOfCPsSeq + 1L))
+  .stop_if_not((nbrOfSegsSeq[1L] == nbrOfRegions)
 
   segList <- lapply(segList, FUN=function(seg) {
     attr(seg, "nbrOfChangePoints") <- nrow(seg) - nbrOfRegions
@@ -491,7 +491,7 @@ setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbos
   verbose && printf(verbose, "Range of number of CPs among solutions: [%d,%d]\n", min(nbrOfCPs), max(nbrOfCPs))
 
   keep <- which(nbrOfCPs == nbrOfSegments)
-  stopifnot(length(keep) == 1L)
+  .stop_if_not((length(keep) == 1L)
 
   knownSegments <- segList[[keep]]
   verbose && printf(verbose, "Solution with %d segments:\n", nbrOfSegments)

@@ -131,7 +131,7 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
   idxs <- which(isPeak)
 
   # Sanity check
-  stopifnot(length(idxs) >= 1)
+  .stop_if_not((length(idxs) >= 1)
 
   # Extract the first peak
   if (flavor == "firstPeak") {
