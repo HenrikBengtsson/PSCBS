@@ -120,7 +120,7 @@ setMethodS3("testROH", "numeric", function(muN, csN=NULL, betaN=NULL, minNbrOfSn
     wnSnps <- sum(w, na.rm=TRUE) # == 1 /HB
 
     # Sanity check
-    .stop_if_not((isZero(wnSnps - 1.0, eps=sqrt(.Machine$double.eps)))
+    .stop_if_not(isZero(wnSnps - 1.0, eps=sqrt(.Machine$double.eps)))
   } else {
     wnHets <- sum(isHet, na.rm=TRUE)
     wnSnps <- 1

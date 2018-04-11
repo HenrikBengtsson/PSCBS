@@ -120,9 +120,9 @@ setMethodS3("callGNLByTCNofAB", "PairedPSCBS", function(fit, ..., minSize=1L, fo
   params <- fit$params
 
   deltaCN <- params$deltaCN
-  .stop_if_not((!is.null(deltaCN))
+  .stop_if_not(!is.null(deltaCN))
   ntcnRange <- params$ntcnRange
-  .stop_if_not((!is.null(ntcnRange))
+  .stop_if_not(!is.null(ntcnRange))
 
   # Confidence interval of the TCN|AB segments
   range <- ntcnRange + c(+1,-1)*deltaCN

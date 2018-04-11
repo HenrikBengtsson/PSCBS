@@ -158,7 +158,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
     createLink(link=link, target=target)
   }
   # Sanity check
-  .stop_if_not((isFile(link))
+  .stop_if_not(isFile(link))
 
   verbose && exit(verbose)
 
@@ -203,7 +203,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
         createLink(link=link, target=target)
       }
       # Sanity check
-      .stop_if_not((isFile(link))
+      .stop_if_not(isFile(link))
     }
   } else {
     verbose && cat(verbose, "No such files found.")
@@ -233,7 +233,7 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
         createLink(link=link, target=target)
       }
       # Sanity check
-      .stop_if_not((isDirectory(link))
+      .stop_if_not(isDirectory(link))
     }
   } else {
     verbose && cat(verbose, "No such directories found.")

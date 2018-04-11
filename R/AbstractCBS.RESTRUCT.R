@@ -498,9 +498,9 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., asMi
 
   # Sanity check
   if (asMissing) {
-    .stop_if_not((nbrOfSegments(res, splitters=TRUE) == nbrOfSegments(this, splitters=TRUE))
+    .stop_if_not(nbrOfSegments(res, splitters=TRUE) == nbrOfSegments(this, splitters=TRUE))
   } else {
-    .stop_if_not((nbrOfSegments(res, splitters=TRUE) + length(regions) == nbrOfSegments(this, splitters=TRUE))
+    .stop_if_not(nbrOfSegments(res, splitters=TRUE) + length(regions) == nbrOfSegments(this, splitters=TRUE))
   }
 
   verbose && exit(verbose)

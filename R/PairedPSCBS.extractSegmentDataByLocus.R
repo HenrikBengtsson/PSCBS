@@ -56,7 +56,7 @@ setMethodS3("extractSegmentDataByLocus", "PairedPSCBS", function(fit, fields=NUL
     idxs <- Arguments$getIndices(idxs, max=nbrOfLoci)
     verbose && cat(verbose, "Number of loci in segment: ", length(idxs))
     # Sanity check
-##    .stop_if_not((length(idxs) == seg$tcnNbrOfLoci)
+##    .stop_if_not(length(idxs) == seg$tcnNbrOfLoci)
 
     segsSS <- seg[fields]
     verbose && cat(verbose, "Segment data extracted:")
@@ -75,8 +75,8 @@ setMethodS3("extractSegmentDataByLocus", "PairedPSCBS", function(fit, fields=NUL
   dataL[nok,] <- NA
 
   # Sanity check
-  .stop_if_not((nrow(dataL) == nbrOfLoci)
-  .stop_if_not((ncol(dataL) == length(fields))
+  .stop_if_not(nrow(dataL) == nbrOfLoci)
+  .stop_if_not(ncol(dataL) == length(fields))
 
   verbose && exit(verbose)
 

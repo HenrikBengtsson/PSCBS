@@ -527,7 +527,7 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   segs <- getSegments(fit)
   dh <- segs$dhMean
-  .stop_if_not((!is.null(dh))
+  .stop_if_not(!is.null(dh))
   n <- segs$dhNbrOfLoci
 
   # Drop missing values
@@ -537,7 +537,7 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   n <- n[idxs]
   verbose && cat(verbose, "Number of segments: ", length(idxs))
   # Sanity check
-  .stop_if_not((length(idxs) > 0)
+  .stop_if_not(length(idxs) > 0)
 
   # Calculated weighted quantile
   weights <- n / sum(n)
@@ -549,7 +549,7 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   idxs <- idxs[keep]
   verbose && cat(verbose, "Number of segments with small DH: ", length(idxs))
   # Sanity check
-  .stop_if_not((length(idxs) > 0)
+  .stop_if_not(length(idxs) > 0)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -561,7 +561,7 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   # Extract the data
   data <- fitT$data
   rho <- data$rho
-  .stop_if_not((!is.null(rho))
+  .stop_if_not(!is.null(rho))
 
   verbose && cat(verbose, "Number of data points: ", length(rho))
 

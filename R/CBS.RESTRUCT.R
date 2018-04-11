@@ -107,7 +107,7 @@ setMethodS3("c", "CBS", function(..., addSplit = TRUE) {
   
   # Sanity check
   ns <- sapply(res[fields], FUN = nrow)
-  .stop_if_not((all(ns == ns[1]))
+  .stop_if_not(all(ns == ns[1]))
 
   res
 }) # c()
@@ -145,7 +145,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
     # Sanity check
     ns2 <- segRows[,2] - segRows[,1] + 1L
     ns2 <- ns2[!isSplitter]
-    .stop_if_not((all(ns2 == ns))
+    .stop_if_not(all(ns2 == ns))
 
     segRows
   } # updateSegRows()
@@ -179,7 +179,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   params <- fit$params
 
   # Sanity checks
-  .stop_if_not((all(!is.na(data$chromosome) & !is.na(data$x)))
+  .stop_if_not(all(!is.na(data$chromosome) & !is.na(data$x)))
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Subset segments
@@ -223,7 +223,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   d <- segRows[idxs,] - segRowsT
 
   # Sanity check
-  .stop_if_not((identical(d[,1], d[,2]))
+  .stop_if_not(identical(d[,1], d[,2]))
   d <- d[,1]
   verbose && cat(verbose, "Row deltas:")
   verbose && str(verbose, d)
@@ -231,9 +231,9 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   segRows <- segRows[idxs,,drop=FALSE] - d
   verbose && str(verbose, segRows)
   # Sanity checks
-  .stop_if_not((suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT))
+  .stop_if_not(suppressWarnings(max(segRows, na.rm=TRUE)) <= nrow(dataT))
   drow <- segRows[-1,1] - segRows[-nrow(segRows),2]
-  .stop_if_not((all(is.na(drow) | (drow > 0)))
+  .stop_if_not(all(is.na(drow) | (drow > 0)))
   if (!all(is.na(drow) | (drow > 0))) {
     print(segRows)
     throw("INTERNAL ERROR: Generated 'segRows' is invalid, because it contains overlapping data chunks.")

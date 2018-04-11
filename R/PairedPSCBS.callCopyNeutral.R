@@ -156,7 +156,7 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
     verbose && exit(verbose)
   }
   # Sanity check
-  .stop_if_not((nbrOfSegments(fitNTCN) == 1L)
+  .stop_if_not(nbrOfSegments(fitNTCN) == 1L)
   verbose && exit(verbose)
 
   verbose && enter(verbose, "Bootstrap the identified copy-neutral states")
@@ -167,7 +167,7 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
   excl <- grep("(^chromosome|Id|Start|End|Call)$", names)
   segsNTCN <- segsNTCN[,-excl,drop=FALSE]
   # Sanity check
-  .stop_if_not((ncol(segsNTCN) > 0L)
+  .stop_if_not(ncol(segsNTCN) > 0L)
   verbose && exit(verbose)
 
   verbose && print(verbose, segsNTCN)
@@ -466,7 +466,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
 
   # Sanity check
 #  # All previously called AB regions should remain called here as well
-#  .stop_if_not((all(isNTCN[isNeutralAB], na.rm=TRUE))
+#  .stop_if_not(all(isNTCN[isNeutralAB], na.rm=TRUE))
 
   segs$ntcnCall <- isNTCN
 

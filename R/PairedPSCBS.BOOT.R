@@ -44,21 +44,21 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   summarizeSamples <- function(X, statsFcn, stats=NULL, what=c("segment", "changepoint"), ..., verbose=FALSE) {
     # Argument 'X':
-    .stop_if_not((is.array(X))
+    .stop_if_not(is.array(X))
     dim <- dim(X)
-    .stop_if_not((length(dim) == 3L)
+    .stop_if_not(length(dim) == 3L)
 
     # Argument 'statsFcn':
-    .stop_if_not((is.function(statsFcn))
+    .stop_if_not(is.function(statsFcn))
     statsT <- statsFcn(1)
-    .stop_if_not((!is.null(names(statsT)))
+    .stop_if_not(!is.null(names(statsT)))
     nbrOfStats <- length(statsT)
     statsNames <- names(statsT)
     statsT <- NULL # Not needed anymore
 
     # Argument 'stats':
     if (!is.null(stats)) {
-      .stop_if_not((is.data.frame(stats))
+      .stop_if_not(is.data.frame(stats))
     }
 
     # Argument 'what':
@@ -91,9 +91,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
       Xkk <- X[,,kk,drop=FALSE] # An JxB matrix
       dim(Xkk) <- dim(Xkk)[-3L]
       # Sanity check
-      .stop_if_not((is.matrix(Xkk))
-      .stop_if_not((nrow(Xkk) == dim(X)[1L])
-      .stop_if_not((ncol(Xkk) == B)
+      .stop_if_not(is.matrix(Xkk))
+      .stop_if_not(nrow(Xkk) == dim(X)[1L])
+      .stop_if_not(ncol(Xkk) == B)
 
       for (jj in seq_len(dim(X)[1L])) {
         verbose && enter(verbose, sprintf("%s #%d of %d", whatC, jj, dim(X)[1L]))
@@ -136,7 +136,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
     if (what == "segment" && B >= 100L) {
       verbose && enter(verbose, "Statistical sanity checks (iff B >= 100)")
 
-      .stop_if_not((is.array(S))
+      .stop_if_not(is.array(S))
 
       # Find extreme quantiles
       probs <- dimnames(S)[[2L]]
@@ -148,7 +148,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
       verbose && printf(verbose, "Available quantiles: %s\n", paste(probs, collapse=", "))
       verbose && str(verbose, S)
       # Sanity check
-      .stop_if_not((all(is.finite(probs)))
+      .stop_if_not(all(is.finite(probs)))
 
       # Is it possible to check?
       if (any(probs < 0.10) && any(probs > 0.90)) {
@@ -163,7 +163,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
             dim(Skk) <- dim(Skk)[-3L]
 
             # Sanity checks
-            .stop_if_not((is.matrix(Skk))
+            .stop_if_not(is.matrix(Skk))
 
             range <- Skk[,c(1L,ncol(Skk)),drop=FALSE]
 
@@ -187,9 +187,9 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
             segMean <- segMean[keep]
 
             # Sanity checks
-            .stop_if_not((all(range[,2L] + tol >= range[,1L], na.rm=TRUE))
-            .stop_if_not((all(segMean + tol >= range[,1L], na.rm=TRUE))
-            .stop_if_not((all(segMean - tol <= range[,2L], na.rm=TRUE))
+            .stop_if_not(all(range[,2L] + tol >= range[,1L], na.rm=TRUE))
+            .stop_if_not(all(segMean + tol >= range[,1L], na.rm=TRUE))
+            .stop_if_not(all(segMean - tol <= range[,2L], na.rm=TRUE))
 
             verbose && exit(verbose)
           } # for (kk ...)
@@ -266,7 +266,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
   # Already done?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   stats <- statsFcn(1)
-  .stop_if_not((!is.null(names(stats)))
+  .stop_if_not(!is.null(names(stats)))
   nbrOfStats <- length(stats)
   statsNames <- names(stats)
 
@@ -421,7 +421,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   params <- fit$params
 
   # Sanity checks
-  .stop_if_not((all(!is.na(data$chromosome) & !is.na(data$x)))
+  .stop_if_not(all(!is.na(data$chromosome) & !is.na(data$x)))
 
   # Sanity checks
   if (!params$joinSegments) {
@@ -431,8 +431,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor))
   }
   # Sanity check (same as above, but just in case)
-  .stop_if_not((all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
-  .stop_if_not((all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE))
+  .stop_if_not(all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
+  .stop_if_not(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE))
 
 
 
@@ -484,7 +484,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   verbose && cat(verbose, "Number of non-SNPs: ", nbrOfNonSNPs)
 
   # Sanity checks
-  .stop_if_not((length(intersect(snps, nonSNPs)) == 0L)
+  .stop_if_not(length(intersect(snps, nonSNPs)) == 0L)
 
   # Heterozygous SNPs
   hets <- which(isSnp &  isHet)
@@ -500,12 +500,12 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   }
 
   # Sanity checks
-  .stop_if_not((length(intersect(hets, homs)) == 0L)
-  .stop_if_not((nbrOfHets + nbrOfHoms == nbrOfSNPs)
+  .stop_if_not(length(intersect(hets, homs)) == 0L)
+  .stop_if_not(nbrOfHets + nbrOfHoms == nbrOfSNPs)
 
   # Sanity checks
-  .stop_if_not((length(isSnp) == nbrOfLoci)
-  .stop_if_not((length(isHet) == nbrOfLoci)
+  .stop_if_not(length(isSnp) == nbrOfLoci)
+  .stop_if_not(length(isHet) == nbrOfLoci)
 
   # Not needed anymore
   muN <- isSnp <- NULL
@@ -575,7 +575,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     verbose && enter(verbose, sprintf("Segment #%d (chr %d, tcnId=%d, dhId=%d) of %d", jj, chr, tcnId, dhId, nbrOfSegments))
 
     # Sanity check
-    if (.debug) .stop_if_not((!is.na(chr) && !is.na(tcnId) && !is.na(dhId))
+    if (.debug) .stop_if_not(!is.na(chr) && !is.na(tcnId) && !is.na(dhId))
 
     # Get the segment data
     segJJ <- segs[jj,,drop=FALSE]
@@ -586,8 +586,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     verbose && cat(verbose, "Number of TCNs: ", nbrOfTCNs)
     verbose && cat(verbose, "Number of DHs: ", nbrOfDHs)
     if (.debug) {
-      .stop_if_not((!is.na(nbrOfTCNs))
-      .stop_if_not((!is.na(nbrOfDHs))
+      .stop_if_not(!is.na(nbrOfTCNs))
+      .stop_if_not(!is.na(nbrOfDHs))
     }
 
     tcnSegRowJJ <- unlist(tcnSegRows[jj,], use.names=FALSE)
@@ -635,7 +635,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     verbose && str(verbose, idxsDH)
 
     # Sanity check
-    if (.debug) .stop_if_not((length(idxsDH) == nbrOfDHs)
+    if (.debug) .stop_if_not(length(idxsDH) == nbrOfDHs)
 
     verbose && exit(verbose)
 
@@ -654,7 +654,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     verbose && cat(verbose, "Non-polymorphic loci:")
     verbose && str(verbose, idxsNonSNP)
     # Sanity check
-    if (.debug) .stop_if_not((length(idxsSNP) + length(idxsNonSNP) == length(idxsAll))
+    if (.debug) .stop_if_not(length(idxsSNP) + length(idxsNonSNP) == length(idxsAll))
 
     # Identify heterozygous and homozygous SNPs
     idxsHet <- intersect(idxsSNP, hets)
@@ -689,9 +689,9 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
     # Sanity check
     if (.debug) {
-      .stop_if_not((length(idxsHet) + length(idxsHom) + length(idxsNonSNP) == nbrOfTCNs)
-      .stop_if_not((length(intersect(idxsDH, idxsHetNonDH)) == 0L)
-      .stop_if_not((length(idxsTCN) == nbrOfTCNs)
+      .stop_if_not(length(idxsHet) + length(idxsHom) + length(idxsNonSNP) == nbrOfTCNs)
+      .stop_if_not(length(intersect(idxsDH, idxsHetNonDH)) == 0L)
+      .stop_if_not(length(idxsTCN) == nbrOfTCNs)
     }
 
     verbose && exit(verbose)
@@ -781,10 +781,10 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
         # Sanity check
         if (.debug) {
-          .stop_if_not((length(intersect(idxsDHBB, idxsHetNonDHBB)) == 0L)
-          .stop_if_not((length(intersect(idxsHetBB, idxsHomBB)) == 0L)
-          .stop_if_not((length(intersect(idxsHetBB, idxsNonSNPBB)) == 0L)
-          .stop_if_not((length(intersect(idxsHomBB, idxsNonSNPBB)) == 0L)
+          .stop_if_not(length(intersect(idxsDHBB, idxsHetNonDHBB)) == 0L)
+          .stop_if_not(length(intersect(idxsHetBB, idxsHomBB)) == 0L)
+          .stop_if_not(length(intersect(idxsHetBB, idxsNonSNPBB)) == 0L)
+          .stop_if_not(length(intersect(idxsHomBB, idxsNonSNPBB)) == 0L)
         }
 
         # Extract signals
@@ -803,7 +803,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   verbose && str(verbose, M)
 
   # Sanity check
-  .stop_if_not((all(!is.nan(M)))
+  .stop_if_not(all(!is.nan(M)))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -816,8 +816,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   M[,,"c2"] <- C2
   verbose && str(verbose, M)
   # Sanity check
-  .stop_if_not((dim(M)[1L] == nbrOfSegments)
-  .stop_if_not((all(!is.nan(M)))
+  .stop_if_not(dim(M)[1L] == nbrOfSegments)
+  .stop_if_not(all(!is.nan(M)))
   # Not needed anymore
   C1 <- C2 <- NULL
   verbose && exit(verbose)
@@ -833,8 +833,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # (will be empty if nbrOfSegments == 1, but that's ok/intended)
   D <- C[-nbrOfSegments,,, drop=FALSE] - C[-1L,,, drop=FALSE]
   # Sanity check
-  .stop_if_not((dim(D)[1L] == nbrOfSegments-1L)
-  .stop_if_not((all(!is.nan(D)))
+  .stop_if_not(dim(D)[1L] == nbrOfSegments-1L)
+  .stop_if_not(all(!is.nan(D)))
   C <- NULL # Not needed anymore
 
   # Allocate array
@@ -843,7 +843,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   dim <- dim(D)
   dim[3L] <- length(dimnames[[3L]])
   P <- array(NA_real_, dim=dim, dimnames=dimnames)
-  .stop_if_not((dim(P)[1L] == nbrOfSegments-1L)
+  .stop_if_not(dim(P)[1L] == nbrOfSegments-1L)
 
   if (nbrOfSegments >= 2L) {
     verbose && str(verbose, D)
@@ -858,8 +858,8 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   verbose && str(verbose, P)
 
   # Sanity check
-  .stop_if_not((dim(P)[1L] == nbrOfSegments-1L)
-  .stop_if_not((all(!is.nan(P)))
+  .stop_if_not(dim(P)[1L] == nbrOfSegments-1L)
+  .stop_if_not(all(!is.nan(P)))
   verbose && exit(verbose)
 
   boot <- list(segments=M, changepoints=P)
@@ -931,7 +931,7 @@ setMethodS3("clearBootstrapSummaries", "PairedPSCBS", function(fit, what=c("segm
     }
     # Sanity check
     fields <- findBootstrapSummaries(fit, what=what, ...)
-    .stop_if_not((length(fields) == 0L)
+    .stop_if_not(length(fields) == 0L)
 
     data <- fields <- NULL # Not needed anymoew
 

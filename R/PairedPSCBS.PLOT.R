@@ -88,7 +88,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
     } else {
       scatterT <- strsplit(scatter, split=",", fixed=TRUE)
       tracksT <- strsplit(tracks, split=",", fixed=TRUE)
-      .stop_if_not((all(is.element(scatterT, tracksT)))
+      .stop_if_not(all(is.element(scatterT, tracksT)))
       # Not needed anymore
       scatterT <- tracksT <- NULL
     }
@@ -719,7 +719,7 @@ setMethodS3("tileChromosomes", "PairedPSCBS", function(fit, chrStarts=NULL, ...,
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   segFields <- grep("(Start|End)$", colnames(segs), value=TRUE)
   # Sanity check
-  .stop_if_not((length(segFields) > 0)
+  .stop_if_not(length(segFields) > 0)
 
   for (kk in seq_along(chromosomes)) {
     chromosome <- chromosomes[kk]
@@ -819,7 +819,7 @@ setMethodS3("getChromosomeRanges", "PairedPSCBS", function(fit, ...) {
   res[,"length"] <- res[,"end"] - res[,"start"] + 1L
 
   # Sanity check
-  .stop_if_not((nrow(res) == length(chromosomes))
+  .stop_if_not(nrow(res) == length(chromosomes))
 
   res <- as.data.frame(res)
   res <- cbind(chromosome=chromosomes, res)

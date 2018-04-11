@@ -42,7 +42,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
 
 
   segs <- getSegments(fit, splitters=TRUE)
-  .stop_if_not((!is.null(segs))
+  .stop_if_not(!is.null(segs))
   nbrOfSegments <- nrow(segs)
 
   # Argument 'idx':
@@ -63,10 +63,10 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   # Extract the data and segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   data <- getLocusData(fit)
-  .stop_if_not((!is.null(data))
+  .stop_if_not(!is.null(data))
 
   segs <- getSegments(fit, splitters=TRUE)
-  .stop_if_not((!is.null(segs))
+  .stop_if_not(!is.null(segs))
 
   verbose && enter(verbose, "Subsetting segment")
   # Subset the region-level data
@@ -142,7 +142,7 @@ setMethodS3("extractDhSegment", "PairedPSCBS", function(fit, idx, what=c("hets",
   verbose && cat(verbose, "Number of TCN markers: ", seg[,"tcnNbrOfLoci"])
 
   # Sanity check
-  if (what == "hets" && n > 0) .stop_if_not((n == seg[,"dhNbrOfLoci"])
+  if (what == "hets" && n > 0) .stop_if_not(n == seg[,"dhNbrOfLoci"])
 
   fitS <- fit
   fitS$data <- data

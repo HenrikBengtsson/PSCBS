@@ -99,16 +99,16 @@ setMethodS3("tileChromosomes", "CBS", function(fit, ..., verbose=FALSE) {
   segsT <- getSegments(fitT)
   segs <- segs[,!is.element(colnames(segs), c("start", "end"))]
   segsT <- segsT[,!is.element(colnames(segsT), c("start", "end"))]
-  .stop_if_not((all.equal(segsT, segs))
+  .stop_if_not(all.equal(segsT, segs))
 
   data <- getLocusData(fit)
   dataT <- getLocusData(fitT)
   data <- data[,!is.element(colnames(data), c("x"))]
   dataT <- dataT[,!is.element(colnames(dataT), c("x"))]
-  .stop_if_not((all.equal(dataT, data))
+  .stop_if_not(all.equal(dataT, data))
 
-  .stop_if_not((nbrOfLoci(fitT) == nbrOfLoci(fit))
-  .stop_if_not((nbrOfSegments(fitT) == nbrOfSegments(fit))
+  .stop_if_not(nbrOfLoci(fitT) == nbrOfLoci(fit))
+  .stop_if_not(nbrOfSegments(fitT) == nbrOfSegments(fit))
 
   # Flag object
   attr(fitT, "tiledChromosomes") <- TRUE
@@ -160,7 +160,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   fitT <- tileChromosomes(fit)
   verbose && str(verbose, fitT)
   # Sanity check
-  .stop_if_not((!is.null(fitT$chromosomeStats))
+  .stop_if_not(!is.null(fitT$chromosomeStats))
 
   # Extract the input data
   data <- getLocusData(fitT)

@@ -369,13 +369,13 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         if (R_SANITY_CHECK) {
           if (nrow(knownSegmentsKK) == 0) {
             # Since all missing data have been dropped...
-            .stop_if_not((nrow(fit$data) == length(y))
+            .stop_if_not(nrow(fit$data) == length(y))
             # ...and ordered along the genome already.
-            .stop_if_not((all.equal(fit$data$y, y))
+            .stop_if_not(all.equal(fit$data$y, y))
           }
 
           # Assert weights were used
-          .stop_if_not((!hasWeights || !is.null(fit$data$w))
+          .stop_if_not(!hasWeights || !is.null(fit$data$w))
         } # if (R_SANITY_CHECK)
 
         verbose && print(verbose, head(as.data.frame(fit)), level=-10)
@@ -467,7 +467,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       splitter <- extractSegment(splitter, 2)
       # Sanity check
       if (R_SANITY_CHECK) {
-        .stop_if_not((nbrOfSegments(splitter, splitters=TRUE) == 1)
+        .stop_if_not(nbrOfSegments(splitter, splitters=TRUE) == 1)
       } # if (R_SANITY_CHECK)
     })
 
@@ -541,11 +541,11 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
         # Sanity checks
         if (R_SANITY_CHECK) {
-          .stop_if_not((nrow(fit$data) == nbrOfLoci)
-          .stop_if_not((all.equal(fit$data$y, y))
+          .stop_if_not(nrow(fit$data) == nbrOfLoci)
+          .stop_if_not(all.equal(fit$data$y, y))
 
           # Assert weights were used
-          .stop_if_not((!hasWeights || !is.null(fit$data$w))
+          .stop_if_not(!hasWeights || !is.null(fit$data$w))
         } # if (R_SANITY_CHECK)
 
         segs <- as.data.frame(fit)
@@ -558,7 +558,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
         # Sanity check
         if (R_SANITY_CHECK) {
-          .stop_if_not((TRUE && nbrOfSegments(fit, splitters=TRUE) > 0)
+          .stop_if_not(TRUE && nbrOfSegments(fit, splitters=TRUE) > 0)
         } # if (R_SANITY_CHECK)
 
         fit
@@ -596,18 +596,18 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Sanity checks
     if (R_SANITY_CHECK) {
       segs <- getSegments(fit)
-      .stop_if_not((all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE))
-      .stop_if_not((all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
-      .stop_if_not((all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
+      .stop_if_not(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE))
+      .stop_if_not(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+      .stop_if_not(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
 
   #    if (nrow(fit$data) != length(y)) {
   #      print(c(nrow(fit$data), nrow(data)))
   #    }
-  #    .stop_if_not((nrow(fit$data) == nrow(data))
-  #    .stop_if_not((all(fit$data$chromosome == data$chromosome))
-  #    .stop_if_not((all(fit$data$x == data$x))
-  #    .stop_if_not((all(fit$data$index == data$index))
-  #    .stop_if_not((all.equal(fit$data$y, data$y))
+  #    .stop_if_not(nrow(fit$data) == nrow(data))
+  #    .stop_if_not(all(fit$data$chromosome == data$chromosome))
+  #    .stop_if_not(all(fit$data$x == data$x))
+  #    .stop_if_not(all(fit$data$index == data$index))
+  #    .stop_if_not(all.equal(fit$data$y, data$y))
     } # if (R_SANITY_CHECK)
 
     verbose && exit(verbose)
@@ -622,7 +622,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   # Sanity check
   if (R_SANITY_CHECK) {
-    .stop_if_not((nbrOfSegments <= 1)
+    .stop_if_not(nbrOfSegments <= 1)
   } # if (R_SANITY_CHECK)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -633,7 +633,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     nbrOfSegments <- nrow(knownSegments)
     # Sanity check
     if (R_SANITY_CHECK) {
-      .stop_if_not((nbrOfSegments <= 1)
+      .stop_if_not(nbrOfSegments <= 1)
     } # if (R_SANITY_CHECK)
   }
 
@@ -705,7 +705,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Sanity check
   if (R_SANITY_CHECK) {
     # (because all loci with unknown locations have already been dropped)
-    .stop_if_not((nrow(cnData) == nrow(data))
+    .stop_if_not(nrow(cnData) == nrow(data))
   } # if (R_SANITY_CHECK)
 
 
@@ -825,7 +825,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
     # Sanity check
     if (R_SANITY_CHECK) {
-      .stop_if_not((nrow(output) == 1)
+      .stop_if_not(nrow(output) == 1)
     } # if (R_SANITY_CHECK)
 
     # Was a region specified?
@@ -857,7 +857,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
     # Sanity check
     if (R_SANITY_CHECK) {
-      .stop_if_not((nrow(output) == 1)
+      .stop_if_not(nrow(output) == 1)
     } # if (R_SANITY_CHECK)
 
     # Was a region specified?
@@ -936,8 +936,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # Sanity checks
   if (R_SANITY_CHECK) {
     segRows <- fit$segRows
-    .stop_if_not((all(segRows[,1] <= segRows[,2], na.rm=TRUE))
-    .stop_if_not((all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE))
+    .stop_if_not(all(segRows[,1] <= segRows[,2], na.rm=TRUE))
+    .stop_if_not(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE))
   } # if (R_SANITY_CHECK)
 
 
@@ -987,8 +987,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Sanity checks
     if (R_SANITY_CHECK) {
       segRows <- fit$segRows
-      .stop_if_not((all(segRows[,1] <= segRows[,2], na.rm=TRUE))
-      .stop_if_not((all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE))
+      .stop_if_not(all(segRows[,1] <= segRows[,2], na.rm=TRUE))
+      .stop_if_not(all(segRows[-nrow(segRows),2] < segRows[-1,1], na.rm=TRUE))
     } # if (R_SANITY_CHECK)
   }
 

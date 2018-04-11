@@ -71,7 +71,7 @@ setMethodS3("getLocusData", "PSCBS", function(fit, indices=NULL, fields=c("asis"
     data <- data[map,]
 
     # Sanity check
-    .stop_if_not((nrow(data) == length(indices))
+    .stop_if_not(nrow(data) == length(indices))
   }
 
   data
@@ -169,8 +169,8 @@ setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE
     # If joinSegments was used (i.e. (start,end) are equal for TCN and DH)...
     if (fit$params$joinSegments) {
       # Sanity check
-      .stop_if_not((all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
-      .stop_if_not((all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE))
+      .stop_if_not(all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
+      .stop_if_not(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE))
 
       names <- colnames(segs)
       keep <- !is.element(names, c("dhStart", "dhEnd"))
@@ -223,7 +223,7 @@ setMethodS3("normalizeTotalCNs", "PSCBS", function(fit, targetTCN=2, ...) {
   ## Fit using locus-level data
   data <- getLocusData(fit, ...)
   C <- data$CT
-  .stop_if_not((!is.null(C))
+  .stop_if_not(!is.null(C))
   mu <- median(C, na.rm=TRUE)
   scale <- targetTCN / mu
 

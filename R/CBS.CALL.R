@@ -167,8 +167,8 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
 
 
   # Sanity check
-  .stop_if_not((length(lossCalls) == nbrOfRows)
-  .stop_if_not((length(gainCalls) == nbrOfRows)
+  .stop_if_not(length(lossCalls) == nbrOfRows)
+  .stop_if_not(length(gainCalls) == nbrOfRows)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -377,7 +377,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   verbose && cat(verbose, "Number of called segments: ", length(calls))
 
   # Sanity check
-  .stop_if_not((length(calls) == nbrOfSegments)
+  .stop_if_not(length(calls) == nbrOfSegments)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -564,8 +564,8 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
 
   # Sanity check
-  .stop_if_not((length(negOutlierCall) == nbrOfLoci)
-  .stop_if_not((length(posOutlierCall) == nbrOfLoci)
+  .stop_if_not(length(negOutlierCall) == nbrOfLoci)
+  .stop_if_not(length(posOutlierCall) == nbrOfLoci)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -625,7 +625,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
                   seg$start <= x & x <= seg$end)
     idxs <- Arguments$getIndices(idxs, max=nbrOfLoci)
     # Sanity check
-##    .stop_if_not((length(idxs) == seg$nbrOfLoci)
+##    .stop_if_not(length(idxs) == seg$nbrOfLoci)
 
     callsSS <- seg[callCols]
     for (cc in seq_len(nbrOfCalls)) {
@@ -639,8 +639,8 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   callsL[nok,] <- as.logical(NA)
 
   # Sanity check
-  .stop_if_not((nrow(callsL) == nbrOfLoci)
-  .stop_if_not((ncol(callsL) == nbrOfCalls)
+  .stop_if_not(nrow(callsL) == nbrOfLoci)
+  .stop_if_not(ncol(callsL) == nbrOfCalls)
 
   callsL
 }, private=TRUE) # extractCallsByLocus()
@@ -717,8 +717,8 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     regions <- getChromosomeRanges(fit)[,c("chromosome", "start", "end")]
   }
   regions <- as.data.frame(regions)
-  .stop_if_not((all(is.element(c("chromosome", "start", "end"), colnames(regions))))
-  .stop_if_not((!any(duplicated(regions$chromosome)))
+  .stop_if_not(all(is.element(c("chromosome", "start", "end"), colnames(regions))))
+  .stop_if_not(!any(duplicated(regions$chromosome)))
 
   # Argument 'verbose':
   verbose <- Arguments$getVerbose(verbose)
@@ -821,13 +821,13 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   regionsT <- regions[idxs,]
 
   # Sanity check
-  .stop_if_not((nrow(regionsT) == nrow(res1))
+  .stop_if_not(nrow(regionsT) == nrow(res1))
 
 
   verbose && enter(verbose, "Calculating fractions per region")
   # Calculate lengths
   regionsT$length <- regionsT[,"end"] - regionsT[,"start"] ## + 1L
-  .stop_if_not((all(regionsT$length >= 0))
+  .stop_if_not(all(regionsT$length >= 0))
 
   res2 <- res1 / regionsT[,"length"]
   names(res2) <- gsub("Call$", "Fraction", callTypes)
@@ -847,11 +847,11 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   resT <- res[,grep("Fraction", colnames(res))]
   for (key in colnames(resT)) {
     rho <- resT[,key]
-    .stop_if_not((all(rho >= 0, na.rm=TRUE))
-    .stop_if_not((all(rho <= 1, na.rm=TRUE))
+    .stop_if_not(all(rho >= 0, na.rm=TRUE))
+    .stop_if_not(all(rho <= 1, na.rm=TRUE))
   }
 
-  .stop_if_not((nrow(res) == nrow(regions))
+  .stop_if_not(nrow(res) == nrow(regions))
 
   verbose && str(verbose, res)
   verbose && exit(verbose)
@@ -1162,7 +1162,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
   nbrOfCalls <- length(keep)
 
   # Sanity check
-  .stop_if_not((nbrOfCalls > 0)
+  .stop_if_not(nbrOfCalls > 0)
 
   chromosomes <- getChromosomes(fit)
   fitList <- list()
@@ -1306,8 +1306,8 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
 
 setMethodS3("encodeCalls", "data.frame", function(calls, flavor="UCSF", ...) {
   # Argument 'calls':
-  .stop_if_not((all(is.element(c("chromosome", "x"), colnames(calls))))
-  .stop_if_not((all(is.element(c("lossCall", "gainCall"), colnames(calls))))
+  .stop_if_not(all(is.element(c("chromosome", "x"), colnames(calls))))
+  .stop_if_not(all(is.element(c("lossCall", "gainCall"), colnames(calls))))
 
   # Argument 'flavor':
   flavor <- match.arg(flavor)
