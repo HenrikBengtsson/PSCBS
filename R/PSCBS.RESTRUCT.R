@@ -18,7 +18,7 @@ setMethodS3("c", "PSCBS", function(..., addSplit = TRUE) {
 
     if (isNA(arg)) {
       if (addSplit) {
-        warning("Detected explicit NA in call to c(..., addSplit = TRUE). Ignoring")
+        warning(sprintf("Detected explicit NA in call to c(<%s>, ..., addSplit = TRUE). Ignoring", class(args[[1]])[1]))
         next
       }
       ## Add "splitter"
