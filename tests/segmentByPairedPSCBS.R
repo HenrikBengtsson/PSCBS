@@ -32,7 +32,7 @@ if (Sys.getenv("_R_CHECK_FULL_") == "") {
 
 str(dataS)
 
-fig <- 1;
+fig <- 1
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

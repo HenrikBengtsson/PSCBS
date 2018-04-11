@@ -88,7 +88,6 @@ fit5 <- segmentByCBS(y, x=x, knownSegments=knownSegments, undo=Inf, verbose=TRUE
 print(fit5)
 plotTracks(fit5)
 abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
-stopifnot(nbrOfSegments(fit5) == nrow(knownSegments));
 
 
 # One can also force a separator between two segments by setting

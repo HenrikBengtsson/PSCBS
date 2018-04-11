@@ -37,7 +37,7 @@
 }
 
 \section{The UCSF caller}{
-  If \code{method == "ucsf-mad"}, then loci are called using [1];
+  If \code{method == "ucsf-mad"}, then loci are called using [1]
  "Finally, to identify single technical or biological outliers such
   as high level amplifications, the presence of the outliers within
   a segment was allowed by assigning the original observed log2ratio
