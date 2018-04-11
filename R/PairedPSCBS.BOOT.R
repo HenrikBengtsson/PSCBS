@@ -54,7 +54,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
     stopifnot(!is.null(names(statsT)))
     nbrOfStats <- length(statsT)
     statsNames <- names(statsT)
-    statsT <- NULL; # Not needed anymore
+    statsT <- NULL # Not needed anymore
 
     # Argument 'stats':
     if (!is.null(stats)) {
@@ -88,7 +88,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
       field <- fields[kk]
       verbose && enter(verbose, sprintf("Field #%d ('%s') of %d", kk, field, length(fields)))
 
-      Xkk <- X[,,kk,drop=FALSE];  # An JxB matrix
+      Xkk <- X[,,kk,drop=FALSE] # An JxB matrix
       dim(Xkk) <- dim(Xkk)[-3L]
       # Sanity check
       stopifnot(is.matrix(Xkk))
@@ -97,12 +97,12 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
 
       for (jj in seq_len(dim(X)[1L])) {
         verbose && enter(verbose, sprintf("%s #%d of %d", whatC, jj, dim(X)[1L]))
-        Xkkjj <- Xkk[jj,,drop=TRUE]; # A vector of length B
+        Xkkjj <- Xkk[jj,,drop=TRUE] # A vector of length B
         S[jj,,kk] <- statsFcn(Xkkjj)
         verbose && exit(verbose)
       } # for (jj ...)
 
-      Xkk <- NULL; # Not needed anymore
+      Xkk <- NULL # Not needed anymore
 
       verbose && exit(verbose)
     } # for (jj ...)
@@ -313,7 +313,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
     segs <- summarizeSamples(boot$segments, statsFcn=statsFcn, stats=segs, what="segment", verbose=verbose)
     # Record statistics
     fitB$output <- segs
-    segs <- NULL; # Not needed anymore
+    segs <- NULL # Not needed anymore
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -323,7 +323,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
     cps <- summarizeSamples(boot$changepoints, statsFcn=statsFcn, stats=cps, what="changepoint", verbose=verbose)
     # Record statistics
     fitB$changepoints <- cps
-    cps <- NULL; # Not needed anymore
+    cps <- NULL # Not needed anymore
   }
 
   # Not needed anymore
@@ -443,7 +443,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   estList <- getMeanEstimators(fit, c("tcn", "dh"))
   avgTCN <- estList$tcn
   avgDH <- estList$dh
-  estList <- NULL; # Not needed anymore
+  estList <- NULL # Not needed anymore
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -835,7 +835,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
   # Sanity check
   stopifnot(dim(D)[1L] == nbrOfSegments-1L)
   stopifnot(all(!is.nan(D)))
-  C <- NULL; # Not needed anymore
+  C <- NULL # Not needed anymore
 
   # Allocate array
   dimnames <- dimnames(D)
@@ -847,13 +847,13 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
   if (nbrOfSegments >= 2L) {
     verbose && str(verbose, D)
-    P[,,"alpha"] <- atan2(D[,,2], D[,,1]); # Changepoint angles in (0,2*pi)
+    P[,,"alpha"] <- atan2(D[,,2], D[,,1]) # Changepoint angles in (0,2*pi)
     P[,,"radius"] <- sqrt(D[,,2]^2 + D[,,1]^2)
     P[,,"manhattan"] <- abs(D[,,2]) + abs(D[,,1])
     P[,,"d1"] <- D[,,1]
     P[,,"d2"] <- D[,,2]
   }
-  alpha <- D <- NULL; # Not needed anymore
+  alpha <- D <- NULL # Not needed anymore
   verbose && cat(verbose, "Bootstrapped change points")
   verbose && str(verbose, P)
 
@@ -933,7 +933,7 @@ setMethodS3("clearBootstrapSummaries", "PairedPSCBS", function(fit, what=c("segm
     fields <- findBootstrapSummaries(fit, what=what, ...)
     stopifnot(length(fields) == 0L)
 
-    data <- fields <- NULL; # Not needed anymoew
+    data <- fields <- NULL # Not needed anymoew
 
     verbose && exit(verbose)
   } # for (what ...)

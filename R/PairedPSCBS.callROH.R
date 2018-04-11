@@ -137,7 +137,7 @@ setMethodS3("callROHOneSegment", "PairedPSCBS", function(fit, ..., verbose=FALSE
   # Extract that SNP signals used for calling ROH
   betaN <- data$betaN
   muN <- data$muN
-  csN <- data$csN;  # Genotyping confidence scores, if available
+  csN <- data$csN # Genotyping confidence scores, if available
 
   # Test for ROH
   fit <- testROH(muN=muN, csN=csN, betaN=betaN, ..., verbose=less(verbose, 10))

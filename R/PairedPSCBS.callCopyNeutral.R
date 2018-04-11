@@ -118,7 +118,7 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
 
   C <- segs[,"tcnMean", drop=TRUE]
   isAB <- segs[,"abCall", drop=TRUE]
-  n <- segs[,"tcnNbrOfSNPs", drop=TRUE]; # "tcnNbrOfLoci"? /HB 2010-09-09
+  n <- segs[,"tcnNbrOfSNPs", drop=TRUE] # "tcnNbrOfLoci"? /HB 2010-09-09
 
   # Give more weight to longer regions
   weights <- n
@@ -445,9 +445,9 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
   # copy-neutral region ("H_0"), that is, it is completely within
   # the rejection region ("H_1"), then the H_0 hypothesis that the
   # segment is copy-neutral in TCN is rejected.
-  isLoss <- (ci[,2] < range[1]); # (a) completely below, or
-  isGain <- (ci[,1] > range[2]); # (b) completely above.
-  isNTCN <- (!isLoss & !isGain); #  => completely inside => not rejected.
+  isLoss <- (ci[,2] < range[1]) # (a) completely below, or
+  isGain <- (ci[,1] > range[2]) # (b) completely above.
+  isNTCN <- (!isLoss & !isGain) #  => completely inside => not rejected.
 
   nbrOfSegs <- nrow(segs)
   nbrOfABs <- sum(segs$abCall, na.rm=TRUE)

@@ -195,7 +195,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   C <- segsT$tcnMean
   n <- segsT$dhNbrOfLoci
   w <- n/sum(n)
-  C1 <- C/2;  # Called AB!
+  C1 <- C/2 # Called AB!
   verbose && printf(verbose, "C: %s\n", hpaste(sprintf("%.3g", C)))
   verbose && printf(verbose, "Corrected C1 (=C/2): %s\n", hpaste(sprintf("%.3g", C1)))
   verbose && printf(verbose, "Number of DHs: %s\n", hpaste(n))

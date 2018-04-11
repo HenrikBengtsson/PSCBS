@@ -192,7 +192,7 @@ setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
   for (ff in names) {
     data[[ff]] <- scale * data[[ff]]
   }
-  fit$data <- data;  ##  fit <- setLocusData(fit, data)
+  fit$data <- data ##  fit <- setLocusData(fit, data)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -211,7 +211,7 @@ setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
   for (ff in names) {
     segs[[ff]] <- NULL
   }
-  fit$output <- segs; ## fit <- setSegments(fit, sets)
+  fit$output <- segs ## fit <- setSegments(fit, sets)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

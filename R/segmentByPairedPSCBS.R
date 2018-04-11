@@ -396,7 +396,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     nbrOfLoci <- nrow(data)
     verbose && exit(verbose)
   }
-  ok <- NULL; # Not needed anymore
+  ok <- NULL # Not needed anymore
 
   # Sanity check
   stopifnot(nrow(data) == nbrOfLoci)
@@ -414,7 +414,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       nbrOfLoci <- nrow(data)
       verbose && exit(verbose)
     }
-    ok <- NULL; # Not needed anymore
+    ok <- NULL # Not needed anymore
 
     # Sanity check
     stopifnot(nrow(data) == nbrOfLoci)
@@ -433,7 +433,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   if (any(o != seq_along(o))) {
     data <- data[o,,drop=FALSE]
   }
-  o <- NULL; # Not needed anymore
+  o <- NULL # Not needed anymore
   verbose && str(verbose, data)
   verbose && exit(verbose)
 
@@ -494,7 +494,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       dataKK <- subset(data, chromosome == chromosomeKK)
       verbose && str(verbose, dataKK)
       fields <- attachLocally(dataKK, fields=c("CT", "thetaT", "thetaN", "betaT", "betaTN", "betaN", "muN", "rho", "chromosome", "x"))
-      dataKK <- NULL; # Not needed anymore
+      dataKK <- NULL # Not needed anymore
 
       knownSegmentsKK <- NULL
       if (!is.null(knownSegments)) {
@@ -541,7 +541,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     fitList <- as.list(fitList)
     ## former Reduce() w/ append(..., addSplit = TRUE)
     fit <- do.call(c, args = c(fitList, addSplit = TRUE))
-    fitList <- NULL; # Not needed anymore
+    fitList <- NULL # Not needed anymore
     verbose && str(verbose, fit)
     verbose && exit(verbose)
 
@@ -697,7 +697,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
                       verbose=verbose)
   verbose && str(verbose, fit)
 
-  rm(list=fields); # Not needed anymore
+  rm(list=fields) # Not needed anymore
 
   # Sanity check
   if (nrow(knownSegments) == 0) {
@@ -710,7 +710,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   tcnSegments <- fit$output
   tcnSegRows <- fit$segRows
-  fit <- NULL; # Not needed anymore
+  fit <- NULL # Not needed anymore
 
   # Sanity checks
   stopifnot(all(tcnSegRows[,1] <= tcnSegRows[,2], na.rm=TRUE))
@@ -1123,7 +1123,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Should we drop attributes? /HB 2010-09-24
   stopifnot(all(data$index == seq_len(nrow(data))))
-  data$index <- NULL; # Drop, because it is guaranteed to be ordered
+  data$index <- NULL # Drop, because it is guaranteed to be ordered
   class(data) <- c("PairedPSCNData", class(data))
 
   class(segs) <- c("PairedPSCNSegments", class(segs))
@@ -1151,7 +1151,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   }
 
   if (is.element(flavor, c("tcn&dh", "sqrt(tcn)&dh"))) {
-    fit$params$flavor <- gsub("&", ",", flavor, fixed=TRUE); # AD HOC.
+    fit$params$flavor <- gsub("&", ",", flavor, fixed=TRUE) # AD HOC.
     fit <- postsegmentTCN(fit, verbose=verbose)
 
     # Sanity check

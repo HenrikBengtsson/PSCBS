@@ -288,7 +288,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     data <- data[ok,,drop=FALSE]
     verbose && exit(verbose)
   }
-  ok <- NULL; # Not needed anymore
+  ok <- NULL # Not needed anymore
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -303,7 +303,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   if (any(o != seq_along(o))) {
     data <- data[o,,drop=FALSE]
   }
-  o <- NULL; # Not needed anymore
+  o <- NULL # Not needed anymore
   verbose && str(verbose, data, level=-50)
   verbose && exit(verbose)
 
@@ -340,7 +340,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       verbose && str(verbose, dataKK, level=-10)
       chrom <- x <- index <- y <- w <- NULL
       fields <- attachLocally(dataKK, fields=c("chrom", "x", "index", "y", "w"))
-      dataKK <- NULL; # Not needed anymore
+      dataKK <- NULL # Not needed anymore
 
       knownSegmentsKK <- NULL
       if (!is.null(knownSegments)) {
@@ -597,8 +597,8 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     if (R_SANITY_CHECK) {
       segs <- getSegments(fit)
       stopifnot(all(segs$start[-1] >= segs$end[-nrow(segs)], na.rm=TRUE))
-      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)); ## FIXME: > 0
-      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));   ## FIXME: > 0
+      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
 
   #    if (nrow(fit$data) != length(y)) {
   #      print(c(nrow(fit$data), nrow(data)))
@@ -682,7 +682,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
 
   verbose && enter(verbose, "Setting up ", pkgName, " data structure", level=-50)
 
-  sampleName <- "y";  # This is going to be the name of the data field
+  sampleName <- "y" # This is going to be the name of the data field
 
   # Supress all warnings, in order to avoid warnings by DNAcopy::CNA()
   # on "array has repeated maploc positions".  Ideally we should filter
@@ -818,7 +818,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   # WORKAROUND for the case when there are no data points.
   if (nbrOfNonMissingLoci == 0) {
     # Drop dummy data point...
-    fit$data <- cnData; ## fit$data[-1,,drop=FALSE]
+    fit$data <- cnData ## fit$data[-1,,drop=FALSE]
     # ...dummy region found
     output <- fit$output
     segRows <- fit$segRows
@@ -850,7 +850,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     fit$segRows <- segRows
   } else if (undo == +Inf) {
     # Drop dummy data point...
-    fit$data <- cnData; ## fit$data[-1,,drop=FALSE]
+    fit$data <- cnData ## fit$data[-1,,drop=FALSE]
     # ...dummy region found
     output <- fit$output
     segRows <- fit$segRows
@@ -963,7 +963,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   names <- gsub("seg.mean", "mean", names, fixed=TRUE)
   names <- gsub("chrom", "chromosome", names, fixed=TRUE)
   names <- gsub("num.mark", "nbrOfLoci", names, fixed=TRUE)
-  names <- gsub("loc.", "", names, fixed=TRUE); # loc.start, loc.end
+  names <- gsub("loc.", "", names, fixed=TRUE) # loc.start, loc.end
   colnames(segs) <- names
   fit$output <- segs
 

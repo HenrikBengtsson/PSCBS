@@ -137,7 +137,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
     fitT <- updateMeans(fit, avg="median")
     segsT <- getSegments(fitT, splitters=TRUE)
     mu <- segsT$mean
-    fitT <- segsT <- NULL; # Not needed anymore
+    fitT <- segsT <- NULL # Not needed anymore
 
     # The median segmented level
     muR <- median(mu, na.rm=TRUE)
@@ -149,8 +149,8 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
     tauGain <- muR + tau
 
     # Call
-    lossCalls <- (mu <= tauLoss);   # Losses
-    gainCalls <- (mu >= tauGain);   # Gains
+    lossCalls <- (mu <= tauLoss) # Losses
+    gainCalls <- (mu >= tauGain) # Gains
 
     # Call parameters used
     params$method <- method
@@ -326,7 +326,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     # The lengths (in bp) of the segments
     start <- segs$start
     end <- segs$end
-    length <- end - start; ## + 1L
+    length <- end - start ## + 1L
     keep1 <- (length <= maxLength)
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -783,7 +783,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
     segsRR$start[segsRR$start < startRR] <- startRR
     segsRR$end[segsRR$end > endRR] <- endRR
 
-    segsRR$fullLength <- endRR - startRR; ## + 1L
+    segsRR$fullLength <- endRR - startRR ## + 1L
 
     segsT <- rbind(segsT, segsRR)
 
@@ -804,7 +804,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
 
   verbose && enter(verbose, "Calculating total length per call and chromosome")
   # Sum length of calls per type and chromosome
-  segs$length <- segs[,"end"] - segs[,"start"];  ## + 1L
+  segs$length <- segs[,"end"] - segs[,"start"] ## + 1L
   res <- lapply(callTypes, FUN=function(type) {
     coeffs <- as.integer(segs[,type])
     lens <- coeffs * segs$length
@@ -826,7 +826,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
 
   verbose && enter(verbose, "Calculating fractions per region")
   # Calculate lengths
-  regionsT$length <- regionsT[,"end"] - regionsT[,"start"]; ## + 1L
+  regionsT$length <- regionsT[,"end"] - regionsT[,"start"] ## + 1L
   stopifnot(all(regionsT$length >= 0))
 
   res2 <- res1 / regionsT[,"length"]
@@ -1034,7 +1034,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
       regions[rr,"end"] <- x1
     }
   } # for (rr ...)
-  regions[,"length"] <- regions[,"end"] - regions[,"start"]; ## + 1L
+  regions[,"length"] <- regions[,"end"] - regions[,"start"] ## + 1L
   callStats <- getCallStatistics(fit, regions=regions)
   callStats$label <- sprintf("%sp", callStats$label)
   callStatsP <- callStats
@@ -1061,7 +1061,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
       regions[rr,"end"] <- x1
     }
   } # for (rr ...)
-  regions[,"length"] <- regions[,"end"] - regions[,"start"]; ## + 1L
+  regions[,"length"] <- regions[,"end"] - regions[,"start"] ## + 1L
 
   callStats <- getCallStatistics(fit, regions=regions)
   callStats$label <- sprintf("%sq", callStats$label)
@@ -1082,7 +1082,7 @@ setMethodS3("getCallStatisticsByArms", "CBS", function(fit, genomeData, ...) {
   callStats <- callStats[o,]
 
   callStats
-}, protected=TRUE); # getCallStatisticsByArms()
+}, protected=TRUE) # getCallStatisticsByArms()
 
 
 setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) {
@@ -1109,7 +1109,7 @@ setMethodS3("callArms", "CBS", function(fit, genomeData, minFraction=0.95, ...) 
   callStats <- cbind(callStats, calls)
 
   callStats
-}, protected=TRUE); # callArms()
+}, protected=TRUE) # callArms()
 
 
 
@@ -1209,7 +1209,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
   verbose && exit(verbose)
 
   res
-}, protected=TRUE); # mergeNonCalledSegments()
+}, protected=TRUE) # mergeNonCalledSegments()
 
 
 setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "density(dTCN)", "dTCN"), adjust=0.3, ..., verbose=FALSE) {
@@ -1233,7 +1233,7 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
     keep <- is.finite(x) & is.finite(w)
     x <- x[keep]
     w <- w[keep]
-    keep <- NULL; # Not needed anymore
+    keep <- NULL # Not needed anymore
 
     # Normalize weights
     w <- w / sum(w, na.rm=TRUE)
@@ -1241,11 +1241,11 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
     # Estimate density
     d <- density(x, weights=w, adjust=adjust)
 
-    w <- NULL; # Not needed anymore
+    w <- NULL # Not needed anymore
 
     # Find peaks
     pv <- findPeaksAndValleys(d, ...)
-    type <- NULL; rm(list="type"); # To please R CMD check
+    type <- NULL; rm(list="type") # To please R CMD check
     p <- subset(pv, type == "peak")
     px <- p$x
     pw <- p$density
@@ -1264,7 +1264,7 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
     # Drop missing values
     keep <- is.finite(x)
     x <- x[keep]
-    keep <- NULL; # Not needed anymore
+    keep <- NULL # Not needed anymore
 
 
     # Estimate density
@@ -1272,7 +1272,7 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
 
     # Find peaks
     pv <- findPeaksAndValleys(d, ...)
-    type <- NULL; rm(list="type"); # To please R CMD check
+    type <- NULL; rm(list="type") # To please R CMD check
     p <- subset(pv, type == "peak")
     px <- p$x
     pw <- p$density
@@ -1291,7 +1291,7 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
     # Drop missing values
     keep <- is.finite(x)
     x <- x[keep]
-    keep <- NULL; # Not needed anymore
+    keep <- NULL # Not needed anymore
 
     deltaCN <- median(x)
   }

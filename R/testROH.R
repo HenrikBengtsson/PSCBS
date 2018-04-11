@@ -88,8 +88,8 @@ setMethodS3("testROH", "numeric", function(muN, csN=NULL, betaN=NULL, minNbrOfSn
       # was used to call genotypes 'muN' from 'betaN'.
 
       # AD HOC: We also have to assume that the thresholds were 1/3 and 2/3.
-      a <- 1/3;  # was fit$x[1]
-      b <- 2/3;  # was fit$x[2]
+      a <- 1/3 # was fit$x[1]
+      b <- 2/3 # was fit$x[2]
 
       # AD HOC: We have to make some assumption about which SNPs are diploid.
       # Assume all for now
@@ -117,7 +117,7 @@ setMethodS3("testROH", "numeric", function(muN, csN=NULL, betaN=NULL, minNbrOfSn
     w <- csN / sum(csN, na.rm=TRUE)
 
     wnHets <- sum(isHet*w, na.rm=TRUE)
-    wnSnps <- sum(w, na.rm=TRUE);  # == 1 /HB
+    wnSnps <- sum(w, na.rm=TRUE) # == 1 /HB
 
     # Sanity check
     stopifnot(isZero(wnSnps - 1.0, eps=sqrt(.Machine$double.eps)))

@@ -144,7 +144,7 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     yKK <- yKK[o]
     chromosomeKK <- chromosomeKK[o]
     keepKK <- keepKK[o]
-    o <- NULL; # Not needed anymore
+    o <- NULL # Not needed anymore
 
     # Supress all warnings, in order to avoid warnings by DNAcopy::CNA()
     # on "array has repeated maploc positions".  Ideally we should filter
@@ -152,31 +152,31 @@ setMethodS3("callSegmentationOutliers", "default", function(y, chromosome=0, x=N
     suppressWarnings({
       dataKK <- CNA(genomdat=yKK, chrom=chromosomeKK, maploc=xKK, sampleid="y", presorted=TRUE)
     })
-    chromosomeKK <- xKK <- NULL; # Not needed anymore
+    chromosomeKK <- xKK <- NULL # Not needed anymore
 
     yKKs <- smooth.CNA(dataKK, ...)$y
-    dataKK <- NULL; # Not needed anymore
+    dataKK <- NULL # Not needed anymore
 
     # Sanity check
     stopifnot(length(yKKs) == nbrOfLociKK)
     outliersKK <- which(yKKs != yKK)
-    yKKs <- yKK <- NULL; # Not needed anymore
+    yKKs <- yKK <- NULL # Not needed anymore
 
     nbrOfOutliers <- length(outliersKK)
     verbose && cat(verbose, "Number of outliers: ", nbrOfOutliers)
 
     outliers <- keepKK[outliersKK]
-    keepKK <- outliersKK <- NULL; # Not needed anymore
+    keepKK <- outliersKK <- NULL # Not needed anymore
 
     isOutlierT[outliers] <- TRUE
-    outliers <- NULL; # Not needed anymore
+    outliers <- NULL # Not needed anymore
 
     verbose && exit(verbose)
   } # for (kk ...)
-  chromosome <- x <- y <- NULL; # Not needed anymore
+  chromosome <- x <- y <- NULL # Not needed anymore
 
   isOutlier[keep] <- isOutlierT
-  isOutlierT <- keep <- NULL; # Not needed anymore
+  isOutlierT <- keep <- NULL # Not needed anymore
 
   nbrOfOutliers <- sum(isOutlier, na.rm=TRUE)
   verbose && cat(verbose, "Total number of outliers: ", nbrOfOutliers)
@@ -203,7 +203,7 @@ setMethodS3("callSegmentationOutliers", "data.frame", function(y, ...) {
 setMethodS3("dropSegmentationOutliers", "default", function(y, ...) {
   isOutlier <- callSegmentationOutliers(y, ...)
   y[isOutlier] <- NA_real_
-  isOutlier <- NULL; # Not needed anymore
+  isOutlier <- NULL # Not needed anymore
   y
 })
 
@@ -221,7 +221,7 @@ setMethodS3("dropSegmentationOutliers", "data.frame", function(y, ...) {
 
   data[[key]][isOutlier] <- NA_real_
 
-  isOutlier <- NULL; # Not needed anymore
+  isOutlier <- NULL # Not needed anymore
 
   data
 })

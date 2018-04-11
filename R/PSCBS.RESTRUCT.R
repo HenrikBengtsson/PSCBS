@@ -89,7 +89,7 @@ setMethodS3("extractChromosomes", "PSCBS", function(x, chromosomes, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locus data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  chromosome <- NULL; rm(list="chromosome"); # To please R CMD check
+  chromosome <- NULL; rm(list="chromosome") # To please R CMD check
   res$data <- subset(res$data, chromosome %in% chromosomes)
 
 

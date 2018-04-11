@@ -104,13 +104,13 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
         fitListJJ <- append(fitListJJ, list(fitKK))
       }
 
-      fitKK <- NULL; # Not needed anymore
+      fitKK <- NULL # Not needed anymore
       verbose && exit(verbose)
     } # for (kk ...)
 
     # Append
     fitList <- append(fitList, fitListJJ)
-    fitListJJ <- NULL; # Not needed anymore
+    fitListJJ <- NULL # Not needed anymore
 
     verbose && exit(verbose)
   } # for (jj ...)
@@ -131,9 +131,9 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   ## former Reduce() w/ append(a, b, addSplit = FALSE)
   fitT <- do.call(c, args = c(fitList, addSplit = FALSE))
   # Sanity check
-##  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit)); # Not true anymore
+##  stopifnot(nbrOfSegments(fitT) == nbrOfSegments(fit)) # Not true anymore
   verbose && exit(verbose)
-  fitList <- NULL; # Not needed anymore
+  fitList <- NULL # Not needed anymore
 
   segsT <- getSegments(fitT)
   verbose && print(verbose, tail(segsT))
@@ -194,7 +194,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   # Drop the K first
   nbrOfCPs <- nbrOfRegions - 1L
   if (nbrOfCPs > 0L) {
-    K <- nbrOfCPs - 1L;  # Don't count the flat segmentation
+    K <- nbrOfCPs - 1L # Don't count the flat segmentation
     jumpList <- jumpList[-(1:K)]
   }
 
@@ -331,7 +331,7 @@ threshold = 0.5,
 
   # Compute boundaries of the smallest intervals considered
   b <- sort(union(0, union(n, candidatechangepoints)))
-  k <- length(b) - 1; # k is the number of such intervals
+  k <- length(b) - 1 # k is the number of such intervals
   # Compute the k*k matrix J such that J[i,j] for i<=j is the RSE when intervales i to j are merged
   J <- matrix(numeric(k*k), ncol=k)
 
@@ -349,7 +349,7 @@ threshold = 0.5,
   } # for (i ...)
 
   # Dynamic programming
-  V <- matrix(numeric((kmax+1)*k), ncol=k); # V[i,j] is the best RSE for segmenting intervals 1 to j with at most i-1 change points
+  V <- matrix(numeric((kmax+1)*k), ncol=k) # V[i,j] is the best RSE for segmenting intervals 1 to j with at most i-1 change points
   jump <- matrix(numeric(kmax*k), ncol=k)
   # With no change points, V[i,j] is juste the precomputed RSE for intervals 1 to j
   V[1,] <- J[1,]
@@ -387,7 +387,7 @@ threshold = 0.5,
   options(warn=-1)
   J <- log(res.rse)
   Km <- length(J)
-  Jtild <- (J[Km]-J)/(J[Km]-J[1])*(Km-1)+1; # Normalize
+  Jtild <- (J[Km]-J)/(J[Km]-J[1])*(Km-1)+1 # Normalize
   res.kbest <- max(which(diff(diff(Jtild)) > threshold)) + 1
   #if((res.kbest) == -Inf) { res.kbest <- 1 }
   return(list(jump=res.jump, rse=res.rse, kbest=res.kbest, V=V))

@@ -220,7 +220,7 @@ setMethodS3("extractSegmentMeansByLocus", "DNAcopy", function(fit, sample=1L, ..
     ySS <- y[idxs]
     ok <- is.finite(ySS)
     # Sanity check
-    ## stopifnot(sum(ok) == seg$num.mark); # Not dealing with ties
+    ## stopifnot(sum(ok) == seg$num.mark) # Not dealing with ties
     mu <- avgY(ySS[ok])
     yS[idxs] <- mu
   } # for (ss ...)

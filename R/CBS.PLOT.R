@@ -425,4 +425,4 @@ setMethodS3("highlightArmCalls", "CBS", function(fit, genomeData, minFraction=0.
   } # for (type ...)
 
   invisible(callStats)
-}, protected=TRUE); # highlightArmCalls()
+}, protected=TRUE) # highlightArmCalls()

@@ -176,7 +176,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
   }
 
   # Return result
-  res <- fit; # "clone"
+  res <- fit # "clone"
   res$data <- data
   res$output <- segs
 
@@ -186,7 +186,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
   # Update segment-to-locus index tables
   if (append && !is.null(dataRowsN)) {
     res$tcnSegRows <- dataRowsN
-    res$dhSegRows <- dataRowsN;  # Is this really the case? /HB 2011-01-17
+    res$dhSegRows <- dataRowsN # Is this really the case? /HB 2011-01-17
   }
 
   verbose && exit(verbose)

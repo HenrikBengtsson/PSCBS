@@ -206,7 +206,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
     counts <- segs[[key]]
     counts[is.na(counts)] <- 0L
     segs[[key]] <- counts
-    counts <- NULL; # Not needed anymore
+    counts <- NULL # Not needed anymore
   }
 
   hasTcnLoci <- (is.finite(tcnSegRows[,1L]) & is.finite(tcnSegRows[,2L]))
@@ -396,7 +396,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
       idxsHetNonDH <- idxsDH
       stopifnot(all(idxsHetNonDH > 0L))
     }
-    shouldHaveDHs <- NULL; # Not needed anymore
+    shouldHaveDHs <- NULL # Not needed anymore
 
     nHoms <- length(idxsHom)
     nNonSNPs <- length(idxsNonSNP)
@@ -433,7 +433,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
         stopifnot(length(intersect(het, nonSnp)) == 0L)
         stopifnot(length(intersect(hom, nonSnp)) == 0L)
       })
-      loci <- NULL; # Not needed anymore
+      loci <- NULL # Not needed anymore
     }
 
 
@@ -538,7 +538,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
         idxsB <- unique(sort(idxsB))
         stopifnot(all(is.element(idxsB, idxs)))
       }
-      loci <- lociB <- NULL; # Not needed anymore
+      loci <- lociB <- NULL # Not needed anymore
     }
 
     verbose && exit(verbose)

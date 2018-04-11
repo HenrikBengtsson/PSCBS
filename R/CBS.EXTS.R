@@ -59,7 +59,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   # Setup the 'output' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   output <- fit$output
-  ID <- NULL; rm(list="ID"); # To please R CMD check
+  ID <- NULL; rm(list="ID") # To please R CMD check
   output <- subset(output, ID == sampleName)
   rownames <- rownames(output)
 
@@ -78,7 +78,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   if (length(ats) > 0) {
     idxs <- seq_len(nrow(output))
     values <- rep(NA_integer_, times=length(ats))
-    expand <- insert(idxs, ats=ats, values=values); # R.utils::insert()
+    expand <- insert(idxs, ats=ats, values=values) # R.utils::insert()
     output <- output[expand,]
     rownames(output) <- NULL
   }
@@ -135,7 +135,7 @@ setMethodS3("extractChromosomes", "CBS", function(x, chromosomes, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Locus data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  chromosome <- NULL; rm(list="chromosome"); # To please R CMD check
+  chromosome <- NULL; rm(list="chromosome") # To please R CMD check
   data <- getLocusData(this)
   class <- class(data)
   class(data) <- "data.frame"
@@ -245,7 +245,7 @@ setMethodS3("extractSegmentMeansByLocus", "CBS", function(fit, ...) {
     ok <- is.finite(ySS)
 
     # Sanity check
-    ## stopifnot(sum(ok) == seg$nbrOfLoci); # Not dealing with ties
+    ## stopifnot(sum(ok) == seg$nbrOfLoci) # Not dealing with ties
 
     mu <- avgY(ySS[ok])
     yS[idxs] <- mu

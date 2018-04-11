@@ -105,14 +105,14 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
     weights <- weights / sum(weights)
   }
   y <- C[idxs]
-  idxs <- NULL; # Not needed anymore
+  idxs <- NULL # Not needed anymore
 
   if (verbose) {
     cat(verbose, "Data points:")
     df <- data.frame(C=y, weights=weights)
     print(verbose, head(df))
     str(verbose, df)
-    df <- NULL; # Not needed anymore
+    df <- NULL # Not needed anymore
   }
 
 

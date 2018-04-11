@@ -105,8 +105,8 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     # Sanity checks
     if (R_SANITY_CHECK) {
       stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
-      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE));  ## FIXME: > 0
-      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));    ## FIXME: > 0
+      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
     } # if (R_SANITY_CHECK)
 
     if (nbrOfSegs > 6) {
@@ -136,8 +136,8 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
       # Sanity checks
       if (R_SANITY_CHECK) {
         stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
-        stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE));  ## FIXME: > 0
-        stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));    ## FIXME: > 0
+        stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+        stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
       }
 
       if (nbrOfSegs > 6) {

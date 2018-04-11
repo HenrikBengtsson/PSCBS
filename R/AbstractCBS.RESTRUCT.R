@@ -374,7 +374,7 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
   if (length(chrs) != 1L) {
     throw("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle)
   }
-  fitT <- NULL; # Not needed anymore
+  fitT <- NULL # Not needed anymore
 
   fit <- mergeTwoSegments(fit, left=middle, ...)
   fit <- mergeTwoSegments(fit, left=middle-1L, ...)
