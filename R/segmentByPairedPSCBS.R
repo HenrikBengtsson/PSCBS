@@ -81,7 +81,7 @@
 #     set to its original state when exiting.  If @NULL, it is not set.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 #   \item{preserveScale}{\emph{Deprecated and ignored
-#                        will give a warning is specified.}}
+#                        will give a warning if specified.}}
 # }
 #
 # \value{
