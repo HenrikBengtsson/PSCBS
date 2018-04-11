@@ -44,7 +44,7 @@ print(fit);
 
 fit1 <- fit;
 fit2 <- renameChromosomes(fit1, from=1, to=2);
-fit <- c(fit1, NA, fit2)
+fit <- c(fit1, fit2)
 knownSegments <- tileChromosomes(fit)$params$knownSegments;
 
 segList <- seqOfSegmentsByDP(fit, verbose=-10);
