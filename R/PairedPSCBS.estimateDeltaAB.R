@@ -40,95 +40,95 @@ setMethodS3("estimateDeltaAB", "PairedPSCBS", function(this, scale=NULL, flavor=
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'flavor':
-  flavor <- match.arg(flavor);
+  flavor <- match.arg(flavor)
 
   # Argument 'max':
-  max <- Arguments$getDouble(max, range=c(0,Inf));
+  max <- Arguments$getDouble(max, range=c(0,Inf))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Estimating DH threshold for calling allelic imbalances");
-  verbose && cat(verbose, "flavor: ", flavor);
+  verbose && enter(verbose, "Estimating DH threshold for calling allelic imbalances")
+  verbose && cat(verbose, "flavor: ", flavor)
 
   if (flavor == "mad(hBAF)") {
-    if (is.null(scale)) scale <- 3;
-    verbose && cat(verbose, "scale: ", scale);
+    if (is.null(scale)) scale <- 3
+    verbose && cat(verbose, "scale: ", scale)
     # sigma = mad(hBAF) = 1.4826*median(|hBAF-m|),
     # where m = median(hBAF) ~= 1/2
-    sd <- estimateStdDevForHeterozygousBAF(this, ..., verbose=verbose);
-    verbose && printf(verbose, "sd: %.3g\n", sd);
-    delta <- scale * sd;
+    sd <- estimateStdDevForHeterozygousBAF(this, ..., verbose=verbose)
+    verbose && printf(verbose, "sd: %.3g\n", sd)
+    delta <- scale * sd
   } else if (flavor == "median(DH)") {
-    if (is.null(scale)) scale <- 3;
-    verbose && cat(verbose, "scale: ", scale);
+    if (is.null(scale)) scale <- 3
+    verbose && cat(verbose, "scale: ", scale)
     # sigma = 1/2*1.4826*median(|hBAF-1/2|), 
     # because DH = 2*|hBAF-1/2|
-    mu <- estimateMeanForDH(this, ..., verbose=verbose);
-    verbose && printf(verbose, "mu: %.3g\n", mu);
-    sd <- 1/2 * 1.4826 * mu;
-    verbose && printf(verbose, "sd: %.3g\n", sd);
-    delta <- scale * sd;
+    mu <- estimateMeanForDH(this, ..., verbose=verbose)
+    verbose && printf(verbose, "mu: %.3g\n", mu)
+    sd <- 1/2 * 1.4826 * mu
+    verbose && printf(verbose, "sd: %.3g\n", sd)
+    delta <- scale * sd
   } else if (flavor == "q(DH)") {
-    if (is.null(scale)) scale <- 1;
-    verbose && cat(verbose, "scale: ", scale);
-    delta <- estimateHighDHQuantileAtAB(this, scale=scale, ..., verbose=verbose);
+    if (is.null(scale)) scale <- 1
+    verbose && cat(verbose, "scale: ", scale)
+    delta <- estimateHighDHQuantileAtAB(this, scale=scale, ..., verbose=verbose)
   } else if (flavor == "qq(DH)") {
-    if (is.null(scale)) scale <- 1;
-    verbose && cat(verbose, "scale: ", scale);
-    delta <- estimateDeltaABBySmallDH(this, ..., verbose=verbose);
-    delta <- scale * delta;
+    if (is.null(scale)) scale <- 1
+    verbose && cat(verbose, "scale: ", scale)
+    delta <- estimateDeltaABBySmallDH(this, ..., verbose=verbose)
+    delta <- scale * delta
   } else {
-    throw("Unkown flavor: ", flavor);
+    throw("Unkown flavor: ", flavor)
   }
 
 ##   } else if (flavor == "DHskew") {
-##     fit <- this;
+##     fit <- this
 ##     if (is.null(fit$output$dhSkew)) {
-##       verbose && enter(verbose, "Estimating DH skewness for each segment");
-##       fit <- applyByRegion(fit, FUN=.addTcnDhStatitics, verbose=less(verbose, 5));
-##       verbose && exit(verbose);
+##       verbose && enter(verbose, "Estimating DH skewness for each segment")
+##       fit <- applyByRegion(fit, FUN=.addTcnDhStatitics, verbose=less(verbose, 5))
+##       verbose && exit(verbose)
 ##     }
-##     mu <- fit$output$dhMean;
-##     skew <- fit$output$dhSkew;
+##     mu <- fit$output$dhMean
+##     skew <- fit$output$dhSkew
 ## 
-##     deltaSkew <- -0.55;
-##     keep <- which(skew < deltaSkew);
-##     verbose && printf(verbose, "Number of segments heavily skewed (< %.3f): %d\n", deltaSkew, length(keep));
+##     deltaSkew <- -0.55
+##     keep <- which(skew < deltaSkew)
+##     verbose && printf(verbose, "Number of segments heavily skewed (< %.3f): %d\n", deltaSkew, length(keep))
 ##     # Sanity check
 ##     if (length(keep) == 0) {
-##       throw("Cannot estimate DH threshold for AB. No segments with strong skewness exists.");
+##       throw("Cannot estimate DH threshold for AB. No segments with strong skewness exists.")
 ##     }
-##     deltaDH <- median(mu[keep], na.rm=TRUE);
-##     verbose && printf(verbose, "deltaDH: %.3g\n", deltaDH);
-##     deltaDH <- 1.10*deltaDH;
-##     verbose && printf(verbose, "Adjusted +10%% deltaDH: %.3g\n", deltaDH);
+##     deltaDH <- median(mu[keep], na.rm=TRUE)
+##     verbose && printf(verbose, "deltaDH: %.3g\n", deltaDH)
+##     deltaDH <- 1.10*deltaDH
+##     verbose && printf(verbose, "Adjusted +10%% deltaDH: %.3g\n", deltaDH)
 ## 
 ##     # sigma = 1/2*1.4826*median(|hBAF-1/2|), 
 ##     # because DH = 2*|hBAF-1/2|
-##     mu <- estimateMeanForDH(this, delta=deltaDH, ...);
-##     verbose && printf(verbose, "mu: %.3g\n", mu);
-##     sd <- 1/2 * 1.4826 * mu;
-##     verbose && printf(verbose, "sd: %.3g\n", sd);
+##     mu <- estimateMeanForDH(this, delta=deltaDH, ...)
+##     verbose && printf(verbose, "mu: %.3g\n", mu)
+##     sd <- 1/2 * 1.4826 * mu
+##     verbose && printf(verbose, "sd: %.3g\n", sd)
 ##  }
 
-  verbose && printf(verbose, "Estimated delta: %.3g\n", delta);
+  verbose && printf(verbose, "Estimated delta: %.3g\n", delta)
 
   # Truncate estimate?
   if (delta > max) {
-    warning("Estimated delta (%.3g) was greater than the maximum allowed value (%.3g).  The latter will be used instead.", delta, max);
-    delta <- max;
-    verbose && printf(verbose, "Max delta: %.3g\n", max);
-    verbose && printf(verbose, "Truncated delta: %.3g\n", delta);
+    warning("Estimated delta (%.3g) was greater than the maximum allowed value (%.3g).  The latter will be used instead.", delta, max)
+    delta <- max
+    verbose && printf(verbose, "Max delta: %.3g\n", max)
+    verbose && printf(verbose, "Truncated delta: %.3g\n", delta)
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  delta;
+  delta
 }) # estimateDeltaAB()
 
 
@@ -138,59 +138,59 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'deltaDH':
-  deltaDH <- Arguments$getDouble(deltaDH, range=c(0,1));
+  deltaDH <- Arguments$getDouble(deltaDH, range=c(0,1))
 
   # Argument 'deltaTCN':
-  deltaTCN <- Arguments$getDouble(deltaTCN, range=c(0,Inf));
+  deltaTCN <- Arguments$getDouble(deltaTCN, range=c(0,Inf))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Estimating standard deviation of tumor BAFs for heterozygous SNPs");
-  verbose && cat(verbose, "DH threshold: ", deltaDH);
-  verbose && cat(verbose, "TCN threshold: ", deltaTCN);
+  verbose && enter(verbose, "Estimating standard deviation of tumor BAFs for heterozygous SNPs")
+  verbose && cat(verbose, "DH threshold: ", deltaDH)
+  verbose && cat(verbose, "TCN threshold: ", deltaTCN)
 
-  segs <- as.data.frame(this);
+  segs <- as.data.frame(this)
 
-  verbose && cat(verbose, "Number of segments: ", nrow(segs));
+  verbose && cat(verbose, "Number of segments: ", nrow(segs))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find segments to be used for the estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find segments that have low DHs
-  idxsDH <- which(segs$dhMean <= deltaDH);
-  verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH));
-  verbose && str(verbose, idxsDH);
+  idxsDH <- which(segs$dhMean <= deltaDH)
+  verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH))
+  verbose && str(verbose, idxsDH)
 
   # Sanity check
   if (length(idxsDH) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH); 
+    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
   }
 
   # Find segments that have low TCNs
-  idxsTCN <- which(segs$tcnMean <= deltaTCN);
-  verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN));
-  verbose && str(verbose, idxsTCN);
+  idxsTCN <- which(segs$tcnMean <= deltaTCN)
+  verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN))
+  verbose && str(verbose, idxsTCN)
 
   # Sanity check
   if (length(idxsTCN) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN); 
+    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
   }
 
   # Segments with small DH and small TCN
-  idxs <- intersect(idxsDH, idxsTCN);
-  verbose && cat(verbose, "Identified segments with small DH and small TCN levels: ", length(idxs));
-  verbose && str(verbose, idxs);
+  idxs <- intersect(idxsDH, idxsTCN)
+  verbose && cat(verbose, "Identified segments with small DH and small TCN levels: ", length(idxs))
+  verbose && str(verbose, idxs)
 
   # Sanity check
   if (length(idxs) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.");
+    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
   }
 
 
@@ -198,24 +198,24 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
   # Extract data and estimate parameters
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract those segments
-  verbose && enter(verbose, "Extracting identified segments");
-  fitT <- extractRegions(this, idxs);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Extracting identified segments")
+  fitT <- extractRegions(this, idxs)
+  verbose && exit(verbose)
 
   # Get the tumor BAFs for the heterozygous SNPs
-  verbose && enter(verbose, "Extracting BAFs for the heterozygous SNPs");
-  beta <- with(fitT$data, betaTN[muN == 1/2]);
-  verbose && str(verbose, beta);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Extracting BAFs for the heterozygous SNPs")
+  beta <- with(fitT$data, betaTN[muN == 1/2])
+  verbose && str(verbose, beta)
+  verbose && exit(verbose)
 
   # Estimate the standard deviation for those
-  sd <- mad(beta, na.rm=TRUE);
-  verbose && cat(verbose, "Estimated standard deviation: ", sd);
+  sd <- mad(beta, na.rm=TRUE)
+  verbose && cat(verbose, "Estimated standard deviation: ", sd)
 
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  sd;
+  sd
 }, private=TRUE) # estimateStdDevForHeterozygousBAF()
 
 
@@ -226,63 +226,63 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'deltaDH':
-  deltaDH <- Arguments$getDouble(deltaDH, range=c(0,1));
+  deltaDH <- Arguments$getDouble(deltaDH, range=c(0,1))
 
   # Argument 'deltaTCN':
-  deltaTCN <- Arguments$getDouble(deltaTCN, range=c(0,Inf));
+  deltaTCN <- Arguments$getDouble(deltaTCN, range=c(0,Inf))
 
   # Argument 'robust':
-  robust <- Arguments$getLogical(robust);
+  robust <- Arguments$getLogical(robust)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Estimating mean of tumor DHs for heterozygous SNPs");
-  verbose && cat(verbose, "DH threshold: ", deltaDH);
-  verbose && cat(verbose, "TCN threshold: ", deltaTCN);
-  verbose && cat(verbose, "Robust estimator: ", robust);
-  verbose && cat(verbose, "Trim: ", trim);
+  verbose && enter(verbose, "Estimating mean of tumor DHs for heterozygous SNPs")
+  verbose && cat(verbose, "DH threshold: ", deltaDH)
+  verbose && cat(verbose, "TCN threshold: ", deltaTCN)
+  verbose && cat(verbose, "Robust estimator: ", robust)
+  verbose && cat(verbose, "Trim: ", trim)
 
-  segs <- as.data.frame(this);
+  segs <- as.data.frame(this)
 
-  verbose && cat(verbose, "Number of segments: ", nrow(segs));
+  verbose && cat(verbose, "Number of segments: ", nrow(segs))
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find segments to be used for the estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find segments that have low DHs
-  idxsDH <- which(segs$dhMean <= deltaDH);
-  verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH));
-  verbose && str(verbose, idxsDH);
+  idxsDH <- which(segs$dhMean <= deltaDH)
+  verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH))
+  verbose && str(verbose, idxsDH)
 
   # Sanity check
   if (length(idxsDH) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH); 
+    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
   }
 
   # Find segments that have low TCNs
-  idxsTCN <- which(segs$tcnMean <= deltaTCN);
-  verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN));
-  verbose && str(verbose, idxsTCN);
+  idxsTCN <- which(segs$tcnMean <= deltaTCN)
+  verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN))
+  verbose && str(verbose, idxsTCN)
 
   # Sanity check
   if (length(idxsTCN) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN); 
+    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
   }
 
   # Segments with small DH and small TCN
-  idxs <- intersect(idxsDH, idxsTCN);
-  verbose && cat(verbose, "Identified segments with small DH and small TCN levels: ", length(idxs));
-  verbose && str(verbose, idxs);
+  idxs <- intersect(idxsDH, idxsTCN)
+  verbose && cat(verbose, "Identified segments with small DH and small TCN levels: ", length(idxs))
+  verbose && str(verbose, idxs)
 
   # Sanity check
   if (length(idxs) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.");
+    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
   }
 
 
@@ -290,32 +290,32 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
   # Extract data and estimate parameters
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract those segments
-  verbose && enter(verbose, "Extracting identified segments");
-  fitT <- extractRegions(this, idxs);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Extracting identified segments")
+  fitT <- extractRegions(this, idxs)
+  verbose && exit(verbose)
 
   # Get the tumor DHs for the heterozygous SNPs
-  verbose && enter(verbose, "Extracting DHs for the heterozygous SNPs");
-  rho <- with(fitT$data, rho[muN == 1/2]);
-  verbose && str(verbose, rho);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Extracting DHs for the heterozygous SNPs")
+  rho <- with(fitT$data, rho[muN == 1/2])
+  verbose && str(verbose, rho)
+  verbose && exit(verbose)
 
   # Estimate the average for those
-  rho <- rho[is.finite(rho)];
+  rho <- rho[is.finite(rho)]
   if (robust) {
-    mu <- median(rho, na.rm=FALSE);
-    qlow <- quantile(rho, probs=0.05, na.rm=FALSE);
-    delta <- mu-qlow;
-    print(list(qlow=qlow, mu=mu, delta=delta, "mu+delta"=mu+delta));
+    mu <- median(rho, na.rm=FALSE)
+    qlow <- quantile(rho, probs=0.05, na.rm=FALSE)
+    delta <- mu-qlow
+    print(list(qlow=qlow, mu=mu, delta=delta, "mu+delta"=mu+delta))
   } else {
-    mu <- mean(rho, trim=trim, na.rm=FALSE);
+    mu <- mean(rho, trim=trim, na.rm=FALSE)
   }
-  verbose && cat(verbose, "Estimated mean: ", mu);
+  verbose && cat(verbose, "Estimated mean: ", mu)
 
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  mu;
+  mu
 }, private=TRUE) # estimateMeanForDH()
 
 
@@ -325,80 +325,80 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Argument 'quantile':
-  quantile <- Arguments$getDouble(quantile, range=c(0.5,1));
+  quantile <- Arguments$getDouble(quantile, range=c(0.5,1))
 
   # Argument 'scale':
-  scale <- Arguments$getDouble(scale, range=c(0,Inf));
+  scale <- Arguments$getDouble(scale, range=c(0,Inf))
 
   # Argument 'deltaDH':
-  deltaDH <- Arguments$getDouble(deltaDH, range=c(0,1));
+  deltaDH <- Arguments$getDouble(deltaDH, range=c(0,1))
 
   # Argument 'deltaTCN':
-  deltaTCN <- Arguments$getDouble(deltaTCN, range=c(0,Inf));
+  deltaTCN <- Arguments$getDouble(deltaTCN, range=c(0,Inf))
 
   # Argument 'robust':
-  robust <- Arguments$getLogical(robust);
+  robust <- Arguments$getLogical(robust)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Estimating DH quantile of tumor DHs for heterozygous SNPs");
-  verbose && cat(verbose, "DH threshold: ", deltaDH);
-  verbose && cat(verbose, "TCN threshold: ", deltaTCN);
-  verbose && cat(verbose, "Robust estimator: ", robust);
-  verbose && cat(verbose, "Scale factor: ", scale);
+  verbose && enter(verbose, "Estimating DH quantile of tumor DHs for heterozygous SNPs")
+  verbose && cat(verbose, "DH threshold: ", deltaDH)
+  verbose && cat(verbose, "TCN threshold: ", deltaTCN)
+  verbose && cat(verbose, "Robust estimator: ", robust)
+  verbose && cat(verbose, "Scale factor: ", scale)
 
-  segs <- as.data.frame(this);
+  segs <- as.data.frame(this)
 
-  verbose && cat(verbose, "Number of segments: ", nrow(segs));
+  verbose && cat(verbose, "Number of segments: ", nrow(segs))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Find segments to be used for the estimation
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Finding some segments that are likely to in allelic balance (AB)");
+  verbose && enter(verbose, "Finding some segments that are likely to in allelic balance (AB)")
 
   # Find some segments that have low DHs
-  idxsDH <- which(segs$dhMean <= deltaDH);
-  verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH));
-  verbose && str(verbose, idxsDH);
+  idxsDH <- which(segs$dhMean <= deltaDH)
+  verbose && cat(verbose, "Identified segments with small DH levels: ", length(idxsDH))
+  verbose && str(verbose, idxsDH)
 
   # Sanity check
   if (length(idxsDH) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH); 
+    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
   }
 
   # Find segments that have low TCNs
-  idxsTCN <- which(segs$tcnMean <= deltaTCN);
-  verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN));
-  verbose && str(verbose, idxsTCN);
+  idxsTCN <- which(segs$tcnMean <= deltaTCN)
+  verbose && cat(verbose, "Identified segments with small TCN levels: ", length(idxsTCN))
+  verbose && str(verbose, idxsTCN)
 
   # Sanity check
   if (length(idxsTCN) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN); 
+    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
   }
 
   # Segments with small DH and small TCN
-  idxs <- intersect(idxsDH, idxsTCN);
-  verbose && cat(verbose, "Identified segments with small DH and small TCN levels: ", length(idxs));
-  verbose && str(verbose, idxs);
+  idxs <- intersect(idxsDH, idxsTCN)
+  verbose && cat(verbose, "Identified segments with small DH and small TCN levels: ", length(idxs))
+  verbose && str(verbose, idxs)
 
   # Sanity check
   if (length(idxs) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.");
+    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
   }
 
   # Extract those segments
-  verbose && enter(verbose, "Extracting identified segments");
-  fitT <- extractRegions(this, idxs);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Extracting identified segments")
+  fitT <- extractRegions(this, idxs)
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
 
 
@@ -406,46 +406,46 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
   # Extract data and estimate parameters
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Get the tumor DHs for the heterozygous SNPs
-  verbose && enter(verbose, "Extracting DHs for the heterozygous SNPs");
-  rho <- with(fitT$data, rho[muN == 1/2]);
-  verbose && str(verbose, rho);
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Extracting DHs for the heterozygous SNPs")
+  rho <- with(fitT$data, rho[muN == 1/2])
+  verbose && str(verbose, rho)
+  verbose && exit(verbose)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Estimating the DH quantile
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Estimating the quantile of interest");
-  verbose && cat(verbose, "Quantile: ", quantile);
+  verbose && enter(verbose, "Estimating the quantile of interest")
+  verbose && cat(verbose, "Quantile: ", quantile)
 
   # Drop missing values
-  rho <- rho[is.finite(rho)];
+  rho <- rho[is.finite(rho)]
 
   if (robust) {
-    lq <- quantile(rho, probs=1-quantile, na.rm=FALSE);
-    verbose && printf(verbose, "Estimated lower quantile (%.3f): %f\n", 1-quantile, lq);
-    mu <- median(rho, na.rm=FALSE);
-    verbose && cat(verbose, "Estimated median: ", mu);
-    delta <- mu-lq;
-    verbose && printf(verbose, "Estimated \"spread\": %f\n", delta);
-    uq <- mu + scale*delta;
-    verbose && printf(verbose, "Scale parameter: %f\n", scale);
-    qs <- c(lq, mu, mu+delta, uq);
-    names(qs) <- sprintf("%.1f%%", 100*c(1-quantile, 0.5, quantile, 0.5+scale*(quantile-0.5)));
-    names(qs)[3:4] <- sprintf("%s*", names(qs)[3:4]);
-    attr(uq, "quantiles") <- qs;
+    lq <- quantile(rho, probs=1-quantile, na.rm=FALSE)
+    verbose && printf(verbose, "Estimated lower quantile (%.3f): %f\n", 1-quantile, lq)
+    mu <- median(rho, na.rm=FALSE)
+    verbose && cat(verbose, "Estimated median: ", mu)
+    delta <- mu-lq
+    verbose && printf(verbose, "Estimated \"spread\": %f\n", delta)
+    uq <- mu + scale*delta
+    verbose && printf(verbose, "Scale parameter: %f\n", scale)
+    qs <- c(lq, mu, mu+delta, uq)
+    names(qs) <- sprintf("%.1f%%", 100*c(1-quantile, 0.5, quantile, 0.5+scale*(quantile-0.5)))
+    names(qs)[3:4] <- sprintf("%s*", names(qs)[3:4])
+    attr(uq, "quantiles") <- qs
   } else {
-    uq <- quantile(rho, probs=quantile, na.rm=FALSE);
+    uq <- quantile(rho, probs=quantile, na.rm=FALSE)
   }
 
-  names(uq) <- uq;
-  verbose && printf(verbose, "Estimated upper quantile (%.3f): %f\n", quantile, uq);
+  names(uq) <- uq
+  verbose && printf(verbose, "Estimated upper quantile (%.3f): %f\n", quantile, uq)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  uq;
+  uq
 }, private=TRUE) # estimateHighDHQuantileAtAB()
 
 
@@ -508,75 +508,75 @@ setMethodS3("estimateDeltaABBySmallDH", "PairedPSCBS", function(fit, q1=0.05, q2
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  
   # Argument 'q1' & 'q2':
-  q1 <- Arguments$getDouble(q1, range=c(0,1));
-  q2 <- Arguments$getDouble(q2, range=c(0,1));
+  q1 <- Arguments$getDouble(q1, range=c(0,1))
+  q2 <- Arguments$getDouble(q2, range=c(0,1))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Estimating DH threshold for AB caller");
-  verbose && cat(verbose, "quantile #1: ", q1);
-  verbose && cat(verbose, "Symmetric quantile #2: ", q2);
+  verbose && enter(verbose, "Estimating DH threshold for AB caller")
+  verbose && cat(verbose, "quantile #1: ", q1)
+  verbose && cat(verbose, "Symmetric quantile #2: ", q2)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the region-level estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-  segs <- getSegments(fit);
-  dh <- segs$dhMean;
-  stopifnot(!is.null(dh));
-  n <- segs$dhNbrOfLoci;
+  segs <- getSegments(fit)
+  dh <- segs$dhMean
+  stopifnot(!is.null(dh))
+  n <- segs$dhNbrOfLoci
 
   # Drop missing values
-  keep <- (!is.na(dh) & !is.na(n));
-  idxs <- which(keep);
-  dh <- dh[idxs];
-  n <- n[idxs];
-  verbose && cat(verbose, "Number of segments: ", length(idxs));
+  keep <- (!is.na(dh) & !is.na(n))
+  idxs <- which(keep)
+  dh <- dh[idxs]
+  n <- n[idxs]
+  verbose && cat(verbose, "Number of segments: ", length(idxs))
   # Sanity check
-  stopifnot(length(idxs) > 0);
+  stopifnot(length(idxs) > 0)
 
   # Calculated weighted quantile
-  weights <- n / sum(n);
-  deltaDH <- weightedQuantile(dh, w=weights, probs=q1);
-  verbose && printf(verbose, "Weighted %g%% quantile of DH: %f\n", 100*q1, deltaDH);
+  weights <- n / sum(n)
+  deltaDH <- weightedQuantile(dh, w=weights, probs=q1)
+  verbose && printf(verbose, "Weighted %g%% quantile of DH: %f\n", 100*q1, deltaDH)
 
   # Identify segments with DH this small
-  keep <- (dh <= deltaDH);
-  idxs <- idxs[keep];
-  verbose && cat(verbose, "Number of segments with small DH: ", length(idxs));
+  keep <- (dh <= deltaDH)
+  idxs <- idxs[keep]
+  verbose && cat(verbose, "Number of segments with small DH: ", length(idxs))
   # Sanity check
-  stopifnot(length(idxs) > 0);
+  stopifnot(length(idxs) > 0)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the locus-level estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
   # Extract the regions of interest
-  fitT <- extractRegions(fit, idxs);
+  fitT <- extractRegions(fit, idxs)
 
   # Extract the data
-  data <- fitT$data;
-  rho <- data$rho;
-  stopifnot(!is.null(rho));
+  data <- fitT$data
+  rho <- data$rho
+  stopifnot(!is.null(rho))
 
-  verbose && cat(verbose, "Number of data points: ", length(rho));
+  verbose && cat(verbose, "Number of data points: ", length(rho))
 
   # Drop missing values
-  rho <- rho[is.finite(rho)];
-  verbose && cat(verbose, "Number of finite data points: ", length(rho));
+  rho <- rho[is.finite(rho)]
+  verbose && cat(verbose, "Number of finite data points: ", length(rho))
 
-  qs <- quantile(rho, probs=c(1-q2, 1/2), na.rm=FALSE, names=FALSE);
-  verbose && printf(verbose, "Estimate of (1-%.3g):th and 50%% quantiles: (%g,%g)\n", q2, qs[1], qs[2]);
-  deltaAB <- qs[2] + (qs[2]-qs[1]);
-  verbose && printf(verbose, "Estimate of %.3g:th \"symmetric\" quantile: %g\n", q2, deltaAB);
+  qs <- quantile(rho, probs=c(1-q2, 1/2), na.rm=FALSE, names=FALSE)
+  verbose && printf(verbose, "Estimate of (1-%.3g):th and 50%% quantiles: (%g,%g)\n", q2, qs[1], qs[2])
+  deltaAB <- qs[2] + (qs[2]-qs[1])
+  verbose && printf(verbose, "Estimate of %.3g:th \"symmetric\" quantile: %g\n", q2, deltaAB)
   
 
   # Sanity check
-  deltaAB <- Arguments$getDouble(deltaAB);
+  deltaAB <- Arguments$getDouble(deltaAB)
 
-  deltaAB;
+  deltaAB
 }, protected=TRUE) # estimateDeltaABBySmallDH()

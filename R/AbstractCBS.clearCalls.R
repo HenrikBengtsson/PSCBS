@@ -1,23 +1,23 @@
 # Removes all segment calls and corresponding parameter estimates.
 setMethodS3("clearCalls", "AbstractCBS", function(fit, ...) {
-  segs <- fit$output;
-  params <- fit$params;
+  segs <- fit$output
+  params <- fit$params
 
   # Drop all calls
-  excl <- grep("Call$", colnames(segs));
+  excl <- grep("Call$", colnames(segs))
   if (length(excl) > 0L) {
-    segs <- segs[,-excl];
+    segs <- segs[,-excl]
   }
 
   # Drop all call parameters (AD HOC!)
   for (ff in c("deltaROH", "deltaAB", "deltaLOH")) {
-    params[[ff]] <- NULL;
+    params[[ff]] <- NULL
   }
 
-  fit$output <- segs;
-  fit$params <- params;
+  fit$output <- segs
+  fit$params <- params
 
-  invisible(fit);
+  invisible(fit)
 }, protected=TRUE)
 
 

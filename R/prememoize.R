@@ -1,8 +1,8 @@
 .setupCacheRootPath <- function(...) {
   # Setup the cache root path, possibly by prompting the user.
-  ns <- getNamespace("R.cache");
-  setupCacheRootPath <- get("setupCacheRootPath", mode="function", envir=ns);
-  setupCacheRootPath();
+  ns <- getNamespace("R.cache")
+  setupCacheRootPath <- get("setupCacheRootPath", mode="function", envir=ns)
+  setupCacheRootPath()
 } # .setupCacheRootPath()
 
 # CRAN POLICY: Add precalculated memoization files to the R.cache
@@ -14,17 +14,17 @@
 .prememoize <- function(verbose=FALSE) {
   # Explictly setup cache root here, since it's only done by 'R.cache'
   # if that package is attached.  Here we only load it. /HB 2013-09-27
-  .setupCacheRootPath();
+  .setupCacheRootPath()
 
   # This will make sure that the pre-generated calculations available
   # in the 'PSCBS' package are copied to the R.cache cache directory.
   # This regardless of whether a 'PSCBS' cache subdirectory exists
   # or not. /HB 2013-09-27
   path <- "PSCBS/segmentByCBS/sbdry"
-  pathS <- system.file("misc/_Rcache", path, package="PSCBS");
-  pathD <- getCachePath(path);
-  copyDirectory(pathS, pathD, copy.mode=FALSE, recursive=FALSE, overwrite=TRUE);
+  pathS <- system.file("misc/_Rcache", path, package="PSCBS")
+  pathD <- getCachePath(path)
+  copyDirectory(pathS, pathD, copy.mode=FALSE, recursive=FALSE, overwrite=TRUE)
   if (verbose) {
-    message("Added pre-memoized calculations: ", getAbsolutePath(pathD));
+    message("Added pre-memoized calculations: ", getAbsolutePath(pathD))
   }
 } # .prememoize()

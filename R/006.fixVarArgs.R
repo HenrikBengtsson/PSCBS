@@ -1,4 +1,4 @@
-append <- function(...) UseMethod("append");
+append <- function(...) UseMethod("append")
 setMethodS3("append", "default", function(...) {
-  base::append(...);
+  base::append(...)
 })

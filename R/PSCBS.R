@@ -30,62 +30,62 @@
 setConstructorS3("PSCBS", function(fit=list(), ...) {
   # Argument 'fit':
   if (!is.list(fit)) {
-    throw("Argument 'fit' is not a list: ", class(fit)[1]);
+    throw("Argument 'fit' is not a list: ", class(fit)[1])
   }
 
-  extend(AbstractCBS(fit, ...), "PSCBS");
+  extend(AbstractCBS(fit, ...), "PSCBS")
 })
 
 
 setMethodS3("as.data.frame", "PSCBS", function(x, ...) {
-  getSegments(x, splitters=TRUE, ...);
+  getSegments(x, splitters=TRUE, ...)
 }, protected=TRUE)
 
 
 setMethodS3("getLocusSignalNames", "PSCBS", function(fit, ...) {
-  c("CT", "rho");
+  c("CT", "rho")
 }, protected=TRUE)
 
 setMethodS3("getSegmentTrackPrefixes", "PSCBS", function(fit, ...) {
-  c("tcn", "dh");
+  c("tcn", "dh")
 }, protected=TRUE)
 
 
 setMethodS3("getLocusData", "PSCBS", function(fit, indices=NULL, fields=c("asis"), ...) {
   # Argument 'indices':
   if (!is.null(indices)) {
-    indices <- Arguments$getIndices(indices);
+    indices <- Arguments$getIndices(indices)
   }
 
   # Argument 'fields':
-  fields <- match.arg(fields);
+  fields <- match.arg(fields)
 
-  data <- fit$data;
+  data <- fit$data
 
   # Return requested indices
   if (!is.null(indices)) {
     # Map of final indices to current indices
-    map <- match(indices, data$index);
+    map <- match(indices, data$index)
 
     # Extract/expand...
-    data <- data[map,];
+    data <- data[map,]
 
     # Sanity check
-    stopifnot(nrow(data) == length(indices));
+    stopifnot(nrow(data) == length(indices))
   }
 
-  data;
+  data
 }, protected=TRUE) # getLocusData()
 
 
 
 setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
-  segs <- fit$output;
+  segs <- fit$output
 
-  isSplitter <- lapply(segs[-1], FUN=is.na);
-  isSplitter <- Reduce("&", isSplitter);
+  isSplitter <- lapply(segs[-1], FUN=is.na)
+  isSplitter <- Reduce("&", isSplitter)
 
-  isSplitter;
+  isSplitter
 }, protected=TRUE)
 
 
@@ -119,103 +119,103 @@ setMethodS3("isSegmentSplitter", "PSCBS", function(fit, ...) {
 #*/###########################################################################
 setMethodS3("getSegments", "PSCBS", function(fit, simplify=FALSE, splitters=TRUE, addGaps=FALSE, ...) {
   # Argument 'splitters':
-  splitters <- Arguments$getLogical(splitters);
+  splitters <- Arguments$getLogical(splitters)
 
-  segs <- fit$output;
+  segs <- fit$output
 
   # Drop chromosome splitters?
   if (!splitters) {
-    isSplitter <- isSegmentSplitter(fit);
-    segs <- segs[!isSplitter,];
+    isSplitter <- isSegmentSplitter(fit)
+    segs <- segs[!isSplitter,]
   }
 
   # Add splitters for "gaps"...
   if (splitters && addGaps) {
     # Chromosome gaps
-    n <- nrow(segs);
-    chrs <- segs$chromosome;
-    gapsAfter <- which(diff(chrs) != 0L);
-    gapsAfter <- gapsAfter[!is.na(chrs[gapsAfter])];
-    nGaps <- length(gapsAfter);
+    n <- nrow(segs)
+    chrs <- segs$chromosome
+    gapsAfter <- which(diff(chrs) != 0L)
+    gapsAfter <- gapsAfter[!is.na(chrs[gapsAfter])]
+    nGaps <- length(gapsAfter)
     if (nGaps > 0L) {
-      idxs <- seq_len(n);
-      values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
-      segs <- segs[idxs,];
+      idxs <- seq_len(n)
+      values <- rep(NA_integer_, times=nGaps)
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values)
+      segs <- segs[idxs,]
     }
 
     # Other gaps
-    n <- nrow(segs);
-    chrs <- segs$chromosome;
-    starts <- segs$tcnStart[-1L];
-    ends <- segs$tcnEnd[-n];
-    gapsAfter <- which(starts != ends);
-    onSameChr <- (chrs[gapsAfter+1L] == chrs[gapsAfter] );
-    gapsAfter <- gapsAfter[onSameChr];
-    nGaps <- length(gapsAfter);
+    n <- nrow(segs)
+    chrs <- segs$chromosome
+    starts <- segs$tcnStart[-1L]
+    ends <- segs$tcnEnd[-n]
+    gapsAfter <- which(starts != ends)
+    onSameChr <- (chrs[gapsAfter+1L] == chrs[gapsAfter] )
+    gapsAfter <- gapsAfter[onSameChr]
+    nGaps <- length(gapsAfter)
     if (nGaps > 0L) {
-      idxs <- seq_len(n);
-      values <- rep(NA_integer_, times=nGaps);
-      idxs <- insert(idxs, ats=gapsAfter+1L, values=values);
-      segs <- segs[idxs,];
+      idxs <- seq_len(n)
+      values <- rep(NA_integer_, times=nGaps)
+      idxs <- insert(idxs, ats=gapsAfter+1L, values=values)
+      segs <- segs[idxs,]
     }
   }
 
 ##  if (nrow(segs) > 0) {
-##    segs$id <- getSampleName(fit);
+##    segs$id <- getSampleName(fit)
 ##  }
 
   if (simplify) {
     # If joinSegments was used (i.e. (start,end) are equal for TCN and DH)...
     if (fit$params$joinSegments) {
       # Sanity check
-      stopifnot(all(segs$tcnStart == segs$dhStart, na.rm=TRUE));
-      stopifnot(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE));
+      stopifnot(all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
+      stopifnot(all(segs$tcnEnd == segs$dhEnd, na.rm=TRUE))
 
-      names <- colnames(segs);
-      keep <- !is.element(names, c("dhStart", "dhEnd"));
-      segs <- segs[,keep];
-      names <- colnames(segs);
-      names[names == "tcnStart"] <- "start";
-      names[names == "tcnEnd"] <- "end";
-      colnames(segs) <- names;
+      names <- colnames(segs)
+      keep <- !is.element(names, c("dhStart", "dhEnd"))
+      segs <- segs[,keep]
+      names <- colnames(segs)
+      names[names == "tcnStart"] <- "start"
+      names[names == "tcnEnd"] <- "end"
+      colnames(segs) <- names
     }
 
     # Drop bootstrap columns, if any
-    names <- colnames(segs);
-    keep <- (regexpr("_[0-9]+(|[.][0-9]+)%$", names) == -1);
-    segs <- segs[,keep];
+    names <- colnames(segs)
+    keep <- (regexpr("_[0-9]+(|[.][0-9]+)%$", names) == -1)
+    segs <- segs[,keep]
   }
 
-  segs;
+  segs
 }, private=TRUE)
 
 
 
 setMethodS3("getChangePoints", "PSCBS", function(fit, ...) {
   # Already available?
-  cps <- fit$changepoints;
-  if (!is.null(cps)) return(cps);
+  cps <- fit$changepoints
+  if (!is.null(cps)) return(cps)
 
-  segs <- getSegments(fit, splitters=TRUE);
-  tcn <- segs[["tcnMean"]];
-  dh <- segs[["dhMean"]];
-  C1 <- (1-dh) * tcn / 2;
-  C2 <- tcn - C1;
-  n <- length(tcn);
+  segs <- getSegments(fit, splitters=TRUE)
+  tcn <- segs[["tcnMean"]]
+  dh <- segs[["dhMean"]]
+  C1 <- (1-dh) * tcn / 2
+  C2 <- tcn - C1
+  n <- length(tcn)
 
   # Calculate observed (alpha, radius, manhattan, dc1, dc2) data
-  D1 <- C1[-n] - C1[-1L];
-  D2 <- C2[-n] - C2[-1L];
+  D1 <- C1[-n] - C1[-1L]
+  D2 <- C2[-n] - C2[-1L]
   cps <- data.frame(
     alpha = atan2(D2, D1), # Changepoint angles in (0,2*pi)
     radius = sqrt(D2^2 + D1^2),
     manhattan = abs(D2) + abs(D1),
     d1 = D1,
     d2 = D2
-  );
+  )
 
-  cps;
+  cps
 }, private=TRUE) # getChangePoints()
 
 

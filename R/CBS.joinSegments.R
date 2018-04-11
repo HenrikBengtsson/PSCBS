@@ -34,7 +34,7 @@
 # @keyword internal
 #*/###########################################################################
 setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...) {
-  R_SANITY_CHECK <- TRUE;
+  R_SANITY_CHECK <- TRUE
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
@@ -47,33 +47,33 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
     if (nbrOfChrs > 1L) {
       throw("Argument 'range' cannot be given when 'fit' contains multiple chromosomes.")
     }
-    range <- Arguments$getDoubles(range, length=c(2,2));
-    stopifnot(range[2] >= range[1]);
+    range <- Arguments$getDoubles(range, length=c(2,2))
+    stopifnot(range[2] >= range[1])
   }
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Joining segments");
-  segs <- getSegments(fit, splitters=TRUE);
-  verbose && cat(verbose, "Segments:");
-  verbose && print(verbose, segs);
+  verbose && enter(verbose, "Joining segments")
+  segs <- getSegments(fit, splitters=TRUE)
+  verbose && cat(verbose, "Segments:")
+  verbose && print(verbose, segs)
   verbose && cat(verbose, "Chromosomes:")
   verbose && print(verbose, chromosomes)
-  verbose && cat(verbose, "Range:");
-  verbose && print(verbose, range);
+  verbose && cat(verbose, "Range:")
+  verbose && print(verbose, range)
 
-  nbrOfSegs <- nrow(segs);
+  nbrOfSegs <- nrow(segs)
   if (nbrOfSegs > 1) {
-    verbose && enter(verbose, "Centering change points");
-    prevSeg <- segs[1L,];
+    verbose && enter(verbose, "Centering change points")
+    prevSeg <- segs[1L,]
     for (ss in 2:nbrOfSegs) {
-      currSeg <- segs[ss,];
+      currSeg <- segs[ss,]
 
       ## New chromosome?
       if (!identical(currSeg$chromosome, prevSeg$chromosome)) {
@@ -83,83 +83,83 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
         next
       }
 
-      currStart <- currSeg[,"start"];
-      prevEnd <- prevSeg[,"end"];
+      currStart <- currSeg[,"start"]
+      prevEnd <- prevSeg[,"end"]
 
       # Sanity check (will give an error if more than one chromosome)
       if (R_SANITY_CHECK) {
-        stopifnot(all(currStart >= prevEnd, na.rm=TRUE));
+        stopifnot(all(currStart >= prevEnd, na.rm=TRUE))
       }
 
       # Center CP
-      xMid <- (prevEnd + currStart) / 2;
+      xMid <- (prevEnd + currStart) / 2
 
       # Move previous end and current start to this centered CP
-      segs[ss,"start"] <- xMid;
-      segs[ss-1L,"end"] <- xMid;
+      segs[ss,"start"] <- xMid
+      segs[ss-1L,"end"] <- xMid
 
-      prevSeg <- currSeg;
+      prevSeg <- currSeg
     } # for (ss ...)
-    verbose && exit(verbose);
+    verbose && exit(verbose)
 
     # Sanity checks
     if (R_SANITY_CHECK) {
-      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
-      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE));  ## FIXME: > 0
-      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));    ## FIXME: > 0
+      stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
+      stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+      stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
     } # if (R_SANITY_CHECK)
 
     if (nbrOfSegs > 6) {
-      verbose && print(verbose, head(segs));
-      verbose && print(verbose, tail(segs));
+      verbose && print(verbose, head(segs))
+      verbose && print(verbose, tail(segs))
     } else {
-      verbose && print(verbose, segs);
+      verbose && print(verbose, segs)
     }
   } # if (nbrOfSegs > 1)
 
 
   if (!is.null(range)) {
-    verbose && enter(verbose, "Adjust for 'range'");
-    verbose && cat(verbose, "Range:");
-    verbose && print(verbose, range);
-    xMin <- min(range, na.rm=TRUE);
-    xMax <- max(range, na.rm=TRUE);
+    verbose && enter(verbose, "Adjust for 'range'")
+    verbose && cat(verbose, "Range:")
+    verbose && print(verbose, range)
+    xMin <- min(range, na.rm=TRUE)
+    xMax <- max(range, na.rm=TRUE)
     if (nbrOfSegs > 0) {
       # Sanity checks
       if (R_SANITY_CHECK) {
-        stopifnot(xMin <= segs[1L,"start"]);
-        stopifnot(segs[1L,"end"] <= xMax);
+        stopifnot(xMin <= segs[1L,"start"])
+        stopifnot(segs[1L,"end"] <= xMax)
       }
-      segs[1L,"start"] <- xMin;
-      segs[nbrOfSegs,"end"] <- xMax;
+      segs[1L,"start"] <- xMin
+      segs[nbrOfSegs,"end"] <- xMax
 
       # Sanity checks
       if (R_SANITY_CHECK) {
-        stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE));
-        stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE));  ## FIXME: > 0
-        stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE));    ## FIXME: > 0
+        stopifnot(all(segs$start[-1] >= segs$end[-nbrOfSegs], na.rm=TRUE))
+        stopifnot(all(diff(segs$start) >= 0, na.rm=TRUE)) ## FIXME: > 0
+        stopifnot(all(diff(segs$end) >= 0, na.rm=TRUE)) ## FIXME: > 0
       }
 
       if (nbrOfSegs > 6) {
-        verbose && print(verbose, head(segs));
-        verbose && print(verbose, tail(segs));
+        verbose && print(verbose, head(segs))
+        verbose && print(verbose, tail(segs))
       } else {
-        verbose && print(verbose, segs);
+        verbose && print(verbose, segs)
       }
     } # if (nbrOfSegs > 0)
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # if (!is.null(range))
 
-  fit <- setSegments(fit, segs, splitters=TRUE);
+  fit <- setSegments(fit, segs, splitters=TRUE)
 
-  segs <- getSegments(fit, splitters=FALSE);
+  segs <- getSegments(fit, splitters=FALSE)
   if (nbrOfSegs > 6) {
-    verbose && print(verbose, head(segs));
-    verbose && print(verbose, tail(segs));
+    verbose && print(verbose, head(segs))
+    verbose && print(verbose, tail(segs))
   } else {
-    verbose && print(verbose, segs);
+    verbose && print(verbose, segs)
   }
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, private=TRUE) # joinSegments()
