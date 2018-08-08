@@ -1,8 +1,5 @@
 library("revdepcheck")
-if (isTRUE(as.logical(toupper(Sys.getenv("_R_CHECK_REVDEP_RESET_", "FALSE")))))
-  revdep_reset()
-
-options(warn = 1)
+options(warn = 1L)
 
 availableCores <- function() {
   getenv <- function(name) as.integer(Sys.getenv(name, NA_character_))
@@ -13,6 +10,17 @@ availableCores <- function() {
   if (is.finite(n <- getenv("SLURM_CPUS_PER_TASK"))) return(n)
   if (is.finite(n <- getenv("NSLOTS"))) return(n)
   1L
+}
+
+if (file_test("-f", p <- Sys.getenv("R_CHECK_ENVIRON", "~/.R/check.Renviron"))) {
+  cat(sprintf("R CMD check will use env vars from %s\n", sQuote(p)))
+  cat(sprintf("To disable, set 'R_CHECK_ENVIRON=false' (a fake pathname)\n"))
+}
+
+envs <- grep("^_R_CHECK_", names(Sys.getenv()), value = TRUE)
+if (length(envs) > 0L) {
+  cat(sprintf("Detected _R_CHECK_* env vars that will affect R CMD check: %s\n",
+              paste(sQuote(envs), collapse = ", ")))
 }
 
 revdep_check(bioc = TRUE, num_workers = availableCores(),
