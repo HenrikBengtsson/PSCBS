@@ -16,7 +16,7 @@ future vignette '[A Future for R: Controlling Default Future Strategy](https://c
 
 
 ## Installation
-R package PSCBS is available on [CRAN](http://cran.r-project.org/package=PSCBS) and can be installed in R as:
+R package PSCBS is available on [CRAN](https://cran.r-project.org/package=PSCBS) and can be installed in R as:
 ```r
 install.packages('PSCBS')
 ```
