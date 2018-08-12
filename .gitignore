@@ -16,5 +16,7 @@
 .future
 .ghi
 .issues
-
-.Rproj.user
+.make
+revdep/data.sqlite
+revdep/checks/*
+revdep/library/*
