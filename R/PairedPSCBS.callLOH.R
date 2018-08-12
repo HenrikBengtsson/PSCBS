@@ -54,59 +54,59 @@
 #*/###########################################################################
 setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH"), ..., minSize=1, xorCalls=TRUE, force=FALSE) {
   # Argument 'flavor':
-  flavor <- match.arg(flavor);
+  flavor <- match.arg(flavor)
 
   # Argument 'minSize':
-  minSize <- Arguments$getDouble(minSize, range=c(1,Inf));
+  minSize <- Arguments$getDouble(minSize, range=c(1,Inf))
 
   # Argument 'xorCalls':
-  xorCalls <- Arguments$getLogical(xorCalls);
+  xorCalls <- Arguments$getLogical(xorCalls)
 
 
   # Already done?
-  segs <- as.data.frame(fit);
-  calls <- segs$lohCall;
+  segs <- as.data.frame(fit)
+  calls <- segs$lohCall
   if (!force && !is.null(calls)) {
-    return(invisible(fit));
+    return(invisible(fit))
   }
 
 
   if (flavor == "SmallC1") {
-    fit <- callLowC1ByC1(fit, ..., callName="loh");
+    fit <- callLowC1ByC1(fit, ..., callName="loh")
   } else if (flavor == "LargeDH") {
-    fit <- callExtremeAllelicImbalanceByDH(fit, ..., callName="loh");
+    fit <- callExtremeAllelicImbalanceByDH(fit, ..., callName="loh")
   } else {
-    throw("Cannot call LOH. Unsupported flavor: ", flavor);
+    throw("Cannot call LOH. Unsupported flavor: ", flavor)
   }
 
   # Don't call segments with too few data points?
   if (minSize > 1) {
-    segs <- as.data.frame(fit);
-    ns <- segs$dhNbrOfLoci;
-    calls <- segs$lohCall;
-    calls[ns < minSize] <- NA;
-    segs$lohCall <- calls;
-    fit$output <- segs;
+    segs <- as.data.frame(fit)
+    ns <- segs$dhNbrOfLoci
+    calls <- segs$lohCall
+    calls[ns < minSize] <- NA
+    segs$lohCall <- calls
+    fit$output <- segs
     # Not needed anymore
-    segs <- calls <- NULL;
+    segs <- calls <- NULL
   }
 
   # Don't call a segment LOH if it already called AB?
   if (xorCalls) {
-    segs <- as.data.frame(fit);
+    segs <- as.data.frame(fit)
     if (is.element("abCall", names(segs))) {
-      calls <- segs$lohCall;
-      otherCalls <- segs$abCall;
+      calls <- segs$lohCall
+      otherCalls <- segs$abCall
       # If called (TRUE) and already called (TRUE)
       # by the other caller, call it as NA.
-      calls[calls & otherCalls] <- NA;
-      segs$lohCall <- calls;
-      fit$output <- segs;
+      calls[calls & otherCalls] <- NA
+      segs$lohCall <- calls
+      fit$output <- segs
     }
   }
 
 
-  return(invisible(fit));
+  return(invisible(fit))
 })
 
 
@@ -117,60 +117,60 @@ setMethodS3("callLowC1ByC1", "PairedPSCBS", function(fit, delta=estimateDeltaLOH
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'delta':
   if (delta != -Inf) {
-    delta <- Arguments$getDouble(delta, range=c(0,Inf));
+    delta <- Arguments$getDouble(delta, range=c(0,Inf))
   }
 
   # Argument 'alpha':
-  alpha <- Arguments$getDouble(alpha, range=c(0,1));
+  alpha <- Arguments$getDouble(alpha, range=c(0,1))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling segments of allelic balance from one-sided DH bootstrap confidence intervals");
+  verbose && enter(verbose, "Calling segments of allelic balance from one-sided DH bootstrap confidence intervals")
 
-  verbose && cat(verbose, "delta (offset adjusting for bias in C1): ", delta);
-  verbose && cat(verbose, "alpha (CI quantile; significance level): ", alpha);
+  verbose && cat(verbose, "delta (offset adjusting for bias in C1): ", delta)
+  verbose && cat(verbose, "alpha (CI quantile; significance level): ", alpha)
 
   # Calculate C1 confidence intervals, if not already done
-  probs <- c(alpha, 1-alpha);
-  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
+  probs <- c(alpha, 1-alpha)
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50))
 
-  segs <- as.data.frame(fit);
+  segs <- as.data.frame(fit)
 
   # Extract confidence interval
-  alphaTag <- sprintf("%g%%", 100*alpha);
-  column <- sprintf("c1_%s", alphaTag);
+  alphaTag <- sprintf("%g%%", 100*alpha)
+  column <- sprintf("c1_%s", alphaTag)
   # Sanity checks
-  stopifnot(is.element(column, colnames(segs)));
+  .stop_if_not(is.element(column, colnames(segs)))
 
   # One-sided test
-  verbose && enter(verbose, "Calling segments");
-  value <- segs[,column, drop=TRUE];
-  call <- (value < delta);
-  nbrOfCalls <- sum(call, na.rm=TRUE);
-  verbose && printf(verbose, "Number of segments called low C1 (LowC1, \"LOH_C1\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Calling segments")
+  value <- segs[,column, drop=TRUE]
+  call <- (value < delta)
+  nbrOfCalls <- sum(call, na.rm=TRUE)
+  verbose && printf(verbose, "Number of segments called low C1 (LowC1, \"LOH_C1\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs))
+  verbose && exit(verbose)
 
-  key <- sprintf("%sCall", callName);
-#  calls <- data.frame(lowc1Call=call);
-#  colnames(calls) <- key;
-#  segs <- cbind(segs, calls);
-  segs[[key]] <- call;
-  fit$output <- segs;
+  key <- sprintf("%sCall", callName)
+#  calls <- data.frame(lowc1Call=call)
+#  colnames(calls) <- key
+#  segs <- cbind(segs, calls)
+  segs[[key]] <- call
+  fit$output <- segs
 
   # Append 'delta' and 'alpha' to parameters
-  params <- fit$params;
-  params$deltaLowC1 <- delta;
-  params$alphaLowC1 <- alpha;
-  fit$params <- params;
+  params <- fit$params
+  params$deltaLowC1 <- delta
+  params$alphaLowC1 <- alpha
+  fit$params <- params
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, private=TRUE) # callLowC1ByC1()
 
 
@@ -181,60 +181,60 @@ setMethodS3("callExtremeAllelicImbalanceByDH", "PairedPSCBS", function(fit, delt
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'delta':
-  delta <- Arguments$getDouble(delta, range=c(0,Inf));
+  delta <- Arguments$getDouble(delta, range=c(0,Inf))
 
   # Argument 'alpha':
-  alpha <- Arguments$getDouble(alpha, range=c(0,1));
+  alpha <- Arguments$getDouble(alpha, range=c(0,1))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling segments of extreme allelic imbalance (AI) from one-sided DH bootstrap confidence intervals");
+  verbose && enter(verbose, "Calling segments of extreme allelic imbalance (AI) from one-sided DH bootstrap confidence intervals")
 
-  verbose && cat(verbose, "delta (offset adjusting for normal contamination and other biases): ", delta);
-  verbose && cat(verbose, "alpha (CI quantile; significance level): ", alpha);
+  verbose && cat(verbose, "delta (offset adjusting for normal contamination and other biases): ", delta)
+  verbose && cat(verbose, "alpha (CI quantile; significance level): ", alpha)
 
 
   # Calculate DH confidence intervalls, if not already done
-  probs <- c(alpha, 1-alpha);
-  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
+  probs <- c(alpha, 1-alpha)
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50))
 
-  segs <- as.data.frame(fit);
+  segs <- as.data.frame(fit)
 
   # Extract confidence interval
-  alphaTag <- sprintf("%g%%", 100*alpha);
-  column <- sprintf("dh_%s", alphaTag);
+  alphaTag <- sprintf("%g%%", 100*alpha)
+  column <- sprintf("dh_%s", alphaTag)
   # Sanity checks
-  stopifnot(is.element(column, colnames(segs)));
+  .stop_if_not(is.element(column, colnames(segs)))
 
   # One-sided test
-  verbose && enter(verbose, "Calling segments");
-  value <- segs[,column, drop=TRUE];
-  call <- (value >= delta);
-  nbrOfCalls <- sum(call, na.rm=TRUE);
-  verbose && printf(verbose, "Number of segments called high allelic imbalance (AI/\"LOH_AI\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Calling segments")
+  value <- segs[,column, drop=TRUE]
+  call <- (value >= delta)
+  nbrOfCalls <- sum(call, na.rm=TRUE)
+  verbose && printf(verbose, "Number of segments called high allelic imbalance (AI/\"LOH_AI\"): %d (%.2f%%) of %d\n", nbrOfCalls, 100*nbrOfCalls/nrow(segs), nrow(segs))
+  verbose && exit(verbose)
 
-  key <- sprintf("%sCall", callName);
-#  calls <- data.frame(aiHighCall=call);
-#  colnames(calls) <- key;
-#  segs <- cbind(segs, calls);
-  segs[[key]] <- call;
-  fit$output <- segs;
+  key <- sprintf("%sCall", callName)
+#  calls <- data.frame(aiHighCall=call)
+#  colnames(calls) <- key
+#  segs <- cbind(segs, calls)
+  segs[[key]] <- call
+  fit$output <- segs
 
   # Append 'delta' and 'alpha' to parameters
-  params <- fit$params;
-  params$deltaExtremeDH <- delta;
-  params$alphaExtremeDH <- alpha;
-  fit$params <- params;
+  params <- fit$params
+  params$deltaExtremeDH <- delta
+  params$alphaExtremeDH <- alpha
+  fit$params <- params
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, private=TRUE) # callExtremeAllelicImbalanceByDH()
 
 

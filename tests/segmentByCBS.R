@@ -126,7 +126,7 @@ abline(v=c(knownSegments$start, knownSegments$end)/1e6, lty=3)
 # Simulate multiple chromosomes
 fit1 <- renameChromosomes(fit, from=0, to=1)
 fit2 <- renameChromosomes(fit, from=0, to=2)
-fitM <- append(fit1, fit2)
+fitM <- c(fit1, fit2)
 fitM <- segmentByCBS(fitM)
 sampleName(fitM) <- "CBS_Example_M"
 print(fitM)

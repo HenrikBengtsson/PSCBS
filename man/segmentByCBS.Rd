@@ -205,7 +205,7 @@ drawLevels(fitC, col="blue", lwd=2, xScale=1e-6)
 # Appending CBS results
 fit1 <- segmentByCBS(y, chromosome=1, x=x)
 fit2 <- segmentByCBS(y, chromosome=2, x=x)
-fit <- append(fit1, fit2)
+fit <- c(fit1, fit2)
 print(fit)
 plotTracks(fit, subset=NULL, lwd=2, Clim=c(-3,3))
 

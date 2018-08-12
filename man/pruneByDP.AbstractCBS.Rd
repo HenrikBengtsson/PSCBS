@@ -37,7 +37,7 @@
 
 \examples{\dontrun{
  # Drop two segments
- fitP <- pruneByDP(fit, nbrOfSegments=-2);
+ fitP <- pruneByDP(fit, nbrOfSegments=-2)
 }}
 
 \author{Henrik Bengtsson, Pierre Neuvial}

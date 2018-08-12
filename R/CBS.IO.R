@@ -3,52 +3,52 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'name' and 'tags':
-  name <- Arguments$getCharacter(name);
-  tags <- Arguments$getCharacters(tags);
+  name <- Arguments$getCharacter(name)
+  tags <- Arguments$getCharacters(tags)
 
   # Argument 'ext':
-  ext <- Arguments$getCharacter(ext);
+  ext <- Arguments$getCharacter(ext)
 
   # Arguments 'path':
-  path <- Arguments$getWritablePath(path);
+  path <- Arguments$getWritablePath(path)
 
   # Argument 'nbrOfDecimals':
-  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
+  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals)
 
 
 
-  fullname <- paste(c(name, tags), collapse=",");
-  filename <- sprintf("%s.%s", fullname, ext);
-  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
+  fullname <- paste(c(name, tags), collapse=",")
+  filename <- sprintf("%s.%s", fullname, ext)
+  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip))
 
   # File already exists?
   if (isFile(pathname)) {
     # Skip?
     if (skip) {
-      return(pathname);
+      return(pathname)
     }
 
     # Overwrite!
-    file.remove(pathname);
+    file.remove(pathname)
   }
 
   # Write to temporary file
-  pathnameT <- pushTemporaryFile(pathname);
+  pathnameT <- pushTemporaryFile(pathname)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- getLocusData(fit, ...);
+  data <- getLocusData(fit, ...)
 
   # Round of floating points
   if (!is.null(nbrOfDecimals)) {
-    cols <- colnames(data);
+    cols <- colnames(data)
     for (key in cols) {
-      values <- data[[key]];
+      values <- data[[key]]
       if (is.double(values)) {
-        values <- round(values, digits=nbrOfDecimals);
-        data[[key]] <- values;
+        values <- round(values, digits=nbrOfDecimals)
+        data[[key]] <- values
       }
     } # for (key ...)
   }
@@ -58,10 +58,10 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
   # Build header
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (addHeader) {
-    sigmaDelta <- estimateStandardDeviation(fit, method="diff");
-#    sigmaResiduals <- estimateStandardDeviation(fit, method="res");
+    sigmaDelta <- estimateStandardDeviation(fit, method="diff")
+#    sigmaResiduals <- estimateStandardDeviation(fit, method="res")
 
-    createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z");
+    createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z")
     hdr <- c(
       name=name,
       tags=tags,
@@ -79,18 +79,18 @@ setMethodS3("writeLocusData", "CBS", function(fit, name=getSampleName(fit), tags
       nbrOfColumns=ncol(data),
       columnNames=paste(colnames(data), collapse=", "),
       columnClasses=paste(sapply(data, FUN=function(x) class(x)[1]), collapse=", ")
-    );
-    bfr <- paste("# ", names(hdr), ": ", hdr, sep="");
+    )
+    bfr <- paste("# ", names(hdr), ": ", hdr, sep="")
 
-    cat(file=pathnameT, bfr, sep="\n");
+    cat(file=pathnameT, bfr, sep="\n")
   } # if (addHeader)
 
   write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep,
-                                          row.names=FALSE, col.names=TRUE);
+                                          row.names=FALSE, col.names=TRUE)
 
-  pathname <- popTemporaryFile(pathnameT);
+  pathname <- popTemporaryFile(pathnameT)
 
-  pathname;
+  pathname
 }, protected=TRUE) # writeLocusData()
 
 
@@ -139,69 +139,69 @@ setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'name' and 'tags':
-  name <- Arguments$getCharacter(name);
-  tags <- Arguments$getCharacters(tags);
+  name <- Arguments$getCharacter(name)
+  tags <- Arguments$getCharacters(tags)
 
   # Argument 'ext':
-  ext <- Arguments$getCharacter(ext);
+  ext <- Arguments$getCharacter(ext)
 
   # Arguments 'path':
-  path <- Arguments$getWritablePath(path);
+  path <- Arguments$getWritablePath(path)
 
   # Argument 'nbrOfDecimals':
-  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
+  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals)
 
 
 
-  fullname <- paste(c(name, tags), collapse=",");
-  filename <- sprintf("%s.%s", fullname, ext);
-  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
+  fullname <- paste(c(name, tags), collapse=",")
+  filename <- sprintf("%s.%s", fullname, ext)
+  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip))
 
   # File already exists?
   if (isFile(pathname)) {
     # Skip?
     if (skip) {
-      return(pathname);
+      return(pathname)
     }
 
     # Overwrite!
-    file.remove(pathname);
+    file.remove(pathname)
   }
 
   # Write to temporary file
-  pathnameT <- pushTemporaryFile(pathname);
+  pathnameT <- pushTemporaryFile(pathname)
 
 
-  sampleName <- getSampleName(fit);
+  sampleName <- getSampleName(fit)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- getSegments(fit, ..., splitters=splitters);
+  data <- getSegments(fit, ..., splitters=splitters)
 
   # Round of floating points
   if (!is.null(nbrOfDecimals)) {
-    cols <- tolower(colnames(data));
-    isInt <- (regexpr("chromosome|start|end|nbrofloci", cols) != -1);
-    cols <- which(isInt);
+    cols <- tolower(colnames(data))
+    isInt <- (regexpr("chromosome|start|end|nbrofloci", cols) != -1)
+    cols <- which(isInt)
     for (cc in cols) {
-      values <- data[[cc]];
+      values <- data[[cc]]
       if (is.double(values)) {
-        values <- round(values, digits=0);
-        data[[cc]] <- values;
+        values <- round(values, digits=0)
+        data[[cc]] <- values
       }
     } # for (key ...)
 
-    cols <- tolower(colnames(data));
-    isInt <- (regexpr("chromosome|start|end|nbrofloci", cols) != -1);
-    isLog <- (regexpr("call", cols) != -1);
-    isDbl <- (!isInt & !isLog);
-    cols <- which(isDbl);
+    cols <- tolower(colnames(data))
+    isInt <- (regexpr("chromosome|start|end|nbrofloci", cols) != -1)
+    isLog <- (regexpr("call", cols) != -1)
+    isDbl <- (!isInt & !isLog)
+    cols <- which(isDbl)
     for (kk in cols) {
-      values <- data[[kk]];
+      values <- data[[kk]]
       if (is.double(values)) {
-        values <- round(values, digits=nbrOfDecimals);
-        data[[kk]] <- values;
+        values <- round(values, digits=nbrOfDecimals)
+        data[[kk]] <- values
       }
     } # for (key ...)
   }
@@ -211,10 +211,10 @@ setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=
   # Build header
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (addHeader) {
-    sigmaDelta <- estimateStandardDeviation(fit, method="diff");
-#    sigmaResiduals <- estimateStandardDeviation(fit, method="res");
+    sigmaDelta <- estimateStandardDeviation(fit, method="diff")
+#    sigmaResiduals <- estimateStandardDeviation(fit, method="res")
 
-    createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z");
+    createdOn <- format(Sys.time(), format="%Y-%m-%d %H:%M:%S %Z")
     hdr <- c(
       name=name,
       tags=tags,
@@ -232,30 +232,16 @@ setMethodS3("writeSegments", "CBS", function(fit, name=getSampleName(fit), tags=
       nbrOfColumns=ncol(data),
       columnNames=paste(colnames(data), collapse=", "),
       columnClasses=paste(sapply(data, FUN=function(x) class(x)[1]), collapse=", ")
-    );
-    bfr <- paste("# ", names(hdr), ": ", hdr, sep="");
+    )
+    bfr <- paste("# ", names(hdr), ": ", hdr, sep="")
 
-    cat(file=pathnameT, bfr, sep="\n");
+    cat(file=pathnameT, bfr, sep="\n")
   } # if (addHeader)
 
   write.table(file=pathnameT, data, append=TRUE, quote=FALSE, sep=sep,
-                                          row.names=FALSE, col.names=TRUE);
+                                          row.names=FALSE, col.names=TRUE)
 
-  pathname <- popTemporaryFile(pathnameT);
+  pathname <- popTemporaryFile(pathnameT)
 
-  pathname;
+  pathname
 }) # writeSegments()
-
-
-
-
-
-############################################################################
-# HISTORY:
-# 2011-12-03
-# o Added arguments 'name', 'tags' and 'exts' to writeSegments() and
-#   writeLocusData() and dropped 'filename'.
-# 2011-09-04
-# o Added writeSegments() for CBS.
-# o Added writeLocusData() for CBS.
-############################################################################

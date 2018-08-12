@@ -38,7 +38,7 @@
 }
 
 \examples{\dontrun{
- fitP <- pruneByHClust(fit, h=0.25);
+ fitP <- pruneByHClust(fit, h=0.25)
 }}
 
 \author{Henrik Bengtsson}

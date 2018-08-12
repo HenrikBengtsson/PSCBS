@@ -3,62 +3,62 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'from':
-  from <- match.arg(from);
+  from <- match.arg(from)
 
   # Argument 'adjustFor':
   if (!is.null(adjustFor)) {
-    adjustFor <- Arguments$getCharacters(adjustFor);
-    adjustFor <- tolower(adjustFor);
-    knownValues <- c("ab", "loh", "roh");
-    adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE);
+    adjustFor <- Arguments$getCharacters(adjustFor)
+    adjustFor <- tolower(adjustFor)
+    knownValues <- c("ab", "loh", "roh")
+    adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE)
   }
 
   # Argument 'avgTCN' & 'avgDH':
-  avgTCN <- match.arg(avgTCN);
-  avgDH <- match.arg(avgDH);
+  avgTCN <- match.arg(avgTCN)
+  avgDH <- match.arg(avgDH)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Updating mean level estimates");
-  verbose && cat(verbose, "Adjusting for:");
-  verbose && print(verbose, adjustFor);
+  verbose && enter(verbose, "Updating mean level estimates")
+  verbose && cat(verbose, "Adjusting for:")
+  verbose && print(verbose, adjustFor)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up averaging functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (avgTCN == "asis" || avgDH == "asis") {
-    est <- fit$params$meanEstimators;
+    est <- fit$params$meanEstimators
     if (avgTCN == "asis") {
-      avgTCN <- est$tcn;
-      if (is.null(avgTCN)) avgTCN <- "mean";
-      avgTCN <- match.arg(avgTCN);
+      avgTCN <- est$tcn
+      if (is.null(avgTCN)) avgTCN <- "mean"
+      avgTCN <- match.arg(avgTCN)
     }
     if (avgDH == "asis") {
-      avgDH <- est$dh;
-      if (is.null(avgDH)) avgDH <- "mean";
-      avgDH <- match.arg(avgDH);
+      avgDH <- est$dh
+      if (is.null(avgDH)) avgDH <- "mean"
+      avgDH <- match.arg(avgDH)
     }
   }
 
   avgList <- list(
     tcn = get(avgTCN, mode="function"),
     dh = get(avgDH, mode="function")
-  );
+  )
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  segs <- getSegments(fit, splitters=TRUE);
-  segRows <- list(tcn=fit$tcnSegRows, dh=fit$dhSegRows);
-  nbrOfSegments <- nrow(segs);
-  verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
+  segs <- getSegments(fit, splitters=TRUE)
+  segRows <- list(tcn=fit$tcnSegRows, dh=fit$dhSegRows)
+  nbrOfSegments <- nrow(segs)
+  verbose && cat(verbose, "Number of segments: ", nbrOfSegments)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,22 +66,22 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.element("ab", adjustFor)) {
     if (!is.element("abCall", names(segs))) {
-      adjustFor <- setdiff(adjustFor, "ab");
-      throw("Cannot adjust for AB, because they haven't been called.");
+      adjustFor <- setdiff(adjustFor, "ab")
+      throw("Cannot adjust for AB, because they haven't been called.")
     }
   }
 
   if (is.element("loh", adjustFor)) {
     if (!is.element("lohCall", names(segs))) {
-      adjustFor <- setdiff(adjustFor, "loh");
-      throw("Cannot adjust for LOH, because they haven't been called.");
+      adjustFor <- setdiff(adjustFor, "loh")
+      throw("Cannot adjust for LOH, because they haven't been called.")
     }
   }
 
   if (is.element("roh", adjustFor)) {
     if (!is.element("rohCall", names(segs))) {
-      adjustFor <- setdiff(adjustFor, "roh");
-      throw("Cannot adjust for ROH, because they haven't been called.");
+      adjustFor <- setdiff(adjustFor, "roh")
+      throw("Cannot adjust for ROH, because they haven't been called.")
     }
   }
 
@@ -90,58 +90,58 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   # Update the (TCN,DH) mean levels from locus-level data?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (from == "loci") {
-    data <- getLocusData(fit);
-    chromosome <- data$chromosome;
-    x <- data$x;
-    CT <- data$CT;
-    rho <- data$rho;
+    data <- getLocusData(fit)
+    chromosome <- data$chromosome
+    x <- data$x
+    CT <- data$CT
+    rho <- data$rho
 
-    isSplitter <- isSegmentSplitter(fit);
+    isSplitter <- isSegmentSplitter(fit)
     for (ss in seq_len(nbrOfSegments)[!isSplitter]) {
-      verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
-      seg <- segs[ss,];
-      verbose && print(verbose, seg);
+      verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments))
+      seg <- segs[ss,]
+      verbose && print(verbose, seg)
 
-      chr <- seg[["chromosome"]];
-      chrTag <- sprintf("chr%02d", chr);
+      chr <- seg[["chromosome"]]
+      chrTag <- sprintf("chr%02d", chr)
 
       for (what in c("tcn", "dh")) {
-        segRow <- segRows[[what]][ss,];
+        segRow <- segRows[[what]][ss,]
 
         # (a) A splitter - nothing todo?
         if (!is.finite(segRow[[1]]) || !is.finite(segRow[[2]])) {
-          next;
+          next
         }
 
         # (b) Identify units (loci)
-        units <- segRow[[1]]:segRow[[2]];
+        units <- segRow[[1]]:segRow[[2]]
 
         # (c) Adjust for missing values
         if (what == "tcn") {
-          value <- CT;
+          value <- CT
         } else if (what == "dh") {
-          value <- rho;
+          value <- rho
         }
-        keep <- which(!is.na(value[units]));
-        units <- units[keep];
+        keep <- which(!is.na(value[units]))
+        units <- units[keep]
 
         # (d) Update mean
-        avgFUN <- avgList[[what]];
-        gamma <- avgFUN(value[units]);
+        avgFUN <- avgList[[what]]
+        gamma <- avgFUN(value[units])
 
         # Sanity check
-        stopifnot(length(units) == 0 || !is.na(gamma));
+        .stop_if_not(length(units) == 0 || !is.na(gamma))
 
         # Update the segment boundaries, estimates and counts
-        key <- paste(what, "Mean", sep="");
-        seg[[key]] <- gamma;
+        key <- paste(what, "Mean", sep="")
+        seg[[key]] <- gamma
       }
 
-      verbose && print(verbose, seg);
+      verbose && print(verbose, seg)
 
-      segs[ss,] <- seg;
+      segs[ss,] <- seg
 
-      verbose && exit(verbose);
+      verbose && exit(verbose)
     } # for (ss ...)
   } # if (from ...)
 
@@ -151,48 +151,48 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   # Adjust segment means from various types of calls
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (length(adjustFor) > 0) {
-    verbose && enter(verbose, "Adjusting segment means");
-    verbose && cat(verbose, "Adjusting for:");
-    verbose && print(verbose, adjustFor);
+    verbose && enter(verbose, "Adjusting segment means")
+    verbose && cat(verbose, "Adjusting for:")
+    verbose && print(verbose, adjustFor)
 
     if (is.element("ab", adjustFor)) {
-      verbose && enter(verbose, "Adjusting for AB");
-      calls <- segs$abCall;
-      segs$dhMean[calls] <- 0;
-      verbose && exit(verbose);
+      verbose && enter(verbose, "Adjusting for AB")
+      calls <- segs$abCall
+      segs$dhMean[calls] <- 0
+      verbose && exit(verbose)
     }
 
     if (is.element("loh", adjustFor)) {
-      verbose && enter(verbose, "Adjusting for LOH");
-      calls <- segs$lohCall;
-      segs$dhMean[calls] <- 1;
-      verbose && exit(verbose);
+      verbose && enter(verbose, "Adjusting for LOH")
+      calls <- segs$lohCall
+      segs$dhMean[calls] <- 1
+      verbose && exit(verbose)
     }
 
     if (is.element("roh", adjustFor)) {
-      verbose && enter(verbose, "Adjusting for ROH");
-      calls <- segs$rohCall;
-      segs$dhMean[calls] <- NA_real_;
-      verbose && exit(verbose);
+      verbose && enter(verbose, "Adjusting for ROH")
+      calls <- segs$rohCall
+      segs$dhMean[calls] <- NA_real_
+      verbose && exit(verbose)
     }
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # if (length(adjustFor) > 0)
 
 
   # Update
-  fit$output <- segs;
-  fit <- setMeanEstimators(fit, tcn=avgTCN, dh=avgDH);
+  fit$output <- segs
+  fit <- setMeanEstimators(fit, tcn=avgTCN, dh=avgDH)
   if (clear) {
-    fit <- clearBootstrapSummaries(fit);
+    fit <- clearBootstrapSummaries(fit)
   }
 
   # Update (C1,C2) mean levels
-  fit <- updateMeansC1C2(fit, verbose=verbose);
+  fit <- updateMeansC1C2(fit, verbose=verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, private=TRUE) # updateMeans()
 
 
@@ -201,40 +201,40 @@ setMethodS3("updateMeansC1C2", "PairedPSCBS", function(fit, ..., verbose=FALSE) 
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Updating (C1,C2) segment mean levels");
-  segs <- getSegments(fit);
+  verbose && enter(verbose, "Updating (C1,C2) segment mean levels")
+  segs <- getSegments(fit)
 
   if (nrow(segs) > 0L) {
-    tcn <- segs$tcnMean;
-    dh <- segs$dhMean;
+    tcn <- segs$tcnMean
+    dh <- segs$dhMean
 
-    C1 <- 1/2*(1-dh)*tcn;
-    C2 <- tcn - C1;
+    C1 <- 1/2*(1-dh)*tcn
+    C2 <- tcn - C1
 
-    segs$c1Mean <- C1;
-    segs$c2Mean <- C2;
+    segs$c1Mean <- C1
+    segs$c2Mean <- C2
 
     # Preserve (C1,C2) swaps / change-point flips?
-    swap <- segs$c1c2Swap;
+    swap <- segs$c1c2Swap
     if (!is.null(swap)) {
-      swap <- which(swap);
+      swap <- which(swap)
       if (length(swap) > 0L) {
-        segs[swap, c("c1Mean","c2Mean")] <- segs[swap, c("c2Mean","c1Mean")];
+        segs[swap, c("c1Mean","c2Mean")] <- segs[swap, c("c2Mean","c1Mean")]
       }
     }
 
-    fit$output <- segs;
+    fit$output <- segs
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, protected=TRUE) # updateMeansC1C2()
 
 

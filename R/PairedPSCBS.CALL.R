@@ -3,28 +3,28 @@ setMethodS3("callABandHighAI", "PairedPSCBS", function(fit, deltaAB=estimateDelt
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling segments to be in allelic balance (AB) or extreme allelic imbalance (AI)");
+  verbose && enter(verbose, "Calling segments to be in allelic balance (AB) or extreme allelic imbalance (AI)")
 
   # Calculate DH confidence intervals, if not already done
-  probs <- sort(unique(c(alphaAB, alphaHighAI)));
-  probs <- sort(unique(c(probs, 1-probs)));
-  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
+  probs <- sort(unique(c(alphaAB, alphaHighAI)))
+  probs <- sort(unique(c(probs, 1-probs)))
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50))
 
   # Call allelic balance
-  fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
+  fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1))
 
   # Call high allelic imbalance
-  fit <- callExtremeAllelicImbalanceByDH(fit, delta=deltaHighAI, alpha=alphaHighAI, ..., verbose=less(verbose, 1));
+  fit <- callExtremeAllelicImbalanceByDH(fit, delta=deltaHighAI, alpha=alphaHighAI, ..., verbose=less(verbose, 1))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, private=TRUE) # callABandHighAI()
 
 
@@ -33,81 +33,81 @@ setMethodS3("callABandLowC1", "PairedPSCBS", function(fit, deltaAB=estimateDelta
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling segments to be in allelic balance (AB) or low minor copy number (low C1)");
+  verbose && enter(verbose, "Calling segments to be in allelic balance (AB) or low minor copy number (low C1)")
 
   # Calculate DH confidence intervals, if not already done
-  probs <- sort(unique(c(alphaAB, alphaLowC1)));
-  probs <- sort(unique(c(probs, 1-probs)));
-  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50));
+  probs <- sort(unique(c(alphaAB, alphaLowC1)))
+  probs <- sort(unique(c(probs, 1-probs)))
+  fit <- bootstrapTCNandDHByRegion(fit, probs=probs, ..., verbose=less(verbose, 50))
 
   # Call allelic balance
-  fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1));
+  fit <- callAllelicBalanceByDH(fit, delta=deltaAB, alpha=alphaAB, ..., verbose=less(verbose, 1))
 
   # Call high allelic imbalance
-  fit <- callLowC1ByC1(fit, delta=deltaLowC1, alpha=alphaLowC1, ..., verbose=less(verbose, 1));
+  fit <- callLowC1ByC1(fit, delta=deltaLowC1, alpha=alphaLowC1, ..., verbose=less(verbose, 1))
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, private=TRUE) # callABandLowC1()
 
 
 
 setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
   # Extract locus data
-  data <- getLocusData(fit, ...);
+  data <- getLocusData(fit, ...)
 
-  nbrOfLoci <- nrow(data);
+  nbrOfLoci <- nrow(data)
 
   # Extract segment data
-  segs <- getSegments(fit, splitters=TRUE);
+  segs <- getSegments(fit, splitters=TRUE)
 
   # Identify segment calls
-  callCols <- grep("Call$", colnames(segs));
-  nbrOfCalls <- length(callCols);
+  callCols <- grep("Call$", colnames(segs))
+  nbrOfCalls <- length(callCols)
 
 
-  chromosome <- data$chromosome;
-  x <- data$x;
-  y <- data[,3];
+  chromosome <- data$chromosome
+  x <- data$x
+  y <- data[,3]
 
   # Allocate locus calls
-  naValue <- as.logical(NA);
-  callsL <- matrix(naValue, nrow=nbrOfLoci, ncol=nbrOfCalls);
-  colnames(callsL) <- colnames(segs)[callCols];
-  callsL <- as.data.frame(callsL);
+  naValue <- as.logical(NA)
+  callsL <- matrix(naValue, nrow=nbrOfLoci, ncol=nbrOfCalls)
+  colnames(callsL) <- colnames(segs)[callCols]
+  callsL <- as.data.frame(callsL)
 
   # For each segment...
   for (ss in seq_len(nrow(segs))) {
-    seg <- segs[ss,];
+    seg <- segs[ss,]
     idxs <- which(chromosome == seg$chromosome &
-                  seg$tcnStart <= x & x <= seg$tcnEnd);
-    idxs <- Arguments$getIndices(idxs, max=nbrOfLoci);
+                  seg$tcnStart <= x & x <= seg$tcnEnd)
+    idxs <- Arguments$getIndices(idxs, max=nbrOfLoci)
     # Sanity check
-##    stopifnot(length(idxs) == seg$tcnNbrOfLoci);
+##    .stop_if_not(length(idxs) == seg$tcnNbrOfLoci)
 
-    callsSS <- seg[callCols];
+    callsSS <- seg[callCols]
     for (cc in seq_len(nbrOfCalls)) {
-      callsL[idxs,cc] <- callsSS[,cc];
+      callsL[idxs,cc] <- callsSS[,cc]
     }
   } # for (ss ...)
 
   # The calls for loci that have missing annotations or observations,
   # should also be missing, i.e. NA.
-  nok <- (is.na(chromosome) | is.na(x) | is.na(y));
-  callsL[nok,] <- as.logical(NA);
+  nok <- (is.na(chromosome) | is.na(x) | is.na(y))
+  callsL[nok,] <- as.logical(NA)
 
   # Sanity check
-  stopifnot(nrow(callsL) == nbrOfLoci);
-  stopifnot(ncol(callsL) == nbrOfCalls);
+  .stop_if_not(nrow(callsL) == nbrOfLoci)
+  .stop_if_not(ncol(callsL) == nbrOfCalls)
 
-  callsL;
+  callsL
 }, private=TRUE) # extractCallsByLocus()
 
 

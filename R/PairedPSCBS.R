@@ -30,22 +30,22 @@
 setConstructorS3("PairedPSCBS", function(fit=list(), ...) {
   # Argument 'fit':
   if (!is.list(fit)) {
-    throw("Argument 'fit' is not a list: ", class(fit)[1]);
+    throw("Argument 'fit' is not a list: ", class(fit)[1])
   }
 
-  extend(PSCBS(fit=fit, ...), "PairedPSCBS");
+  extend(PSCBS(fit=fit, ...), "PairedPSCBS")
 })
 
 setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "full")) {
   # Argument 'fields':
-  fields <- match.arg(fields);
+  fields <- match.arg(fields)
 
 
-  data <- NextMethod("getLocusData", fields="asis");
+  data <- NextMethod("getLocusData", fields="asis")
 
 
   if (fields == "full") {
-    names <- colnames(data);
+    names <- colnames(data)
 
     # Genotype calls
     if (!is.element("muN", names)) {
@@ -53,7 +53,7 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
         data$muN <- rep(NA_real_, times=length(data$rho))
         data$muN[is.finite(data$rho)] <- 1/2
       } else if (is.element("betaN", names)) {
-        data$muN <- callNaiveGenotypes(data$betaN);
+        data$muN <- callNaiveGenotypes(data$betaN)
       } else {
         throw("Cannot identify heterozygous SNPs or genotypes")
       }
@@ -65,38 +65,38 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
     # it on the fly from 'betaT'.
     # NOTE: This should give an error in the future. /HB 2013-10-25
     if (is.null(data$rho)) {
-      data$rho <- 2*abs(data$betaT-1/2);
-      data$rho[!data$isHet] <- NA_real_;
-      warning("Locus-level DH signals ('rho') did not exist and were calculated from tumor BAFs ('betaT')");
+      data$rho <- 2*abs(data$betaT-1/2)
+      data$rho[!data$isHet] <- NA_real_
+      warning("Locus-level DH signals ('rho') did not exist and were calculated from tumor BAFs ('betaT')")
     }
-    data$c1 <- 1/2*(1-data$rho)*data$CT;
-    data$c2 <- data$CT - data$c1;
+    data$c1 <- 1/2*(1-data$rho)*data$CT
+    data$c2 <- data$CT - data$c1
 
     # TumorBoost BAFs
     if (!is.element("rhoN", names)) {
       if (!is.element("betaTN", names) && is.element("betaN", names)) {
-        data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN);
+        data$betaTN <- normalizeTumorBoost(betaN=data$betaN, betaT=data$betaT, muN=data$muN)
       }
 
       if (is.element("betaTN", names)) {
-        data$rhoN <- 2*abs(data$betaTN-1/2);
-        data$rhoN[!data$isHet] <- NA_real_;
-        data$c1N <- 1/2*(1-data$rhoN)*data$CT;
-        data$c2N <- data$CT - data$c1N;
+        data$rhoN <- 2*abs(data$betaTN-1/2)
+        data$rhoN[!data$isHet] <- NA_real_
+        data$c1N <- 1/2*(1-data$rhoN)*data$CT
+        data$c2N <- data$CT - data$c1N
       }
 
       if (all(is.element(c("betaN", "betaT"), names))) {
-        data$isSNP <- (!is.na(data$betaT) | !is.na(data$betaN));
-        data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus");
+        data$isSNP <- (!is.na(data$betaT) | !is.na(data$betaN))
+        data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus")
       }
     }
 
     # Labels
-    data$muNx <- c("AA", "AB", "BB")[2*data$muN + 1L];
-    data$isHetx <- c("AA|BB", "AB")[data$isHet + 1L];
+    data$muNx <- c("AA", "AB", "BB")[2*data$muN + 1L]
+    data$isHetx <- c("AA|BB", "AB")[data$isHet + 1L]
   }
 
-  data;
+  data
 }, protected=TRUE) # getLocusData()
 
 
@@ -106,80 +106,80 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Resegmenting a ", class(fit)[1], " object");
+  verbose && enter(verbose, "Resegmenting a ", class(fit)[1], " object")
 
   # Use the locus-level data of the PairedPSCBS object
-  data <- getLocusData(fit);
-  class(data) <- "data.frame";
-  drop <- c("rho", "betaTN", "index");
-  keep <- !is.element(colnames(data), drop);
-  data <- data[,keep];
-  verbose && str(verbose, data);
+  data <- getLocusData(fit)
+  class(data) <- "data.frame"
+  drop <- c("rho", "betaTN", "index")
+  keep <- !is.element(colnames(data), drop)
+  data <- data[,keep]
+  verbose && str(verbose, data)
 
-  verbose && cat(verbose, "Number of loci: ", nrow(data));
+  verbose && cat(verbose, "Number of loci: ", nrow(data))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup arguments to be passed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Overriding default arguments");
-  segFcnName <- "segmentByPairedPSCBS";
-  segFcn <- getMethodS3(segFcnName, "default");
+  verbose && enter(verbose, "Overriding default arguments")
+  segFcnName <- "segmentByPairedPSCBS"
+  segFcn <- getMethodS3(segFcnName, "default")
 
   # (a) The default arguments
-  formals <- formals(segFcn);
+  formals <- formals(segFcn)
 
-  formals <- formals[!sapply(formals, FUN=is.language)];
-  formals <- formals[!sapply(formals, FUN=is.name)];
-  drop <- c("chromosome", "x", "w", "CT", "thetaT", "thetaN", "betaT", "betaN", "muN", "rho", "...");
-  keep <- !is.element(names(formals), drop);
-  formals <- formals[keep];
+  formals <- formals[!sapply(formals, FUN=is.language)]
+  formals <- formals[!sapply(formals, FUN=is.name)]
+  drop <- c("chromosome", "x", "w", "CT", "thetaT", "thetaN", "betaT", "betaN", "muN", "rho", "...")
+  keep <- !is.element(names(formals), drop)
+  formals <- formals[keep]
 
   # (b) The arguments used in previous fit
-  params <- fit$params;
-  keep <- is.element(names(params), names(formals));
-  params <- params[keep];
+  params <- fit$params
+  keep <- is.element(names(params), names(formals))
+  params <- params[keep]
   # Don't trust 'tbn'!  TODO. /HB 20111117
-  params$tbn <- NULL;
+  params$tbn <- NULL
 
   # (c) The arguments in '...'
-  userArgs <- list(..., verbose=verbose);
+  userArgs <- list(..., verbose=verbose)
 
   # (d) Merge
-  args <- formals;
-  args2 <- c(params, userArgs);
+  args <- formals
+  args2 <- c(params, userArgs)
   for (kk in seq_along(args2)) {
-    value <- args2[[kk]];
+    value <- args2[[kk]]
     if (!is.null(value)) {
-      key <- names(args2)[kk];
+      key <- names(args2)[kk]
       if (!is.null(key)) {
-        args[[key]] <- value;
+        args[[key]] <- value
       } else {
-        args <- c(args, list(value));
+        args <- c(args, list(value))
       }
     }
   } # for (key ...)
-  verbose && str(verbose, args[names(args) != "verbose"]);
+  verbose && str(verbose, args[names(args) != "verbose"])
 
-  verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
-  args <- c(list(data), args);
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, args[names(args) != "verbose"]);
-  verbose && exit(verbose);
+  verbose && enter(verbose, sprintf("Calling %s()", segFcnName))
+  args <- c(list(data), args)
+  verbose && cat(verbose, "Arguments:")
+  verbose && str(verbose, args[names(args) != "verbose"])
+  verbose && exit(verbose)
 
-  fit <- do.call(segFcnName, args);
-  verbose && exit(verbose);
+  fit <- do.call(segFcnName, args)
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, protected=TRUE) # resegment()
 
 
@@ -187,42 +187,42 @@ setMethodS3("adjustPloidyScale", "PairedPSCBS", function(fit, scale, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (a) Update locus-level data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  data <- getLocusData(fit);
-  names <- c("CT");
+  data <- getLocusData(fit)
+  names <- c("CT")
   for (ff in names) {
-    data[[ff]] <- scale * data[[ff]];
+    data[[ff]] <- scale * data[[ff]]
   }
-  fit$data <- data;  ##  fit <- setLocusData(fit, data);
+  fit$data <- data ##  fit <- setLocusData(fit, data)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (b) Update segment-level data
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  segs <- getSegments(fit);
+  segs <- getSegments(fit)
 
   # Adjust segment levels
-  names <- grep("^(tcn|c1|c2)(Mean|_.*%)$", names(segs), value=TRUE);
+  names <- grep("^(tcn|c1|c2)(Mean|_.*%)$", names(segs), value=TRUE)
   for (ff in names) {
-    segs[[ff]] <- scale * segs[[ff]];
+    segs[[ff]] <- scale * segs[[ff]]
   }
 
   # Clear segment calls
-  names <- c("lohCall", "ntcnCall");
+  names <- c("lohCall", "ntcnCall")
   for (ff in names) {
-    segs[[ff]] <- NULL;
+    segs[[ff]] <- NULL
   }
-  fit$output <- segs; ## fit <- setSegments(fit, sets);
+  fit$output <- segs ## fit <- setSegments(fit, sets)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (c) Update parameter estimates
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  params <- fit$params;
-  fields <- c("copyNeutralStats", "deltaCN", "ntcnRange", "deltaLowC1");
-  params[fields] <- NULL;
-  fit$params <- params;
+  params <- fit$params
+  fields <- c("copyNeutralStats", "deltaCN", "ntcnRange", "deltaLowC1")
+  params[fields] <- NULL
+  fit$params <- params
 
-  fit;
+  fit
 }, protected=TRUE) # adjustPloidyScale()
 
 

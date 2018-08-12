@@ -39,40 +39,40 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'flavor':
-  flavor <- match.arg(flavor);
+  flavor <- match.arg(flavor)
 
   # Argument 'max':
-  max <- Arguments$getDouble(max, range=c(0,Inf));
+  max <- Arguments$getDouble(max, range=c(0,Inf))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Estimating DH threshold for calling LOH");
-  verbose && cat(verbose, "flavor: ", flavor);
+  verbose && enter(verbose, "Estimating DH threshold for calling LOH")
+  verbose && cat(verbose, "flavor: ", flavor)
 
   if (flavor == "minC1|nonAB") {
-    delta <- estimateDeltaLOHByMinC1ForNonAB(this, ..., verbose=verbose);
+    delta <- estimateDeltaLOHByMinC1ForNonAB(this, ..., verbose=verbose)
   } else {
-    throw("Unkown flavor: ", flavor);
+    throw("Unkown flavor: ", flavor)
   }
 
-  verbose && printf(verbose, "delta: %.3g\n", delta);
+  verbose && printf(verbose, "delta: %.3g\n", delta)
 
   # Truncate estimate?
   if (delta > max) {
-    warning("Estimated delta (%.3g) was greater than the maximum allowed value (%.3g).  The latter will be used instead.", delta, max);
-    delta <- max;
-    verbose && printf(verbose, "Max delta: %.3g\n", max);
-    verbose && printf(verbose, "Truncated delta: %.3g\n", delta);
+    warning("Estimated delta (%.3g) was greater than the maximum allowed value (%.3g).  The latter will be used instead.", delta, max)
+    delta <- max
+    verbose && printf(verbose, "Max delta: %.3g\n", max)
+    verbose && printf(verbose, "Truncated delta: %.3g\n", delta)
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  delta;
+  delta
 }) # estimateDeltaLOH()
 
 
@@ -134,125 +134,91 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'midpoint':
-  midpoint <- Arguments$getDouble(midpoint, range=c(0,1));
+  midpoint <- Arguments$getDouble(midpoint, range=c(0,1))
 
   # Argument 'maxC':
-  maxC <- Arguments$getDouble(maxC, range=c(0,Inf));
+  maxC <- Arguments$getDouble(maxC, range=c(0,Inf))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Estimating DH threshold for calling LOH as the midpoint between guessed C1=0 and C1=1");
-  segs <- getSegments(this, splitters=FALSE);
-  nbrOfSegments <- nrow(segs);
+  verbose && enter(verbose, "Estimating DH threshold for calling LOH as the midpoint between guessed C1=0 and C1=1")
+  segs <- getSegments(this, splitters=FALSE)
+  nbrOfSegments <- nrow(segs)
 
-  verbose && printf(verbose, "Argument 'midpoint': %.3g\n", midpoint);
-  verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
+  verbose && printf(verbose, "Argument 'midpoint': %.3g\n", midpoint)
+  verbose && cat(verbose, "Number of segments: ", nbrOfSegments)
 
   # Getting AB calls
-  isAB <- segs$abCall;
+  isAB <- segs$abCall
   if (is.null(isAB)) {
-    throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.");
+    throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.")
   }
 
-  nbrOfAB <- sum(isAB, na.rm=TRUE);
-  verbose && printf(verbose, "Number of segments in allelic balance: %d (%.1f%%) of %d\n", nbrOfAB, 100*nbrOfAB/nbrOfSegments, nbrOfSegments);
+  nbrOfAB <- sum(isAB, na.rm=TRUE)
+  verbose && printf(verbose, "Number of segments in allelic balance: %d (%.1f%%) of %d\n", nbrOfAB, 100*nbrOfAB/nbrOfSegments, nbrOfSegments)
 
   # Sanity check
   if (nbrOfAB == 0) {
-    throw("There are no segments in allelic balance.");
+    throw("There are no segments in allelic balance.")
   }
 
-  nbrOfNonAB <- sum(!isAB, na.rm=TRUE);
-  verbose && printf(verbose, "Number of segments not in allelic balance: %d (%.1f%%) of %d\n", nbrOfNonAB, 100*nbrOfNonAB/nbrOfSegments, nbrOfSegments);
-  segsNonAB <- segs[which(!isAB),,drop=FALSE];
+  nbrOfNonAB <- sum(!isAB, na.rm=TRUE)
+  verbose && printf(verbose, "Number of segments not in allelic balance: %d (%.1f%%) of %d\n", nbrOfNonAB, 100*nbrOfNonAB/nbrOfSegments, nbrOfSegments)
+  segsNonAB <- segs[which(!isAB),,drop=FALSE]
 
   # Sanity check
   if (nbrOfNonAB == 0) {
-    msg <- sprintf("All %d segments are in allelic balance. Cannot estimate DeltaLOH, which requires that at least one segment must be in allelic imbalance.  Returning -Inf instead.", nbrOfSegments);
-    warning(msg);
-    return(-Inf);
+    msg <- sprintf("All %d segments are in allelic balance. Cannot estimate DeltaLOH, which requires that at least one segment must be in allelic imbalance.  Returning -Inf instead.", nbrOfSegments)
+    warning(msg)
+    return(-Inf)
   }
 
 
   # Identify segments in AB and with small enough TCNs
-  C <- segs$tcnMean;
-  keep <- which(isAB & C <= maxC);
-  verbose && printf(verbose, "Number of segments in allelic balance and TCN <= %.2f: %d (%.1f%%) of %d\n", maxC, length(keep), 100*length(keep)/nbrOfSegments, nbrOfSegments);
+  C <- segs$tcnMean
+  keep <- which(isAB & C <= maxC)
+  verbose && printf(verbose, "Number of segments in allelic balance and TCN <= %.2f: %d (%.1f%%) of %d\n", maxC, length(keep), 100*length(keep)/nbrOfSegments, nbrOfSegments)
 
   # Sanity check
   if (length(keep) == 0) {
-    throw("There are no segments in allelic balance with small enough total CN.");
+    throw("There are no segments in allelic balance with small enough total CN.")
   }
 
   # (a) Estimate mean C1 level of AB segments
-  segsT <- segs[keep,,drop=FALSE];
-  C <- segsT$tcnMean;
-  n <- segsT$dhNbrOfLoci;
-  w <- n/sum(n);
-  C1 <- C/2;  # Called AB!
-  verbose && printf(verbose, "C: %s\n", hpaste(sprintf("%.3g", C)));
-  verbose && printf(verbose, "Corrected C1 (=C/2): %s\n", hpaste(sprintf("%.3g", C1)));
-  verbose && printf(verbose, "Number of DHs: %s\n", hpaste(n));
-  verbose && printf(verbose, "Weights: %s\n", hpaste(sprintf("%.3g", w)));
-  muC1atAB  <- weightedMedian(C1, w=w, na.rm=TRUE);
-  verbose && printf(verbose, "Weighted median of (corrected) C1 in allelic balance: %.3f\n", muC1atAB);
+  segsT <- segs[keep,,drop=FALSE]
+  C <- segsT$tcnMean
+  n <- segsT$dhNbrOfLoci
+  w <- n/sum(n)
+  C1 <- C/2 # Called AB!
+  verbose && printf(verbose, "C: %s\n", hpaste(sprintf("%.3g", C)))
+  verbose && printf(verbose, "Corrected C1 (=C/2): %s\n", hpaste(sprintf("%.3g", C1)))
+  verbose && printf(verbose, "Number of DHs: %s\n", hpaste(n))
+  verbose && printf(verbose, "Weights: %s\n", hpaste(sprintf("%.3g", w)))
+  muC1atAB  <- weightedMedian(C1, w=w, na.rm=TRUE)
+  verbose && printf(verbose, "Weighted median of (corrected) C1 in allelic balance: %.3f\n", muC1atAB)
 
 
   # (b) Estimate mean C1 level of non-AB segments
-  C1 <- segsNonAB$c1Mean;
-  muC1atNonAB <- min(C1, na.rm=TRUE);
-  idxs <- which(C1 <= muC1atNonAB);
-  n <- segsNonAB$dhNbrOfLoci[idxs];
-  verbose && printf(verbose, "Smallest C1 among segments not in allelic balance: %.3g\n", muC1atNonAB);
-  verbose && printf(verbose, "There are %d segments with in total %d heterozygous SNPs with this level.\n", length(idxs), n);
+  C1 <- segsNonAB$c1Mean
+  muC1atNonAB <- min(C1, na.rm=TRUE)
+  idxs <- which(C1 <= muC1atNonAB)
+  n <- segsNonAB$dhNbrOfLoci[idxs]
+  verbose && printf(verbose, "Smallest C1 among segments not in allelic balance: %.3g\n", muC1atNonAB)
+  verbose && printf(verbose, "There are %d segments with in total %d heterozygous SNPs with this level.\n", length(idxs), n)
 
   # Sanity check
-  stopifnot(muC1atNonAB < muC1atAB);
+  .stop_if_not(muC1atNonAB < muC1atAB)
 
-  delta <- midpoint * (muC1atAB + muC1atNonAB);
-  verbose && printf(verbose, "Midpoint between the two: %.3g\n", delta);
+  delta <- midpoint * (muC1atAB + muC1atNonAB)
+  verbose && printf(verbose, "Midpoint between the two: %.3g\n", delta)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  delta;
+  delta
 }, private=TRUE) # estimateDeltaLOHByMinC1AtNonAB()
-
-
-
-############################################################################
-# HISTORY:
-# 2012-08-30
-# o Now estimateKappaByC1Density() relies on matrixStats (and no longer
-#   aroma.light) to implement weightedMedian().
-# 2012-01-13
-# o Corrected some of verbose messages of estimateDeltaLOHByMinC1ForNonAB()
-#   for PairedPSCBS objects.
-# 2011-07-07
-# o GENERALIZATION: Now estimateDeltaLOHByMinC1ForNonAB() returns -Inf
-#   if all segments are called AB.
-# 2011-07-06
-# o ROBUSTNESS: Added a sanity check to estimateDeltaLOHByMinC1AtNonAB()
-#   asserting that there exist segments that are not in allelic balance,
-#   which are needed for estimating $\mu_0$.
-# 2011-06-14
-# o Updated code to recognize new column names.
-# 2011-05-29
-# o Renamed all arguments, variables, function named 'tau' to 'delta'.
-# 2011-04-27
-# o Added argument 'maxC' to estimateTauLOHByMinC1ForNonAB().
-# 2011-04-14
-# o Added argument 'max' to estimateTauAB() and estimateTauLOH().
-# 2011-04-11
-# o Added argument 'midpoint' to estimateTauLOHByMinC1AtNonAB().
-# o Dropped argument 'tauMax'; it was a misunderstanding.
-# 2011-04-09
-# o Added estimateTauLOHByMinC1AtNonAB().
-# o Added estimateTauLOH().
-# o Created.
-############################################################################

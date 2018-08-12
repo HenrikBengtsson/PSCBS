@@ -3,7 +3,7 @@ setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, transform=NULL, n
   graphType <- match.arg(graphType)
 
   # Argument 'nbrOfDecimals':
-  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals);
+  nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals)
 
   data <- getSegments(fit, splitter=FALSE)
   fields <- c("chromosome", "start", "end", "mean")
@@ -26,7 +26,7 @@ setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, transform=NULL, n
   
   # Round mean levels
   if (!is.null(nbrOfDecimals)) {
-    data[["mean"]] <- round(data[["mean"]], digits=nbrOfDecimals);
+    data[["mean"]] <- round(data[["mean"]], digits=nbrOfDecimals)
   }
 
   # Drop segments with missing values
@@ -83,29 +83,29 @@ setMethodS3("writeWIG", "AbstractCBS", function(fit, name=getSampleName(fit), ta
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'name' and 'tags':
-  name <- Arguments$getCharacter(name);
-  tags <- Arguments$getCharacters(tags);
+  name <- Arguments$getCharacter(name)
+  tags <- Arguments$getCharacters(tags)
 
   # Argument 'ext':
-  ext <- Arguments$getCharacter(ext);
+  ext <- Arguments$getCharacter(ext)
 
   # Arguments 'path':
-  path <- Arguments$getWritablePath(path);
+  path <- Arguments$getWritablePath(path)
 
 
-  fullname <- paste(c(name, tags), collapse=",");
-  filename <- sprintf("%s.%s", fullname, ext);
-  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip));
+  fullname <- paste(c(name, tags), collapse=",")
+  filename <- sprintf("%s.%s", fullname, ext)
+  pathname <- Arguments$getWritablePathname(filename, path=path, mustNotExist=(!overwrite && !skip))
 
   # File already exists?
   if (isFile(pathname)) {
     # Skip?
     if (skip) {
-      return(pathname);
+      return(pathname)
     }
 
     # Overwrite!
-    file.remove(pathname);
+    file.remove(pathname)
   }
 
   ## Write file (atomically)
@@ -134,10 +134,3 @@ setMethodS3("writeWIG", "AbstractCBS", function(fit, name=getSampleName(fit), ta
 
   pathname
 })
-
-
-############################################################################
-# HISTORY:
-# 2015-09-08
-# o Added extractWIG() and writeWIG() for CBS objects.
-############################################################################

@@ -10,12 +10,12 @@ to the beginning of the PSCBS script.  Everything else will work the
 same.  To reset to non-parallel processing, use `future::plan("sequential")`.
 
 To configure this automatically whenever the package is loaded, see
-future vignette '[A Future for R: Controlling Default Future Strategy](https://cran.r-project.org/web/packages/future/vignettes/future-4-startup.html)'.
+future vignette '[A Future for R: Controlling Default Future Strategy](https://cran.r-project.org/web/packages/future/vignettes/future-5-startup.html)'.
 <% } %>
 
 
 ## Installation
-R package <%=pkg()%> is available on [CRAN](http://cran.r-project.org/package=<%=pkg()%>) and can be installed in R as:
+R package <%=pkg()%> is available on [CRAN](https://cran.r-project.org/package=<%=pkg()%>) and can be installed in R as:
 ```r
 install.packages('<%=pkg()%>')
 ```

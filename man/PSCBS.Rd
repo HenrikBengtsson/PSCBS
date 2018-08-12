@@ -45,7 +45,7 @@ extends \emph{\link[PSCBS]{AbstractCBS}}\cr
 \section{Fields and Methods}{
  \bold{Methods:}\cr
 \tabular{rll}{
- \tab \code{append} \tab  -\cr
+ \tab \code{c} \tab  -\cr
  \tab \code{isLocallyPhased} \tab  -\cr
  \tab \code{normalizeTotalCNs} \tab  -\cr
  \tab \code{writeSegments} \tab  -\cr

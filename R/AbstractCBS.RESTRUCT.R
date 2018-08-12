@@ -90,8 +90,12 @@
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("append", "AbstractCBS", abstract=TRUE);
-
+setMethodS3("append", "AbstractCBS", function(x, other, addSplit = TRUE, ...) {
+  new <- if (addSplit) "c(x, other, addSplit = TRUE)" else "c(x, other)"
+  old <- sprintf("append.%s()", class(x)[1])
+  .Deprecated(new = new, old = old)
+  c(x, other, addSplit = addSplit)  
+})
 
 
 setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
@@ -99,61 +103,61 @@ setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'from' & 'to':
-  from <- Arguments$getIntegers(from, disallow=c("NaN", "Inf"));
-  n <- length(from);
-  to <- Arguments$getIntegers(to, disallow=c("NaN", "Inf"), length=c(n,n));
+  from <- Arguments$getIntegers(from, disallow=c("NaN", "Inf"))
+  n <- length(from)
+  to <- Arguments$getIntegers(to, disallow=c("NaN", "Inf"), length=c(n,n))
 
 
   # Nothing to do?
   if (n == 0) {
-    return(fit);
+    return(fit)
   }
 
-  data <- getLocusData(fit);
-  segs <- getSegments(fit, splitters=TRUE, simplify=FALSE);
-  knownSegments <- fit$params$knownSegments;
+  data <- getLocusData(fit)
+  segs <- getSegments(fit, splitters=TRUE, simplify=FALSE)
+  knownSegments <- fit$params$knownSegments
 
   for (cc in seq_len(n)) {
-    chr <- from[cc];
-    chrN <- to[cc];
-    data$chromosome[data$chromosome == chr] <- chrN;
-    segs$chromosome[segs$chromosome == chr] <- chrN;
-    knownSegments$chromosome[knownSegments$chromosome == chr] <- chrN;
+    chr <- from[cc]
+    chrN <- to[cc]
+    data$chromosome[data$chromosome == chr] <- chrN
+    segs$chromosome[segs$chromosome == chr] <- chrN
+    knownSegments$chromosome[knownSegments$chromosome == chr] <- chrN
   } # for (cc ...)
 
-  fit <- setLocusData(fit, data);
-  fit <- setSegments(fit, segs);
-  fit$params$knownSegments <- knownSegments;
+  fit <- setLocusData(fit, data)
+  fit <- setSegments(fit, segs)
+  fit$params$knownSegments <- knownSegments
 
-  fit;
+  fit
 }, protected=TRUE) # renameChromosomes()
 
 
-setMethodS3("extractChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("extractChromosomes", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
 
 setMethodS3("extractChromosome", "AbstractCBS", function(x, chromosome, ...) {
   # To please R CMD check
-  this <- x;
+  this <- x
 
   # Argument 'chromosome':
-  chromosome <- Arguments$getInteger(chromosome, disallow=c("NaN", "Inf"));
+  chromosome <- Arguments$getInteger(chromosome, disallow=c("NaN", "Inf"))
 
-  extractChromosomes(this, chromosomes=chromosome, ...);
+  extractChromosomes(this, chromosomes=chromosome, ...)
 }, protected=TRUE)
 
 
 
-setMethodS3("extractSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("extractSegments", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
 setMethodS3("extractSegment", "AbstractCBS", function(this, idx, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'region':
-  idx <- Arguments$getIndex(idx, max=nbrOfSegments(this, splitters=TRUE));
+  idx <- Arguments$getIndex(idx, max=nbrOfSegments(this, splitters=TRUE))
 
-  extractSegments(this, idxs=idx, ...);
+  extractSegments(this, idxs=idx, ...)
 }, private=TRUE) # extractSegment()
 
 
@@ -161,44 +165,44 @@ setMethodS3("extractRegions", "AbstractCBS", function(this, regions, H=1, ..., v
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE);
+  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE)
 
   # Argument 'regions':
-  regions <- Arguments$getIndices(regions, max=nbrOfSegments);
+  regions <- Arguments$getIndices(regions, max=nbrOfSegments)
 
   # Argument 'H':
-  H <- Arguments$getInteger(H, range=c(0,Inf));
+  H <- Arguments$getInteger(H, range=c(0,Inf))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Extract regions of a certain length");
+  verbose && enter(verbose, "Extract regions of a certain length")
 
-  verbose && cat(verbose, "Left-most segments of regions to be extracted:");
-  verbose && str(verbose, regions);
-  verbose && cat(verbose, "Number of segments in each region: ", H);
+  verbose && cat(verbose, "Left-most segments of regions to be extracted:")
+  verbose && str(verbose, regions)
+  verbose && cat(verbose, "Number of segments in each region: ", H)
 
 
   # Identify segments to keep
-  Hs <- seq_len(H);
-  regions <- regions - 1L;
-  regions <- as.list(regions);
-  segments <- lapply(regions, FUN=function(region) region + Hs);
-  segments <- unlist(segments, use.names=FALSE);
-  segments <- sort(unique(segments));
-  verbose && cat(verbose, "Final set of segments to be extracted:");
-  verbose && str(verbose, segments);
+  Hs <- seq_len(H)
+  regions <- regions - 1L
+  regions <- as.list(regions)
+  segments <- lapply(regions, FUN=function(region) region + Hs)
+  segments <- unlist(segments, use.names=FALSE)
+  segments <- sort(unique(segments))
+  verbose && cat(verbose, "Final set of segments to be extracted:")
+  verbose && str(verbose, segments)
 
-  res <- extractSegments(this, idxs=segments, ...);
+  res <- extractSegments(this, idxs=segments, ...)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }, protected=TRUE) # extractRegions()
 
 
@@ -208,9 +212,9 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'region':
-  region <- Arguments$getIndex(region, max=nbrOfSegments(this, splitters=TRUE));
+  region <- Arguments$getIndex(region, max=nbrOfSegments(this, splitters=TRUE))
 
-  extractRegions(this, regions=region, ...);
+  extractRegions(this, regions=region, ...)
 }, private=TRUE) # extractRegion()
 
 
@@ -250,16 +254,16 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("mergeTwoSegments", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
 
 setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
   # Argument 'idx':
-##  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
-  max <- nbrOfSegments(fit, splitters=TRUE, ...) - 1L;
-  idx <- Arguments$getIndex(idx, max=max);
+##  max <- nbrOfChangePoints(fit, splitters=TRUE, ...)
+  max <- nbrOfSegments(fit, splitters=TRUE, ...) - 1L
+  idx <- Arguments$getIndex(idx, max=max)
 
-  mergeTwoSegments(fit, left=idx, ...);
+  mergeTwoSegments(fit, left=idx, ...)
 }, protected=TRUE)
 
 
@@ -300,32 +304,32 @@ setMethodS3("dropChangePoint", "AbstractCBS", function(fit, idx, ...) {
 #*/###########################################################################
 setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, ...) {
   # Assert that there is only one chromosome
-  chrs <- getChromosomes(fit);
+  chrs <- getChromosomes(fit)
   if (length(chrs) > 1) {
-    throw("dropChangePoints() only support single-chromosome data: ", hpaste(chrs));
+    throw("dropChangePoints() only support single-chromosome data: ", hpaste(chrs))
   }
 
   # Argument 'idxs':
-##  max <- nbrOfChangePoints(fit, splitters=TRUE, ...);
-  max <- nbrOfSegments(fit, splitters=TRUE, ...) - 1L;
-  idxs <- Arguments$getIndices(idxs, max=max);
+##  max <- nbrOfChangePoints(fit, splitters=TRUE, ...)
+  max <- nbrOfSegments(fit, splitters=TRUE, ...) - 1L
+  idxs <- Arguments$getIndices(idxs, max=max)
 
 
   # Drop change points one by one
-  idxs <- unique(idxs);
-  idxs <- sort(idxs, decreasing=TRUE);
+  idxs <- unique(idxs)
+  idxs <- sort(idxs, decreasing=TRUE)
   for (ii in seq_along(idxs)) {
-    idx <- idxs[ii];
-    updateI <- update && (ii == length(idxs));
-    fit <- dropChangePoint(fit, idx=idx, update=updateI, ...);
+    idx <- idxs[ii]
+    updateI <- update && (ii == length(idxs))
+    fit <- dropChangePoint(fit, idx=idx, update=updateI, ...)
   }
 
   # Update segment statistics?
   if (update) {
-    fit <- updateMeans(fit, ...);
+    fit <- updateMeans(fit, ...)
   }
 
-  fit;
+  fit
 }, protected=TRUE)
 
 
@@ -360,21 +364,21 @@ setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, 
 #*/###########################################################################
 setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
   # Argument 'middle':
-  S <- nbrOfSegments(fit, splitters=TRUE);
-  middle <- Arguments$getIndex(middle, range=c(2L, S));
+  S <- nbrOfSegments(fit, splitters=TRUE)
+  middle <- Arguments$getIndex(middle, range=c(2L, S))
 
   # Assert that the three segments are on the same chromosome
-  idxs <- middle + c(-1L, 0L, +1L);
-  fitT <- extractSegments(fit, idxs);
-  chrs <- getChromosomes(fitT);
+  idxs <- middle + c(-1L, 0L, +1L)
+  fitT <- extractSegments(fit, idxs)
+  chrs <- getChromosomes(fitT)
   if (length(chrs) != 1L) {
-    throw("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle);
+    throw("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle)
   }
-  fitT <- NULL; # Not needed anymore
+  fitT <- NULL # Not needed anymore
 
-  fit <- mergeTwoSegments(fit, left=middle, ...);
-  fit <- mergeTwoSegments(fit, left=middle-1L, ...);
-  fit;
+  fit <- mergeTwoSegments(fit, left=middle, ...)
+  fit <- mergeTwoSegments(fit, left=middle-1L, ...)
+  fit
 }) # mergeThreeSegments()
 
 
@@ -422,140 +426,95 @@ setMethodS3("dropRegions", "AbstractCBS", function(this, regions, H=1, ..., asMi
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE);
+  nbrOfSegments <- nbrOfSegments(this, splitters=TRUE)
   # Argument 'regions':
-  regions <- Arguments$getIndices(regions, max=nbrOfSegments);
+  regions <- Arguments$getIndices(regions, max=nbrOfSegments)
 
   # Argument 'H':
-  H <- Arguments$getInteger(H, range=c(0,Inf));
+  H <- Arguments$getInteger(H, range=c(0,Inf))
 
   # Argument 'asMissing':
-  asMissing <- Arguments$getLogical(asMissing);
+  asMissing <- Arguments$getLogical(asMissing)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Dropping regions of a certain length");
+  verbose && enter(verbose, "Dropping regions of a certain length")
 
-  verbose && cat(verbose, "Left-most segments of regions to be dropped:");
-  verbose && str(verbose, regions);
-  verbose && cat(verbose, "Number of segments in each region: ", H);
+  verbose && cat(verbose, "Left-most segments of regions to be dropped:")
+  verbose && str(verbose, regions)
+  verbose && cat(verbose, "Number of segments in each region: ", H)
 
   # Nothing to do?
   if (H == 0) {
-    verbose && cat(verbose, "Nothing to do. No segments will be dropped.");
-    verbose && exit(verbose);
-    return(this);
+    verbose && cat(verbose, "Nothing to do. No segments will be dropped.")
+    verbose && exit(verbose)
+    return(this)
   }
 
   # Identify segments to drop
-  Hs <- seq_len(H);
-  regions <- regions - 1L;
-  regions <- as.list(regions);
-  regions <- lapply(regions, FUN=function(region) region + Hs);
-  regions <- unlist(regions, use.names=FALSE);
-  regions <- sort(unique(regions));
-  verbose && cat(verbose, "Final set of segments to be dropped:");
-  verbose && str(verbose, regions);
+  Hs <- seq_len(H)
+  regions <- regions - 1L
+  regions <- as.list(regions)
+  regions <- lapply(regions, FUN=function(region) region + Hs)
+  regions <- unlist(regions, use.names=FALSE)
+  regions <- sort(unique(regions))
+  verbose && cat(verbose, "Final set of segments to be dropped:")
+  verbose && str(verbose, regions)
 
   # Identify segments to keep
-  allRegions <- seq_len(nbrOfSegments);
-  keepSegments <- setdiff(allRegions, regions);
-  verbose && cat(verbose, "Final set of segments to be kept:");
-  verbose && str(verbose, keepSegments);
+  allRegions <- seq_len(nbrOfSegments)
+  keepSegments <- setdiff(allRegions, regions)
+  verbose && cat(verbose, "Final set of segments to be kept:")
+  verbose && str(verbose, keepSegments)
 
-  dropped <- extractRegions(this, regions=regions, ...);
-  res <- this;
+  dropped <- extractRegions(this, regions=regions, ...)
+  res <- this
   if (length(regions) > 0) {
     if (asMissing) {
-      segs <- getSegments(res, splitters=TRUE);
-      pattern <- "(chromosome|id|start|end)$";
+      segs <- getSegments(res, splitters=TRUE)
+      pattern <- "(chromosome|id|start|end)$"
 
       # TODO/AD HOC: Should be class specific /HB 2011-10-17
-      pattern <- "(chromosome|id)$";
-      excl <- grep(pattern, colnames(segs), ignore.case=TRUE, invert=TRUE);
-      segs[regions,excl] <- NA;
-      res$output <- segs;
+      pattern <- "(chromosome|id)$"
+      excl <- grep(pattern, colnames(segs), ignore.case=TRUE, invert=TRUE)
+      segs[regions,excl] <- NA
+      res$output <- segs
 
       # TODO/AD HOC: Should be class specific /HB 2011-10-17
       for (ff in grep("segRows", names(res), ignore.case=TRUE, value=TRUE)) {
-        res[[ff]][regions,] <- NA;
+        res[[ff]][regions,] <- NA
       }
     } else {
-      res <- extractRegions(res, regions=keepSegments, ...);
+      res <- extractRegions(res, regions=keepSegments, ...)
     }
   }
-  res$dropped <- dropped;
+  res$dropped <- dropped
 
   # Sanity check
   if (asMissing) {
-    stopifnot(nbrOfSegments(res, splitters=TRUE) == nbrOfSegments(this, splitters=TRUE));
+    .stop_if_not(nbrOfSegments(res, splitters=TRUE) == nbrOfSegments(this, splitters=TRUE))
   } else {
-    stopifnot(nbrOfSegments(res, splitters=TRUE) + length(regions) == nbrOfSegments(this, splitters=TRUE));
+    .stop_if_not(nbrOfSegments(res, splitters=TRUE) + length(regions) == nbrOfSegments(this, splitters=TRUE))
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }, protected=TRUE)
 
 
 setMethodS3("dropRegion", "AbstractCBS", function(fit, region, ...) {
   # Argument 'region':
-  region <- Arguments$getIndex(region);
+  region <- Arguments$getIndex(region)
 
-  dropRegions(fit, regions=region, ...);
+  dropRegions(fit, regions=region, ...)
 }, protected=TRUE)
 
 
-setMethodS3("shiftTCN", "AbstractCBS", abstract=TRUE, protected=TRUE);
-
-
-
-
-############################################################################
-# HISTORY:
-# 2013-04-20 [HB]
-# o CLEANUP: Removed previously deprecated methods for AbstractCBS.
-# 2013-03-21 [HB]
-# o SPEEDUP: Made dropChangePoints() faster by only updating the segment
-#   statistics/means at the very end.
-# o BUG FIX: dropChangePoint[s]() for AbstractCBS would not allow to
-#   drop the change points at the very end, if segmentation where done
-#   with known segments/gaps and/or empty segments.
-# 2012-09-13
-# o Now renameChromosomes() also adjusts 'knownSegments'.
-# o Added shiftTCN().
-# 2012-02-27
-# o Added renameChromosomes() to AbstractCBS.
-# 2012-02-25
-# o Added dropChangePoints() for AbstractCBS.
-# 2011-11-17
-# o FIX: extractRegions() for AbstractCBS would also show verbose output.
-# 2011-11-04
-# o BUG FIX: extractSegment() for AbstractCBS would give an error, because
-#   it called itself instead of extractSegments().
-# 2011-10-21
-# o Added mergeThreeSegments() to AbstractCBS.
-# 2011-10-17
-# o Added argument 'asMissing' to dropRegions() for AbstractCBS.
-# 2011-10-14
-# o Added implementation of extractRegions() for AbstractCBS, which
-#   utilizes extractSegments().
-# o Added abstract extractSegments() and extractSegment() for AbstractCBS.
-# 2011-10-10
-# o Added extractRegion()/dropRegion() and extractRegions()/dropRegions()
-#   for AbstractCBS, where former ones are wrappers for the latter ones.
-# o Added dropChangePoint() for AbstractCBS, which is just a
-#   "name wrapper" for mergeTwoSegments().
-# 2011-10-08
-# o Added abstract updateMeans() for AbstractCBS.
-# o Added abstract mergeTwoSegments() for AbstractCBS.
-# 2011-10-02
-# o Created.
-############################################################################
+setMethodS3("shiftTCN", "AbstractCBS", abstract=TRUE, protected=TRUE)

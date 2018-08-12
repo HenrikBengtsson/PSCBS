@@ -96,7 +96,7 @@ randomSeed <- local({
   function(action=c("set", "advance", "reset", "get"), seed=NULL, kind=NULL, n=1L, backup=TRUE) {
     action <- match.arg(action)
     n <- as.integer(n)
-    stopifnot(n >= 1)
+    .stop_if_not(n >= 1)
 
     ## Record existing RNG kind (only once)
     if (is.null(oldKind)) oldKind <<- RNGkind()[1L]

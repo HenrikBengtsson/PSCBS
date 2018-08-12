@@ -30,52 +30,52 @@
 setConstructorS3("NonPairedPSCBS", function(fit=list(), ...) {
   # Argument 'fit':
   if (!is.list(fit)) {
-    throw("Argument 'fit' is not a list: ", class(fit)[1]);
+    throw("Argument 'fit' is not a list: ", class(fit)[1])
   }
 
-  extend(PSCBS(fit=fit, ...), "NonPairedPSCBS");
+  extend(PSCBS(fit=fit, ...), "NonPairedPSCBS")
 })
 
 
 setMethodS3("getLocusData", "NonPairedPSCBS", function(fit, ..., fields=c("asis", "full")) {
   # Argument 'fields':
-  fields <- match.arg(fields);
+  fields <- match.arg(fields)
 
 
-  data <- NextMethod("getLocusData", fields="asis");
+  data <- NextMethod("getLocusData", fields="asis")
 
 
   if (fields == "full") {
-    names <- colnames(data);
+    names <- colnames(data)
 
-    data$isHet <- (data$muN == 1/2);
+    data$isHet <- (data$muN == 1/2)
 
     # BACKWARD COMPATIBILITY: If 'rho' does not exists, calculate
     # it on the fly from 'betaT'.
     # NOTE: This should give an error in the future. /HB 2013-10-25
     if (is.null(data$rho)) {
-      data$rho <- 2*abs(data$betaT-1/2);
-      data$rho[!data$isHet] <- NA_real_;
-      warning("Locus-level DH signals ('rho') did not exist and were calculated from tumor BAFs ('betaT')");
+      data$rho <- 2*abs(data$betaT-1/2)
+      data$rho[!data$isHet] <- NA_real_
+      warning("Locus-level DH signals ('rho') did not exist and were calculated from tumor BAFs ('betaT')")
     }
 
-    data$c1 <- 1/2*(1-data$rho)*data$CT;
-    data$c2 <- data$CT - data$c1;
+    data$c1 <- 1/2*(1-data$rho)*data$CT
+    data$c2 <- data$CT - data$c1
 
-    data$isSNP <- (!is.na(data$betaT) | !is.na(data$muN));
-    data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus");
+    data$isSNP <- (!is.na(data$betaT) | !is.na(data$muN))
+    data$type <- ifelse(data$isSNP, "SNP", "non-polymorphic locus")
 
     # Labels
-    data$muNx <- c("AA", "AB", "BB")[2*data$muN + 1L];
-    data$isHetx <- c("AA|BB", "AB")[data$isHet + 1L];
+    data$muNx <- c("AA", "AB", "BB")[2*data$muN + 1L]
+    data$isHetx <- c("AA|BB", "AB")[data$isHet + 1L]
   }
 
-  data;
+  data
 }, protected=TRUE) # getLocusData()
 
 
 setMethodS3("callROH", "NonPairedPSCBS", function(fit, ...) {
-  throw(sprintf("Cannot call ROH from '%s' data.", class(fit)[1L]));
+  throw(sprintf("Cannot call ROH from '%s' data.", class(fit)[1L]))
 }, private=TRUE) # callROH()
 
 
@@ -84,63 +84,63 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'from':
-  from <- match.arg(from);
+  from <- match.arg(from)
 
   # Argument 'adjustFor':
   if (!is.null(adjustFor)) {
-    adjustFor <- Arguments$getCharacters(adjustFor);
-    adjustFor <- tolower(adjustFor);
-    knownValues <- c("ab", "loh", "roh");
-    adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE);
+    adjustFor <- Arguments$getCharacters(adjustFor)
+    adjustFor <- tolower(adjustFor)
+    knownValues <- c("ab", "loh", "roh")
+    adjustFor <- match.arg(adjustFor, choices=knownValues, several.ok=TRUE)
   }
 
   # Argument 'avgTCN' & 'avgDH':
-  avgTCN <- match.arg(avgTCN);
-  avgDH <- match.arg(avgDH);
+  avgTCN <- match.arg(avgTCN)
+  avgDH <- match.arg(avgDH)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Updating mean level estimates");
-  verbose && cat(verbose, "Adjusting for:");
-  verbose && print(verbose, adjustFor);
+  verbose && enter(verbose, "Updating mean level estimates")
+  verbose && cat(verbose, "Adjusting for:")
+  verbose && print(verbose, adjustFor)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setting up averaging functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (avgTCN == "asis" || avgDH == "asis") {
-    est <- fit$params$meanEstimators;
+    est <- fit$params$meanEstimators
     if (avgTCN == "asis") {
-      avgTCN <- est$tcn;
-      if (is.null(avgTCN)) avgTCN <- "mean";
-      avgTCN <- match.arg(avgTCN);
+      avgTCN <- est$tcn
+      if (is.null(avgTCN)) avgTCN <- "mean"
+      avgTCN <- match.arg(avgTCN)
     }
     if (avgDH == "asis") {
-      avgDH <- est$dh;
-      if (is.null(avgDH)) avgDH <- "mean";
-      avgDH <- match.arg(avgDH);
+      avgDH <- est$dh
+      if (is.null(avgDH)) avgDH <- "mean"
+      avgDH <- match.arg(avgDH)
     }
   }
 
   avgList <- list(
     tcn = get(avgTCN, mode="function"),
     dh = get(avgDH, mode="function")
-  );
+  )
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Extract the segmentation results
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  segs <- getSegments(fit, splitters=TRUE);
-  segRows <- list(tcn=fit$tcnSegRows, dh=fit$dhSegRows);
-  nbrOfSegments <- nrow(segs);
-  verbose && cat(verbose, "Number of segments: ", nbrOfSegments);
+  segs <- getSegments(fit, splitters=TRUE)
+  segRows <- list(tcn=fit$tcnSegRows, dh=fit$dhSegRows)
+  nbrOfSegments <- nrow(segs)
+  verbose && cat(verbose, "Number of segments: ", nbrOfSegments)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -148,22 +148,22 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.element("ab", adjustFor)) {
     if (!is.element("abCall", names(segs))) {
-      adjustFor <- setdiff(adjustFor, "ab");
-      throw("Cannot adjust for AB, because they haven't been called.");
+      adjustFor <- setdiff(adjustFor, "ab")
+      throw("Cannot adjust for AB, because they haven't been called.")
     }
   }
 
   if (is.element("loh", adjustFor)) {
     if (!is.element("lohCall", names(segs))) {
-      adjustFor <- setdiff(adjustFor, "loh");
-      throw("Cannot adjust for LOH, because they haven't been called.");
+      adjustFor <- setdiff(adjustFor, "loh")
+      throw("Cannot adjust for LOH, because they haven't been called.")
     }
   }
 
   if (is.element("roh", adjustFor)) {
     if (!is.element("rohCall", names(segs))) {
-      adjustFor <- setdiff(adjustFor, "roh");
-      throw("Cannot adjust for ROH, because they haven't been called.");
+      adjustFor <- setdiff(adjustFor, "roh")
+      throw("Cannot adjust for ROH, because they haven't been called.")
     }
   }
 
@@ -172,58 +172,58 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # Update the (TCN,DH) mean levels from locus-level data?
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (from == "loci") {
-    data <- getLocusData(fit);
-    chromosome <- data$chromosome;
-    x <- data$x;
-    CT <- data$CT;
-    rho <- data$rho;
+    data <- getLocusData(fit)
+    chromosome <- data$chromosome
+    x <- data$x
+    CT <- data$CT
+    rho <- data$rho
 
-    isSplitter <- isSegmentSplitter(fit);
+    isSplitter <- isSegmentSplitter(fit)
     for (ss in seq_len(nbrOfSegments)[!isSplitter]) {
-      verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments));
-      seg <- segs[ss,];
-      verbose && print(verbose, seg);
+      verbose && enter(verbose, sprintf("Segment %d of %d", ss, nbrOfSegments))
+      seg <- segs[ss,]
+      verbose && print(verbose, seg)
 
-      chr <- seg[["chromosome"]];
-      chrTag <- sprintf("chr%02d", chr);
+      chr <- seg[["chromosome"]]
+      chrTag <- sprintf("chr%02d", chr)
 
       for (what in c("tcn", "dh")) {
-        segRow <- segRows[[what]][ss,];
+        segRow <- segRows[[what]][ss,]
 
         # (a) A splitter - nothing todo?
         if (!is.finite(segRow[[1]]) || !is.finite(segRow[[2]])) {
-          next;
+          next
         }
 
         # (b) Identify units (loci)
-        units <- segRow[[1]]:segRow[[2]];
+        units <- segRow[[1]]:segRow[[2]]
 
         # (c) Adjust for missing values
         if (what == "tcn") {
-          value <- CT;
+          value <- CT
         } else if (what == "dh") {
-          value <- rho;
+          value <- rho
         }
-        keep <- which(!is.na(value[units]));
-        units <- units[keep];
+        keep <- which(!is.na(value[units]))
+        units <- units[keep]
 
         # (d) Update mean
-        avgFUN <- avgList[[what]];
-        gamma <- avgFUN(value[units]);
+        avgFUN <- avgList[[what]]
+        gamma <- avgFUN(value[units])
 
         # Sanity check
-        stopifnot(length(units) == 0 || !is.na(gamma));
+        .stop_if_not(length(units) == 0 || !is.na(gamma))
 
         # Update the segment boundaries, estimates and counts
-        key <- paste(what, "Mean", sep="");
-        seg[[key]] <- gamma;
+        key <- paste(what, "Mean", sep="")
+        seg[[key]] <- gamma
       }
 
-      verbose && print(verbose, seg);
+      verbose && print(verbose, seg)
 
-      segs[ss,] <- seg;
+      segs[ss,] <- seg
 
-      verbose && exit(verbose);
+      verbose && exit(verbose)
     } # for (ss ...)
   } # if (from ...)
 
@@ -233,32 +233,32 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # Adjust segment means from various types of calls
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (length(adjustFor) > 0) {
-    verbose && enter(verbose, "Adjusting segment means");
-    verbose && cat(verbose, "Adjusting for:");
-    verbose && print(verbose, adjustFor);
+    verbose && enter(verbose, "Adjusting segment means")
+    verbose && cat(verbose, "Adjusting for:")
+    verbose && print(verbose, adjustFor)
 
     if (is.element("ab", adjustFor)) {
-      verbose && enter(verbose, "Adjusting for AB");
-      calls <- segs$abCall;
-      segs$dhMean[calls] <- 1/2;
-      verbose && exit(verbose);
+      verbose && enter(verbose, "Adjusting for AB")
+      calls <- segs$abCall
+      segs$dhMean[calls] <- 1/2
+      verbose && exit(verbose)
     }
 
     if (is.element("loh", adjustFor)) {
-      verbose && enter(verbose, "Adjusting for LOH");
-      calls <- segs$lohCall;
-      segs$dhMean[calls] <- 0;
-      verbose && exit(verbose);
+      verbose && enter(verbose, "Adjusting for LOH")
+      calls <- segs$lohCall
+      segs$dhMean[calls] <- 0
+      verbose && exit(verbose)
     }
 
     if (is.element("roh", adjustFor)) {
-      verbose && enter(verbose, "Adjusting for ROH");
-      calls <- segs$rohCall;
-      segs$dhMean[calls] <- NA_real_;
-      verbose && exit(verbose);
+      verbose && enter(verbose, "Adjusting for ROH")
+      calls <- segs$rohCall
+      segs$dhMean[calls] <- NA_real_
+      verbose && exit(verbose)
     }
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # if (length(adjustFor) > 0)
 
 
@@ -266,25 +266,25 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Update (C1,C2) mean levels
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Update (C1,C2) per segment");
+  verbose && enter(verbose, "Update (C1,C2) per segment")
   # Append (C1,C2) estimates
-  tcn <- segs$tcnMean;
-  dh <- segs$dhMean;
-  C1 <- 1/2*(1-dh)*tcn;
-  C2 <- tcn - C1;
-  segs$c1Mean <- C1;
-  segs$c2Mean <- C2;
-  verbose && exit(verbose);
+  tcn <- segs$tcnMean
+  dh <- segs$dhMean
+  C1 <- 1/2*(1-dh)*tcn
+  C2 <- tcn - C1
+  segs$c1Mean <- C1
+  segs$c2Mean <- C2
+  verbose && exit(verbose)
 
 
   # Return results
-  res <- fit;
-  res$output <- segs;
-  res <- setMeanEstimators(res, tcn=avgTCN, dh=avgDH);
+  res <- fit
+  res$output <- segs
+  res <- setMeanEstimators(res, tcn=avgTCN, dh=avgDH)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  res;
+  res
 }, private=TRUE) # updateMeans()
 
 
@@ -294,80 +294,80 @@ setMethodS3("resegment", "NonPairedPSCBS", function(fit, ..., verbose=FALSE) {
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Resegmenting a ", class(fit)[1], " object");
+  verbose && enter(verbose, "Resegmenting a ", class(fit)[1], " object")
 
   # Use the locus-level data of the PairedPSCBS object
-  data <- getLocusData(fit);
-  class(data) <- "data.frame";
-  drop <- c("rho", "betaTN", "index");
-  keep <- !is.element(colnames(data), drop);
-  data <- data[,keep];
-  verbose && str(verbose, data);
+  data <- getLocusData(fit)
+  class(data) <- "data.frame"
+  drop <- c("rho", "betaTN", "index")
+  keep <- !is.element(colnames(data), drop)
+  data <- data[,keep]
+  verbose && str(verbose, data)
 
-  verbose && cat(verbose, "Number of loci: ", nrow(data));
+  verbose && cat(verbose, "Number of loci: ", nrow(data))
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup arguments to be passed
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  verbose && enter(verbose, "Overriding default arguments");
-  segFcnName <- "segmentByPairedNonPSCBS";
-  segFcn <- getMethodS3(segFcnName, "default");
+  verbose && enter(verbose, "Overriding default arguments")
+  segFcnName <- "segmentByPairedNonPSCBS"
+  segFcn <- getMethodS3(segFcnName, "default")
 
   # (a) The default arguments
-  formals <- formals(segFcn);
+  formals <- formals(segFcn)
 
-  formals <- formals[!sapply(formals, FUN=is.language)];
-  formals <- formals[!sapply(formals, FUN=is.name)];
-  drop <- c("chromosome", "x", "w", "CT", "betaT", "betaN", "muN", "...");
-  keep <- !is.element(names(formals), drop);
-  formals <- formals[keep];
+  formals <- formals[!sapply(formals, FUN=is.language)]
+  formals <- formals[!sapply(formals, FUN=is.name)]
+  drop <- c("chromosome", "x", "w", "CT", "betaT", "betaN", "muN", "...")
+  keep <- !is.element(names(formals), drop)
+  formals <- formals[keep]
 
   # (b) The arguments used in previous fit
-  params <- fit$params;
-  keep <- is.element(names(params), names(formals));
-  params <- params[keep];
+  params <- fit$params
+  keep <- is.element(names(params), names(formals))
+  params <- params[keep]
   # Don't trust 'tbn'!  TODO. /HB 20111117
-  params$tbn <- NULL;
+  params$tbn <- NULL
 
   # (c) The arguments in '...'
-  userArgs <- list(..., verbose=verbose);
+  userArgs <- list(..., verbose=verbose)
 
   # (d) Merge
-  args <- formals;
-  args2 <- c(params, userArgs);
+  args <- formals
+  args2 <- c(params, userArgs)
   for (kk in seq_along(args2)) {
-    value <- args2[[kk]];
+    value <- args2[[kk]]
     if (!is.null(value)) {
-      key <- names(args2)[kk];
+      key <- names(args2)[kk]
       if (!is.null(key)) {
-        args[[key]] <- value;
+        args[[key]] <- value
       } else {
-        args <- c(args, list(value));
+        args <- c(args, list(value))
       }
     }
   } # for (key ...)
-  verbose && str(verbose, args[names(args) != "verbose"]);
+  verbose && str(verbose, args[names(args) != "verbose"])
 
-  verbose && enter(verbose, sprintf("Calling %s()", segFcnName));
-  args <- c(list(data), args);
-  verbose && cat(verbose, "Arguments:");
-  verbose && str(verbose, args[names(args) != "verbose"]);
-  verbose && exit(verbose);
+  verbose && enter(verbose, sprintf("Calling %s()", segFcnName))
+  args <- c(list(data), args)
+  verbose && cat(verbose, "Arguments:")
+  verbose && str(verbose, args[names(args) != "verbose"])
+  verbose && exit(verbose)
 
-  fit <- do.call(segFcnName, args);
-  verbose && exit(verbose);
+  fit <- do.call(segFcnName, args)
+  verbose && exit(verbose)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fit;
+  fit
 }, protected=TRUE) # resegment()
 
 

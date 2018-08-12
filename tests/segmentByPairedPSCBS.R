@@ -32,7 +32,7 @@ if (Sys.getenv("_R_CHECK_FULL_") == "") {
 
 str(dataS)
 
-fig <- 1;
+fig <- 1
 
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -144,7 +144,7 @@ fit4 <- fit
 # Simulate multiple chromosomes
 fit1 <- fit
 fit2 <- renameChromosomes(fit, from=1, to=2)
-fitM <- append(fit1, fit2)
+fitM <- c(fit1, fit2)
 
 # Tile chromosomes
 fitT <- tileChromosomes(fitM)

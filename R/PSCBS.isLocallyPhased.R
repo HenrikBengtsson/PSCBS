@@ -1,6 +1,6 @@
 setMethodS3("isLocallyPhased", "PSCBS", function(fit, ...) {
-  segs <- getSegments(fit);
-  is.element("c1c2Swap", names(segs));
+  segs <- getSegments(fit)
+  is.element("c1c2Swap", names(segs))
 })
 
 

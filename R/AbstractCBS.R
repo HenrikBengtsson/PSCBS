@@ -29,20 +29,20 @@
 setConstructorS3("AbstractCBS", function(fit=list(), sampleName=fit$sampleName, ...) {
   # Argument 'sampleName':
   if (!is.null(sampleName)) {
-    sampleName <- Arguments$getCharacter(sampleName);
+    sampleName <- Arguments$getCharacter(sampleName)
   }
 
-  fit$sampleName <- sampleName;
-  extend(fit, "AbstractCBS");
+  fit$sampleName <- sampleName
+  extend(fit, "AbstractCBS")
 })
 
 
 setMethodS3("print", "AbstractCBS", function(x, ...) {
   # To please R CMD check
-  fit <- x;
+  fit <- x
 
-  segs <- getSegments(fit, simplify=TRUE, ...);
-  print(segs);
+  segs <- getSegments(fit, simplify=TRUE, ...)
+  print(segs)
 }, protected=TRUE)
 
 
@@ -51,64 +51,64 @@ setMethodS3("print", "AbstractCBS", function(x, ...) {
 setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attributes=FALSE, ...) {
   # NOTE: Here we cannot trust argument '...', because it may contain
   # copies of 'target' and 'current'
-  args <- list(...);
-  drop <- integer(0L);
+  args <- list(...)
+  drop <- integer(0L)
   for (kk in seq_along(args)) {
-    if (identical(args[[kk]], target)) drop <- c(drop, kk);
-    if (identical(args[[kk]], current)) drop <- c(drop, kk);
+    if (identical(args[[kk]], target)) drop <- c(drop, kk)
+    if (identical(args[[kk]], current)) drop <- c(drop, kk)
   }
   if (length(drop) > 0L) {
-    args <- args[-drop];
-    str(args);
-#    assign("...", args, inherits=FALSE);
+    args <- args[-drop]
+    str(args)
+#    assign("...", args, inherits=FALSE)
   }
-  args <- list(...);
+  args <- list(...)
 
   # Compare class attributes
-  res <- all.equal(class(target), class(current));
+  res <- all.equal(class(target), class(current))
   if (!isTRUE(res)) {
-    return(res);
+    return(res)
   }
 
   # Compare locus-level data
-  dataT <- getLocusData(target);
-  dataC <- getLocusData(current);
-  res <- all.equal(dataT, dataC, check.attributes=check.attributes);
+  dataT <- getLocusData(target)
+  dataC <- getLocusData(current)
+  res <- all.equal(dataT, dataC, check.attributes=check.attributes)
   if (!isTRUE(res)) {
-    attr(res, "what") <- "getLocusData()";
-    return(res);
+    attr(res, "what") <- "getLocusData()"
+    return(res)
   }
 
   # Compare segments
-  dataT <- getSegments(target);
-  dataC <- getSegments(current);
-  res <- all.equal(dataT, dataC, check.attributes=check.attributes);
+  dataT <- getSegments(target)
+  dataC <- getSegments(current)
+  res <- all.equal(dataT, dataC, check.attributes=check.attributes)
   if (!isTRUE(res)) {
-    attr(res, "what") <- "getSegments()";
-    return(res);
+    attr(res, "what") <- "getSegments()"
+    return(res)
   }
 
   # Compare field names
-  fieldsT <- names(target);
-  fieldsC <- names(current);
-  res <- all.equal(fieldsT, fieldsC, check.attributes=check.attributes);
+  fieldsT <- names(target)
+  fieldsC <- names(current)
+  res <- all.equal(fieldsT, fieldsC, check.attributes=check.attributes)
   if (!isTRUE(res)) {
-      attr(res, "what") <- "names";
-    return(res);
+      attr(res, "what") <- "names"
+    return(res)
   }
 
   # Compare other fields
   for (key in fieldsT) {
-    dataT <- target[[key]];
-    dataC <- current[[key]];
-    res <- all.equal(dataT, dataC, check.attributes=check.attributes);
+    dataT <- target[[key]]
+    dataC <- current[[key]]
+    res <- all.equal(dataT, dataC, check.attributes=check.attributes)
     if (!isTRUE(res)) {
-      attr(res, "what") <- sprintf("[[\"%s\"]]", key);
-      return(res);
+      attr(res, "what") <- sprintf("[[\"%s\"]]", key)
+      return(res)
     }
   } # for (key ...)
 
-  return(TRUE);
+  return(TRUE)
 }, protected=TRUE)
 
 
@@ -141,7 +141,7 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 # }
 #*/###########################################################################
 setMethodS3("save", "AbstractCBS", function(this, ...) {
-  saveObject(this, ...);
+  saveObject(this, ...)
 })
 
 
@@ -174,26 +174,26 @@ setMethodS3("save", "AbstractCBS", function(this, ...) {
 # }
 #*/###########################################################################
 setMethodS3("load", "AbstractCBS", function(static, ...) {
-  object <- loadObject(...);
+  object <- loadObject(...)
 
   # Patch for changes in class structure in PSCBS v0.13.2 -> v0.13.3.
   if (!inherits(object, "AbstractCBS")) {
     if (inherits(object, "CBS")) {
-      class(object) <- c(class(object), "AbstractCBS");
-      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.");
+      class(object) <- c(class(object), "AbstractCBS")
+      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.")
     } else if (inherits(object, "PairedPSCBS")) {
-      class(object) <- c(class(object), "AbstractCBS");
-      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.");
+      class(object) <- c(class(object), "AbstractCBS")
+      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.")
     }
   }
 
   # Sanity check
   if (!inherits(object, class(static)[1])) {
     throw("Loaded an object from file, but it does not inherit from ",
-          class(static)[1], " as expected: ", hpaste(class(object)));
+          class(static)[1], " as expected: ", hpaste(class(object)))
   }
 
-  object;
+  object
 }, static=TRUE)
 
 
@@ -226,15 +226,15 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
 # }
 #*/###########################################################################
 setMethodS3("getSampleName", "AbstractCBS", function(fit, ...) {
-  name <- fit$sampleName;
+  name <- fit$sampleName
   if (is.null(name)) {
-    name <- as.character(NA);
+    name <- as.character(NA)
   }
-  name;
+  name
 }, protected=TRUE)
 
 setMethodS3("sampleName", "AbstractCBS", function(fit, ...) {
-  getSampleName(fit);
+  getSampleName(fit)
 }, protected=TRUE)
 
 
@@ -269,20 +269,20 @@ setMethodS3("sampleName", "AbstractCBS", function(fit, ...) {
 #*/###########################################################################
 setMethodS3("setSampleName", "AbstractCBS", function(fit, name, ...) {
   # Argument 'value':
-  name <- Arguments$getCharacter(name);
+  name <- Arguments$getCharacter(name)
 
-  fit$sampleName <- name;
+  fit$sampleName <- name
 
-  invisible(fit);
+  invisible(fit)
 }, protected=TRUE)
 
 
 setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
-  setSampleName(x, value);
+  setSampleName(x, value)
 }, protected=TRUE, addVarArgs=FALSE)
 
 "sampleName<-" <- function(x, value) {
-  UseMethod("sampleName<-");
+  UseMethod("sampleName<-")
 }
 
 
@@ -317,25 +317,25 @@ setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("getLocusData", "AbstractCBS", abstract=TRUE);
+setMethodS3("getLocusData", "AbstractCBS", abstract=TRUE)
 
 setMethodS3("setLocusData", "AbstractCBS", function(fit, loci, ...) {
   # Argument 'loci':
-  loci <- Arguments$getInstanceOf(loci, "data.frame");
-  nbrOfLoci <- nbrOfLoci(fit);
+  loci <- Arguments$getInstanceOf(loci, "data.frame")
+  nbrOfLoci <- nbrOfLoci(fit)
   if (nrow(loci) != nbrOfLoci) {
-    throw("Cannot set locus-level data. The number of loci to be set differ from the existing number of loci: ", nrow(loci), " != ", nbrOfLoci);
+    throw("Cannot set locus-level data. The number of loci to be set differ from the existing number of loci: ", nrow(loci), " != ", nbrOfLoci)
   }
 
-  fit$data <- loci;
+  fit$data <- loci
 
-  invisible(fit);
+  invisible(fit)
 }, protected=TRUE)
 
 
-setMethodS3("getLocusSignalNames", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("getLocusSignalNames", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
-setMethodS3("getSegmentTrackPrefixes", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("getSegmentTrackPrefixes", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
 
 ###########################################################################/**
@@ -364,8 +364,8 @@ setMethodS3("getSegmentTrackPrefixes", "AbstractCBS", abstract=TRUE, protected=T
 # }
 #*/###########################################################################
 setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
-  data <- getLocusData(fit, splitters=splitters, ...);
-  nrow(data);
+  data <- getLocusData(fit, splitters=splitters, ...)
+  nrow(data)
 })
 
 
@@ -401,7 +401,7 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 #   @seeclass
 # }
 #*/###########################################################################
-setMethodS3("getSegments", "AbstractCBS", abstract=TRUE);
+setMethodS3("getSegments", "AbstractCBS", abstract=TRUE)
 
 
 setMethodS3("setSegments", "AbstractCBS", function(fit, segments, splitters=TRUE, ...) {
@@ -418,7 +418,7 @@ setMethodS3("setSegments", "AbstractCBS", function(fit, segments, splitters=TRUE
 }, protected=TRUE)
 
 
-setMethodS3("getChangePoints", "AbstractCBS", abstract=TRUE);
+setMethodS3("getChangePoints", "AbstractCBS", abstract=TRUE)
 
 
 
@@ -454,25 +454,25 @@ setMethodS3("getChangePoints", "AbstractCBS", abstract=TRUE);
 #*/###########################################################################
 setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
   segs <- getSegments(fit, splitters=TRUE)
-  names <- colnames(segs);
+  names <- colnames(segs)
 
-  excl <- NULL;
+  excl <- NULL
 
   # Drop all quantile mean level estimates (from bootstrapping)
-  idxs <- grep("_[0-9.]*[%]$", names);
-  excl <- c(excl, idxs);
+  idxs <- grep("_[0-9.]*[%]$", names)
+  excl <- c(excl, idxs)
 
   # Drop all calls
-  idxs <- grep("Call$", names);
-  excl <- c(excl, idxs);
+  idxs <- grep("Call$", names)
+  excl <- c(excl, idxs)
 
-  excl <- unique(excl);
+  excl <- unique(excl)
   if (length(excl) > 0L) {
-    segs <- segs[,-excl];
+    segs <- segs[,-excl]
   }
 
   fit <- setSegments(fit, segs, splitters=TRUE)
-  invisible(fit);
+  invisible(fit)
 }, protected=TRUE)
 
 
@@ -505,7 +505,7 @@ setMethodS3("resetSegments", "AbstractCBS", function(fit, ...) {
 # }
 #*/###########################################################################
 setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...) {
-  nrow(getSegments(this, splitters=splitters, ...));
+  nrow(getSegments(this, splitters=splitters, ...))
 })
 
 
@@ -539,17 +539,17 @@ setMethodS3("nbrOfSegments", "AbstractCBS", function(this, splitters=FALSE, ...)
 # }
 #*/###########################################################################
 setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ignoreGaps=FALSE, dropEmptySegments=TRUE, ...) {
-  segs <- getSegments(fit, splitters=TRUE, addGaps=!ignoreGaps);
+  segs <- getSegments(fit, splitters=TRUE, addGaps=!ignoreGaps)
   if (dropEmptySegments) {
-    prefix <- getSegmentTrackPrefixes(fit);
+    prefix <- getSegmentTrackPrefixes(fit)
     keys <- sapply(prefix, FUN=function(x) {
-      toCamelCase(paste(c(x, "nbr of loci"), collapse=" "));
-    });
-    counts <- as.matrix(segs[,keys]);
-    counts <- rowSums(counts, na.rm=TRUE);
-    segs$chromosome[counts == 0L] <- NA;
+      toCamelCase(paste(c(x, "nbr of loci"), collapse=" "))
+    })
+    counts <- as.matrix(segs[,keys])
+    counts <- rowSums(counts, na.rm=TRUE)
+    segs$chromosome[counts == 0L] <- NA
   }
-  sum(!is.na(diff(segs$chromosome)));
+  sum(!is.na(diff(segs$chromosome)))
 })
 
 
@@ -582,7 +582,7 @@ setMethodS3("nbrOfChangePoints", "AbstractCBS", function(fit, ignoreGaps=FALSE, 
 # }
 #*/###########################################################################
 setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
-  getSegments(x, ...);
+  getSegments(x, ...)
 }, protected=TRUE)
 
 
@@ -615,15 +615,15 @@ setMethodS3("as.data.frame", "AbstractCBS", function(x, ...) {
 # }
 #*/###########################################################################
 setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
-  segs <- getSegments(this, ...);
-  chromosomes <- sort(unique(segs$chromosome), na.last=TRUE);
+  segs <- getSegments(this, ...)
+  chromosomes <- sort(unique(segs$chromosome), na.last=TRUE)
 
   # Drop NA dividers
   if (length(chromosomes) > 1) {
-    chromosomes <- chromosomes[!is.na(chromosomes)];
+    chromosomes <- chromosomes[!is.na(chromosomes)]
   }
 
-  chromosomes;
+  chromosomes
 })
 
 
@@ -654,44 +654,44 @@ setMethodS3("getChromosomes", "AbstractCBS", function(this, ...) {
 # }
 #*/###########################################################################
 setMethodS3("nbrOfChromosomes", "AbstractCBS", function(this, ...) {
-  length(getChromosomes(this, ...));
+  length(getChromosomes(this, ...))
 })
 
 
 setMethodS3("getSegmentSizes", "AbstractCBS", function(fit, by=c("length", "count"), ...) {
-  by <- match.arg(by);
+  by <- match.arg(by)
 
   if (by == "length") {
-    prefix <- getSegmentTrackPrefixes(fit)[1];
-    keys <- toCamelCase(paste(prefix, " ", c("start", "end")));
+    prefix <- getSegmentTrackPrefixes(fit)[1]
+    keys <- toCamelCase(paste(prefix, " ", c("start", "end")))
   } else if (by == "count") {
-    keys <- "nbrOfLoci";
+    keys <- "nbrOfLoci"
   }
-  data <- getSegments(fit, ...)[,keys];
+  data <- getSegments(fit, ...)[,keys]
 
   if (by == "length") {
-    res <- data[[2L]]-data[[1L]]+1L;
+    res <- data[[2L]]-data[[1L]]+1L
   } else if (by == "count") {
-    res <- data[[1L]];
+    res <- data[[1L]]
   }
-  res;
+  res
 })
 
 
-setMethodS3("extractCNs", "AbstractCBS", abstract=TRUE);
+setMethodS3("extractCNs", "AbstractCBS", abstract=TRUE)
 
 setMethodS3("sampleCNs", "AbstractCBS", function(fit, size=NULL, ...) {
-  data <- extractCNs(fit, ...);
+  data <- extractCNs(fit, ...)
 
   if (!is.null(size)) {
-    sizes <- getSegmentSizes(fit, ...);
+    sizes <- getSegmentSizes(fit, ...)
     # Sanity check
-    stopifnot(length(sizes) == nrow(data));
-    idxs <- sample(nrow(data), size=size, replace=TRUE, prob=sizes);
-    data <- data[idxs,,drop=FALSE];
+    .stop_if_not(length(sizes) == nrow(data))
+    idxs <- sample(nrow(data), size=size, replace=TRUE, prob=sizes)
+    data <- data[idxs,,drop=FALSE]
   }
 
-  data;
+  data
 })
 
 ###########################################################################/**
@@ -721,91 +721,91 @@ setMethodS3("sampleCNs", "AbstractCBS", function(fit, size=NULL, ...) {
 #
 # @keyword internal
 #*/###########################################################################
-setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("updateMeans", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
 
 setMethodS3("getMeanEstimators", "AbstractCBS", function(fit, which=NULL, default=mean, ...) {
-  estList <- fit$params$meanEstimators;
+  estList <- fit$params$meanEstimators
   if (is.null(estList)) {
-    estList <- list();
+    estList <- list()
   }
 
-  if (is.null(which)) which <- names(estList);
+  if (is.null(which)) which <- names(estList)
 
   for (key in which) {
-    fcn <- estList[[key]];
+    fcn <- estList[[key]]
     if (is.null(fcn)) {
-      fcn <- default;
+      fcn <- default
     } else if (is.character(fcn)) {
-      fcn <- get(fcn, mode="function");
+      fcn <- get(fcn, mode="function")
     }
-    estList[[key]] <- fcn;
+    estList[[key]] <- fcn
   }
 
-  estList;
+  estList
 }, protected=TRUE)
 
 
 setMethodS3("setMeanEstimators", "AbstractCBS", function(fit, ...) {
-  estList <- fit$params$meanEstimators;
+  estList <- fit$params$meanEstimators
   if (is.null(estList)) {
-    estList <- list();
+    estList <- list()
   }
 
-  args <- list(...);
+  args <- list(...)
 
   # Nothing todo?
   if (length(args) == 0L) {
-    return(invisible(fit));
+    return(invisible(fit))
   }
 
-  keys <- names(args);
+  keys <- names(args)
   if (is.null(keys)) {
-    throw("Estimators arguments must be named.");
+    throw("Estimators arguments must be named.")
   }
 
   for (key in keys) {
-    fcn <- args[[key]];
+    fcn <- args[[key]]
     if (is.function(fcn)) {
     } else if (is.character(fcn)) {
       if (!exists(fcn, mode="function")) {
-        throw(sprintf("No such '%s' estimator function: %s", key, fcn));
+        throw(sprintf("No such '%s' estimator function: %s", key, fcn))
       }
     } else {
-      throw(sprintf("Estimator argument '%s' must be a function or character string: %s", key, mode(fcn)));
+      throw(sprintf("Estimator argument '%s' must be a function or character string: %s", key, mode(fcn)))
     }
-    estList[[key]] <- fcn;
+    estList[[key]] <- fcn
   }
 
-  fit$params$meanEstimators <- estList;
+  fit$params$meanEstimators <- estList
 
-  invisible(fit);
+  invisible(fit)
 }, protected=TRUE)
 
 
-setMethodS3("resegment", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("resegment", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
 
-setMethodS3("getChromosomeRanges", "AbstractCBS", abstract=TRUE, protected=TRUE);
+setMethodS3("getChromosomeRanges", "AbstractCBS", abstract=TRUE, protected=TRUE)
 
 setMethodS3("getChromosomeOffsets", "AbstractCBS", function(fit, resolution=1e6, ...) {
   # Argument 'resolution':
   if (!is.null(resolution)) {
-    resolution <- Arguments$getDouble(resolution, range=c(1,Inf));
+    resolution <- Arguments$getDouble(resolution, range=c(1,Inf))
   }
 
-  data <- getChromosomeRanges(fit, ...);
-  splits <- data[,"start"] + data[,"length"];
+  data <- getChromosomeRanges(fit, ...)
+  splits <- data[,"start"] + data[,"length"]
 
   if (!is.null(resolution)) {
-    splits <- ceiling(splits / resolution);
-    splits <- resolution * splits;
+    splits <- ceiling(splits / resolution)
+    splits <- resolution * splits
   }
 
-  offsets <- c(0L, cumsum(splits));
-  names(offsets) <- c(rownames(data), NA);
+  offsets <- c(0L, cumsum(splits))
+  names(offsets) <- c(rownames(data), NA)
 
-  offsets;
+  offsets
 }, protected=TRUE) # getChromosomeOffsets()
 
 
@@ -851,41 +851,41 @@ setMethodS3("getChromosomeOffsets", "AbstractCBS", function(fit, resolution=1e6,
 # @keyword internal
 #*/###########################################################################
 setMethodS3("ploidy", "AbstractCBS", function(fit, ...) {
-  ploidy <- fit$params$ploidy;
-  if (is.null(ploidy)) ploidy <- 2L;
-  ploidy;
+  ploidy <- fit$params$ploidy
+  if (is.null(ploidy)) ploidy <- 2L
+  ploidy
 })
 
 setMethodS3("ploidy<-", "AbstractCBS", function(fit, value) {
-  fit <- setPloidy(fit, ploidy=value, update=TRUE);
-  invisible(fit);
+  fit <- setPloidy(fit, ploidy=value, update=TRUE)
+  invisible(fit)
 })
 
 "ploidy<-" <- function(fit, value) {
-  UseMethod("ploidy<-");
+  UseMethod("ploidy<-")
 }
 
 setMethodS3("setPloidy", "AbstractCBS", function(fit, ploidy=2L, update=TRUE, ...) {
   # Argument 'ploidy':
-  ploidy <- Arguments$getInteger(ploidy, range=c(1,Inf));
+  ploidy <- Arguments$getInteger(ploidy, range=c(1,Inf))
 
   if (update) {
     # Calculate rescaling factor
-    oldPloidy <- ploidy(fit);
-    scale <- ploidy / oldPloidy;
+    oldPloidy <- ploidy(fit)
+    scale <- ploidy / oldPloidy
 
     # Nothing todo?
     if (scale != 1) {
-      fit <- adjustPloidyScale(fit, scale=scale, ...);
+      fit <- adjustPloidyScale(fit, scale=scale, ...)
     }
   }
 
-  fit$params$ploidy <- ploidy;
-  invisible(fit);
+  fit$params$ploidy <- ploidy
+  invisible(fit)
 }, protected=TRUE)
 
 
-setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
+setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE)
 
 
 ###########################################################################/**
@@ -916,48 +916,3 @@ setMethodS3("adjustPloidyScale", "AbstractCBS", abstract=TRUE);
 # }
 #*/###########################################################################
 setMethodS3("normalizeTotalCNs", "AbstractCBS", abstract=TRUE)
-
-
-############################################################################
-# HISTORY:
-# 2013-11-05
-# o Added basic implementations of setLocusData() and setSegments()
-#   for AbstractCBS.
-# 2013-10-20
-# o Added abstract getChangePoints().
-# 2013-05-07
-# o Added ploidy() and ploidy()<- for AbstractCBS.
-# 2013-02-01
-# o Added resetSegments() for AbstractCBS, which drops extra segments
-#   columns (e.g. bootstrap statisistics and calls) except those
-#   obtained from the segment algorithm.
-# 2013-01-15
-# o Added get-/setMeanEstimators() for AbstractCBS.
-# 2012-09-21
-# o Now nbrOfChangePoints() for AbstractCBS calculates only change points
-#   of connected neighboring segments.
-# 2012-09-14
-# o GENERALIZATION: Added getSegmentSizes() for AbstractCBS.
-# o GENERALIZATION: Added getChromosomeOffsets() for AbstractCBS.
-# 2012-09-13
-# o Updated all.equal() for AbstractCBS to compare locus-level data,
-#   segments, and other fields.
-# 2012-06-03
-# o DOCUMENTATION: Added Rd help for updateMeans().
-# 2011-12-03
-# o Now print() for AbstractCBS returns getSegments(..., simplify=TRUE).
-# 2011-11-17
-# o Added resegment() for AbstractCBS.
-# 2011-10-30
-# o Added save() and load() methods to AbstractCBS.
-# 2011-10-16
-# o Added sampleCNs() for AbstractCBS.
-# o Added abstract getSegmentSizes() for AbstractCBS.
-# o Added abstract extractCNs() for AbstractCBS.
-# 2011-10-08
-# o Added abstract updateMeans() for AbstractCBS.
-# o Added all.equal() for AbstractCBS.
-# o Added nbrOfChangePoints() for AbstractCBS.
-# 2011-10-02
-# o Created.
-############################################################################

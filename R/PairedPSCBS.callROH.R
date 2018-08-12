@@ -38,68 +38,68 @@ setMethodS3("callROH", "PairedPSCBS", function(fit, ..., updateMeans=TRUE, force
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Calling ROH");
+  verbose && enter(verbose, "Calling ROH")
 
   # Already done?
-  segs <- getSegments(fit);
-  calls <- segs$rohCall;
+  segs <- getSegments(fit)
+  calls <- segs$rohCall
   if (!force && !is.null(calls)) {
-    return(invisible(fit));
+    return(invisible(fit))
   }
 
-  nbrOfSegments <- nrow(segs);
-  calls <- rep(NA, times=nbrOfSegments);
+  nbrOfSegments <- nrow(segs)
+  calls <- rep(NA, times=nbrOfSegments)
   if (is.null(calls)) {
-    segs <- cbind(segs, rohCall=calls);
+    segs <- cbind(segs, rohCall=calls)
   }
-  delta <- NA_real_;
+  delta <- NA_real_
 
   # For each segment...
   for (ss in seq_len(nbrOfSegments)) {
-    verbose && enter(verbose, sprintf("Segment #%d of %d", ss, nbrOfSegments));
+    verbose && enter(verbose, sprintf("Segment #%d of %d", ss, nbrOfSegments))
 
-    fitT <- extractSegment(fit, ss);
+    fitT <- extractSegment(fit, ss)
 
     # Call only "non-splitter" segments
     if (nbrOfSegments(fitT) > 0L) {
-      callSS <- callROHOneSegment(fitT, ..., verbose=less(verbose, 1));
-      calls[ss] <- callSS;
+      callSS <- callROHOneSegment(fitT, ..., verbose=less(verbose, 1))
+      calls[ss] <- callSS
       if (is.na(delta) && !is.na(callSS)) {
-        delta <- attr(callSS, "delta");
+        delta <- attr(callSS, "delta")
       }
     }
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # for (ss ...)
 
-  verbose && cat(verbose, "ROH calls:");
-  verbose && str(verbose, calls);
-  verbose && print(verbose, summary(calls));
+  verbose && cat(verbose, "ROH calls:")
+  verbose && str(verbose, calls)
+  verbose && print(verbose, summary(calls))
 
-  segs$rohCall <- calls;
+  segs$rohCall <- calls
 
-  fit$output <- segs;
+  fit$output <- segs
 
   # Append parameters
-  params <- fit$params;
-  params$deltaROH <- delta;
-  fit$params <- params;
+  params <- fit$params
+  params$deltaROH <- delta
+  fit$params <- params
 
   # Set DH and (C1,C2) mean levels to NA?
   if (updateMeans) {
     fit <- updateMeans(fit, from="segments", adjustFor="roh",
-                                             verbose=less(verbose, 20));
+                                             verbose=less(verbose, 20))
   }
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  invisible(fit);
+  invisible(fit)
 }) # callROH()
 
 
@@ -109,45 +109,45 @@ setMethodS3("callROHOneSegment", "PairedPSCBS", function(fit, ..., verbose=FALSE
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Calling ROH for a single segment");
+  verbose && enter(verbose, "Calling ROH for a single segment")
 
   # Make sure that there is only a single segment in this object
-  stopifnot(nbrOfSegments(fit, splitters=TRUE) == 1L);
+  .stop_if_not(nbrOfSegments(fit, splitters=TRUE) == 1L)
 
 
   # Extract the locus-level data for the segment tested
-  data <- getLocusData(fit);
+  data <- getLocusData(fit)
 
 
   # Keep only SNPs:
   # SNPs are identifies as those loci that have non-missing
   # 'betaTN' & 'muN', cf. segmentByPairedPSCBS().
-  isSnp <- (!is.na(data$betaTN) & !is.na(data$muN));
-  nbrOfSnps <- sum(isSnp);
-  verbose && cat(verbose, "Number of SNPs: ", nbrOfSnps);
-  data <- data[isSnp,];
+  isSnp <- (!is.na(data$betaTN) & !is.na(data$muN))
+  nbrOfSnps <- sum(isSnp)
+  verbose && cat(verbose, "Number of SNPs: ", nbrOfSnps)
+  data <- data[isSnp,]
 
   # Extract that SNP signals used for calling ROH
-  betaN <- data$betaN;
-  muN <- data$muN;
-  csN <- data$csN;  # Genotyping confidence scores, if available
+  betaN <- data$betaN
+  muN <- data$muN
+  csN <- data$csN # Genotyping confidence scores, if available
 
   # Test for ROH
-  fit <- testROH(muN=muN, csN=csN, betaN=betaN, ..., verbose=less(verbose, 10));
+  fit <- testROH(muN=muN, csN=csN, betaN=betaN, ..., verbose=less(verbose, 10))
 
   # Get the ROH call (TRUE, FALSE, or NA)
-  call <- fit;
+  call <- fit
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  call;
+  call
 }, private=TRUE)
 
 

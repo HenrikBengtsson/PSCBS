@@ -35,65 +35,65 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'C':
-  C <- Arguments$getNumerics(C);
-  nbrOfLoci <- length(C);
+  C <- Arguments$getNumerics(C)
+  nbrOfLoci <- length(C)
 
   # Argument 'isAI':
-  length2 <- rep(nbrOfLoci, times=2);
-  isAI <- Arguments$getLogicals(isAI, length=length2, disallow=NULL);
+  length2 <- rep(nbrOfLoci, times=2)
+  isAI <- Arguments$getLogicals(isAI, length=length2, disallow=NULL)
 
   # Argument 'weights':
   if (!is.null(weights)) {
-    weights <- Arguments$getNumerics(weights, range=c(0, Inf), length=length2);
+    weights <- Arguments$getNumerics(weights, range=c(0, Inf), length=length2)
   }
 
   # Argument 'minDensity':
-  minDensity <- Arguments$getDouble(minDensity);
+  minDensity <- Arguments$getDouble(minDensity)
 
   # Argument 'flavor':
-  flavor <- match.arg(flavor);
+  flavor <- match.arg(flavor)
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
 
-  verbose && enter(verbose, "Identifying segments that are copy neutral states");
+  verbose && enter(verbose, "Identifying segments that are copy neutral states")
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify segments in allelic balance
-  isAB <- !isAI;
+  isAB <- !isAI
 
   # Identify segments that cannot be called
-  isNA <- (is.na(isAB) | is.na(C));
+  isNA <- (is.na(isAB) | is.na(C))
 
   # Only segments in allelic balance can be considered to be neutral
-  isNeutral <- isAB;
+  isNeutral <- isAB
 
   # Extracting segments in allelic balance
-  idxs <- which(isAB);
-  n <- length(idxs);
-  verbose && cat(verbose, "Number of segments in allelic balance: ", n);
+  idxs <- which(isAB)
+  n <- length(idxs)
+  verbose && cat(verbose, "Number of segments in allelic balance: ", n)
 
   # Special cases?
   if (n == 0) {
     # No segments are in allelic balance
-    verbose && exit(verbose);
-    return(isNeutral);
+    verbose && exit(verbose)
+    return(isNeutral)
   } else if (n == 1) {
     # Only one segment is in allelic balance.  The best we can do
     # is to call that segment neutral.
-    verbose && exit(verbose);
-    return(isNeutral);
+    verbose && exit(verbose)
+    return(isNeutral)
   } else if (n < 5) {
     # What to do when the number of segments is really low? /HB 2010-09-09
-    warning("The calling of regions in a copy-neutral state is uncertain, because there are less than five (5) regions in allelic balance: ", n);
+    warning("The calling of regions in a copy-neutral state is uncertain, because there are less than five (5) regions in allelic balance: ", n)
   }
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -101,75 +101,75 @@ setMethodS3("findNeutralCopyNumberState", "default", function(C, isAI, weights=N
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Subset and standardize weights
   if (!is.null(weights)) {
-    weights <- weights[idxs];
-    weights <- weights / sum(weights);
+    weights <- weights[idxs]
+    weights <- weights / sum(weights)
   }
-  y <- C[idxs];
-  idxs <- NULL; # Not needed anymore
+  y <- C[idxs]
+  idxs <- NULL # Not needed anymore
 
   if (verbose) {
-    cat(verbose, "Data points:");
-    df <- data.frame(C=y, weights=weights);
-    print(verbose, head(df));
-    str(verbose, df);
-    df <- NULL; # Not needed anymore
+    cat(verbose, "Data points:")
+    df <- data.frame(C=y, weights=weights)
+    print(verbose, head(df))
+    str(verbose, df)
+    df <- NULL # Not needed anymore
   }
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Estimate the empirical density
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  fit <- findPeaksAndValleys(y, weights=weights, ...);
-  verbose && cat(verbose, "Fit:");
+  fit <- findPeaksAndValleys(y, weights=weights, ...)
+  verbose && cat(verbose, "Fit:")
 
-  verbose && cat(verbose, "Fit filtered by 'minDensity':");
-  ok <- (fit[,"density"] > minDensity);
-  verbose && print(verbose, fit[ok,]);
+  verbose && cat(verbose, "Fit filtered by 'minDensity':")
+  ok <- (fit[,"density"] > minDensity)
+  verbose && print(verbose, fit[ok,])
 
   # Look for peaks with enough density
-  isPeak <- (fit[,"type"] == "peak") & ok;
-  idxs <- which(isPeak);
+  isPeak <- (fit[,"type"] == "peak") & ok
+  idxs <- which(isPeak)
 
   # Sanity check
-  stopifnot(length(idxs) >= 1);
+  .stop_if_not(length(idxs) >= 1)
 
   # Extract the first peak
   if (flavor == "firstPeak") {
-    idx <- idxs[1];
+    idx <- idxs[1]
   } else if (flavor == "maxPeak") {
-    idx <- idxs[which.max(fit[idxs,"density"])];
+    idx <- idxs[which.max(fit[idxs,"density"])]
   }
 
-  neutralC <- fit[idx,"x"];
+  neutralC <- fit[idx,"x"]
 
-  verbose && cat(verbose, "Neutral copy number:");
-  verbose && cat(verbose, "Mode at: ", neutralC);
-  verbose && cat(verbose, "Mode ampliture: ", fit[idx,"density"]);
+  verbose && cat(verbose, "Neutral copy number:")
+  verbose && cat(verbose, "Mode at: ", neutralC)
+  verbose && cat(verbose, "Mode ampliture: ", fit[idx,"density"])
 
   # If there is more than one peak, we should only call segments that
   # are not part of that other peak.
   if (idx+1 <= nrow(fit)) {
-    nextValleyC <- fit[idx+1, "x"];
+    nextValleyC <- fit[idx+1, "x"]
   } else {
-    nextValleyC <- Inf;
+    nextValleyC <- Inf
   }
-  verbose && cat(verbose, "Upper range at: ", nextValleyC);
+  verbose && cat(verbose, "Upper range at: ", nextValleyC)
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Call copy-neutral regions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  isNeutral <- isNeutral & (C < nextValleyC);
+  isNeutral <- isNeutral & (C < nextValleyC)
 
   # Segments with missing values cannot be called
-  isNeutral[isNA] <- NA;
+  isNeutral[isNA] <- NA
 
-  verbose && cat(verbose, "Neutral region calls:");
-  verbose && summary(verbose, isNeutral);
+  verbose && cat(verbose, "Neutral region calls:")
+  verbose && summary(verbose, isNeutral)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  isNeutral;
+  isNeutral
 }) # findNeutralCopyNumberState()
 
 

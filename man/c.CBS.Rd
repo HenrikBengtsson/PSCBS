@@ -7,30 +7,29 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\name{append.CBS}
-\alias{append.CBS}
-\alias{CBS.append}
-\alias{append,CBS-method}
+\name{c.CBS}
+\alias{c.CBS}
+\alias{CBS.c}
+\alias{c,CBS-method}
+\alias{c.PSCBS}
 
-\title{Appends one segmentation result to another}
+\title{Concatenates segmentation results}
 
 \description{
-  Appends one segmentation result to another.
+  Concatenates segmentation results.
 }
 
 \usage{
-\method{append}{CBS}(x, other, addSplit=TRUE, ...)
+\method{c}{CBS}(..., addSplit=TRUE)
 }
 
 \arguments{
- \item{x, other}{The two \code{\link{CBS}} objects to be combined.}
- \item{other}{A \code{\link{PSCBS}} object.}
+ \item{\dots}{One or more \code{\link{AbstractCBS}} objects to be combined.}
  \item{addSplit}{If \code{\link[base:logical]{TRUE}}, a "divider" is added between chromosomes.}
- \item{...}{Not used.}
 }
 
 \value{
-  Returns a \code{\link{CBS}} object of the same class as argument \code{x}.
+  Returns an \code{\link{AbstractCBS}} object of the same class in \dots.
 }
 
 \author{Henrik Bengtsson}

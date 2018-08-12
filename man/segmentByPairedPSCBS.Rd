@@ -27,8 +27,8 @@
   rho=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0,
   ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"),
   flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho),
-  preserveScale=getOption("PSCBS/preserveScale", FALSE), joinSegments=TRUE,
-  knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE)
+  joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE,
+  preserveScale=FALSE)
 }
 
 \arguments{
@@ -78,8 +78,6 @@
     calling algorithm to be used.}
   \item{tbn}{If \code{\link[base:logical]{TRUE}}, \code{betaT} is normalized before segmentation
     using the TumorBoost method [2], otherwise not.}
-  \item{preserveScale}{Passed to \code{\link[aroma.light]{normalizeTumorBoost}},
-    which is only called if \code{tbn} is \code{\link[base:logical]{TRUE}}.}
   \item{joinSegments}{If \code{\link[base:logical]{TRUE}}, there are no gaps between neighboring
     segments.
     If \code{\link[base:logical]{FALSE}}, the boundaries of a segment are defined by the support
@@ -98,6 +96,8 @@
     set before calling the segmentation method.  The random seed is
     set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
+  \item{preserveScale}{\emph{Deprecated and ignored
+                       will give a warning if specified.}}
 }
 
 \value{

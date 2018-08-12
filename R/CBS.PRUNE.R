@@ -44,187 +44,174 @@
 #*/###########################################################################
 setMethodS3("pruneBySdUndo", "CBS", function(fit, rho=3, sigma="DNAcopy", ..., verbose=FALSE) {
   # Local copies of DNAcopy functions
-  DNAcopy_changepoints.sdundo <- .use("changepoints.sdundo", package="DNAcopy");
+  DNAcopy_changepoints.sdundo <- .use("changepoints.sdundo", package="DNAcopy")
 
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'rho':
-  rho <- Arguments$getDouble(rho, range=c(0,Inf));
+  rho <- Arguments$getDouble(rho, range=c(0,Inf))
 
   # Argument 'sigma':
   if (is.character(sigma)) {
-    sigma <- estimateStandardDeviation(fit, method=sigma, ...);
+    sigma <- estimateStandardDeviation(fit, method=sigma, ...)
   }
-  sigma <- Arguments$getDouble(sigma, range=c(0,Inf), disallow=c("NA", "NaN", "Inf"));
+  sigma <- Arguments$getDouble(sigma, range=c(0,Inf), disallow=c("NA", "NaN", "Inf"))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
-  verbose && enter(verbose, "Pruning segments by standard deviation");
+  verbose && enter(verbose, "Pruning segments by standard deviation")
 
   # Check if locus weights are available
-  data <- getLocusData(fit);
-  hasWeights <- !is.null(data$w);
+  data <- getLocusData(fit)
+  hasWeights <- !is.null(data$w)
   # Not needed anymore
-  data <- NULL;
+  data <- NULL
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Prune chromosome by chromosome
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  chromosomes <- getChromosomes(fit);
-  nbrOfChromosomes <- length(chromosomes);
+  chromosomes <- getChromosomes(fit)
+  nbrOfChromosomes <- length(chromosomes)
 
-  fitList <- vector("list", length=nbrOfChromosomes);
+  fitList <- vector("list", length=nbrOfChromosomes)
   for (cc in seq_len(nbrOfChromosomes)) {
-    chr <- chromosomes[cc];
+    chr <- chromosomes[cc]
     verbose && enter(verbose, sprintf("Chromosome #%d ('Chr%s') of %d",
-                                            cc, chr, length(chromosomes)));
+                                            cc, chr, length(chromosomes)))
 
     # Extract this chromosome
-    fitT <- extractChromosome(fit, chromosome=chr);
+    fitT <- extractChromosome(fit, chromosome=chr)
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Get segmentation data
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    data <- getLocusData(fitT);
-    segs <- getSegments(fitT);
-    segRows <- fitT$segRows;
-    nbrOfSegs <- nrow(segRows);
-    verbose && cat(verbose, "Number of segments (before): ", nbrOfSegs);
+    data <- getLocusData(fitT)
+    segs <- getSegments(fitT)
+    segRows <- fitT$segRows
+    nbrOfSegs <- nrow(segRows)
+    verbose && cat(verbose, "Number of segments (before): ", nbrOfSegs)
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Drop missing values
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    y <- data$y;
+    y <- data$y
 
     # Label data points by their segment index
-    segId <- rep(NA_integer_, times=max(segRows[,2], na.rm=TRUE));
+    segId <- rep(NA_integer_, times=max(segRows[,2], na.rm=TRUE))
     for (rr in 1:nbrOfSegs) {
-      segRow <- unlist(segRows[rr,], use.names=FALSE);
-      idxs <- segRow[1]:segRow[2];
-      segId[idxs] <- rr;
+      segRow <- unlist(segRows[rr,], use.names=FALSE)
+      idxs <- segRow[1]:segRow[2]
+      segId[idxs] <- rr
     }
 
     # Drop missing value
-    keep <- !is.na(y);
+    keep <- !is.na(y)
     if (hasWeights) {
-      w <- data$w;
-      keep <- keep & !is.na(w);
+      w <- data$w
+      keep <- keep & !is.na(w)
     }
-    units <- which(keep);
-    y <- y[units];
-    segId <- segId[units];
+    units <- which(keep)
+    y <- y[units]
+    segId <- segId[units]
     if (hasWeights) {
-      w <- w[units];
+      w <- w[units]
     }
 
     # Update 'segRows' accordingly
     for (rr in 1:nbrOfSegs) {
-      startStop <- range(which(segId == rr));
-      segRows[rr,1] <- startStop[1];
-      segRows[rr,2] <- startStop[2];
+      startStop <- range(which(segId == rr))
+      segRows[rr,1] <- startStop[1]
+      segRows[rr,2] <- startStop[2]
     }
     # Not needed anymore
-    segId <- startStop <- NULL;
+    segId <- startStop <- NULL
 
     # Sanity check
-    stopifnot(max(segRows[,2]) <= length(y));
+    .stop_if_not(max(segRows[,2]) <= length(y))
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Prune change points
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    segLengths <- segRows[,2] - segRows[,1] + 1L;
+    segLengths <- segRows[,2] - segRows[,1] + 1L
     segLengthsP <- DNAcopy_changepoints.sdundo(genomdat=y,
-                         lseg=segLengths, trimmed.SD=sigma, change.SD=rho);
-    segLengthsP <- as.integer(segLengthsP);
-    nbrOfSegsP <- length(segLengthsP);
-    verbose && cat(verbose, "Number of segments (after): ", nbrOfSegsP);
+                         lseg=segLengths, trimmed.SD=sigma, change.SD=rho)
+    segLengthsP <- as.integer(segLengthsP)
+    nbrOfSegsP <- length(segLengthsP)
+    verbose && cat(verbose, "Number of segments (after): ", nbrOfSegsP)
 
-    nbrOfPrunedSegs <- nbrOfSegs-nbrOfSegsP;
-    verbose && cat(verbose, "Number of segments dropped: ", nbrOfPrunedSegs);
+    nbrOfPrunedSegs <- nbrOfSegs-nbrOfSegsP
+    verbose && cat(verbose, "Number of segments dropped: ", nbrOfPrunedSegs)
 
     # No segments pruned?
     if (nbrOfPrunedSegs == 0) {
       # Sanity check
-      stopifnot(identical(segLengthsP, segLengths));
+      .stop_if_not(identical(segLengthsP, segLengths))
 
-      fitList[[cc]] <- fitT;
-      verbose && cat(verbose, "Nothing to changed. Skipping.");
-#      verbose && exit(verbose);
-#      next;
+      fitList[[cc]] <- fitT
+      verbose && cat(verbose, "Nothing to changed. Skipping.")
+#      verbose && exit(verbose)
+#      next
     }
 
     # Setup new 'segRows'
-    endRow <- cumsum(segLengthsP);
-    n <- length(endRow);
-    segRowsP <- data.frame(startRow=c(1L, endRow[-n]+1L), endRow=endRow);
+    endRow <- cumsum(segLengthsP)
+    n <- length(endRow)
+    segRowsP <- data.frame(startRow=c(1L, endRow[-n]+1L), endRow=endRow)
 
 
     # Expand to units with also missing values
-    segRowsP[,1] <- units[segRowsP[,1]];
-    segRowsP[,2] <- units[segRowsP[,2]];
+    segRowsP[,1] <- units[segRowsP[,1]]
+    segRowsP[,2] <- units[segRowsP[,2]]
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # Create stub for a segment table
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    idxs <- seq_len(nbrOfSegsP);
-    segsP <- segs[idxs,];
+    idxs <- seq_len(nbrOfSegsP)
+    segsP <- segs[idxs,]
 
     # Sanity checks
     if (nbrOfPrunedSegs == 0) {
-      segRows <- fitT$segRows;
-      stopifnot(all.equal(segRowsP, segRows, check.attributes=FALSE));
-      stopifnot(all.equal(segsP, segs, check.attributes=FALSE));
+      segRows <- fitT$segRows
+      .stop_if_not(all.equal(segRowsP, segRows, check.attributes=FALSE))
+      .stop_if_not(all.equal(segsP, segs, check.attributes=FALSE))
     }
 
-    fitT$output <- segsP;
-    fitT$segRows <- segRowsP;
+    fitT$output <- segsP
+    fitT$segRows <- segRowsP
 
-    fitList[[cc]] <- fitT;
+    fitList[[cc]] <- fitT
 
-    verbose && exit(verbose);
+    verbose && exit(verbose)
   } # for (cc ...)
 
-  fitP <- Reduce(append, fitList);
+  ## formerly Reduce() w/ append(..., addSplit = TRUE)
+  fitP <- do.call(c, args = c(fitList, addSplit = TRUE))
 
-  verbose && enter(verbose, "Updating segment means and boundaries");
-  fitP <- updateBoundaries(fitP, verbose=less(verbose, 50));
-  fitP <- updateMeans(fitP, verbose=less(verbose, 50));
-  verbose && exit(verbose);
+  verbose && enter(verbose, "Updating segment means and boundaries")
+  fitP <- updateBoundaries(fitP, verbose=less(verbose, 50))
+  fitP <- updateMeans(fitP, verbose=less(verbose, 50))
+  verbose && exit(verbose)
 
-  nbrOfSegs <- nbrOfSegments(fit);
-  nbrOfSegsP <- nbrOfSegments(fitP);
-  nbrOfPrunedSegs <- nbrOfSegs-nbrOfSegsP;
-  verbose && cat(verbose, "Number of segments (before): ", nbrOfSegs);
-  verbose && cat(verbose, "Number of segments (after): ", nbrOfSegsP);
-  verbose && cat(verbose, "Number of segments dropped: ", nbrOfPrunedSegs);
+  nbrOfSegs <- nbrOfSegments(fit)
+  nbrOfSegsP <- nbrOfSegments(fitP)
+  nbrOfPrunedSegs <- nbrOfSegs-nbrOfSegsP
+  verbose && cat(verbose, "Number of segments (before): ", nbrOfSegs)
+  verbose && cat(verbose, "Number of segments (after): ", nbrOfSegsP)
+  verbose && cat(verbose, "Number of segments dropped: ", nbrOfPrunedSegs)
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  fitP;
+  fitP
 }) # pruneBySdUndo()
 
 
 setMethodS3("seqOfSegmentsByDP", "CBS", function(fit, by=c("y"), ...) {
-  NextMethod("seqOfSegmentsByDP", by=by);
+  NextMethod("seqOfSegmentsByDP", by=by)
 })
-
-
-############################################################################
-# HISTORY:
-# 2012-09-13
-# o Added seqOfSegmentsByDP() for CBS.
-# 2011-12-06
-# o BUG FIX: pruneBySdUndo() for CBS did not work with more than one array.
-# 2011-11-16
-# o Added Rdoc comments.
-# 2011-11-15
-# o Added pruneBySdUndo() for CBS.
-# o Created.
-############################################################################

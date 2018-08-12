@@ -40,41 +40,41 @@ setMethodS3("testROH", "numeric", function(muN, csN=NULL, betaN=NULL, minNbrOfSn
   # Validate arguments
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'muN':
-  muN <- Arguments$getDoubles(muN, range=c(0,1));
-  nbrOfSnps <- length(muN);
-  length2 <- rep(nbrOfSnps, times=2);
+  muN <- Arguments$getDoubles(muN, range=c(0,1))
+  nbrOfSnps <- length(muN)
+  length2 <- rep(nbrOfSnps, times=2)
 
   # Argument 'csN' & 'betaN':
   if (!is.null(csN)) {
-    csN <- Arguments$getDoubles(csN, range=c(0,1), length=length2);
+    csN <- Arguments$getDoubles(csN, range=c(0,1), length=length2)
   } else {
     if (!is.null(betaN)) {
-      betaN <- Arguments$getDoubles(betaN, length=length2);
+      betaN <- Arguments$getDoubles(betaN, length=length2)
     }
   }
 
   # Argument 'minNbrOfSnps':
-  minNbrOfSnps <- Arguments$getInteger(minNbrOfSnps, range=c(1,Inf));
+  minNbrOfSnps <- Arguments$getInteger(minNbrOfSnps, range=c(1,Inf))
 
   # Argument 'verbose':
-  verbose <- Arguments$getVerbose(verbose);
+  verbose <- Arguments$getVerbose(verbose)
   if (verbose) {
-    pushState(verbose);
-    on.exit(popState(verbose));
+    pushState(verbose)
+    on.exit(popState(verbose))
   }
 
 
-  verbose && enter(verbose, "Testing for ROH");
+  verbose && enter(verbose, "Testing for ROH")
 
   # Default ROH call
-  call <- NA;
+  call <- NA
 
-  verbose && cat(verbose, "Number of SNPs: ", nbrOfSnps);
+  verbose && cat(verbose, "Number of SNPs: ", nbrOfSnps)
 
   # Nothing todo?
   if (nbrOfSnps < minNbrOfSnps) {
-    verbose && exit(verbose);
-    return(call);
+    verbose && exit(verbose)
+    return(call)
   }
 
 
@@ -83,22 +83,22 @@ setMethodS3("testROH", "numeric", function(muN, csN=NULL, betaN=NULL, minNbrOfSn
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   if (is.null(csN)) {
     if (!is.null(betaN)) {
-      verbose && enter(verbose, "Calculating confidence scores");
+      verbose && enter(verbose, "Calculating confidence scores")
       # Assuming naive genotyping a'la aroma.light::callNaiveGenotypes()
       # was used to call genotypes 'muN' from 'betaN'.
 
       # AD HOC: We also have to assume that the thresholds were 1/3 and 2/3.
-      a <- 1/3;  # was fit$x[1];
-      b <- 2/3;  # was fit$x[2];
+      a <- 1/3 # was fit$x[1]
+      b <- 2/3 # was fit$x[2]
 
       # AD HOC: We have to make some assumption about which SNPs are diploid.
       # Assume all for now
-      isDiploid <- rep(TRUE, times=nbrOfSnps);
+      isDiploid <- rep(TRUE, times=nbrOfSnps)
 
       # KNOWN ISSUE: Scores for homozygotes are in [0,1/3], whereas
       # heterzygotes are in [0,1/6]. /PN 2011-11-11
-      csN[isDiploid] <- rowMins(abs(cbind(betaN[isDiploid]-a, betaN[isDiploid]-b)));
-      verbose && exit(verbose);
+      csN[isDiploid] <- rowMins(abs(cbind(betaN[isDiploid]-a, betaN[isDiploid]-b)))
+      verbose && exit(verbose)
     }
   }
 
@@ -107,38 +107,38 @@ setMethodS3("testROH", "numeric", function(muN, csN=NULL, betaN=NULL, minNbrOfSn
   # Call ROH
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Identify heterozygous SNPs
-  isHet <- (muN == 1/2);
-  verbose && print(verbose, summary(isHet));
+  isHet <- (muN == 1/2)
+  verbose && print(verbose, summary(isHet))
 
   # With or without genotype confidence scores?
   if (!is.null(csN)) {
     # 0-1 weights (just to make sure)
     # Weights summing to one
-    w <- csN / sum(csN, na.rm=TRUE);
+    w <- csN / sum(csN, na.rm=TRUE)
 
-    wnHets <- sum(isHet*w, na.rm=TRUE);
-    wnSnps <- sum(w, na.rm=TRUE);  # == 1 /HB
+    wnHets <- sum(isHet*w, na.rm=TRUE)
+    wnSnps <- sum(w, na.rm=TRUE) # == 1 /HB
 
     # Sanity check
-    stopifnot(isZero(wnSnps - 1.0, eps=sqrt(.Machine$double.eps)));
+    .stop_if_not(isZero(wnSnps - 1.0, eps=sqrt(.Machine$double.eps)))
   } else {
-    wnHets <- sum(isHet, na.rm=TRUE);
-    wnSnps <- 1;
+    wnHets <- sum(isHet, na.rm=TRUE)
+    wnSnps <- 1
   }
 
-  propHets <- wnHets/wnSnps;
-  verbose && print(verbose, propHets);
+  propHets <- wnHets/wnSnps
+  verbose && print(verbose, propHets)
 
-  call <- (propHets < delta);
-  verbose && print(verbose, call);
+  call <- (propHets < delta)
+  verbose && print(verbose, call)
 
   # Record parameter settings
-  attr(call, "minNbrOfSnps") <- minNbrOfSnps;
-  attr(call, "delta") <- delta;
+  attr(call, "minNbrOfSnps") <- minNbrOfSnps
+  attr(call, "delta") <- delta
 
-  verbose && exit(verbose);
+  verbose && exit(verbose)
 
-  call;
+  call
 }) # testROH()
 
 
