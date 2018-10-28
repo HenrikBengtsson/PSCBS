@@ -1201,11 +1201,12 @@ setMethodS3("segmentByPairedPSCBS", "data.frame", function(CT, ...) {
   # To please R CMD check
   data <- CT
 
-  segmentByPairedPSCBS(CT=data$CT, thetaT=data$thetaT, thetaN=data$thetaN,
-                       betaT=data$betaT, betaN=data$betaN,
-                       w=data$w,
-                       muN=data$muN, rho=data$rho,
-                       chromosome=data$chromosome, x=data$x, ...)
+  segmentByPairedPSCBS(CT=data[["CT"]], 
+                       thetaT=data[["thetaT"]], thetaN=data[["thetaN"]],
+                       betaT=data[["betaT"]], betaN=data[["betaN"]],
+                       w=data[["w"]],
+                       muN=data[["muN"]], rho=data[["rho"]],
+                       chromosome=data[["chromosome"]], x=data[["x"]], ...)
 })
 
 
