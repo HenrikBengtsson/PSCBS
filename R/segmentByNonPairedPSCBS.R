@@ -260,7 +260,7 @@ setMethodS3("segmentByNonPairedPSCBS", "data.frame", function(CT, ...) {
 
 
   segmentByNonPairedPSCBS(CT=data$CT, betaT=data$betaT,
-                          chromosome=data$chromosome, x=data$x, ...)
+                          chromosome=data$chromosome, x=data$x, w=data$w, ...)
 })
 
 
