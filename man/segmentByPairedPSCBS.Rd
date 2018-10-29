@@ -24,8 +24,8 @@
 
 \usage{
 \method{segmentByPairedPSCBS}{default}(CT, thetaT=NULL, thetaN=NULL, betaT=NULL, betaN=NULL, muN=NULL,
-  rho=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0,
-  ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"),
+  rho=NULL, chromosome=0, x=NULL, w=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0,
+  undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"),
   flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho),
   joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE,
   preserveScale=FALSE)
@@ -63,6 +63,7 @@
        This argument is also used for annotation purposes.}
   \item{x}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of J genomic locations.
            If \code{\link[base]{NULL}}, index locations \code{1:J} are used.}
+  \item{w}{Optional \code{\link[base]{numeric}} \code{\link[base]{vector}} in [0,1] of J weights.}
   \item{alphaTCN, alphaDH}{The significance levels for segmenting total
        copy numbers (TCNs) and decrease-in-heterozygosity signals (DHs),
        respectively.}

@@ -47,6 +47,7 @@
 #        This argument is also used for annotation purposes.}
 #   \item{x}{Optional @numeric @vector of J genomic locations.
 #            If @NULL, index locations \code{1:J} are used.}
+#   \item{w}{Optional @numeric @vector in [0,1] of J weights.}
 #   \item{alphaTCN, alphaDH}{The significance levels for segmenting total
 #        copy numbers (TCNs) and decrease-in-heterozygosity signals (DHs),
 #        respectively.}
