@@ -19,28 +19,29 @@ matrix:
       r: oldrel
       r_packages:
         - survival
+      bioc_packages:
+        - BiocInstaller
     - os: linux
       r: release
       r_packages:
         - survival
-      r_github_packages:
-      - jimhester/covr
-      after_success:
-      - Rscript -e 'covr::codecov(quiet=FALSE)'
-      env: NB='w/ covr' ## Just a label
     - os: linux
       r: devel
     - os: osx
       r: oldrel
-      r_github_packages:
-      - HenrikBengtsson/R.devices
+      bioc_packages:
+        - BiocInstaller
     - os: osx
       r: release
-      r_github_packages:
-      - HenrikBengtsson/R.devices
-
-bioc_packages:
-  - BiocInstaller
+    - os: linux
+      r: release
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vi
+gnettes
+      r_packages:
+        - covr
+      after_success:
+        - Rscript -e 'covr::codecov(quiet=FALSE)'
+      env: NB='w/ covr' ## Just a label
 
 notifications:
   email:

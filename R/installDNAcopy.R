@@ -45,11 +45,15 @@ setMethodS3("installDNAcopy", "default", function(..., force=FALSE) {
   }
 
   # If not, install it...
-  # To please R CMD check
-  biocLite <- NULL; rm(list="biocLite")
-  source("http://www.bioconductor.org/biocLite.R")
-  biocLite(pkgName, ...)
-
+  if (getRversion() >= "3.5.0") {
+    BiocManager::install(pkgName, ...)
+  } else {
+    # To please R CMD check
+    biocLite <- NULL; rm(list="biocLite")
+    source("http://www.bioconductor.org/biocLite.R")
+    biocLite(pkgName, ...)
+  }
+  
   # ...and load it
   library(pkgName, character.only=TRUE)
 
