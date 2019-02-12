@@ -35,8 +35,7 @@ matrix:
       r: release
     - os: linux
       r: release
-      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vi
-gnettes
+      r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       r_packages:
         - covr
       after_success:
