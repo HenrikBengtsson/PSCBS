@@ -18,8 +18,7 @@ Suggests:
   Hmisc (>= 4.2-0),
   R.rsp (>= 0.43.1),
   R.devices (>= 2.16.0),
-  ggplot2 (>= 3.1.0),
-  BiocManager
+  ggplot2 (>= 3.1.0)
 SuggestsNote:
   BioC (>= 3.1),
   Recommended:

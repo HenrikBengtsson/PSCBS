@@ -52,7 +52,7 @@ importFrom("stats",
 importFrom("utils",
            "capture.output", "file_test", "getFromNamespace",
            "head", "packageVersion", "str", "tail", "write.table",
-           "packageDescription")
+           "packageDescription", "install.packages")
 
 importFrom("aroma.light",
            "callNaiveGenotypes", "findPeaksAndValleys", "normalizeTumorBoost")
