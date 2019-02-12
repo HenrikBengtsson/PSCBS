@@ -192,7 +192,7 @@ Specifying known segments is optional.
 We are now ready to segment the locus-level PSCN signals.  This is done by\footnote{We fix the random seed in order for the results of this vignette to be numerically reproducible.}:
 \begin{verbatim}
 <%=withCapture({
-fit <- segmentByPairedPSCBS(data, knownSegments=knownSegments, preserveScale=FALSE, seed=0xBEEF, verbose=-10)
+fit <- segmentByPairedPSCBS(data, knownSegments=knownSegments, seed=0xBEEF, verbose=-10)
 })%>
 \end{verbatim}
 Note that this may take several minutes when applied to whole-genome data.

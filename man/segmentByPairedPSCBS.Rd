@@ -96,8 +96,7 @@
     set before calling the segmentation method.  The random seed is
     set to its original state when exiting.  If \code{\link[base]{NULL}}, it is not set.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
-  \item{preserveScale}{\emph{Deprecated and ignored
-                       will give a warning if specified.}}
+  \item{preserveScale}{\emph{Defunct - gives an error is specified.}}
 }
 
 \value{

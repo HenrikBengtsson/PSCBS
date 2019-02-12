@@ -80,8 +80,7 @@
 #     set before calling the segmentation method.  The random seed is
 #     set to its original state when exiting.  If @NULL, it is not set.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
-#   \item{preserveScale}{\emph{Deprecated and ignored
-#                        will give a warning if specified.}}
+#   \item{preserveScale}{\emph{Defunct - gives an error is specified.}}
 # }
 #
 # \value{
@@ -312,7 +311,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   # Argument 'preserveScale' is deprecated
   if (!missing(preserveScale)) {
-    .Deprecated(msg = "Argument 'preserveScale' for segmentByPairedPSCBS() is deprecated and ignored; as of PSCBS 0.64.0 (Mar 2018) it is effectively fixed to FALSE, which has been the default since PSCBS 0.50.0 (Oct 2015). To avoid this warning, do not specify 'preserveScale' when calling segmentByPairedPSCBS().")
+    .Defunct(msg = "Argument 'preserveScale' for segmentByPairedPSCBS() is defunct; as of PSCBS 0.64.0 (Mar 2018) it is effectively fixed to FALSE, which has been the default since PSCBS 0.50.0 (Oct 2015). To avoid this error, do not specify 'preserveScale' when calling segmentByPairedPSCBS().")
   }
   
   verbose && enter(verbose, "Segmenting paired tumor-normal signals using Paired PSCBS")
