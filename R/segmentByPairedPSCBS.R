@@ -1000,8 +1000,8 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       # Sanity check
       .stop_if_not(nrow(tcnSegmentsKK) == nrow(dhSegments))
       .stop_if_not(nrow(tcnSegRowsKK) == nrow(dhSegments))
-      .stop_if_not(is.na(tcnSegRowsKK[,1]) || is.na(dhSegRowsKK[,1]) || (tcnSegRowsKK[,1] <= dhSegRowsKK[,1]))
-      .stop_if_not(is.na(tcnSegRowsKK[,2]) || is.na(dhSegRowsKK[,2]) || (dhSegRowsKK[,2] <= tcnSegRowsKK[,2]))
+      .stop_if_not(all(is.na(tcnSegRowsKK[,1]) | is.na(dhSegRowsKK[,1]) | (tcnSegRowsKK[,1] <= dhSegRowsKK[,1])))
+      .stop_if_not(all(is.na(tcnSegRowsKK[,2]) | is.na(dhSegRowsKK[,2]) | (dhSegRowsKK[,2] <= tcnSegRowsKK[,2])))
       verbose && cat(verbose, "TCN segmentation rows:")
       verbose && print(verbose, tcnSegRowsKK)
       .stop_if_not(all(tcnSegRowsKK[,1] == tcnSegRowsKK[1,1], na.rm=TRUE))

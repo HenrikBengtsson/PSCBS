@@ -1,7 +1,14 @@
 Package: PSCBS
 ==============
 
-Version: 0.64.0-9000 [2019-02-11]
+Version: 0.64.0-9000 [2019-05-04]
+
+BUG FIXES:
+
+ * A sanity check in segmentByPairedPSCBS() could produce an error on
+   "'length(x) = 5 > 1' in coercion to 'logical(1)'" when running with
+   _R_CHECK_LENGTH_1_LOGIC2_=true. This bug did *not( affect the results
+   of PSCBS.
 
 DEPRECATED AND DEFUNCT:
 
