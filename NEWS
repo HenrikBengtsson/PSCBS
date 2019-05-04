@@ -10,6 +10,11 @@ BUG FIXES:
    _R_CHECK_LENGTH_1_LOGIC2_=true. This bug did *not( affect the results
    of PSCBS.
 
+ * Report templates used by report() would produce error "Error in unit(x, 
+   default.units) : 'x' and 'units' must have length > 0" if there are too
+   few loci to plot.  This would typically happen when reporting on human
+   chromosome 25 results.
+
 DEPRECATED AND DEFUNCT:
 
  * Argument 'preserveScale' of segmentByPairedPSCBS() is now defunct.

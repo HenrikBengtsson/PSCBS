@@ -37,7 +37,7 @@
 |:-----------------------------------|:-------|:-----|:-------|:----|
 |[aroma.cn](problems.md#aromacn)     |1.6.1   |      |        |1    |
 |[aroma.core](problems.md#aromacore) |3.1.3   |      |        |2    |
-|[EstMix](problems.md#estmix)        |1.0.1   |1     |        |1    |
+|[EstMix](problems.md#estmix)        |1.0.1   |-1    |        |1    |
 |[jointseg](problems.md#jointseg)    |1.0.2   |      |        |1    |
 |[PureCN](problems.md#purecn)        |1.14.0  |      |        |2    |
 

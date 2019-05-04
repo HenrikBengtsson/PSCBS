@@ -65,7 +65,7 @@ Run `revdep_details(,"EstMix")` for more info
 
 </details>
 
-## In both
+## Newly fixed
 
 *   checking examples ... ERROR
     ```
@@ -92,6 +92,8 @@ Run `revdep_details(,"EstMix")` for more info
     Calls: <Anonymous> -> segmentByPairedPSCBS.default -> .stop_if_not
     Execution halted
     ```
+
+## In both
 
 *   checking whether package ‘EstMix’ can be installed ... NOTE
     ```

@@ -290,6 +290,8 @@ chrsTags <- if (nbrOfChromosomes == 1) {
   sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
 }
 %>
+
+<% if (nrow(data) >= 2L) { %>
 \begin{figure}[htbp]
  \begin{center}
 <%
@@ -344,6 +346,9 @@ chrsTags <- if (nbrOfChromosomes == 1) {
  }
  \label{fig:SignalDensity}
 \end{figure}
+<% } else { %>
+NOTE: No density plots produced for <%= chromosomesH %> because there are fewer than two loci.
+<% } ## if (nrow(data) >= 2L) %>
 <% } # signalDensities() %>
 
 <%=signalDensities(fit)%>
