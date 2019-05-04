@@ -5,7 +5,7 @@
 # * Travis CI: https://docs.travis-ci.com/user/languages/r
 # * covr: https://github.com/jimhester/covr
 #
-# Validate your .travis.yml file at http://lint.travis-ci.org/
+# YAML validated using http://www.yamllint.com/
 #----------------------------------------------------------------
 language: r
 sudo: false
@@ -13,38 +13,36 @@ cache: packages
 warnings_are_errors: false
 r_check_args: --as-cran
 
+r_packages:
+  - survival
+  - BiocManager
+
 matrix:
   include:
     - os: linux
       r: oldrel
-      r_packages:
-        - survival
-      bioc_packages:
-        - BiocInstaller
     - os: linux
       r: release
-      r_packages:
-        - survival
-        - BiocManager
     - os: linux
       r: devel
-      r_packages:
-        - survival
-        - BiocManager
+      env:
+        - R_KEEP_PKG_SOURCE=yes
+        - _R_S3_METHOD_LOOKUP_BASEENV_AFTER_GLOBALENV_=true
+        - _R_S3_METHOD_LOOKUP_USE_TOPENV_AS_DEFENV_=true
+        - _R_CHECK_CONNECTIONS_LEFT_OPEN_=true
+        - _R_CHECK_LENGTH_1_CONDITION_=true
+        - _R_CHECK_LENGTH_1_LOGIC2_=true
     - os: osx
       r: oldrel
-      bioc_packages:
-        - BiocInstaller
     - os: osx
       r: release
-      r_packages:
-        - survival
-        - BiocManager
     - os: linux
       r: release
       r_check_args: --no-build-vignettes --no-codoc --no-examples --no-tests --no-manual --ignore-vignettes
       r_packages:
         - covr
+        - survival
+        - BiocManager
       after_success:
         - Rscript -e 'covr::codecov(quiet=FALSE)'
       env: NB='w/ covr' ## Just a label
