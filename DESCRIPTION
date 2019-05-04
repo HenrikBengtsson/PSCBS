@@ -6,19 +6,19 @@ Depends:
 Imports:
   R.methodsS3 (>= 1.7.1),
   R.oo (>= 1.22.0),
-  R.utils (>= 2.7.0),
+  R.utils (>= 2.8.0),
   R.cache (>= 0.13.0),
   matrixStats (>= 0.54.0),
   aroma.light (>= 2.4.0),
   DNAcopy (>= 1.42.0),
   listenv (>= 0.7.0),
-  future (>= 1.11.1.1),
+  future (>= 1.12.0),
   parallel
 Suggests:
   Hmisc (>= 4.2-0),
   R.rsp (>= 0.43.1),
   R.devices (>= 2.16.0),
-  ggplot2 (>= 3.1.0)
+  ggplot2 (>= 3.1.1)
 SuggestsNote:
   BioC (>= 3.1),
   Recommended:
@@ -40,4 +40,3 @@ ByteCompile: TRUE
 biocViews: aCGH, CopyNumberVariants, SNP, Microarray, OneChannel, TwoChannel, Genetics
 URL: https://github.com/HenrikBengtsson/PSCBS
 BugReports: https://github.com/HenrikBengtsson/PSCBS/issues
-RoxygenNote: 6.0.1
