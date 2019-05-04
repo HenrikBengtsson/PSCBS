@@ -42,7 +42,7 @@ Run `revdep_details(,"aroma.core")` for more info
 *   checking package dependencies ... NOTE
     ```
     Packages suggested but not available for checking:
-      'sfit', 'expectile', 'HaarSeg', 'mpcbs'
+      'EBImage', 'sfit', 'expectile', 'HaarSeg', 'mpcbs'
     ```
 
 *   checking whether package ‘aroma.core’ can be installed ... NOTE
