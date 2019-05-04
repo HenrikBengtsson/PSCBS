@@ -3,6 +3,11 @@ Package: PSCBS
 
 Version: 0.64.0-9000 [2019-05-04]
 
+NEW FEATURES:
+
+ * The PDF report produced by report() for Paired PSCBS results will now
+   provide an esimate of normal contamination together with a disclaimer.
+
 BUG FIXES:
 
  * A sanity check in segmentByPairedPSCBS() could produce an error on
