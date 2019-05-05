@@ -1,6 +1,11 @@
 Package: PSCBS
 ==============
 
+Version: 0.65.0-9000 [2019-05-05]
+
+ * ...
+
+
 Version: 0.65.0 [2019-05-04]
 
 NEW FEATURES:
@@ -12,7 +17,7 @@ BUG FIXES:
 
  * A sanity check in segmentByPairedPSCBS() could produce an error on
    "'length(x) = 5 > 1' in coercion to 'logical(1)'" when running with
-   _R_CHECK_LENGTH_1_LOGIC2_=true. This bug did *not( affect the results
+   _R_CHECK_LENGTH_1_LOGIC2_=true. This bug did *not* affect the results
    of PSCBS.
 
  * Report templates used by report() would produce error "Error in unit(x, 
