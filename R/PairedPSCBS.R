@@ -138,7 +138,7 @@ setMethodS3("resegment", "PairedPSCBS", function(fit, ..., verbose=FALSE) {
 
   formals <- formals[!sapply(formals, FUN=is.language)]
   formals <- formals[!sapply(formals, FUN=is.name)]
-  drop <- c("chromosome", "x", "w", "CT", "thetaT", "thetaN", "betaT", "betaN", "muN", "rho", "...")
+  drop <- c("chromosome", "x", "w", "CT", "thetaT", "thetaN", "betaT", "betaN", "muN", "rho", "preserveScale", "...")
   keep <- !is.element(names(formals), drop)
   formals <- formals[keep]
 

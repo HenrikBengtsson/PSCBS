@@ -313,6 +313,7 @@ chrsTags <- if (nbrOfChromosomes == 1) {
   sprintf("chrs%02d-%02d", min(chromosomes), max(chromosomes));
 }
 %>
+<% if (nrow(data) >= 2L) { %>
 \begin{figure}[htbp]
  \begin{center}
 <%
@@ -378,6 +379,9 @@ chrsTags <- if (nbrOfChromosomes == 1) {
  }
  \label{fig:SignalDensity}
 \end{figure}
+<% } else { %>
+NOTE: No density plots produced for <%= chromosomesH %> because there are fewer than two loci.
+<% } ## if (nrow(data) >= 2L) %>
 <% } # signalDensities() %>
 
 <%=signalDensities(fit)%>
@@ -570,6 +574,26 @@ chrsTags <- if (nbrOfChromosomes == 1) {
 <% } # pscnSegmentationTransitions() %>
 
 <%=pscnSegmentationTransitions(fit)%>
+
+
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+% NORMAL CONTAMINATION
+% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+<% pscnNormalContamination <- function(fit, ...) { %>
+\clearpage
+\section{Normal contamination}
+\label{sec:PSCNNormalContamination}
+<%
+## Attempt to estimate kappa
+kappa <- tryCatch(estimateKappa(fit, ...), error = identity)
+if (inherits(kappa, "error")) { %>
+The estimation of normal contamination failed, which typically happens when the parent-specific copy numbers are too noisy or when there are too few parent-specific copy-number events occuring in the tumor.  Details: The reason reported by \code{estimateKappa()} was: <%= conditionMessage(kappa) %>.
+<% } else { %>
+The estimated amount of normal contamination of this sample is <%= sprintf("%.1f", 100*kappa) %>\% ($\kappa = <%= sprintf("%.3f", kappa) %>$).  This estimate, which is provided due to popular demand, is also affected by other types of background signals, which may be specific to sample or batch.  Because of this, great care should be taken when interpreting this estimate and using it in downstream analysis.  Being conservative, we recommend to \emph{not} to use it as an accurate estimate of the \emph{true} amount of normal contamination.  However, if the sample and batch-specific effects are small, estimates from multiple samples may compared with each other, i.e. samples can be ranked by their \emph{relative amount of normal contamination} (which might be done also when the absolute values cannot be trusted).
+<% } %>
+<% } # pscnNormalContamination() %>
+
+<%=pscnNormalContamination(fit)%>
 
 
 
