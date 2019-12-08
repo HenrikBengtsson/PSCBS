@@ -1,11 +1,11 @@
 Package: PSCBS
-Version: 0.65.0
+Version: 0.65.0-9000
 Depends:
   R (>= 3.2.0),
   utils
 Imports:
   R.methodsS3 (>= 1.7.1),
-  R.oo (>= 1.22.0),
+  R.oo (>= 1.23.0),
   R.utils (>= 2.8.0),
   R.cache (>= 0.13.0),
   matrixStats (>= 0.54.0),

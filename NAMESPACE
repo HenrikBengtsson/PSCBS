@@ -4,7 +4,7 @@
 importFrom("R.methodsS3", "setMethodS3")
 importFrom("R.methodsS3", "getMethodS3")
 importFrom("R.oo", "setConstructorS3")
-importFrom("R.methodsS3", "throw")
+importFrom("R.oo", "throw")
 importFrom("R.utils", "use")
 
 ## Importing Object classes
