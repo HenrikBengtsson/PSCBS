@@ -11,7 +11,7 @@ Imports:
   matrixStats (>= 0.54.0),
   aroma.light (>= 2.4.0),
   DNAcopy (>= 1.42.0),
-  listenv (>= 0.7.0),
+  listenv (>= 0.8.0),
   future (>= 1.15.1),
   parallel
 Suggests:
