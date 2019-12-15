@@ -401,7 +401,7 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
   # To please R CMD check, cf. subset()
   chromosome <- NULL; rm(list="chromosome")
 
-  segs <- getSegments(fit, splitter=FALSE)
+  segs <- getSegments(fit, splitters=FALSE)
   chromosomes <- sort(unique(segs$chromosome))
 
   # Allocate

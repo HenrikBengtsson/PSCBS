@@ -60,7 +60,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the 'output' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  output <- getSegments(fit, splitter=FALSE)
+  output <- getSegments(fit, splitters=FALSE)
   rownames <- rownames(output)
 
   output <- data.frame(

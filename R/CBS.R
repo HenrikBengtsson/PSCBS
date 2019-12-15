@@ -151,7 +151,7 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 
 
 setMethodS3("as.data.frame", "CBS", function(x, ...) {
-  getSegments(x, splitter=FALSE, ...)
+  getSegments(x, splitters=FALSE, ...)
 }, protected=TRUE)
 
 
