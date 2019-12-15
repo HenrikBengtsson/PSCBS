@@ -86,7 +86,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup up 'CBS' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (sampleName == "<NA>") sampleName <- as.character(NA)
+  if (sampleName == "<NA>") sampleName <- NA_character_
   res <- list()
   res$sampleName <- sampleName
   res$data <- data

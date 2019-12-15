@@ -79,7 +79,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   params <- list()
 
   # Allocate calls
-  naValue <- as.logical(NA)
+  naValue <- NA
   nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE)
   segs <- getSegments(fit, splitters=TRUE)
   nbrOfRows <- nrow(segs)
@@ -277,7 +277,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   params <- list()
 
   # Allocate calls
-  naValue <- as.logical(NA)
+  naValue <- NA
   nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE)
   calls <- rep(naValue, times=nbrOfSegments)
 
@@ -474,7 +474,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
   # Allocate calls
   nbrOfLoci <- nbrOfLoci(fit)
-  naValue <- as.logical(NA)
+  naValue <- NA
   negOutlierCall <- posOutlierCall <- rep(naValue, times=nbrOfLoci)
 
   if (method == "ucsf-mad") {
@@ -543,7 +543,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
       tau <- adjust * tau
 
       # Call outliers
-      naValue <- as.logical(NA)
+      naValue <- NA
       callsSS <- rep(naValue, times=length(dySS))
       callsSS[-tau <= dySS & dySS <= +tau] <- 0L
       callsSS[dySS > +tau] <- +1L
@@ -613,7 +613,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   y <- data[,3]
 
   # Allocate locus calls
-  naValue <- as.logical(NA)
+  naValue <- NA
   callsL <- matrix(naValue, nrow=nbrOfLoci, ncol=nbrOfCalls)
   colnames(callsL) <- colnames(segs)[callCols]
   callsL <- as.data.frame(callsL)
@@ -636,7 +636,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   # The calls for loci that have missing annotations or observations,
   # should also be missing, i.e. NA.
   nok <- (is.na(chromosome) | is.na(x) | is.na(y))
-  callsL[nok,] <- as.logical(NA)
+  callsL[nok,] <- NA
 
   # Sanity check
   .stop_if_not(nrow(callsL) == nbrOfLoci)

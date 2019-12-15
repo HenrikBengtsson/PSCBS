@@ -228,7 +228,7 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
 setMethodS3("getSampleName", "AbstractCBS", function(fit, ...) {
   name <- fit$sampleName
   if (is.null(name)) {
-    name <- as.character(NA)
+    name <- NA_character_
   }
   name
 }, protected=TRUE)

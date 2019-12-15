@@ -157,7 +157,7 @@ setMethodS3("as.data.frame", "CBS", function(x, ...) {
 
 setMethodS3("getSignalType", "CBS", function(fit, ...) {
   type <- fit$signalType
-  if (is.null(type)) type <- as.character(NA)
+  if (is.null(type)) type <- NA_character_
   type
 }, protected=TRUE)
 
@@ -272,7 +272,7 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
   # Add 'sampleName' column?
   if (nrow(segs) > 0) {
     sampleName <- rep(getSampleName(fit), times=nrow(segs))
-    sampleName[isSplitter] <- as.character(NA)
+    sampleName[isSplitter] <- NA_character_
     if (!is.element("sampleName", colnames(segs))) {
       segs <- cbind(sampleName=I(sampleName), segs)
     } else {
