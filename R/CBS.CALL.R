@@ -343,8 +343,8 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     #          flanking segments.
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # The mean levels of the flanking segments
-    muL <- c(NA, mu[-nbrOfSegments])
-    muR <- c(mu[-1], NA)
+    muL <- c(NA_real_, mu[-nbrOfSegments])
+    muR <- c(mu[-1], NA_real_)
 
     # The difference in mean levels to the flanking segments
     deltaL <- mu - muL
