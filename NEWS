@@ -2181,7 +2181,7 @@ NEW FEATURES:
 
  * Added callLOH() for PairedPSCBS, which in turn calls auxiliary methods.
 
- * Added estimateTauLOH() for PairedPSCBS, which in turn calls axillary methods.
+ * Added estimateTauLOH() for PairedPSCBS, which in turn calls auxiliary methods.
 
  * Now callAB(..., force = FALSE) skips the caller if allelic-balance calls
    already exist.
@@ -2250,7 +2250,7 @@ NEW FEATURES:
 
 Version: 0.9.41 [2011-02-02]
 
-SIGNFICANT CHANGES:
+SIGNIFICANT CHANGES:
 
  * Updated default for 'tauAB' of callABandHighAI() and callABandLowC1() to be
    estimated from data using estimateTauAB().

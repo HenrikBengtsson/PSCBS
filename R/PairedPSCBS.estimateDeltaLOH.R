@@ -15,7 +15,7 @@
 #   \item{flavor}{A @character string specifying which type of
 #    estimator to use.}
 #   \item{...}{Additional arguments passed to the estimator.}
-#   \item{max}{(Optional) The maxium estimate allowed. If greater than
+#   \item{max}{(Optional) The maximum estimate allowed. If greater than
 #    this value, the estimate will be truncated.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -100,7 +100,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 # }
 #
 # \value{
-#   Returns the estimated LOH treshold as a @numeric scalar or -@Inf.
+#   Returns the estimated LOH threshold as a @numeric scalar or -@Inf.
 #   In case it is not possible to estimate the LOH threshold, then
 #   -@Inf is returned.
 # }

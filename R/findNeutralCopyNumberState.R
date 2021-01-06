@@ -13,7 +13,7 @@
 #   \item{C}{A @numeric @vector of region-level total copy number estimates.}
 #   \item{isAI}{A @logical @vector of "allelic imbalance" calls.}
 #   \item{weights}{An optional @numeric @vector of non-negative weights.}
-#   \item{...}{Further argumants to be passed to the density estimation
+#   \item{...}{Further arguments to be passed to the density estimation
 #     function.}
 #   \item{minDensity}{A @numeric value, below which density peaks are
 #     discarded.}

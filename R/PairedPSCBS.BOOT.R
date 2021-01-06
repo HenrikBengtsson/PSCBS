@@ -11,7 +11,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{B}{A postive @integer specifying the number of bootstrap samples.}
+#   \item{B}{A positive @integer specifying the number of bootstrap samples.}
 #   \item{boot}{Alternatively, to generating \code{B} bootstrap samples,
 #      this specifies a pre-generated set of bootstrap samples as
 #      returned by \code{bootstrapSegmentsAndChangepoints()}.}

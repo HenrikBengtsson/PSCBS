@@ -168,7 +168,7 @@ Dropping TCN outliers is optional.
 \label{secGaps}
 Like the CBS method, Paired PSCBS does not take the physical locations (in units of nucleotides) of the loci in to account when segmenting the data, only their relative ordering along the genome.  This means that after having ordered the loci along genome, it will treat two "neighboring" loci that are on both sides of the centromere equally to two neighboring loci that are only a few hundred bases apart.  This may introduce erroneous change points that appear to be inside the centromere.  The same issues occur for other large gaps of the genome where there are no observed signals.
 
-To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observered loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
+To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observed loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
 \begin{verbatim}
 <%=withCapture({
 gaps <- findLargeGaps(data, minLength=1e6)
@@ -281,7 +281,7 @@ Segments already called ROH will not be called for AB, and their AB statuses wil
 
 
 \subsubsection{Tuning parameters}
-The AB caller tests whether a segment's DH is zero or not, by comparing its DH level (or more precisely, the $5\%$ quantile of its bootstrapped DH mean level) to a threshold.  This threshold will be a function of the noise level, because the noiser the BAF signals (and hence the DH signals), the greater the bias of the DH mean level for segments in AB will be.  Because of this, the threshold is choosen from data by estimating the noise level of the DH signals near zero.
+The AB caller tests whether a segment's DH is zero or not, by comparing its DH level (or more precisely, the $5\%$ quantile of its bootstrapped DH mean level) to a threshold.  This threshold will be a function of the noise level, because the noisier the BAF signals (and hence the DH signals), the greater the bias of the DH mean level for segments in AB will be.  Because of this, the threshold is chosen from data by estimating the noise level of the DH signals near zero.
 Further rationales and details are given in~\citet{OlshenA_etal_2011}.
 The AB threshold can be estimated explicitly and used in the caller as 
 \begin{verbatim}
@@ -305,7 +305,7 @@ Analogously to the AB caller, segments already called ROH will not be called for
 Segments already called AB will be called non-LOH, because AB and LOH are exclusively mutual states.  
 
 \subsubsection{Tuning parameters}
-The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (or more precisely, the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be a function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is choosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
+The LOH caller tests whether a segment's minor CN is non-zero or not, by comparing its minor CN level (or more precisely, the $95\%$ quantile of its bootstrapped minor CN mean level) to a threshold.  This threshold will, among other components, be a function of normal contamination, i.e. the greater the fraction of normal cells is the greater the threshold needs to be in order to call LOH in the tumor cells.  Because of this, the threshold is chosen from data as the midpoint of the estimated levels of minor CNs zero and one, which in turn is a function of the normal contamination.  For details on the definition of LOH and details on the LOH caller, see~\citet{OlshenA_etal_2011}.
 The LOH threshold can be estimated explicitly and used as:
 \begin{verbatim}
 deltaLOH <- estimateDeltaLOH(fit, midpoint=1/2)
