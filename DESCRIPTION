@@ -4,19 +4,19 @@ Depends:
   R (>= 3.2.0),
   utils
 Imports:
-  R.methodsS3 (>= 1.7.1),
-  R.oo (>= 1.23.0),
-  R.utils (>= 2.9.0),
+  R.methodsS3 (>= 1.8.1),
+  R.oo (>= 1.24.0),
+  R.utils (>= 2.10.1),
   R.cache (>= 0.14.0),
-  matrixStats (>= 0.55.0),
+  matrixStats (>= 0.57.0),
   aroma.light (>= 2.4.0),
   DNAcopy (>= 1.42.0),
   listenv (>= 0.8.0),
-  future (>= 1.15.1),
+  future (>= 1.21.0),
   parallel
 Suggests:
-  Hmisc (>= 4.3-0),
-  R.rsp (>= 0.43.2),
+  Hmisc (>= 4.4-2),
+  R.rsp (>= 0.44.0),
   R.devices (>= 2.16.1),
   ggplot2 (>= 3.2.1)
 SuggestsNote:
