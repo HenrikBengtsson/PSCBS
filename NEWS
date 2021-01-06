@@ -1,8 +1,12 @@
 Package: PSCBS
 ==============
 
-Version: 0.65.0-9000 [2019-12-14]
+Version: 0.65.0-9000 [2020-01-05]
 
+CODE REFACTORING:
+
+ * Update package tests to test with 'multisession' futures.
+ 
 BUG FIXES:
 
  * Fixed a few partial getSegments() argument name matching ('splitter'
@@ -14,7 +18,7 @@ Version: 0.65.0 [2019-05-04]
 NEW FEATURES:
 
  * The PDF report produced by report() for Paired PSCBS results will now
-   provide an esimate of normal contamination together with a disclaimer.
+   provide an estimate of normal contamination together with a disclaimer.
 
 BUG FIXES:
 
