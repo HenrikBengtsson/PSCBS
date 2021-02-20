@@ -3,35 +3,36 @@
 
 # PSCBS: Analysis of Parent-Specific DNA Copy Numbers
 
-
 ## Parallel processing
+
 The package supports segmentation of the chromosomes in parallel
 (asynchronously) via [futures](https://cran.r-project.org/package=future)
 by adding the following
+
 ```r
-future::plan("multiprocess")
+future::plan("multisession")
 ```
+
 to the beginning of the PSCBS script.  Everything else will work the
 same.  To reset to non-parallel processing, use `future::plan("sequential")`.
 
 To configure this automatically whenever the package is loaded, see
 future vignette '[A Future for R: Controlling Default Future Strategy](https://cran.r-project.org/web/packages/future/vignettes/future-5-startup.html)'.
 
-
 ## Installation
 R package PSCBS is available on [CRAN](https://cran.r-project.org/package=PSCBS) and can be installed in R as:
 ```r
-install.packages('PSCBS')
+install.packages("PSCBS")
 ```
+
 
 ### Pre-release version
 
-To install the pre-release version that is available in branch `develop`, use:
+To install the pre-release version that is available in Git branch `develop` on GitHub, use:
 ```r
-source('http://callr.org/install#HenrikBengtsson/PSCBS@develop')
+remotes::install_github("HenrikBengtsson/PSCBS", ref="develop")
 ```
 This will install the package from source.  
-
 
 ## Contributions
 
