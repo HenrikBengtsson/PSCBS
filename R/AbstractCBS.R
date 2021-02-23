@@ -145,8 +145,8 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 setMethodS3("save", "AbstractCBS", function(this, ...) {
   action <- Sys.getenv("R_PSCBS_SAVE_LOAD_DEPRECATED", "deprecated")
   action <- match.arg(action, choices = c("deprecated", "defunct"))
-  fcn <- switch(action, deprecrated = .Deprecated, defunct = .Defunct)
-  fcn(msg = sprintf("save() for %s is %s. It is recommended to use saveRDS() from the 'base' package. If you need backward compatibility with save(), use R.utils::saveObject().", class(this[1]), action), package = .packageName)
+  fcn <- switch(action, deprecated = .Deprecated, defunct = .Defunct)
+  fcn(msg = sprintf("save() for %s is %s. It is recommended to use saveRDS() from the 'base' package. If you need backward compatibility with save(), use R.utils::saveObject().", class(this)[1], action), package = .packageName)
   saveObject(this, ...)
 })
 
@@ -184,8 +184,8 @@ setMethodS3("save", "AbstractCBS", function(this, ...) {
 setMethodS3("load", "AbstractCBS", function(static, ...) {
   action <- Sys.getenv("R_PSCBS_SAVE_LOAD_DEPRECATED", "deprecated")
   action <- match.arg(action, choices = c("deprecated", "defunct"))
-  fcn <- switch(action, deprecrated = .Deprecated, defunct = .Defunct)
-  fcn(msg = sprintf("%s$load() is %s. It is recommended to use readRDS() from the 'base' package instead. If you need backward compatibility with save(), use R.utils::loadObject().", class(static[1]), action), package = .packageName)
+  fcn <- switch(action, deprecated = .Deprecated, defunct = .Defunct)
+  fcn(msg = sprintf("%s$load() is %s. It is recommended to use readRDS() from the 'base' package instead. If you need backward compatibility with save(), use R.utils::loadObject().", class(static)[1], action), package = .packageName)
   
   object <- loadObject(...)
 
