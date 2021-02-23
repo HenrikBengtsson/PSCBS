@@ -36,5 +36,7 @@
   To load an object, see \code{\link[PSCBS:load.AbstractCBS]{*load}()}.
   For more information see \code{\link{AbstractCBS}}..
 }
+
+
 \keyword{internal}
 \keyword{methods}
