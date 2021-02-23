@@ -18,9 +18,9 @@ DEPRECATED AND DEFUNCT:
    defunct; use c(x, y) instead.
 
  * save() for CBS and PSCBS objects and corresponding CBS$load() and
-   PSCBS$load() methods are deprecated.  We recommend to use base R functions
+   PSCBS$load() methods are defunct.  We recommend to use base R functions
    saveRDS() and readRDS() instead.  If backward compatibility with the
-   deprecated save() and load() methods, the saveObject() and loadObject()
+   defunct save() and load() methods, the saveObject() and loadObject()
    functions from the R.utils package can be used.
 
 
