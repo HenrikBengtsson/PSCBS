@@ -1,7 +1,10 @@
 
 
+<div id="badges"><!-- pkgdown markup -->
+<a href="https://CRAN.R-project.org/web/checks/check_results_PSCBS.html"><img border="0" src="https://www.r-pkg.org/badges/version/PSCBS" alt="CRAN check status"/></a> <a href="https://github.com/HenrikBengtsson/PSCBS/actions?query=workflow%3AR-CMD-check"><img border="0" src="https://github.com/HenrikBengtsson/PSCBS/workflows/R-CMD-check/badge.svg?branch=develop" alt="Build status"/></a>  <a href="https://ci.appveyor.com/project/HenrikBengtsson/pscbs"><img border="0" src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/PSCBS?svg=true" alt="Build status"/></a> <a href="https://codecov.io/gh/HenrikBengtsson/PSCBS"><img border="0" src="https://codecov.io/gh/HenrikBengtsson/PSCBS/branch/develop/graph/badge.svg" alt="Coverage Status"/></a> 
+</div>
 
-# PSCBS: Analysis of Parent-Specific DNA Copy Numbers
+# PSCBS: Analysis of Parent-Specific DNA Copy Numbers 
 
 The PSCBS package implements the parent-specific copy-number segmentation presented in Olshen et al. (2011).  Package vignette ['Parent-specific copy-number segmentation using Paired PSCBS'](https://cran.r-project.org/web/packages/PSCBS/vignettes/PairedPSCBS.pdf) provides a detailed introduction for running PSCBS segmentation.  It's available as:
 
@@ -111,20 +114,10 @@ remotes::install_github("HenrikBengtsson/PSCBS", ref="develop")
 ```
 This will install the package from source.  
 
+<!-- pkgdown-drop-below -->
 
-<div id="badges"><!-- pkgdown markup -->
 
 ## Contributing
 
 To contribute to this package, please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-
-## Software status
-
-| Resource      | CRAN        | GitHub Actions      | Travis CI       | AppVeyor CI      |
-| ------------- | ------------------- | ------------------- | --------------- | ---------------- |
-| _Platforms:_  | _Multiple_          | _Multiple_          | _Linux & macOS_ | _Windows_        |
-| R CMD check   | <a href="https://cran.r-project.org/web/checks/check_results_PSCBS.html"><img border="0" src="http://www.r-pkg.org/badges/version/PSCBS" alt="CRAN version"></a> |        | <a href="https://travis-ci.org/HenrikBengtsson/PSCBS"><img src="https://travis-ci.org/HenrikBengtsson/PSCBS.svg" alt="Build status"></a>   | <a href="https://ci.appveyor.com/project/HenrikBengtsson/pscbs"><img src="https://ci.appveyor.com/api/projects/status/github/HenrikBengtsson/PSCBS?svg=true" alt="Build status"></a> |
-| Test coverage |                     |                     | <a href="https://codecov.io/gh/HenrikBengtsson/PSCBS"><img src="https://codecov.io/gh/HenrikBengtsson/PSCBS/branch/develop/graph/badge.svg" alt="Coverage Status"/></a>     |                  |
-
-</div>
