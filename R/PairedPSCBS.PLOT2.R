@@ -8,7 +8,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Argument 'fit':
   if (nbrOfChromosomes(fit) > 1) {
-    throw("Multiple chromosomes detected. Not yet implemented.")
+    stop("Multiple chromosomes detected. Not yet implemented.")
   }
 
   # Argument 'panels':
@@ -63,7 +63,7 @@ setMethodS3("plotTracks2", "PairedPSCBS", function(x, panels=NULL, calls=".*", p
   # Extract the input data
   data <- getLocusData(fit)
   if (is.null(data)) {
-    throw("Cannot plot segmentation results. No input data available.")
+    stop("Cannot plot segmentation results. No input data available.")
   }
 
   chromosomes <- getChromosomes(fit)

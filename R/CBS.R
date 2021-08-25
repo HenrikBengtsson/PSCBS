@@ -192,7 +192,7 @@ setMethodS3("getLocusSignalNames", "CBS", function(fit, ...) {
     return("CT")
   }
 
-  throw("INTERNAL ERROR: Unknown locus signal names: ", paste(names, collapse=", "))
+  stop("INTERNAL ERROR: Unknown locus signal names: ", paste(names, collapse=", "))
 }, protected=TRUE)
 
 setMethodS3("getSegmentTrackPrefixes", "CBS", function(fit, ...) {
@@ -495,7 +495,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("asis", "mean", "medi
     } else if(avg == "median") {
       avgFUN <- weightedMedian
     } else {
-      throw("Value of argument 'avg' is not supported with weights: ", avg)
+      stop("Value of argument 'avg' is not supported with weights: ", avg)
     }
   } else {
     avgFUN <- get(avg, mode="function")

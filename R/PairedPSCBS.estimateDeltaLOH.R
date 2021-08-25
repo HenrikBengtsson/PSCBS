@@ -57,7 +57,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
   if (flavor == "minC1|nonAB") {
     delta <- estimateDeltaLOHByMinC1ForNonAB(this, ..., verbose=verbose)
   } else {
-    throw("Unkown flavor: ", flavor)
+    stop("Unkown flavor: ", flavor)
   }
 
   verbose && printf(verbose, "delta: %.3g\n", delta)
@@ -157,7 +157,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   # Getting AB calls
   isAB <- segs$abCall
   if (is.null(isAB)) {
-    throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.")
+    stop("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.")
   }
 
   nbrOfAB <- sum(isAB, na.rm=TRUE)
@@ -165,7 +165,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   # Sanity check
   if (nbrOfAB == 0) {
-    throw("There are no segments in allelic balance.")
+    stop("There are no segments in allelic balance.")
   }
 
   nbrOfNonAB <- sum(!isAB, na.rm=TRUE)
@@ -187,7 +187,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   # Sanity check
   if (length(keep) == 0) {
-    throw("There are no segments in allelic balance with small enough total CN.")
+    stop("There are no segments in allelic balance with small enough total CN.")
   }
 
   # (a) Estimate mean C1 level of AB segments

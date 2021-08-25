@@ -174,7 +174,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     thetaN <- Arguments$getDoubles(thetaN, length=length2, disallow=disallow)
     CT <- 2 * thetaT / thetaN
   } else if (!is.null(thetaT) || !is.null(thetaN)) {
-    throw("Either argument 'CT' needs to be specified or *both* of arguments 'thetaT' and 'thetaN'")
+    stop("Either argument 'CT' needs to be specified or *both* of arguments 'thetaT' and 'thetaN'")
   }
 
   # Argument 'CT':
@@ -198,7 +198,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   if (!is.null(muN)) {
     muN <- Arguments$getDoubles(muN, length=length2, range=c(0,1), disallow="Inf")
     if (all(is.na(muN)) == nbrOfLoci) {
-      throw(sprintf("All genotypes ('muN') are NAs: %d (100%%) out of %d", nbrOfLoci, nbrOfLoci))
+      stop(sprintf("All genotypes ('muN') are NAs: %d (100%%) out of %d", nbrOfLoci, nbrOfLoci))
     }
   }
 
@@ -209,7 +209,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
   if (is.null(muN)) {
     if (is.null(betaN) && is.null(rho)) {
-      throw("If argument 'muN' is not given, then either 'betaN' or 'rho' must be.")
+      stop("If argument 'muN' is not given, then either 'betaN' or 'rho' must be.")
     }
   }
 
@@ -218,10 +218,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   if (!is.null(tbn)) {
     if (tbn) {
       if (is.null(betaT)) {
-        throw("Cannot do TumorBoost normalization (tbn=TRUE) without tumor BAFs ('betaT').")
+        stop("Cannot do TumorBoost normalization (tbn=TRUE) without tumor BAFs ('betaT').")
       }
       if (is.null(betaN)) {
-        throw("Cannot do TumorBoost normalization (tbn=TRUE) with normal BAFs ('betaN').")
+        stop("Cannot do TumorBoost normalization (tbn=TRUE) with normal BAFs ('betaN').")
       }
     }
   }
@@ -265,7 +265,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   flavor <- match.arg(flavor)
   knownFlavors <- eval(formals(segmentByPairedPSCBS.default)$flavor, enclos = baseenv())
   if (!is.element(flavor, knownFlavors)) {
-    throw("Segmentation flavor is not among the supported ones (", paste(sprintf("\"%s\"", knownFlavors), collapse=", "), "): ", flavor)
+    stop("Segmentation flavor is not among the supported ones (", paste(sprintf("\"%s\"", knownFlavors), collapse=", "), "): ", flavor)
   }
 
   # Argument 'joinSegments':
@@ -281,18 +281,18 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   }
 
   if (!is.data.frame(knownSegments)) {
-    throw("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1])
+    stop("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1])
   }
 
   if (!all(is.element(c("chromosome", "start", "end"), colnames(knownSegments)))) {
-    throw("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)))
+    stop("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)))
   }
 
   # Argument 'dropMissingCT':
   dropMissingCT <- Arguments$getLogical(dropMissingCT)
   if (!dropMissingCT) {
     if (is.element(flavor, c("tcn&dh", "sqrt(tcn)&dh"))) {
-      throw("Missing values in 'CT' are (currently) not supported by the chosen 'flavor': ", flavor)
+      stop("Missing values in 'CT' are (currently) not supported by the chosen 'flavor': ", flavor)
     }
   }
 
@@ -331,7 +331,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     muN <- Arguments$getDoubles(muN, length=length2, range=c(0,1), disallow="Inf")
     # Sanity check
     if (all(is.na(muN))) {
-      throw(sprintf("All genotypes ('muN') called from the normal allele B fractions ('betaN') are NAs: %d (100%%) out of %d", nbrOfLoci, nbrOfLoci))
+      stop(sprintf("All genotypes ('muN') called from the normal allele B fractions ('betaN') are NAs: %d (100%%) out of %d", nbrOfLoci, nbrOfLoci))
     }
     verbose && exit(verbose)
   }
@@ -349,7 +349,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     # Assert that no missing values where introduced
     keep <- (is.finite(betaT) & is.finite(betaN) & is.finite(muN))
     if (anyNA(betaTN[keep])) {
-      throw("Internal error: normalizeTumorBoost() introduced missing values.")
+      stop("Internal error: normalizeTumorBoost() introduced missing values.")
     }
     # Not needed anymore
     keep <- NULL
@@ -449,14 +449,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Sanity check
   ok <- (!is.na(data$chromosome) & !is.na(data$x))
   if (!all(ok)) {
-    throw("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.")
+    stop("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.")
   }
 
   # Sanity check
   if (dropMissingCT) {
     ok <- (!is.na(data$CT))
     if (!all(ok)) {
-      throw("INTERNAL ERROR: Detected TCN with missing values also after filtering.")
+      stop("INTERNAL ERROR: Detected TCN with missing values also after filtering.")
     }
   }
 
@@ -588,7 +588,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Here 'knownSegments' should specify at most a single chromosome
   uChromosomes <- sort(unique(knownSegments$chromosome))
   if (length(uChromosomes) > 1) {
-    throw("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes))
+    stop("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes))
   }
 
 
@@ -598,14 +598,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Sanity check
   ok <- (!is.na(data$chromosome) & !is.na(data$x))
   if (!all(ok)) {
-    throw("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.")
+    stop("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.")
   }
 
   # Sanity check
   if (dropMissingCT) {
     ok <- (!is.na(data$CT))
     if (!all(ok)) {
-      throw("INTERNAL ERROR: Detected TCN with missing values also after filtering.")
+      stop("INTERNAL ERROR: Detected TCN with missing values also after filtering.")
     }
   }
 
@@ -673,14 +673,14 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Sanity check
   ok <- (!is.na(data$chromosome) & !is.na(data$x))
   if (!all(ok)) {
-    throw("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.")
+    stop("INTERNAL ERROR: Detected (chromosome, x) with missing values also after filtering.")
   }
 
   # Sanity check
   if (dropMissingCT) {
     ok <- (!is.na(data$CT))
     if (!all(ok)) {
-      throw("INTERNAL ERROR: Detected CT with missing values also after filtering.")
+      stop("INTERNAL ERROR: Detected CT with missing values also after filtering.")
     }
   }
 

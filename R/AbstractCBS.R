@@ -202,7 +202,7 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
 
   # Sanity check
   if (!inherits(object, class(static)[1])) {
-    throw("Loaded an object from file, but it does not inherit from ",
+    stop("Loaded an object from file, but it does not inherit from ",
           class(static)[1], " as expected: ", hpaste(class(object)))
   }
 
@@ -337,7 +337,7 @@ setMethodS3("setLocusData", "AbstractCBS", function(fit, loci, ...) {
   loci <- Arguments$getInstanceOf(loci, "data.frame")
   nbrOfLoci <- nbrOfLoci(fit)
   if (nrow(loci) != nbrOfLoci) {
-    throw("Cannot set locus-level data. The number of loci to be set differ from the existing number of loci: ", nrow(loci), " != ", nbrOfLoci)
+    stop("Cannot set locus-level data. The number of loci to be set differ from the existing number of loci: ", nrow(loci), " != ", nbrOfLoci)
   }
 
   fit$data <- loci
@@ -422,7 +422,7 @@ setMethodS3("setSegments", "AbstractCBS", function(fit, segments, splitters=TRUE
   segments <- Arguments$getInstanceOf(segments, "data.frame")
   nbrOfSegs <- nbrOfSegments(fit, splitters=splitters, ...)
   if (nrow(segments) != nbrOfSegs) {
-    throw("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs)
+    stop("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs)
   }
 
   fit$output <- segments
@@ -774,7 +774,7 @@ setMethodS3("setMeanEstimators", "AbstractCBS", function(fit, ...) {
 
   keys <- names(args)
   if (is.null(keys)) {
-    throw("Estimators arguments must be named.")
+    stop("Estimators arguments must be named.")
   }
 
   for (key in keys) {
@@ -782,10 +782,10 @@ setMethodS3("setMeanEstimators", "AbstractCBS", function(fit, ...) {
     if (is.function(fcn)) {
     } else if (is.character(fcn)) {
       if (!exists(fcn, mode="function")) {
-        throw(sprintf("No such '%s' estimator function: %s", key, fcn))
+        stop(sprintf("No such '%s' estimator function: %s", key, fcn))
       }
     } else {
-      throw(sprintf("Estimator argument '%s' must be a function or character string: %s", key, mode(fcn)))
+      stop(sprintf("Estimator argument '%s' must be a function or character string: %s", key, mode(fcn)))
     }
     estList[[key]] <- fcn
   }

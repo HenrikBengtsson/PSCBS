@@ -46,16 +46,16 @@ setMethodS3("report", "AbstractCBS", function(fit, sampleName=getSampleName(fit)
   # Argument 'sampleName':
   sampleName <- Arguments$getCharacter(sampleName)
   if (is.na(sampleName)) {
-    throw("Cannot generate report. Argument 'sampleName' is non-valid or missing.")
+    stop("Cannot generate report. Argument 'sampleName' is non-valid or missing.")
   }
 
   # Argument 'studyName':
   if (missing(studyName)) {
-    throw("Cannot generate report. Argument 'studyName' is missing.")
+    stop("Cannot generate report. Argument 'studyName' is missing.")
   }
   studyName <- Arguments$getCharacter(studyName)
   if (is.na(studyName)) {
-    throw("Cannot generate report. Argument 'studyName' is non-valid.")
+    stop("Cannot generate report. Argument 'studyName' is non-valid.")
   }
 
   # Argument 'rspTags':

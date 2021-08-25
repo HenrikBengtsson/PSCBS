@@ -112,6 +112,6 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
   if (method == "wtd.quantile") {
     wtd.quantile(x, weights=w, probs=probs, normwt=TRUE, na.rm=FALSE, ...)
   } else {
-    throw("Cannot estimate weighted quantiles: Argument 'method' is unknown: ", method)
+    stop("Cannot estimate weighted quantiles: Argument 'method' is unknown: ", method)
   }
 }) # weightedQuantile()

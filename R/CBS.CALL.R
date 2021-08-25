@@ -118,7 +118,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
                                          method="diff", estimator="mad")
       sigmaKey <- "sigmaDelta"
     } else {
-      throw("INTERNAL ERROR: Unknown method: ", method)
+      stop("INTERNAL ERROR: Unknown method: ", method)
     }
 
     # Sanity check
@@ -733,7 +733,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   callTypes <- grep("Call$", colnames(segs), value=TRUE)
   verbose && cat(verbose, "Call types: ", hpaste(callTypes))
   if (length(callTypes) == 0) {
-    throw("Cannot calculate call statistics. No calls have been made.")
+    stop("Cannot calculate call statistics. No calls have been made.")
   }
 
   verbose && cat(verbose, "Regions of interest:")
@@ -1282,7 +1282,7 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
     # Weights "between" peaks (AD HOC: sum up peak weights)
     dw <- pw[-length(pw)] + pw[-1L]
 
-    throw("Still not implemented.")
+    stop("Still not implemented.")
   } else if (flavor == "dTCN") {
     # Get change-point magnitudes
     x <- getChangePoints(fit)[[1L]]

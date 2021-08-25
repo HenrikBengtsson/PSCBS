@@ -67,21 +67,21 @@ setMethodS3("updateMeans", "PairedPSCBS", function(fit, from=c("loci", "segments
   if (is.element("ab", adjustFor)) {
     if (!is.element("abCall", names(segs))) {
       adjustFor <- setdiff(adjustFor, "ab")
-      throw("Cannot adjust for AB, because they haven't been called.")
+      stop("Cannot adjust for AB, because they haven't been called.")
     }
   }
 
   if (is.element("loh", adjustFor)) {
     if (!is.element("lohCall", names(segs))) {
       adjustFor <- setdiff(adjustFor, "loh")
-      throw("Cannot adjust for LOH, because they haven't been called.")
+      stop("Cannot adjust for LOH, because they haven't been called.")
     }
   }
 
   if (is.element("roh", adjustFor)) {
     if (!is.element("rohCall", names(segs))) {
       adjustFor <- setdiff(adjustFor, "roh")
-      throw("Cannot adjust for ROH, because they haven't been called.")
+      stop("Cannot adjust for ROH, because they haven't been called.")
     }
   }
 

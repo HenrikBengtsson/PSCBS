@@ -165,7 +165,7 @@ setMethodS3("plotTracksManyChromosomes", "CBS", function(x, scatter=TRUE, pch=20
   # Extract the input data
   data <- getLocusData(fitT)
   if (is.null(data)) {
-    throw("Cannot plot segmentation results. No input data available.")
+    stop("Cannot plot segmentation results. No input data available.")
   }
 
   # Subset of the loci?

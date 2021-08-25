@@ -188,7 +188,7 @@ setMethodS3("plotTracksManyChromosomes", "PairedPSCBS", function(fit, chromosome
   # Extract the input data
   data <- getLocusData(fit)
   if (is.null(data)) {
-    throw("Cannot plot segmentation results. No input data available.")
+    stop("Cannot plot segmentation results. No input data available.")
   }
 
   # Extract the segmentation

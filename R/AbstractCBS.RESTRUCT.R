@@ -307,7 +307,7 @@ setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, 
   # Assert that there is only one chromosome
   chrs <- getChromosomes(fit)
   if (length(chrs) > 1) {
-    throw("dropChangePoints() only support single-chromosome data: ", hpaste(chrs))
+    stop("dropChangePoints() only support single-chromosome data: ", hpaste(chrs))
   }
 
   # Argument 'idxs':
@@ -373,7 +373,7 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
   fitT <- extractSegments(fit, idxs)
   chrs <- getChromosomes(fitT)
   if (length(chrs) != 1L) {
-    throw("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle)
+    stop("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle)
   }
   fitT <- NULL # Not needed anymore
 

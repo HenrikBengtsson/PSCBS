@@ -386,7 +386,7 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
     sigma <- estimatorFcn(y, ...)
     df <- length(y)
   } else {
-    throw("Method no implemented: ", method)
+    stop("Method no implemented: ", method)
   }
 
   attr(sigma, "nbrOfLoci") <- nbrOfLoci

@@ -111,7 +111,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
   flavor <- match.arg(flavor)
   knownFlavors <- eval(formals(segmentByPairedPSCBS.default)$flavor, enclos = baseenv())
   if (!is.element(flavor, knownFlavors)) {
-    throw("Segmentation flavor is not among the supported ones (", paste(sprintf("\"%s\"", knownFlavors), collapse=", "), "): ", flavor)
+    stop("Segmentation flavor is not among the supported ones (", paste(sprintf("\"%s\"", knownFlavors), collapse=", "), "): ", flavor)
   }
 
   # Argument 'tauA' & 'tauB':
@@ -119,7 +119,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
     tauA <- Arguments$getDouble(tauA)
     tauB <- Arguments$getDouble(tauB)
     if (tauB < tauA) {
-      throw("Argument 'tauA' must be smaller than 'tauB': ", tauA, " > ", tauB)
+      stop("Argument 'tauA' must be smaller than 'tauB': ", tauA, " > ", tauB)
     }
     tauA <- Arguments$getDouble(tauA, range=c(-0.5, +0.5))
     tauB <- Arguments$getDouble(tauB, range=c(+0.5, +1.5))
@@ -172,7 +172,7 @@ setMethodS3("segmentByNonPairedPSCBS", "default", function(CT, betaT, ..., flavo
 
     # Sanity check on (tauA, tauB) estimates
     if (tauB < tauA) {
-      throw("Failed to estimate (tauA, tauB). The estimate 'tauA' is greater than 'tauB', which it should not: ", tauA, " > ", tauB)
+      stop("Failed to estimate (tauA, tauB). The estimate 'tauA' is greater than 'tauB', which it should not: ", tauA, " > ", tauB)
     }
     tauA <- Arguments$getDouble(tauA, range=c(-0.5, +0.5))
     tauB <- Arguments$getDouble(tauB, range=c(+0.5, +1.5))

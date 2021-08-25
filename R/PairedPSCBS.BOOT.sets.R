@@ -87,10 +87,10 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
 
   # Sanity checks
   if (!params$joinSegments) {
-    throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.")
+    stop("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.")
   }
   if (regexpr(",", params$flavor, fixed=TRUE) != -1L) {
-    throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor))
+    stop(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor))
   }
   # Sanity check (same as above, but just in case)
   .stop_if_not(all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
@@ -295,7 +295,7 @@ setMethodS3("getBootstrapLocusSets", "PairedPSCBS", function(fit, B=1000L, by=c(
     # Sanity check
     if (length(idxsAll) != nbrOfTCNs) {
       verbose && str(verbose, setdiff(idxsCT, idxsAll))
-      throw("INTERNAL ERROR: length(idxsAll) != nbrOfTCNs: ", length(idxsAll), " != ", nbrOfTCNs)
+      stop("INTERNAL ERROR: length(idxsAll) != nbrOfTCNs: ", length(idxsAll), " != ", nbrOfTCNs)
     }
 
 

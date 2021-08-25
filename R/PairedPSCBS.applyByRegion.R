@@ -34,7 +34,7 @@ setMethodS3("applyByRegion", "PairedPSCBS", function(fit, FUN, ..., subset=NULL,
 
   # Sanity checks
   if (!params$joinSegments) {
-    throw("Cannot applyByRegion() unless PSCNs are segmented using joinSegments=TRUE.")
+    stop("Cannot applyByRegion() unless PSCNs are segmented using joinSegments=TRUE.")
   }
   dataRows <- tcnSegRows
 

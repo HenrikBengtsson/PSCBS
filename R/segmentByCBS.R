@@ -165,7 +165,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   ##    # a unique chromosome.
   ##    chromosomes <- sort(unique(chromosome))
   ##    if (length(chromosomes) > 1) {
-  ##      throw("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "))
+  ##      stop("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "))
   ##    }
   ##    chromosome <- chromosomes
     }
@@ -210,16 +210,16 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     knownSegments <- data.frame(chromosome=integer(0), start=integer(0), end=integer(0))
   } else {
 #    if (!joinSegments) {
-#      throw("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.")
+#      stop("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.")
 #    }
   }
 
   if (!is.data.frame(knownSegments)) {
-    throw("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1])
+    stop("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1])
   }
 
   if (!all(is.element(c("chromosome", "start", "end"), colnames(knownSegments)))) {
-    throw("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)))
+    stop("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)))
   }
 
   # Detailed validation of 'knownSegments'.
@@ -236,14 +236,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       xs <- xs[!is.na(xs)]
       if (anyDuplicated(xs) > 0) {
         print(knownSegments)
-        throw(sprintf("Detected segments on chromosome %s with non-unique '%s' positions in argument 'knownSegments'", chr, field))
+        stop(sprintf("Detected segments on chromosome %s with non-unique '%s' positions in argument 'knownSegments'", chr, field))
       }
     } # for (field ...)
 
     # Known segments must not overlap
     if (!all(dd$start[-1] >= dd$end[-nrow(dd)], na.rm=TRUE)) {
       print(knownSegments)
-      throw("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments'.")
+      stop("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments'.")
     }
   }
 
@@ -445,7 +445,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Here 'knownSegments' should specify at most a single chromosome
     uChromosomes <- sort(unique(knownSegments$chromosome))
     if (length(uChromosomes) > 1) {
-      throw("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes))
+      stop("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes))
     }
   } # if (R_SANITY_CHECK)
 

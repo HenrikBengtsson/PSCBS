@@ -181,7 +181,7 @@ setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1L, met
         sigma <- estimatorFcn(dy, na.rm=na.rm)
       }
   } else {
-    throw("Method no implemented: ", method)
+    stop("Method no implemented: ", method)
   }
 
   sigma
