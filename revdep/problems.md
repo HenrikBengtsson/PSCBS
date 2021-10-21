@@ -6,7 +6,7 @@
 * GitHub: https://github.com/HenrikBengtsson/aroma.core
 * Source code: https://github.com/cran/aroma.core
 * Date/Publication: 2021-01-05 05:10:12 UTC
-* Number of recursive dependencies: 47
+* Number of recursive dependencies: 48
 
 Run `revdep_details(, "aroma.core")` for more info
 
@@ -20,15 +20,39 @@ Run `revdep_details(, "aroma.core")` for more info
       'sfit', 'expectile', 'HaarSeg', 'mpcbs'
     ```
 
+# EstMix
+
+<details>
+
+* Version: 1.0.1
+* GitHub: NA
+* Source code: https://github.com/cran/EstMix
+* Date/Publication: 2018-09-13 04:20:02 UTC
+* Number of recursive dependencies: 16
+
+Run `revdep_details(, "EstMix")` for more info
+
+</details>
+
+## In both
+
+*   checking installed package size ... NOTE
+    ```
+      installed size is  5.5Mb
+      sub-directories of 1Mb or more:
+        extdata   1.3Mb
+        libs      3.9Mb
+    ```
+
 # PureCN
 
 <details>
 
-* Version: 1.20.0
+* Version: 1.22.2
 * GitHub: https://github.com/lima1/PureCN
 * Source code: https://github.com/cran/PureCN
-* Date/Publication: 2020-10-27
-* Number of recursive dependencies: 148
+* Date/Publication: 2021-07-04
+* Number of recursive dependencies: 153
 
 Run `revdep_details(, "PureCN")` for more info
 
@@ -36,29 +60,29 @@ Run `revdep_details(, "PureCN")` for more info
 
 ## In both
 
-*   checking tests ...
+*   checking re-building of vignette outputs ... WARNING
     ```
-     ERROR
-    Running the tests in ‘tests/testthat.R’ failed.
-    Last 50 lines of output:
-        1. └─PureCN::annotateTargets(...) test_annotateTargets.R:17:4
-        2.   └─PureCN:::.checkSeqlevelStyle(x, txdb, "txdb", "interval file")
-        3.     ├─GenomeInfoDb::`seqlevelsStyle<-`(`*tmp*`, value = refSeqlevelStyle[1])
-        4.     └─GenomeInfoDb::`seqlevelsStyle<-`(`*tmp*`, value = refSeqlevelStyle[1])
-        5.       ├─GenomeInfoDb::`seqlevelsStyle<-`(`*tmp*`, value = value)
-        6.       └─GenomeInfoDb::`seqlevelsStyle<-`(`*tmp*`, value = value)
-        7.         └─BiocGenerics::mapply(...)
+    Error(s) in re-building vignettes:
+    --- re-building ‘Quick.Rmd’ using rmarkdown
+    Loading required package: DNAcopy
+    Loading required package: VariantAnnotation
+    Loading required package: BiocGenerics
+    Loading required package: parallel
+    
+    Attaching package: 'BiocGenerics'
+    
+    The following objects are masked from 'package:parallel':
     ...
-       17.                   ├─base::do.call(...)
-       18.                   └─(function (UCSC_chrom_info, assembly_accession, AssemblyUnits = NULL, ...
-       19.                     └─GenomeInfoDb::getChromInfoFromNCBI(assembly_accession, assembly.units = AssemblyUnits)
-       20.                       └─GenomeInfoDb:::.get_NCBI_chrom_info_from_accession(...)
-       21.                         └─GenomeInfoDb:::fetch_assembly_report(accession)
-       22.                           └─GenomeInfoDb:::.make_assembly_report_URL(assembly_accession)
-      
-      [ FAIL 2 | WARN 11 | SKIP 1 | PASS 340 ]
-      Error: Test failures
-      Execution halted
+    l.189 \RequirePackage
+                         {parnotes}^^M
+    !  ==> Fatal error occurred, no output PDF file produced!
+    --- failed re-building ‘PureCN.Rnw’
+    
+    SUMMARY: processing the following file failed:
+      ‘PureCN.Rnw’
+    
+    Error: Vignette re-building failed.
+    Execution halted
     ```
 
 *   checking package dependencies ... NOTE
@@ -68,9 +92,9 @@ Run `revdep_details(, "PureCN")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is  8.7Mb
+      installed size is  9.4Mb
       sub-directories of 1Mb or more:
         doc       3.5Mb
-        extdata   3.8Mb
+        extdata   4.1Mb
     ```
 
