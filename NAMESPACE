@@ -60,7 +60,7 @@ importFrom("DNAcopy",
            "segments.summary", "smooth.CNA", "CNA", "segment", "getbdry")
 
 importFrom("listenv", "listenv")
-importFrom("future", "%<-%")
+importFrom("future", "%<-%", "%seed%")
 importFrom("parallel", "nextRNGStream")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

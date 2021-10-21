@@ -1,13 +1,17 @@
 Package: PSCBS
 ==============
 
-Version: 0.65.0-9000 [2021-02-22]
+Version: 0.65.0-9001 [2021-10-21]
 
 CODE REFACTORING:
 
  * Update package tests to test with 'multisession' futures.
  
 BUG FIXES:
+
+ * segmentByCBS() and segmentByPairedPSCBS() would produce warnings on
+   possibly unreliable random numbers due to parallel processing in the
+   case they segmented multiple chromosomes or segments.
 
  * Fixed a few partial getSegments() argument name matching ('splitter'
    -> 'splitters').

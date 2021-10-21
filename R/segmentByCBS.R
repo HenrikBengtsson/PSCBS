@@ -382,7 +382,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         verbose && print(verbose, tail(as.data.frame(fit)), level=-10)
 
         fit
-      } ## fitList[[chrTag]] <- ...
+      } %seed% TRUE  ## fitList[[chrTag]] <- ...
 
       rm(list=fields) # Not needed anymore
       verbose && exit(verbose)
@@ -562,7 +562,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         } # if (R_SANITY_CHECK)
 
         fit
-      }
+      } %seed% TRUE  ## fitList[[segTag]] <- ...
 
       rm(list=fields) # Not needed anymore
 
