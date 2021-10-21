@@ -530,7 +530,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
         verbose && print(verbose, tail(as.data.frame(fit)))
 
         fit
-      } %seed% TRUE  ## fitList[[chrTag]] <- ...
+      } %seed% TRUE %label% sprintf("segmentByPairedPSCBS-%s", chrTag)  ## fitList[[chrTag]] <- ...
 
       rm(list=fields) # Not needed anymore
       verbose && exit(verbose)
