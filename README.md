@@ -100,19 +100,15 @@ future vignette '[A Future for R: Controlling Default Future Strategy](https://c
 * Olshen AB, Bengtsson H, Neuvial P, Spellman PT, Olshen RA, Seshan VA. Parent-specific copy number in paired tumor-normal studies using circular binary segmentation, Bioinformatics, 2011. DOI: [10.1093/bioinformatics/btr329](https://doi.org/10.1093%2Fbioinformatics%2Fbtr329). PMID: [21666266](https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&cmd=prlinks&retmode=ref&id=21666266). PMCID: [PMC3137217](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3137217/)
 
 ## Installation
+
 R package PSCBS is available on [CRAN](https://cran.r-project.org/package=PSCBS) and can be installed in R as:
 ```r
+# install.packages("BiocManager")
+BiocManager::install(c("aroma.light", "DNAcopy"))
+
 install.packages("PSCBS")
 ```
 
-
-### Pre-release version
-
-To install the pre-release version that is available in Git branch `develop` on GitHub, use:
-```r
-remotes::install_github("HenrikBengtsson/PSCBS", ref="develop")
-```
-This will install the package from source.  
 
 <!-- pkgdown-drop-below -->
 
