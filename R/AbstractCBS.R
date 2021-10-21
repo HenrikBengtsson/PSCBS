@@ -185,7 +185,7 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
   action <- Sys.getenv("R_PSCBS_SAVE_LOAD_DEPRECATED", "defunct")
   action <- match.arg(action, choices = c("deprecated", "defunct"))
   fcn <- switch(action, deprecated = .Deprecated, defunct = .Defunct)
-  fcn(msg = sprintf("%s$load() is %s. It is recommended to use readRDS() from the 'base' package instead. If you need backward compatibility with save(), use R.utils::loadObject().", class(static)[1], action), package = .packageName)
+  fcn(msg = sprintf("%s$load() is %s. It is recommended to use readRDS() from the 'base' package instead. If you need backward compatibility with load(), use R.utils::loadObject().", class(static)[1], action), package = .packageName)
   
   object <- loadObject(...)
 
