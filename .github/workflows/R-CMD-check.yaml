@@ -35,7 +35,7 @@ jobs:
       _R_CHECK_MATRIX_DATA_: true
       _R_CHECK_SUGGESTS_ONLY_: true
       ## Specific to futures
-      R_FUTURE_RNG_ONMISUSE: {{ matrix.config.rng }}
+      R_FUTURE_RNG_ONMISUSE: ${{ matrix.config.rng }}
 
     steps:
       - uses: actions/checkout@v2
