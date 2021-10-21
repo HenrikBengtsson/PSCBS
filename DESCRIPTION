@@ -8,7 +8,7 @@ Imports:
   R.oo (>= 1.24.0),
   R.utils (>= 2.10.1),
   R.cache (>= 0.14.0),
-  matrixStats (>= 0.57.0),
+  matrixStats (>= 0.61.0),
   aroma.light (>= 2.4.0),
   DNAcopy (>= 1.42.0),
   listenv (>= 0.8.0),

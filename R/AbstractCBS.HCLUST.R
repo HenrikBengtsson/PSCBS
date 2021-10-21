@@ -87,7 +87,7 @@ setMethodS3("hclustCNs", "AbstractCBS", function(fit, size=NULL, distMethod="euc
 
   # Drop also segments with no data points
   ok <- !is.na(C)
-  ok <- rowAlls(ok)
+  ok <- rowAlls(ok, useNames=FALSE)
   C <- C[ok,,drop=FALSE]
   verbose && str(verbose, C)
   verbose && exit(verbose)

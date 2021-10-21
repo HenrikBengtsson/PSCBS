@@ -304,13 +304,13 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
   # Starts
   idxs <- grep("(S|s)tart$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMins(T, na.rm=TRUE)
+  segT[,idxs] <- colMins(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Ends
   idxs <- grep("(E|e)nd$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMaxs(T, na.rm=TRUE)
+  segT[,idxs] <- colMaxs(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Counts

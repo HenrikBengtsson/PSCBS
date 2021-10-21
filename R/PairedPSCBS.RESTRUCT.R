@@ -241,13 +241,13 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
   # Starts
   idxs <- grep("Start$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMins(T, na.rm=TRUE)
+  segT[,idxs] <- colMins(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Ends
   idxs <- grep("End$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMaxs(T, na.rm=TRUE)
+  segT[,idxs] <- colMaxs(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Counts

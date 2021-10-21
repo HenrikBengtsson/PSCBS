@@ -1180,7 +1180,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
       calls <- as.matrix(segs[,keep])
 
       # Find two neighboring segments that are not called
-      isCalled <- rowAnys(calls, na.rm=TRUE)
+      isCalled <- rowAnys(calls, na.rm=TRUE, useNames=FALSE)
       verbose && printf(verbose, "Number of segments not called: %d of %d\n", sum(!isCalled, na.rm=TRUE), length(isCalled))
 
       notCalled <- which(!isCalled)

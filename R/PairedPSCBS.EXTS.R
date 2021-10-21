@@ -142,7 +142,7 @@ setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
   # Calculate (dC1,dC2)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (dC1, dC2)
-  dC1C2 <- matrixStats::colDiffs(C1C2)
+  dC1C2 <- colDiffs(C1C2, useNames = FALSE)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Change-point weights
@@ -154,7 +154,7 @@ setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
 
   # (a) Smallest of the two flanking (DH) counts
   cpw <- cbind(w[1:(length(w)-1)], w[2:length(w)])
-  cpw <- rowMins(cpw, na.rm=TRUE)
+  cpw <- rowMins(cpw, na.rm=TRUE, useNames=FALSE)
   cpw[is.infinite(cpw)] <- NA
   cpw <- sqrt(cpw)
   cpwMin <- cpw / sum(cpw, na.rm=TRUE)
