@@ -1,4 +1,4 @@
-The PSCBS package implements the parent-specific copy-number segmentation presented in Olshen et al. (2011).  Package vignette ['Parent-specific copy-number segmentation using Paired PSCBS'](https://cran.r-project.org/web/packages/PSCBS/vignettes/PairedPSCBS.pdf) provides a detailed introduction for running PSCBS segmentation.  It's available as:
+The PSCBS package implements the parent-specific copy-number segmentation presented in Olshen et al. (2011).  Package vignette ['Parent-specific copy-number segmentation using Paired PSCBS'](https://CRAN.R-project.org/package=PSCBS/vignettes/PairedPSCBS.pdf) provides a detailed introduction for running PSCBS segmentation.  It's available as:
 
 ```r
 vignette("PairedPSCBS", package = "PSCBS")
@@ -81,7 +81,7 @@ to the beginning of the PSCBS script.  Everything else will work the
 same.  To reset to non-parallel processing, use `future::plan("sequential")`.
 
 To configure this automatically whenever the package is loaded, see
-future vignette '[A Future for R: Controlling Default Future Strategy](https://cran.r-project.org/web/packages/future/vignettes/future-5-startup.html)'.
+future vignette '[A Future for R: Controlling Default Future Strategy](https://CRAN.R-project.org/package=future/vignettes/future-5-startup.html)'.
 
 
 
