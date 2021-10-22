@@ -475,10 +475,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
     seeds <- NULL
     if (!is.null(seed)) {
       randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+      on.exit(randomSeed("reset"), add=TRUE)
       verbose && printf(verbose, "Random seed temporarily set (seed=c(%s), kind=\"L'Ecuyer-CMRG\")\n", paste(seed, collapse=", "))
       seeds <- randomSeed("advance", n=nbrOfChromosomes)
       verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
-      randomSeed("reset")
     }
 
     fitList <- listenv()
@@ -652,11 +652,11 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   seeds <- NULL
   if (!is.null(seed)) {
     randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+    on.exit(randomSeed("reset"), add=TRUE)
     verbose && printf(verbose, "Random seed temporarily set (seed=c(%s), kind=\"L'Ecuyer-CMRG\")\n", paste(seed, collapse=", "))
     seeds <- randomSeed("advance", n=2L) ## For TCN and DH
     names(seeds) <- c("TCN", "DH")
     verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
-    randomSeed("reset")
   }
 
 

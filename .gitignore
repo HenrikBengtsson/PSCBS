@@ -22,3 +22,4 @@ revdep/cache
 revdep/checks
 revdep/library
 .Rdump
+.local
