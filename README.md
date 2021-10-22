@@ -72,7 +72,7 @@ segments
 plotTracks(fit)
 ```
 
-![](figures/ex-PSCBS-paired.chr01.png)
+![](man/figures/ex-PSCBS-paired.chr01.png)
 
 
 ## Parallel processing
@@ -95,13 +95,14 @@ future vignette '[A Future for R: Controlling Default Future Strategy](https://c
 
 ## References
 
-* Bengtsson H, Neuvial P, Speed TP. TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays, BMC Bioinformatics, 2010. DOI: [10.1186/1471-2105-11-245](https://doi.org/10.1186%2F1471-2105-11-245). PMID: [20462408](https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&cmd=prlinks&retmode=ref&id=20462408), PMCID: [PMC2894037](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2894037/)
+* Bengtsson H, Neuvial P, Speed TP. TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays, BMC Bioinformatics, 2010. DOI: [10.1186/1471-2105-11-245](https://doi.org/10.1186%2F1471-2105-11-245). PMID: [20462408](https://europepmc.org/article/MED/20462408), PMCID: [PMC2894037](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2894037/)
 
-* Olshen AB, Bengtsson H, Neuvial P, Spellman PT, Olshen RA, Seshan VA. Parent-specific copy number in paired tumor-normal studies using circular binary segmentation, Bioinformatics, 2011. DOI: [10.1093/bioinformatics/btr329](https://doi.org/10.1093%2Fbioinformatics%2Fbtr329). PMID: [21666266](https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=pubmed&cmd=prlinks&retmode=ref&id=21666266). PMCID: [PMC3137217](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3137217/)
+* Olshen AB, Bengtsson H, Neuvial P, Spellman PT, Olshen RA, Seshan VA. Parent-specific copy number in paired tumor-normal studies using circular binary segmentation, Bioinformatics, 2011. DOI: [10.1093/bioinformatics/btr329](https://doi.org/10.1093%2Fbioinformatics%2Fbtr329). PMID: [21666266](https://europepmc.org/article/MED/21666266). PMCID: [PMC3137217](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3137217/)
 
 ## Installation
 
 R package PSCBS is available on [CRAN](https://cran.r-project.org/package=PSCBS) and can be installed in R as:
+
 ```r
 # install.packages("BiocManager")
 BiocManager::install(c("aroma.light", "DNAcopy"))
@@ -109,11 +110,16 @@ BiocManager::install(c("aroma.light", "DNAcopy"))
 install.packages("PSCBS")
 ```
 
+### Pre-release version
+ 
+To install the pre-release version that is available in Git branch `develop` on GitHub, use:
+
+```r
+remotes::install_github("HenrikBengtsson/PSCBS", ref="develop")
+```
+
+This will install the package from source.  
+
 
 <!-- pkgdown-drop-below -->
-
-
-## Contributing
-
-To contribute to this package, please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
