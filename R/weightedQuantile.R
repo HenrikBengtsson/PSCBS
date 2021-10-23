@@ -109,9 +109,5 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
   }
 
   # Here we know that there are no missing values in the data
-  if (method == "wtd.quantile") {
-    wtd.quantile(x, weights=w, probs=probs, normwt=TRUE, na.rm=FALSE, ...)
-  } else {
-    stop("Cannot estimate weighted quantiles: Argument 'method' is unknown: ", method)
-  }
+  wtd.quantile(x, weights=w, probs=probs, normwt=TRUE, na.rm=FALSE, ...)
 }) # weightedQuantile()
