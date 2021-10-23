@@ -108,22 +108,19 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
 
 
 
-## These functions, wtd.quantile() and wtd.table() originate from the
-## Hmisc 4.6-0 (2021-10-07), which is released under GPL (>= 2).  The reason
-## for copying (and pruning) them instead of adding 'Hmisc' as a dependency are
-## several: (i) Hmisc has a large number of dependencies, (ii) Hmisc requires
-## R (>= 3.6.0) whereas we try to stay backward compatible with R (>= 3.2.0),
-## and, most importantly, (iii) due to it's many dependencies Hmisc does not
-## install out of the box on all systems, e.g. as of 2021-10-22 it is not
-## available for macOS running on the M1 chip.
+## The wtd.quantile() function originates from Hmisc 4.6-0 (2021-10-07), which
+## was released under GPL (>= 2).  The reasons for copying (and pruning) it
+## instead of adding 'Hmisc' as a dependency are several: (i) Hmisc has a large
+## number of dependencies, (ii) Hmisc requires R (>= 3.6.0) whereas we try to
+## stay backward compatible with R (>= 3.2.0), and, most importantly, (iii) due
+## to it's many dependencies Hmisc does not install out of the box on all
+## systems, e.g. as of 2021-10-22 it is not available for macOS running on the
+## M1 chip.
 ##
 ## CHANGES MADE:
 ## * wtd.quantile(): Dropped argument 'type' - always type="quantile"
 ## * wtd.quantile(): Dropped argument 'normwt' - always normwt=TRUE
 ## * wtd.quantile(): Dropped argument 'na.rm' - always na.rm=FALSE
-## * wtd.table(): Dropped argument 'type' from - always type="list"
-## * wtd.table(): No need to support dates, strings, of factors
-## * wtd.table(): Dropped argument 'na.rm' - always na.rm=FALSE
 .wtd.quantile <- function(x, weights, probs=c(0, .25, .5, .75, 1)) {
   if(any(probs < 0 | probs > 1))
     stop("Probabilities must be between 0 and 1 inclusive")
