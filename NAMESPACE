@@ -45,7 +45,7 @@ importFrom("grDevices",
            "col2rgb", "rgb")
 
 importFrom("stats",
-           "cor", "cutree", "density", "end", "mad", "median",
+           "approx", "cor", "cutree", "density", "end", "mad", "median",
            "na.omit", "quantile", "sd", "start", "weighted.mean")
 
 importFrom("utils",

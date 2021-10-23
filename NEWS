@@ -1,7 +1,16 @@
 Package: PSCBS
 ==============
 
-Version: 0.65.0-9001 [2021-10-21]
+Version: 0.65.0-9002 [2021-10-22]
+
+SIGNIFICANT CHANGES:
+
+ * Package no longer depends on the 'Hmisc' package, which was used for its
+   wtd.quantile() function. Instead, we have adopted its GPL (>=2) code.
+   The reason for doing so is that 'Hmisc' no longer installs out of the
+   box on platforms, e.g. macOS M1, but also that 'Hmisc' has a large number
+   of package dependencies, which adds an unnecessary installation weight
+   to the 'PSCBS' package.
 
 CODE REFACTORING:
 

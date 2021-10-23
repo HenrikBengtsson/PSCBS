@@ -20,8 +20,8 @@
 #   \item{na.rm}{a @logical value indicating whether @NA values in
 #            \code{x} should be stripped before the computation proceeds,
 #            or not.}
-#   \item{method}{If \code{"wtd.quantile"}, then @see "Hmisc::wtd.quantile"
-#            of the \pkg{Hmisc} package is used.
+#   \item{method}{If \code{"wtd.quantile"}, then an internal copy of
+#            \code{Hmisc::wtd.quantile()} is used.
 #            No other methods are currently supported.}
 #   \item{...}{Additional arguments passed to the estimator.}
 # }
@@ -34,8 +34,8 @@
 #
 # \seealso{
 #   Internally the following functions may be used:
-#   @see "stats::quantile" (if no weights are specified), or
-#   @see "Hmisc::wtd.quantile".
+#   @see "stats::quantile" (if no weights are specified), or an internal
+#   copy of \code{Hmisc::wtd.quantile()}.
 #   For a weighted median estimator, @see "matrixStats::weightedMedian"
 #   of the \pkg{matrixStats} package.
 # }
@@ -73,12 +73,6 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
 
   # Argument 'method':
   method <- match.arg(method)
-  if (method == "wtd.quantile") {
-    # This will load 'Hmisc', if not already done
-    wtd.quantile <- Hmisc::wtd.quantile
-  }
-
-
 
   # Remove values with zero (and negative) weight. This will:
   # (1) take care of the case when all weights are zero,
@@ -109,5 +103,84 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
   }
 
   # Here we know that there are no missing values in the data
-  wtd.quantile(x, weights=w, probs=probs, normwt=TRUE, na.rm=FALSE, ...)
+  .wtd.quantile(x, weights=w, probs=probs)
 }) # weightedQuantile()
+
+
+
+## These functions, wtd.quantile() and wtd.table() originate from the
+## Hmisc 4.6-0 (2021-10-07), which is released under GPL (>= 2).  The reason
+## for copying (and pruning) them instead of adding 'Hmisc' as a dependency are
+## several: (i) Hmisc has a large number of dependencies, (ii) Hmisc requires
+## R (>= 3.6.0) whereas we try to stay backward compatible with R (>= 3.2.0),
+## and, most importantly, (iii) due to it's many dependencies Hmisc does not
+## install out of the box on all systems, e.g. as of 2021-10-22 it is not
+## available for macOS running on the M1 chip.
+##
+## CHANGES MADE:
+## * wtd.quantile(): Dropped argument 'type' - always type="quantile"
+## * wtd.quantile(): Dropped argument 'normwt' - always normwt=TRUE
+## * wtd.quantile(): Dropped argument 'na.rm' - always na.rm=FALSE
+## * wtd.table(): Dropped argument 'type' from - always type="list"
+## * wtd.table(): No need to support dates, strings, of factors
+## * wtd.table(): Dropped argument 'na.rm' - always na.rm=FALSE
+.wtd.quantile <- function(x, weights, probs=c(0, .25, .5, .75, 1)) {
+  if(any(probs < 0 | probs > 1))
+    stop("Probabilities must be between 0 and 1 inclusive")
+
+  nams <- paste(format(round(probs * 100, if(length(probs) > 1) 
+                             2 - log10(diff(range(probs))) else 2)), 
+                "%", sep = "")
+
+  ## NOTE: Data points with zero or NA weights have already been dropped
+  ## by weightedQuantile() before calling this function
+
+  w <- .wtd.table(x, weights)
+  x     <- w$x
+  wts   <- w$sum.of.weights
+  n     <- sum(wts)
+  order <- 1 + (n - 1) * probs
+  low   <- pmax(floor(order), 1)
+  high  <- pmin(low + 1, n)
+  order <- order %% 1
+  ## Find low and high order statistics
+  ## These are minimum values of x such that the cum. freqs >= c(low,high)
+  allq <- approx(cumsum(wts), x, xout=c(low,high), 
+                 method="constant", f=1, rule=2L)$y
+  k <- length(probs)
+  quantiles <- (1 - order)*allq[1:k] + order*allq[-(1:k)]
+  names(quantiles) <- nams
+  quantiles
+}
+
+
+.wtd.table <- function(x, weights) {
+  n <- length(x)
+  
+  ## Normalize weights
+  weights <- n * weights/sum(weights)
+
+  ## Order (x,w) by x
+  i <- order(x)
+  x <- x[i]
+  weights <- weights[i]
+
+  if (anyDuplicated(x)) {  ## diff(x) == 0 faster but doesn't handle Inf
+    weights <- tapply(weights, INDEX = x, FUN = sum)
+    if (length(names(weights)) == 0) stop("program logic error")
+    x <- .all.is.numeric(names(weights))
+    names(weights) <- NULL
+  }
+
+  list(x=x, sum.of.weights=weights)
+}
+
+
+.all.is.numeric <- function(x) {
+  x <- sub("(^[[:space:]]+|[[:space:]]+$)", "", x)
+  xs <- x[!is.element(x, c("", ".", "NA"))]
+  if (length(xs) == 0) return(x)
+  isnum <- suppressWarnings(!any(is.na(as.numeric(xs))))
+  if (isnum) x <- as.numeric(x)
+  x
+}
