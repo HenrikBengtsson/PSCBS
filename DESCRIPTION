@@ -1,5 +1,5 @@
 Package: PSCBS
-Version: 0.65.0-9001
+Version: 0.65.0-9002
 Depends:
   R (>= 3.2.0)
 Imports:
@@ -18,14 +18,12 @@ Imports:
   stats,
   utils
 Suggests:
-  Hmisc (>= 4.4-2),
+  Hmisc,
   R.rsp (>= 0.44.0),
   R.devices (>= 2.17.0),
   ggplot2 (>= 3.2.1)
 SuggestsNote:
-  BioC (>= 3.1),
-  Recommended:
-  Hmisc
+  BioC (>= 3.1)
 VignetteBuilder: R.rsp
 Title: Analysis of Parent-Specific DNA Copy Numbers
 Authors@R: c(
@@ -35,7 +33,9 @@ Authors@R: c(
   person("Venkatraman E.", "Seshan", role="aut"),
   person("Adam B.", "Olshen", role="aut"),
   person("Paul T.", "Spellman", role="aut"),
-  person("Richard A.", "Olshen", role="aut"))
+  person("Richard A.", "Olshen", role="aut"),
+  person("Frank E", "Harrell Jr", role="ctb",
+         comment = "Weighted quantile estimator adopted from Hmisc::wtd.quantile()"))
 Description: Segmentation of allele-specific DNA copy number data and detection of regions with abnormal copy number within each parental chromosome.  Both tumor-normal paired and tumor-only analyses are supported.
 License: GPL (>= 2)
 LazyLoad: TRUE
