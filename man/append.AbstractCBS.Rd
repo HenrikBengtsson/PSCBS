@@ -38,5 +38,7 @@
 \seealso{
   For more information see \code{\link{AbstractCBS}}.
 }
+
+
 \keyword{internal}
 \keyword{methods}

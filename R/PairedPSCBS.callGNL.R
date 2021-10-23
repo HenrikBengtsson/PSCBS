@@ -60,7 +60,7 @@ setMethodS3("callGNL", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), ..., min
   if (flavor == "TCN|AB") {
     fit <- callGNLByTCNofAB(fit, ..., force=force)
   } else {
-    throw("Cannot call allelic balance. Unsupported flavor: ", flavor)
+    stop("Cannot call allelic balance. Unsupported flavor: ", flavor)
   }
 
   # Don't call segments with too few data points?
@@ -197,7 +197,7 @@ setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, d
   keys <- sprintf("tcn_%g%%", 100*c(alpha/2, 1-alpha/2))
   missing <- keys[!is.element(keys, colnames(segs))]
   if (length(missing) > 0) {
-    throw("No such statistics: ", hpaste(missing))
+    stop("No such statistics: ", hpaste(missing))
   }
 
   verbose && enter(verbose, "Calling segments")
@@ -224,7 +224,7 @@ setMethodS3("callGNLByTCNofABv1", "PairedPSCBS", function(fit, deltaLoss=-0.5, d
   keys <- sprintf("tcn_%g%%", 100*c(alpha/2, 1-alpha/2))
   missing <- keys[!is.element(keys, names(tcnStats))]
   if (length(missing) > 0) {
-    throw("No such statistics: ", hpaste(missing))
+    stop("No such statistics: ", hpaste(missing))
   }
   mean <- tcnStats["tcnMean"]
   ci <- tcnStats[keys]

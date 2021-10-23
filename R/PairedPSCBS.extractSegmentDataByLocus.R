@@ -11,7 +11,7 @@ setMethodS3("extractSegmentDataByLocus", "PairedPSCBS", function(fit, fields=NUL
     fields <- Arguments$getCharacters(fields)
     unknown <- fields[!is.element(fields, colnames(segs))]
     if (length(unknown) > 0L) {
-      throw("Unknown segment fields: ", paste(sQuote(unknown), collapse=", "))
+      stop("Unknown segment fields: ", paste(sQuote(unknown), collapse=", "))
     }
   } else {
     fields <- colnames(segs)

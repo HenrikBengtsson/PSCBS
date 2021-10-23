@@ -55,7 +55,7 @@ setMethodS3("findLargeGaps", "default", function(chromosome=NULL, x, minLength, 
   # Argument 'resolution':
   resolution <- Arguments$getNumeric(resolution, range=c(0,Inf))
   if (resolution >= minLength) {
-    throw(sprintf("Cannot identify large gaps. Argument 'resolution' (=%g) is not strictly smaller than 'minLength' (=%g).", resolution, minLength))
+    stop(sprintf("Cannot identify large gaps. Argument 'resolution' (=%g) is not strictly smaller than 'minLength' (=%g).", resolution, minLength))
   }
 
   if (!is.null(chromosome)) {

@@ -27,7 +27,7 @@
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of
    estimator to use.}
   \item{...}{Additional arguments passed to the estimator.}
-  \item{max}{(Optional) The maxium estimate allowed. If greater than
+  \item{max}{(Optional) The maximum estimate allowed. If greater than
    this value, the estimate will be truncated.}
   \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }

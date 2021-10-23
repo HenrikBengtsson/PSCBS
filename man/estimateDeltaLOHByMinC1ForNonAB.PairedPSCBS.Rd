@@ -34,7 +34,7 @@
 }
 
 \value{
-  Returns the estimated LOH treshold as a \code{\link[base]{numeric}} scalar or -\code{\link[base:is.finite]{Inf}}.
+  Returns the estimated LOH threshold as a \code{\link[base]{numeric}} scalar or -\code{\link[base:is.finite]{Inf}}.
   In case it is not possible to estimate the LOH threshold, then
   -\code{\link[base:is.finite]{Inf}} is returned.
 }

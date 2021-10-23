@@ -76,7 +76,7 @@ setMethodS3("c", "CBS", function(..., addSplit = TRUE) {
       data <- getLocusData(res)
       data_arg <- getLocusData(arg)
       if (!all(colnames(data_arg) == colnames(data))) {
-        throw(sprintf("Cannot concatenate %s and %s objects, because they have different sets of columns in field %s: {%s} [n=%d] != {%s} [n=%d]", sQuote(class(res)[1]), sQuote(class(arg)[1]), sQuote(field), paste(sQuote(colnames(data)), collapse=", "), ncol(data), paste(sQuote(colnames(data_arg)), collapse=", "), ncol(data_arg)))
+        stop(sprintf("Cannot concatenate %s and %s objects, because they have different sets of columns in field %s: {%s} [n=%d] != {%s} [n=%d]", sQuote(class(res)[1]), sQuote(class(arg)[1]), sQuote(field), paste(sQuote(colnames(data)), collapse=", "), ncol(data), paste(sQuote(colnames(data_arg)), collapse=", "), ncol(data_arg)))
       }
 
       indexOffset <- nrow(data)
@@ -236,7 +236,7 @@ setMethodS3("extractSegments", "CBS", function(this, idxs, ..., verbose=FALSE) {
   .stop_if_not(all(is.na(drow) | (drow > 0)))
   if (!all(is.na(drow) | (drow > 0))) {
     print(segRows)
-    throw("INTERNAL ERROR: Generated 'segRows' is invalid, because it contains overlapping data chunks.")
+    stop("INTERNAL ERROR: Generated 'segRows' is invalid, because it contains overlapping data chunks.")
   }
 
   verbose && exit(verbose)
@@ -285,7 +285,7 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
   # Sanity check
   chrs <- segsT[["chromosome"]]
   if (chrs[1] != chrs[2]) {
-    throw("Cannot merge segments that are on different chromosomes: ", chrs[1], " != ", chrs[2])
+    stop("Cannot merge segments that are on different chromosomes: ", chrs[1], " != ", chrs[2])
   }
 
   # Merge segments
@@ -304,13 +304,13 @@ setMethodS3("mergeTwoSegments", "CBS", function(this, left, update=TRUE, verbose
   # Starts
   idxs <- grep("(S|s)tart$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMins(T, na.rm=TRUE)
+  segT[,idxs] <- colMins(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Ends
   idxs <- grep("(E|e)nd$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMaxs(T, na.rm=TRUE)
+  segT[,idxs] <- colMaxs(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Counts

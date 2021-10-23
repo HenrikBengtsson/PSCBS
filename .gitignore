@@ -18,5 +18,8 @@
 .issues
 .make
 revdep/data.sqlite
-revdep/checks/*
-revdep/library/*
+revdep/cache
+revdep/checks
+revdep/library
+.Rdump
+.local

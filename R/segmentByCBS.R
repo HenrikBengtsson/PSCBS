@@ -165,7 +165,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
   ##    # a unique chromosome.
   ##    chromosomes <- sort(unique(chromosome))
   ##    if (length(chromosomes) > 1) {
-  ##      throw("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "))
+  ##      stop("Argument 'chromosome' specifies more than one unique chromosome: ", paste(seqToHumanReadable(chromosomes), collapse=", "))
   ##    }
   ##    chromosome <- chromosomes
     }
@@ -210,16 +210,16 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     knownSegments <- data.frame(chromosome=integer(0), start=integer(0), end=integer(0))
   } else {
 #    if (!joinSegments) {
-#      throw("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.")
+#      stop("Argument 'knownSegments' should only be specified if argument 'joinSegments' is TRUE.")
 #    }
   }
 
   if (!is.data.frame(knownSegments)) {
-    throw("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1])
+    stop("Argument 'knownSegments' is not a data.frame: ", class(knownSegments)[1])
   }
 
   if (!all(is.element(c("chromosome", "start", "end"), colnames(knownSegments)))) {
-    throw("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)))
+    stop("Argument 'knownSegments' does not have the required column names: ", hpaste(colnames(knownSegments)))
   }
 
   # Detailed validation of 'knownSegments'.
@@ -236,14 +236,14 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
       xs <- xs[!is.na(xs)]
       if (anyDuplicated(xs) > 0) {
         print(knownSegments)
-        throw(sprintf("Detected segments on chromosome %s with non-unique '%s' positions in argument 'knownSegments'", chr, field))
+        stop(sprintf("Detected segments on chromosome %s with non-unique '%s' positions in argument 'knownSegments'", chr, field))
       }
     } # for (field ...)
 
     # Known segments must not overlap
     if (!all(dd$start[-1] >= dd$end[-nrow(dd)], na.rm=TRUE)) {
       print(knownSegments)
-      throw("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments'.")
+      stop("Detected overlapping segments on chromosome ", chr, " in argument 'knownSegments'.")
     }
   }
 
@@ -321,10 +321,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     seeds <- NULL
     if (!is.null(seed)) {
       randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+      on.exit(randomSeed("reset"), add=TRUE)
       verbose && printf(verbose, "Random seed temporarily set (seed=c(%s), kind=\"L'Ecuyer-CMRG\")\n", paste(seed, collapse=", "))
       seeds <- randomSeed("advance", n=nbrOfChromosomes)
       verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
-      randomSeed("reset")
     }
 
     fitList <- listenv()
@@ -382,7 +382,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         verbose && print(verbose, tail(as.data.frame(fit)), level=-10)
 
         fit
-      } ## fitList[[chrTag]] <- ...
+      } %seed% TRUE %label% sprintf("segmentByCBS-%s", chrTag)  ## fitList[[chrTag]] <- ...
 
       rm(list=fields) # Not needed anymore
       verbose && exit(verbose)
@@ -445,7 +445,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     # Here 'knownSegments' should specify at most a single chromosome
     uChromosomes <- sort(unique(knownSegments$chromosome))
     if (length(uChromosomes) > 1) {
-      throw("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes))
+      stop("INTERNAL ERROR: Argument 'knownSegments' specifies more than one chromosome: ", hpaste(uChromosomes))
     }
   } # if (R_SANITY_CHECK)
 
@@ -476,10 +476,10 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
     seeds <- NULL
     if (!is.null(seed)) {
       randomSeed("set", seed=seed, kind="L'Ecuyer-CMRG")
+      on.exit(randomSeed("reset"), add=TRUE)
       verbose && printf(verbose, "Random seed temporarily set (seed=c(%s), kind=\"L'Ecuyer-CMRG\")\n", paste(seed, collapse=", "))
       seeds <- randomSeed("advance", n=nbrOfSegments)
       verbose && printf(verbose, "Produced %d seeds from this stream for future usage\n", length(seeds))
-      randomSeed("reset")
     }
 
     fitList <- listenv()
@@ -562,7 +562,7 @@ setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=
         } # if (R_SANITY_CHECK)
 
         fit
-      }
+      } %seed% TRUE %label% sprintf("segmentByCBS-%s", segTag)  ## fitList[[segTag]] <- ...
 
       rm(list=fields) # Not needed anymore
 

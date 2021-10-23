@@ -53,7 +53,7 @@ setMethodS3("installDNAcopy", "default", function(..., force=FALSE) {
   } else {
     # To please R CMD check
     biocLite <- NULL; rm(list="biocLite")
-    source("http://www.bioconductor.org/biocLite.R")
+    source("https://www.bioconductor.org/biocLite.R")
     biocLite(pkgName, ...)
   }
   

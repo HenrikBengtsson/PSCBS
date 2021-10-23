@@ -121,7 +121,7 @@
   (TCN,BAF) data at once.  The reason for this is that downstream
   CN-state calling methods, such as the AB and the LOH callers,
   performs much better on whole-genome data.  In fact, they may
-  fail to provide valid calls if done chromsome by chromosome.
+  fail to provide valid calls if done chromosome by chromosome.
 }
 
 \section{Missing and non-finite values}{

@@ -59,7 +59,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
 ##     Failed to infer argument 'Clim' due to an unknown signalType(): NA"
 ##  /HB 2013-10-14
 ##  if (!add && is.null(Clim)) {
-##    throw("Failed to infer argument 'Clim' due to an unknown signalType(): ", signalType)
+##    stop("Failed to infer argument 'Clim' due to an unknown signalType(): ", signalType)
 ##  }
   } else if (!add) {
     Clim <- Arguments$getNumerics(Clim, length=c(2L,2L),
@@ -87,7 +87,7 @@ setMethodS3("plotTracks", "CBS", function(x, scatter=TRUE, pch=20, col="gray", m
   # Extract the input data
   data <- getLocusData(fit)
   if (is.null(data)) {
-    throw("Cannot plot segmentation results. No input data available.")
+    stop("Cannot plot segmentation results. No input data available.")
   }
 
   chromosomes <- getChromosomes(fit)

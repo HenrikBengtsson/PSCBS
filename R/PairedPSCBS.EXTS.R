@@ -142,7 +142,7 @@ setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
   # Calculate (dC1,dC2)
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # (dC1, dC2)
-  dC1C2 <- matrixStats::colDiffs(C1C2)
+  dC1C2 <- colDiffs(C1C2, useNames = FALSE)
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Change-point weights
@@ -154,7 +154,7 @@ setMethodS3("extractDeltaC1C2", "PairedPSCBS", function(...) {
 
   # (a) Smallest of the two flanking (DH) counts
   cpw <- cbind(w[1:(length(w)-1)], w[2:length(w)])
-  cpw <- rowMins(cpw, na.rm=TRUE)
+  cpw <- rowMins(cpw, na.rm=TRUE, useNames=FALSE)
   cpw[is.infinite(cpw)] <- NA
   cpw <- sqrt(cpw)
   cpwMin <- cpw / sum(cpw, na.rm=TRUE)
@@ -190,7 +190,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
 
   joinSegments <- fit$params$joinSegments
   if (!joinSegments) {
-    throw("Postsegmentation of TCNs is only implemented for the case when joinSegments=TRUE: ", joinSegments)
+    stop("Postsegmentation of TCNs is only implemented for the case when joinSegments=TRUE: ", joinSegments)
   }
 
 
@@ -346,7 +346,7 @@ setMethodS3("postsegmentTCN", "PairedPSCBS", function(fit, ..., force=FALSE, ver
           verbose && printf(verbose, "[idxStart,idxEnd] = [%d,%d]\n", tcnSegRow[1], tcnSegRow[2])
           verbose && cat(verbose, "Number of non-missing TCN loci: ", length(units))
         } else {
-          throw("Not implemented yet.")  # /HB 2010-12-02
+          stop("Not implemented yet.")  # /HB 2010-12-02
         } # if (joinSegments)
 
         gamma <- avgTCN(CT[units])

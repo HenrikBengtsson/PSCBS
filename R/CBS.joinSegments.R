@@ -45,7 +45,7 @@ setMethodS3("joinSegments", "CBS", function(fit, range=NULL, verbose=FALSE, ...)
   # Argument 'range':
   if (!is.null(range)) {
     if (nbrOfChrs > 1L) {
-      throw("Argument 'range' cannot be given when 'fit' contains multiple chromosomes.")
+      stop("Argument 'range' cannot be given when 'fit' contains multiple chromosomes.")
     }
     range <- Arguments$getDoubles(range, length=c(2,2))
     .stop_if_not(range[2] >= range[1])

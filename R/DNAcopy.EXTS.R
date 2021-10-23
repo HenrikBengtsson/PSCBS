@@ -60,7 +60,7 @@ setMethodS3("as.DNAcopy", "CBS", function(fit, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup the 'output' field
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  output <- getSegments(fit, splitter=FALSE)
+  output <- getSegments(fit, splitters=FALSE)
   rownames <- rownames(output)
 
   output <- data.frame(
@@ -181,7 +181,7 @@ setMethodS3("estimateStandardDeviation", "DNAcopy", function(fit, sample=1L, met
         sigma <- estimatorFcn(dy, na.rm=na.rm)
       }
   } else {
-    throw("Method no implemented: ", method)
+    stop("Method no implemented: ", method)
   }
 
   sigma

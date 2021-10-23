@@ -13,7 +13,7 @@ setMethodS3("seqOfSegmentsByDP", "AbstractCBS", function(fit, by, shift=+100, ..
   fields <- colnames(data)
   missing <- fields[!is.element(by, fields)]
   if (length(missing) > 0) {
-    throw("Argument 'by' specifies one or more non-existing locus data fields: ", paste(missing, collapse=", "))
+    stop("Argument 'by' specifies one or more non-existing locus data fields: ", paste(missing, collapse=", "))
   }
 
   # Argument 'shift':
@@ -338,7 +338,7 @@ threshold = 0.5,
   # How should NAs be handled?!?
   Yz <- Y
   Yz[is.na(Yz)] <- 0
-  s <- rbind(rep(0, times=p), colCumsums(Yz))
+  s <- rbind(rep(0, times=p), colCumsums(Yz, useNames=FALSE))
   v <- c(0, cumsum(rowSums(Y^2, na.rm=TRUE)))
   for (i in 1:k) {
     for (j in i:k) {
@@ -458,10 +458,10 @@ setMethodS3("pruneByDP", "AbstractCBS", function(fit, nbrOfSegments, ..., verbos
   }
 
   if (nbrOfSegments < nrow(knownSegments)) {
-    throw("Argument 'nbrOfSegments' is less than number of \"known\" segments: ", nbrOfSegments, " < ", nrow(knownSegments))
+    stop("Argument 'nbrOfSegments' is less than number of \"known\" segments: ", nbrOfSegments, " < ", nrow(knownSegments))
   }
   if (nbrOfSegments > nbrOfSegments(fit, splitters=FALSE)) {
-    throw("Argument 'nbrOfSegments' is greater than the number of \"found\" segments: ", nbrOfSegments, " > ", nbrOfSegments(fit, splitters=FALSE))
+    stop("Argument 'nbrOfSegments' is greater than the number of \"found\" segments: ", nbrOfSegments, " > ", nbrOfSegments(fit, splitters=FALSE))
   }
 
   # Argument 'verbose':

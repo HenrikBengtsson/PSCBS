@@ -76,7 +76,7 @@ setMethodS3("callLOH", "PairedPSCBS", function(fit, flavor=c("SmallC1", "LargeDH
   } else if (flavor == "LargeDH") {
     fit <- callExtremeAllelicImbalanceByDH(fit, ..., callName="loh")
   } else {
-    throw("Cannot call LOH. Unsupported flavor: ", flavor)
+    stop("Cannot call LOH. Unsupported flavor: ", flavor)
   }
 
   # Don't call segments with too few data points?

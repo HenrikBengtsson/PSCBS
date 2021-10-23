@@ -5,7 +5,7 @@ setMethodS3("extractWIG", "AbstractCBS", function(fit, signal, transform=NULL, n
   # Argument 'nbrOfDecimals':
   nbrOfDecimals <- Arguments$getInteger(nbrOfDecimals)
 
-  data <- getSegments(fit, splitter=FALSE)
+  data <- getSegments(fit, splitters=FALSE)
   fields <- c("chromosome", "start", "end", "mean")
   if (!is.null(signal)) {
     fields[-1] <- sprintf("%s%s", signal, capitalize(fields[-1]))

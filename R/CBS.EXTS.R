@@ -86,7 +86,7 @@ setMethodS3("as.CBS", "DNAcopy", function(fit, sample=1L, ...) {
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Setup up 'CBS' object
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  if (sampleName == "<NA>") sampleName <- as.character(NA)
+  if (sampleName == "<NA>") sampleName <- NA_character_
   res <- list()
   res$sampleName <- sampleName
   res$data <- data
@@ -386,7 +386,7 @@ setMethodS3("estimateStandardDeviation", "CBS", function(fit, chromosomes=NULL, 
     sigma <- estimatorFcn(y, ...)
     df <- length(y)
   } else {
-    throw("Method no implemented: ", method)
+    stop("Method no implemented: ", method)
   }
 
   attr(sigma, "nbrOfLoci") <- nbrOfLoci
@@ -401,7 +401,7 @@ setMethodS3("getChromosomeRanges", "CBS", function(fit, ...) {
   # To please R CMD check, cf. subset()
   chromosome <- NULL; rm(list="chromosome")
 
-  segs <- getSegments(fit, splitter=FALSE)
+  segs <- getSegments(fit, splitters=FALSE)
   chromosomes <- sort(unique(segs$chromosome))
 
   # Allocate

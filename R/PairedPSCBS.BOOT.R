@@ -11,7 +11,7 @@
 # @synopsis
 #
 # \arguments{
-#   \item{B}{A postive @integer specifying the number of bootstrap samples.}
+#   \item{B}{A positive @integer specifying the number of bootstrap samples.}
 #   \item{boot}{Alternatively, to generating \code{B} bootstrap samples,
 #      this specifies a pre-generated set of bootstrap samples as
 #      returned by \code{bootstrapSegmentsAndChangepoints()}.}
@@ -197,7 +197,7 @@ setMethodS3("bootstrapTCNandDHByRegion", "PairedPSCBS", function(fit, B=1000L, b
           # If an error, display the data, then throw the exception
           verbose && cat(verbose, "Tolerance (option 'PSCBS/sanityChecks/tolerance'): ", tol)
           verbose && print(verbose, segs)
-          throw(ex)
+          stop(ex)
         })
       } else {
         verbose && cat(verbose, "Skipping. Not enough quantiles: ",
@@ -425,10 +425,10 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
 
   # Sanity checks
   if (!params$joinSegments) {
-    throw("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.")
+    stop("Cannot bootstrap TCN and DH by segments unless PSCNs are segmented using joinSegments=TRUE.")
   }
   if (regexpr(",", params$flavor, fixed=TRUE) != -1L) {
-    throw(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor))
+    stop(sprintf("Cannot bootstrap TCN and DH by segments if PSCNs are segmented using flavor=\"%s\".", params$flavor))
   }
   # Sanity check (same as above, but just in case)
   .stop_if_not(all(segs$tcnStart == segs$dhStart, na.rm=TRUE))
@@ -613,7 +613,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
     # Sanity check
     if (length(idxsAll) != nbrOfTCNs) {
       verbose && str(verbose, setdiff(idxsCT, idxsAll))
-      throw("INTERNAL ERROR: length(idxsAll) != nbrOfTCNs: ", length(idxsAll), " != ", nbrOfTCNs)
+      stop("INTERNAL ERROR: length(idxsAll) != nbrOfTCNs: ", length(idxsAll), " != ", nbrOfTCNs)
     }
 
 
@@ -712,7 +712,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
       dMu <- (mu - tcnMeans[jj])
       if (abs(dMu) > tol) {
         str(list(nbrOfTCNs=nbrOfTCNs, tcnNbrOfLoci=segJJ$tcnNbrOfLoci, mu=mu, tcnMean=tcnMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsTCN])))
-        throw(sprintf("INTERNAL ERROR: Incorrectly recalculated TCN mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, tcnMeans[jj]))
+        stop(sprintf("INTERNAL ERROR: Incorrectly recalculated TCN mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, tcnMeans[jj]))
       }
     }
 
@@ -724,7 +724,7 @@ setMethodS3("bootstrapSegmentsAndChangepoints", "PairedPSCBS", function(fit, B=1
       dMu <- (mu - dhMeans[jj])
       if (abs(dMu) > tol) {
         str(list(nbrOfDHs=nbrOfDHs, dhNbrOfLoci=segJJ$dhNbrOfLoci, mu=mu, dhMean=dhMeans[jj], dMu=dMu, "abs(dMu)"=abs(dMu), "range(x[units])"=range(x[idxsDH])))
-        throw(sprintf("INTERNAL ERROR: Incorrectly recalculated DH mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, dhMeans[jj]))
+        stop(sprintf("INTERNAL ERROR: Incorrectly recalculated DH mean for Segment #%d (chr %d, tcnId=%d, dhId=%d): %g != %g", jj, chr, tcnId, dhId, mu, dhMeans[jj]))
       }
     }
 

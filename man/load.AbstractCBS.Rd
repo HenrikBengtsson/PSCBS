@@ -42,5 +42,7 @@
   To save an object, see \code{\link[PSCBS:save.AbstractCBS]{*save}()}.
   For more information see \code{\link{AbstractCBS}}..
 }
+
+
 \keyword{internal}
 \keyword{methods}

@@ -4,7 +4,6 @@
 importFrom("R.methodsS3", "setMethodS3")
 importFrom("R.methodsS3", "getMethodS3")
 importFrom("R.oo", "setConstructorS3")
-importFrom("R.methodsS3", "throw")
 importFrom("R.utils", "use")
 
 ## Importing Object classes
@@ -46,7 +45,7 @@ importFrom("grDevices",
            "col2rgb", "rgb")
 
 importFrom("stats",
-           "cor", "cutree", "density", "end", "mad", "median",
+           "approx", "cor", "cutree", "density", "end", "mad", "median",
            "na.omit", "quantile", "sd", "start", "weighted.mean")
 
 importFrom("utils",
@@ -61,7 +60,7 @@ importFrom("DNAcopy",
            "segments.summary", "smooth.CNA", "CNA", "segment", "getbdry")
 
 importFrom("listenv", "listenv")
-importFrom("future", "%<-%")
+importFrom("future", "%<-%", "%seed%", "%label%")
 importFrom("parallel", "nextRNGStream")
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

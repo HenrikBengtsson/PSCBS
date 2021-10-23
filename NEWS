@@ -1,18 +1,54 @@
 Package: PSCBS
 ==============
 
+Version: 0.66.0 [2021-10-22]
+
+SIGNIFICANT CHANGES:
+
+ * Package no longer require the 'Hmisc' package, which was used for its
+   wtd.quantile() function. Instead, we have adopted its GPL (>=2) code.
+   The reason for doing so is that 'Hmisc' no longer installs out of the
+   box on platforms, e.g. macOS M1, but also that 'Hmisc' has a large number
+   of package dependencies, which adds an unnecessary installation weight
+   to the 'PSCBS' package for this single function.
+   
+CODE REFACTORING:
+
+ * Update package tests to test with 'multisession' futures.
+ 
+BUG FIXES:
+
+ * segmentByCBS() and segmentByPairedPSCBS() would produce warnings on
+   possibly unreliable random numbers due to parallel processing in the
+   case they segmented multiple chromosomes or segments.
+
+ * Fixed a few partial getSegments() argument name matching ('splitter'
+   -> 'splitters').
+
+DEPRECATED AND DEFUNCT:
+
+ * append(x, y) for CBS and PSCBS objects, deprecated since v0.64.0 is
+   defunct; use c(x, y) instead.
+
+ * save() for CBS and PSCBS objects and corresponding CBS$load() and
+   PSCBS$load() methods are defunct.  We recommend to use base R functions
+   saveRDS() and readRDS() instead.  If backward compatibility with the
+   defunct save() and load() methods, the saveObject() and loadObject()
+   functions from the R.utils package can be used.
+
+
 Version: 0.65.0 [2019-05-04]
 
 NEW FEATURES:
 
  * The PDF report produced by report() for Paired PSCBS results will now
-   provide an esimate of normal contamination together with a disclaimer.
+   provide an estimate of normal contamination together with a disclaimer.
 
 BUG FIXES:
 
  * A sanity check in segmentByPairedPSCBS() could produce an error on
    "'length(x) = 5 > 1' in coercion to 'logical(1)'" when running with
-   _R_CHECK_LENGTH_1_LOGIC2_=true. This bug did *not( affect the results
+   _R_CHECK_LENGTH_1_LOGIC2_=true. This bug did *not* affect the results
    of PSCBS.
 
  * Report templates used by report() would produce error "Error in unit(x, 
@@ -2169,7 +2205,7 @@ NEW FEATURES:
 
  * Added callLOH() for PairedPSCBS, which in turn calls auxiliary methods.
 
- * Added estimateTauLOH() for PairedPSCBS, which in turn calls axillary methods.
+ * Added estimateTauLOH() for PairedPSCBS, which in turn calls auxiliary methods.
 
  * Now callAB(..., force = FALSE) skips the caller if allelic-balance calls
    already exist.
@@ -2238,7 +2274,7 @@ NEW FEATURES:
 
 Version: 0.9.41 [2011-02-02]
 
-SIGNFICANT CHANGES:
+SIGNIFICANT CHANGES:
 
  * Updated default for 'tauAB' of callABandHighAI() and callABandLowC1() to be
    estimated from data using estimateTauAB().

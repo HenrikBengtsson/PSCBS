@@ -78,7 +78,7 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
   y <- data[,3]
 
   # Allocate locus calls
-  naValue <- as.logical(NA)
+  naValue <- NA
   callsL <- matrix(naValue, nrow=nbrOfLoci, ncol=nbrOfCalls)
   colnames(callsL) <- colnames(segs)[callCols]
   callsL <- as.data.frame(callsL)
@@ -101,7 +101,7 @@ setMethodS3("extractCallsByLocus", "PairedPSCBS", function(fit, ...) {
   # The calls for loci that have missing annotations or observations,
   # should also be missing, i.e. NA.
   nok <- (is.na(chromosome) | is.na(x) | is.na(y))
-  callsL[nok,] <- as.logical(NA)
+  callsL[nok,] <- NA
 
   # Sanity check
   .stop_if_not(nrow(callsL) == nbrOfLoci)

@@ -53,7 +53,7 @@ setMethodS3("callCopyNeutral", "PairedPSCBS", function(fit, flavor=c("TCN|AB"), 
   if (flavor == "TCN|AB") {
     fit <- callCopyNeutralByTCNofAB(fit, ..., force=force)
   } else {
-    throw("Cannot call copy-neutral states. Unsupported flavor: ", flavor)
+    stop("Cannot call copy-neutral states. Unsupported flavor: ", flavor)
   }
 
   # Don't call segments with too few data points?
@@ -107,13 +107,13 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
   segs <- getSegments(fit, splitters=TRUE)
   isAB <- segs$abCall
   if (is.null(isAB)) {
-    throw("Cannot call copy-neutral states, because allelic-balance calls have not been made yet.")
+    stop("Cannot call copy-neutral states, because allelic-balance calls have not been made yet.")
   }
 
   nABs <- sum(isAB, na.rm=TRUE)
   verbose && cat(verbose, "Number of AB segments: ", nABs)
   if (nABs == 0L) {
-    throw("Cannot call copy-neutral states, because none of the segments are in allelic balance.")
+    stop("Cannot call copy-neutral states, because none of the segments are in allelic balance.")
   }
 
   C <- segs[,"tcnMean", drop=TRUE]
@@ -129,7 +129,7 @@ setMethodS3("calcStatsForCopyNeutralABs", "PairedPSCBS", function(fit, ..., forc
   nAB <- sum(isNeutralAB, na.rm=TRUE)
   verbose && cat(verbose, "Number of copy-neutral AB segments: ", nAB)
   if (nAB == 0L) {
-    throw("Cannot call copy-neutral states, because none of the segments in allelic-balance are copy neutral.")
+    stop("Cannot call copy-neutral states, because none of the segments in allelic-balance are copy neutral.")
   }
 
   verbose && enter(verbose, "Extracting all copy neutral AB segments across all chromosomes into one big segment")
@@ -395,7 +395,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
     # Assert that they exists
     missing <- keys[!is.element(keys, colnames(segs))]
     if (length(missing) > 0) {
-      throw("INTERNAL ERROR: No such statistics: ", hpaste(missing))
+      stop("INTERNAL ERROR: No such statistics: ", hpaste(missing))
     }
   }
 
@@ -419,7 +419,7 @@ setMethodS3("callCopyNeutralByTCNofAB", "PairedPSCBS", function(fit, delta=estim
   # Assert confidence interval of interest
   missing <- keys[!is.element(keys, names(tcnStats))]
   if (length(missing) > 0) {
-    throw("INTERNAL ERROR: No such statistics: ", hpaste(missing))
+    stop("INTERNAL ERROR: No such statistics: ", hpaste(missing))
   }
   mean <- tcnStats["tcnMean"]
   ci <- tcnStats[keys]

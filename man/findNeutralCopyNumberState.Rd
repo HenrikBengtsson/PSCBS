@@ -25,7 +25,7 @@
   \item{C}{A \code{\link[base]{numeric}} \code{\link[base]{vector}} of region-level total copy number estimates.}
   \item{isAI}{A \code{\link[base]{logical}} \code{\link[base]{vector}} of "allelic imbalance" calls.}
   \item{weights}{An optional \code{\link[base]{numeric}} \code{\link[base]{vector}} of non-negative weights.}
-  \item{...}{Further argumants to be passed to the density estimation
+  \item{...}{Further arguments to be passed to the density estimation
     function.}
   \item{minDensity}{A \code{\link[base]{numeric}} value, below which density peaks are
     discarded.}
