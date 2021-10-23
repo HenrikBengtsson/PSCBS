@@ -128,44 +128,21 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
   if(any(probs < 0 | probs > 1))
     stop("Probabilities must be between 0 and 1 inclusive")
 
-  nams <- paste(format(round(probs * 100, if(length(probs) > 1) 
-                             2 - log10(diff(range(probs))) else 2)), 
-                "%", sep = "")
-
   ## NOTE: Data points with zero or NA weights have already been dropped
   ## by weightedQuantile() before calling this function
 
-  w <- .wtd.table(x, weights)
-  x     <- w$x
-  wts   <- w$sum.of.weights
-  n     <- sum(wts)
-  order <- 1 + (n - 1) * probs
-  low   <- pmax(floor(order), 1)
-  high  <- pmin(low + 1, n)
-  order <- order %% 1
-  ## Find low and high order statistics
-  ## These are minimum values of x such that the cum. freqs >= c(low,high)
-  allq <- approx(cumsum(wts), x, xout=c(low,high), 
-                 method="constant", f=1, rule=2L)$y
-  k <- length(probs)
-  quantiles <- (1 - order)*allq[1:k] + order*allq[-(1:k)]
-  names(quantiles) <- nams
-  quantiles
-}
-
-
-.wtd.table <- function(x, weights) {
-  n <- length(x)
-  
   ## Normalize weights
-  weights <- n * weights/sum(weights)
+  weights <- weights/sum(weights)
 
-  ## Order (x,w) by x
+  ## Order (x,weights) by x
   i <- order(x)
   x <- x[i]
   weights <- weights[i]
 
-  if (anyDuplicated(x)) {  ## diff(x) == 0 faster but doesn't handle Inf
+  nx <- length(x)
+
+  ## Merge replicated 'x':s into single ones by combining their weights
+  if (anyDuplicated(x)) {
     weights <- tapply(weights, INDEX = x, FUN = sum)
     ## The names of 'weights' holds the unique 'x' values
     xs <- names(weights)
@@ -173,6 +150,26 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
     if (length(xs) == 0) stop("program logic error")
     x <- as.numeric(xs)
   }
+  
+  weights <- nx * weights
+  cweights <- cumsum(weights)
+  
+  n     <- cweights[length(weights)]
+  order <- 1 + (n - 1) * probs
+  low   <- pmax(floor(order), 1)
+  high  <- pmin(low + 1, n)
+  order <- order %% 1
+  ## Find low and high order statistics
+  ## These are minimum values of x such that the cum. freqs >= c(low,high)
+  allq <- approx(cweights, x, xout=c(low,high), 
+                 method="constant", f=1, rule=2L)$y
+  k <- length(probs)
+  quantiles <- (1 - order)*allq[1:k] + order*allq[-(1:k)]
 
-  list(x=x, sum.of.weights=weights)
+  ## Add 'probs' names
+  digits <- if (k > 1) 2 - log10(diff(range(probs))) else 2
+  names <- paste(format(round(100 * probs, digits = digits)), "%", sep = "")
+  names(quantiles) <- names
+  
+  quantiles
 }
