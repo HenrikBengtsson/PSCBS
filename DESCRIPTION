@@ -13,7 +13,10 @@ Imports:
   DNAcopy (>= 1.42.0),
   listenv (>= 0.8.0),
   future (>= 1.22.1),
-  parallel
+  parallel,
+  graphics,
+  grDevices,
+  stats
 Suggests:
   Hmisc (>= 4.4-2),
   R.rsp (>= 0.44.0),
