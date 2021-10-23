@@ -1,8 +1,7 @@
 Package: PSCBS
 Version: 0.65.0-9001
 Depends:
-  R (>= 3.2.0),
-  utils
+  R (>= 3.2.0)
 Imports:
   R.methodsS3 (>= 1.8.1),
   R.oo (>= 1.24.0),
@@ -16,7 +15,8 @@ Imports:
   parallel,
   graphics,
   grDevices,
-  stats
+  stats,
+  utils
 Suggests:
   Hmisc (>= 4.4-2),
   R.rsp (>= 0.44.0),
