@@ -167,20 +167,12 @@ setMethodS3("weightedQuantile", "default", function(x, w, probs=c(0, 0.25, 0.5, 
 
   if (anyDuplicated(x)) {  ## diff(x) == 0 faster but doesn't handle Inf
     weights <- tapply(weights, INDEX = x, FUN = sum)
-    if (length(names(weights)) == 0) stop("program logic error")
-    x <- .all.is.numeric(names(weights))
+    ## The names of 'weights' holds the unique 'x' values
+    xs <- names(weights)
     names(weights) <- NULL
+    if (length(xs) == 0) stop("program logic error")
+    x <- as.numeric(xs)
   }
 
   list(x=x, sum.of.weights=weights)
-}
-
-
-.all.is.numeric <- function(x) {
-  x <- sub("(^[[:space:]]+|[[:space:]]+$)", "", x)
-  xs <- x[!is.element(x, c("", ".", "NA"))]
-  if (length(xs) == 0) return(x)
-  isnum <- suppressWarnings(!any(is.na(as.numeric(xs))))
-  if (isnum) x <- as.numeric(x)
-  x
 }
