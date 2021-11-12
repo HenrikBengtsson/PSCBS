@@ -73,7 +73,7 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
     # Assert that no overlapping gaps where specified
     if (!all(starts[-1] >= ends[-nCC], na.rm=TRUE)) {
       print(knownSegments)
-      throw("INTERNAL ERROR: Detected overlapping gaps on chromosome ", chr, " in argument 'gaps'.")
+      stop("INTERNAL ERROR: Detected overlapping gaps on chromosome ", chr, " in argument 'gaps'.")
     }
 
     # All boundaries in order
@@ -122,7 +122,7 @@ setMethodS3("gapsToSegments", "data.frame", function(gaps, resolution=1L, minLen
 
     # Known segments must not overlap
     if (!all(dd$start[-1] >= dd$end[-nrow(dd)], na.rm=TRUE)) {
-      throw("INTERNAL ERROR: Detected overlapping segments on chromosome ", chr, " in generated 'knownSegments'.")
+      stop("INTERNAL ERROR: Detected overlapping segments on chromosome ", chr, " in generated 'knownSegments'.")
     }
   }
 

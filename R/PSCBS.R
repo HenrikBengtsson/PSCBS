@@ -30,7 +30,7 @@
 setConstructorS3("PSCBS", function(fit=list(), ...) {
   # Argument 'fit':
   if (!is.list(fit)) {
-    throw("Argument 'fit' is not a list: ", class(fit)[1])
+    stop("Argument 'fit' is not a list: ", class(fit)[1])
   }
 
   extend(AbstractCBS(fit, ...), "PSCBS")

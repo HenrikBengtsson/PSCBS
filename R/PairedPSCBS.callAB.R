@@ -73,7 +73,7 @@ setMethodS3("callAB", "PairedPSCBS", function(fit, flavor=c("DeltaAB*"), ..., mi
   if (flavor == "DeltaAB*") {
     fit <- callAllelicBalanceByDH(fit, ...)
   } else {
-    throw("Cannot call allelic balance. Unsupported flavor: ", flavor)
+    stop("Cannot call allelic balance. Unsupported flavor: ", flavor)
   }
 
   # Don't call segments with too few data points?

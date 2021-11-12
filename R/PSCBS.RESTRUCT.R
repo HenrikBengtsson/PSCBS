@@ -30,7 +30,7 @@ setMethodS3("c", "PSCBS", function(..., addSplit = TRUE) {
       data <- getLocusData(res)
       data_arg <- getLocusData(arg)
       if (!all(colnames(data_arg) == colnames(data))) {
-        throw(sprintf("Cannot concatenate %s and %s objects, because they have different sets of columns in field %s: {%s} [n=%d] != {%s} [n=%d]", sQuote(class(res)[1]), sQuote(class(arg)[1]), sQuote(field), paste(sQuote(colnames(data)), collapse=", "), ncol(data), paste(sQuote(colnames(data_arg)), collapse=", "), ncol(data_arg)))
+        stop(sprintf("Cannot concatenate %s and %s objects, because they have different sets of columns in field %s: {%s} [n=%d] != {%s} [n=%d]", sQuote(class(res)[1]), sQuote(class(arg)[1]), sQuote(field), paste(sQuote(colnames(data)), collapse=", "), ncol(data), paste(sQuote(colnames(data_arg)), collapse=", "), ncol(data_arg)))
       }
 
       indexOffset <- nrow(data)

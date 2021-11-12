@@ -164,7 +164,7 @@ Dropping <%=signalType%> outliers is optional.
 \label{secGaps}
 The CBS method does not take the physical locations (in units of nucleotides) of the loci in to account when segmenting the data, only their relative ordering along the genome.  This means that after having ordered the loci along genome, it will treat two "neighboring" loci that are on both sides of the centromere equally as two neighboring loci that are only few hundred bases apart.  This may introduce erroneous change points that appears to be inside the centromere and biological impossible interpretation of the identified copy-number states.  The same issues occur for other large gaps of the genome where there are no observed signals.
 
-To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observered loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
+To avoid this, although not mandatory, we will locate all gaps of the genome where there are no observed loci.  As a threshold we will consider a region to be a "gap" if the distance between the two closest loci is greater than 1Mb.
 \begin{verbatim}
 <%=withCapture({
 gaps <- findLargeGaps(data, minLength=1e6)
@@ -210,7 +210,7 @@ To plot the <%=signalType%> segmentation results, do:
 plotTracks(fit)
 \end{verbatim}
 which displays <%=signalType%> as in Figure~\ref{figTracks}.
-To zoom in on a partical region, do:
+To zoom in on a particular region, do:
 \begin{verbatim}
 plotTracks(fit, xlim=c(120,244)*1e6)
 \end{verbatim}

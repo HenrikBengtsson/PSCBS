@@ -15,7 +15,7 @@
 #   \item{flavor}{A @character string specifying which type of
 #    estimator to use.}
 #   \item{...}{Additional arguments passed to the estimator.}
-#   \item{max}{(Optional) The maxium estimate allowed. If greater than 
+#   \item{max}{(Optional) The maximum estimate allowed. If greater than 
 #    this value, the estimate will be truncated.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -83,7 +83,7 @@ setMethodS3("estimateDeltaAB", "PairedPSCBS", function(this, scale=NULL, flavor=
     delta <- estimateDeltaABBySmallDH(this, ..., verbose=verbose)
     delta <- scale * delta
   } else {
-    throw("Unkown flavor: ", flavor)
+    stop("Unkown flavor: ", flavor)
   }
 
 ##   } else if (flavor == "DHskew") {
@@ -101,7 +101,7 @@ setMethodS3("estimateDeltaAB", "PairedPSCBS", function(this, scale=NULL, flavor=
 ##     verbose && printf(verbose, "Number of segments heavily skewed (< %.3f): %d\n", deltaSkew, length(keep))
 ##     # Sanity check
 ##     if (length(keep) == 0) {
-##       throw("Cannot estimate DH threshold for AB. No segments with strong skewness exists.")
+##       stop("Cannot estimate DH threshold for AB. No segments with strong skewness exists.")
 ##     }
 ##     deltaDH <- median(mu[keep], na.rm=TRUE)
 ##     verbose && printf(verbose, "deltaDH: %.3g\n", deltaDH)
@@ -170,7 +170,7 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
 
   # Sanity check
   if (length(idxsDH) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
+    stop("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
   }
 
   # Find segments that have low TCNs
@@ -180,7 +180,7 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
 
   # Sanity check
   if (length(idxsTCN) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
+    stop("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
   }
 
   # Segments with small DH and small TCN
@@ -190,7 +190,7 @@ setMethodS3("estimateStdDevForHeterozygousBAF", "PairedPSCBS", function(this, de
 
   # Sanity check
   if (length(idxs) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
+    stop("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
   }
 
 
@@ -262,7 +262,7 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
 
   # Sanity check
   if (length(idxsDH) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
+    stop("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
   }
 
   # Find segments that have low TCNs
@@ -272,7 +272,7 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
 
   # Sanity check
   if (length(idxsTCN) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
+    stop("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
   }
 
   # Segments with small DH and small TCN
@@ -282,7 +282,7 @@ setMethodS3("estimateMeanForDH", "PairedPSCBS", function(this, deltaDH=0.20, del
 
   # Sanity check
   if (length(idxs) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
+    stop("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
   }
 
 
@@ -370,7 +370,7 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
 
   # Sanity check
   if (length(idxsDH) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
+    stop("Cannot estimate standard deviation.  There exist no segments with DH less or equal to the given threshold: ", deltaDH)
   }
 
   # Find segments that have low TCNs
@@ -380,7 +380,7 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
 
   # Sanity check
   if (length(idxsTCN) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
+    stop("Cannot estimate standard deviation.  There exist no segments with TCN less or equal to the given threshold: ", deltaTCN)
   }
 
   # Segments with small DH and small TCN
@@ -390,7 +390,7 @@ setMethodS3("estimateHighDHQuantileAtAB", "PairedPSCBS", function(this, quantile
 
   # Sanity check
   if (length(idxs) == 0) {
-    throw("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
+    stop("Cannot estimate standard deviation.  There exist no segments with small DH and small TCN.")
   }
 
   # Extract those segments

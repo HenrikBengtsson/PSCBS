@@ -1,4 +1,5 @@
-library("PSCBS")
+library(PSCBS)
+library(utils)
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Load SNP microarray data
@@ -41,12 +42,12 @@ message("*** segmentByPairedPSCBS() via futures ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("sequential", "multiprocess")
+strategies <- c("sequential", "multisession")
 
-## Test 'future.BatchJobs' futures?
-pkg <- "future.BatchJobs"
+## Test 'future.batchtools' futures?
+pkg <- "future.batchtools"
 if (require(pkg, character.only=TRUE)) {
-  strategies <- c(strategies, "batchjobs_local")
+  strategies <- c(strategies, "batchtools_local")
 }
 
 message("Future strategies to test: ", paste(sQuote(strategies), collapse=", "))
@@ -57,7 +58,13 @@ for (strategy in strategies) {
   plan(strategy)
   fit <- segmentByPairedPSCBS(data, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
-  stopifnot(all.equal(fit, fits[[1]]))
+  equal <- all.equal(fit, fits[[1]])
+  if (!equal) {
+    str(fit)
+    str(fits[[1]])
+    print(equal)
+    stop(sprintf("segmentByPairedPSCBS() using '%s' futures does not produce the same results as when using '%s' futures", strategy, names(fits)[1]))
+  }
 }
 
 message("*** segmentByPairedPSCBS() via futures ... DONE")
@@ -70,11 +77,17 @@ gaps <- findLargeGaps(dataT, minLength=2e6)
 knownSegments <- gapsToSegments(gaps)
 
 for (strategy in strategies) {
-  message(sprintf("- segmentByCBS() w/ known segments using '%s' futures ...", strategy))
+  message(sprintf("- segmentByPairedPSCBS() w/ known segments using '%s' futures ...", strategy))
   plan(strategy)
   fit <- segmentByPairedPSCBS(dataT, knownSegments=knownSegments, seed=0xBEEF, verbose=TRUE)
   fits[[strategy]] <- fit
-  stopifnot(all.equal(fit, fits[[1]]))
+  equal <- all.equal(fit, fits[[1]])
+  if (!equal) {
+    str(fit)
+    str(fits[[1]])
+    print(equal)
+    stop(sprintf("segmentByPairedPSCBS() w/ known segments using '%s' futures does not produce the same results as when using '%s' futures", strategy, names(fits)[1]))
+  }
 }
 
 message("*** segmentByPairedPSCBS() via futures ... DONE")

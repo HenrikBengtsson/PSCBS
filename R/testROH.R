@@ -97,7 +97,7 @@ setMethodS3("testROH", "numeric", function(muN, csN=NULL, betaN=NULL, minNbrOfSn
 
       # KNOWN ISSUE: Scores for homozygotes are in [0,1/3], whereas
       # heterzygotes are in [0,1/6]. /PN 2011-11-11
-      csN[isDiploid] <- rowMins(abs(cbind(betaN[isDiploid]-a, betaN[isDiploid]-b)))
+      csN[isDiploid] <- rowMins(abs(cbind(betaN[isDiploid]-a, betaN[isDiploid]-b)), useNames=FALSE)
       verbose && exit(verbose)
     }
   }

@@ -32,8 +32,8 @@
   \item{na.rm}{a \code{\link[base]{logical}} value indicating whether \code{\link[base]{NA}} values in
            \code{x} should be stripped before the computation proceeds,
            or not.}
-  \item{method}{If \code{"wtd.quantile"}, then \code{\link[Hmisc]{wtd.quantile}}
-           of the \pkg{Hmisc} package is used.
+  \item{method}{If \code{"wtd.quantile"}, then an internal copy of
+           \code{Hmisc::wtd.quantile()} is used.
            No other methods are currently supported.}
   \item{...}{Additional arguments passed to the estimator.}
 }
@@ -46,8 +46,8 @@
 
 \seealso{
   Internally the following functions may be used:
-  \code{\link[stats]{quantile}} (if no weights are specified), or
-  \code{\link[Hmisc]{wtd.quantile}}.
+  \code{\link[stats]{quantile}} (if no weights are specified), or an internal
+  copy of \code{Hmisc::wtd.quantile()}.
   For a weighted median estimator, \code{\link[matrixStats]{weightedMedian}}
   of the \pkg{matrixStats} package.
 }

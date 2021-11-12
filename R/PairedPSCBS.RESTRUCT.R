@@ -70,11 +70,11 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
 
   # Sanity checks
   if (!params$joinSegments) {
-    throw("Cannot extract subset of segments unless CNs are segmented using joinSegments=TRUE.")
+    stop("Cannot extract subset of segments unless CNs are segmented using joinSegments=TRUE.")
   }
 
   if (params$flavor == "tcn,dh") {
-    throw("NOT IMPLEMENTED: Extracting a subset of segments is not supported for flavor '", params$flavor, "'.")
+    stop("NOT IMPLEMENTED: Extracting a subset of segments is not supported for flavor '", params$flavor, "'.")
   }
 
 
@@ -134,7 +134,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   drow <- segRows[-1,1] - segRows[-nrow(segRows),2]
   if (!all(is.na(drow) | (drow > 0))) {
     print(segRows)
-    throw("INTERNAL ERROR: Generated 'tcnSegRows' is invalid, because it contains overlapping data chunks.")
+    stop("INTERNAL ERROR: Generated 'tcnSegRows' is invalid, because it contains overlapping data chunks.")
   }
 
   dhSegRows <- dhSegRows[idxs,,drop=FALSE] - d
@@ -146,7 +146,7 @@ setMethodS3("extractSegments", "PairedPSCBS", function(this, idxs, ..., verbose=
   .stop_if_not(all(is.na(drow) | (drow > 0)))
   if (!all(is.na(drow) | (drow > 0))) {
     print(segRows)
-    throw("INTERNAL ERROR: Generated 'dhSegRows' is invalid, because it contains overlapping data chunks.")
+    stop("INTERNAL ERROR: Generated 'dhSegRows' is invalid, because it contains overlapping data chunks.")
   }
 
   verbose && exit(verbose)
@@ -228,7 +228,7 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
   # Sanity check
   chrs <- segsT[["chromosome"]]
   if (chrs[1] != chrs[2]) {
-    throw("Cannot merge segments that are on different chromosomes: ", chrs[1], " != ", chrs[2])
+    stop("Cannot merge segments that are on different chromosomes: ", chrs[1], " != ", chrs[2])
   }
 
   # Merge segments
@@ -241,13 +241,13 @@ setMethodS3("mergeTwoSegments", "PairedPSCBS", function(this, left, update=TRUE,
   # Starts
   idxs <- grep("Start$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMins(T, na.rm=TRUE)
+  segT[,idxs] <- colMins(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Ends
   idxs <- grep("End$", fields)
   T <- as.matrix(segsT[,idxs,drop=FALSE])
-  segT[,idxs] <- colMaxs(T, na.rm=TRUE)
+  segT[,idxs] <- colMaxs(T, na.rm=TRUE, useNames=FALSE)
   idxsUsed <- c(idxsUsed, idxs)
 
   # Counts

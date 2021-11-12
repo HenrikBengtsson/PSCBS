@@ -139,8 +139,14 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 #   To load an object, see @seemethod "load".
 #   @seeclass.
 # }
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("save", "AbstractCBS", function(this, ...) {
+  action <- Sys.getenv("R_PSCBS_SAVE_LOAD_DEPRECATED", "defunct")
+  action <- match.arg(action, choices = c("deprecated", "defunct"))
+  fcn <- switch(action, deprecated = .Deprecated, defunct = .Defunct)
+  fcn(msg = sprintf("save() for %s is %s. It is recommended to use saveRDS() from the 'base' package. If you need backward compatibility with save(), use R.utils::saveObject().", class(this)[1], action), package = .packageName)
   saveObject(this, ...)
 })
 
@@ -172,8 +178,15 @@ setMethodS3("save", "AbstractCBS", function(this, ...) {
 #   To save an object, see @seemethod "save".
 #   @seeclass.
 # }
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("load", "AbstractCBS", function(static, ...) {
+  action <- Sys.getenv("R_PSCBS_SAVE_LOAD_DEPRECATED", "defunct")
+  action <- match.arg(action, choices = c("deprecated", "defunct"))
+  fcn <- switch(action, deprecated = .Deprecated, defunct = .Defunct)
+  fcn(msg = sprintf("%s$load() is %s. It is recommended to use readRDS() from the 'base' package instead. If you need backward compatibility with load(), use R.utils::loadObject().", class(static)[1], action), package = .packageName)
+  
   object <- loadObject(...)
 
   # Patch for changes in class structure in PSCBS v0.13.2 -> v0.13.3.
@@ -189,7 +202,7 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
 
   # Sanity check
   if (!inherits(object, class(static)[1])) {
-    throw("Loaded an object from file, but it does not inherit from ",
+    stop("Loaded an object from file, but it does not inherit from ",
           class(static)[1], " as expected: ", hpaste(class(object)))
   }
 
@@ -228,7 +241,7 @@ setMethodS3("load", "AbstractCBS", function(static, ...) {
 setMethodS3("getSampleName", "AbstractCBS", function(fit, ...) {
   name <- fit$sampleName
   if (is.null(name)) {
-    name <- as.character(NA)
+    name <- NA_character_
   }
   name
 }, protected=TRUE)
@@ -324,7 +337,7 @@ setMethodS3("setLocusData", "AbstractCBS", function(fit, loci, ...) {
   loci <- Arguments$getInstanceOf(loci, "data.frame")
   nbrOfLoci <- nbrOfLoci(fit)
   if (nrow(loci) != nbrOfLoci) {
-    throw("Cannot set locus-level data. The number of loci to be set differ from the existing number of loci: ", nrow(loci), " != ", nbrOfLoci)
+    stop("Cannot set locus-level data. The number of loci to be set differ from the existing number of loci: ", nrow(loci), " != ", nbrOfLoci)
   }
 
   fit$data <- loci
@@ -409,7 +422,7 @@ setMethodS3("setSegments", "AbstractCBS", function(fit, segments, splitters=TRUE
   segments <- Arguments$getInstanceOf(segments, "data.frame")
   nbrOfSegs <- nbrOfSegments(fit, splitters=splitters, ...)
   if (nrow(segments) != nbrOfSegs) {
-    throw("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs)
+    stop("Cannot set segments. The number of segments to be set differ from the existing number of segments: ", nrow(segments), " != ", nbrOfSegs)
   }
 
   fit$output <- segments
@@ -761,7 +774,7 @@ setMethodS3("setMeanEstimators", "AbstractCBS", function(fit, ...) {
 
   keys <- names(args)
   if (is.null(keys)) {
-    throw("Estimators arguments must be named.")
+    stop("Estimators arguments must be named.")
   }
 
   for (key in keys) {
@@ -769,10 +782,10 @@ setMethodS3("setMeanEstimators", "AbstractCBS", function(fit, ...) {
     if (is.function(fcn)) {
     } else if (is.character(fcn)) {
       if (!exists(fcn, mode="function")) {
-        throw(sprintf("No such '%s' estimator function: %s", key, fcn))
+        stop(sprintf("No such '%s' estimator function: %s", key, fcn))
       }
     } else {
-      throw(sprintf("Estimator argument '%s' must be a function or character string: %s", key, mode(fcn)))
+      stop(sprintf("Estimator argument '%s' must be a function or character string: %s", key, mode(fcn)))
     }
     estList[[key]] <- fcn
   }

@@ -25,7 +25,7 @@
 }
 
 \arguments{
-  \item{B}{A postive \code{\link[base]{integer}} specifying the number of bootstrap samples.}
+  \item{B}{A positive \code{\link[base]{integer}} specifying the number of bootstrap samples.}
   \item{boot}{Alternatively, to generating \code{B} bootstrap samples,
      this specifies a pre-generated set of bootstrap samples as
      returned by \code{bootstrapSegmentsAndChangepoints()}.}

@@ -15,7 +15,7 @@
 #   \item{flavor}{A @character string specifying which type of
 #    estimator to use.}
 #   \item{...}{Additional arguments passed to the estimator.}
-#   \item{max}{(Optional) The maxium estimate allowed. If greater than
+#   \item{max}{(Optional) The maximum estimate allowed. If greater than
 #    this value, the estimate will be truncated.}
 #   \item{verbose}{See @see "R.utils::Verbose".}
 # }
@@ -57,7 +57,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
   if (flavor == "minC1|nonAB") {
     delta <- estimateDeltaLOHByMinC1ForNonAB(this, ..., verbose=verbose)
   } else {
-    throw("Unkown flavor: ", flavor)
+    stop("Unkown flavor: ", flavor)
   }
 
   verbose && printf(verbose, "delta: %.3g\n", delta)
@@ -100,7 +100,7 @@ setMethodS3("estimateDeltaLOH", "PairedPSCBS", function(this, flavor=c("minC1|no
 # }
 #
 # \value{
-#   Returns the estimated LOH treshold as a @numeric scalar or -@Inf.
+#   Returns the estimated LOH threshold as a @numeric scalar or -@Inf.
 #   In case it is not possible to estimate the LOH threshold, then
 #   -@Inf is returned.
 # }
@@ -157,7 +157,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
   # Getting AB calls
   isAB <- segs$abCall
   if (is.null(isAB)) {
-    throw("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.")
+    stop("Cannot estimate delta_LOH because allelic-balance calls have not been made yet.")
   }
 
   nbrOfAB <- sum(isAB, na.rm=TRUE)
@@ -165,7 +165,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   # Sanity check
   if (nbrOfAB == 0) {
-    throw("There are no segments in allelic balance.")
+    stop("There are no segments in allelic balance.")
   }
 
   nbrOfNonAB <- sum(!isAB, na.rm=TRUE)
@@ -187,7 +187,7 @@ setMethodS3("estimateDeltaLOHByMinC1ForNonAB", "PairedPSCBS", function(this, mid
 
   # Sanity check
   if (length(keep) == 0) {
-    throw("There are no segments in allelic balance with small enough total CN.")
+    stop("There are no segments in allelic balance with small enough total CN.")
   }
 
   # (a) Estimate mean C1 level of AB segments

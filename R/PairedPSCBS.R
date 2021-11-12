@@ -30,7 +30,7 @@
 setConstructorS3("PairedPSCBS", function(fit=list(), ...) {
   # Argument 'fit':
   if (!is.list(fit)) {
-    throw("Argument 'fit' is not a list: ", class(fit)[1])
+    stop("Argument 'fit' is not a list: ", class(fit)[1])
   }
 
   extend(PSCBS(fit=fit, ...), "PairedPSCBS")
@@ -55,7 +55,7 @@ setMethodS3("getLocusData", "PairedPSCBS", function(fit, ..., fields=c("asis", "
       } else if (is.element("betaN", names)) {
         data$muN <- callNaiveGenotypes(data$betaN)
       } else {
-        throw("Cannot identify heterozygous SNPs or genotypes")
+        stop("Cannot identify heterozygous SNPs or genotypes")
       }
     }
 

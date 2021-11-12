@@ -89,12 +89,13 @@
 # \seealso{
 #   @seeclass
 # }
+#
+# @keyword internal
 #*/###########################################################################
 setMethodS3("append", "AbstractCBS", function(x, other, addSplit = TRUE, ...) {
   new <- if (addSplit) "c(x, other, addSplit = TRUE)" else "c(x, other)"
-  old <- sprintf("append.%s()", class(x)[1])
-  .Deprecated(new = new, old = old)
-  c(x, other, addSplit = addSplit)  
+  msg <- sprintf("append() for %s is defunct. Use %s instead.", class(x)[1], new)
+  .Defunct(msg = msg, package = .packageName)
 })
 
 
@@ -306,7 +307,7 @@ setMethodS3("dropChangePoints", "AbstractCBS", function(fit, idxs, update=TRUE, 
   # Assert that there is only one chromosome
   chrs <- getChromosomes(fit)
   if (length(chrs) > 1) {
-    throw("dropChangePoints() only support single-chromosome data: ", hpaste(chrs))
+    stop("dropChangePoints() only support single-chromosome data: ", hpaste(chrs))
   }
 
   # Argument 'idxs':
@@ -372,7 +373,7 @@ setMethodS3("mergeThreeSegments", "AbstractCBS", function(fit, middle, ...) {
   fitT <- extractSegments(fit, idxs)
   chrs <- getChromosomes(fitT)
   if (length(chrs) != 1L) {
-    throw("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle)
+    stop("Argument 'middle' specifies a segment that is at the very end of a chromosome: ", middle)
   }
   fitT <- NULL # Not needed anymore
 

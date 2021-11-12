@@ -151,13 +151,13 @@ setMethodS3("as.character", "CBS", function(x, ...) {
 
 
 setMethodS3("as.data.frame", "CBS", function(x, ...) {
-  getSegments(x, splitter=FALSE, ...)
+  getSegments(x, splitters=FALSE, ...)
 }, protected=TRUE)
 
 
 setMethodS3("getSignalType", "CBS", function(fit, ...) {
   type <- fit$signalType
-  if (is.null(type)) type <- as.character(NA)
+  if (is.null(type)) type <- NA_character_
   type
 }, protected=TRUE)
 
@@ -192,7 +192,7 @@ setMethodS3("getLocusSignalNames", "CBS", function(fit, ...) {
     return("CT")
   }
 
-  throw("INTERNAL ERROR: Unknown locus signal names: ", paste(names, collapse=", "))
+  stop("INTERNAL ERROR: Unknown locus signal names: ", paste(names, collapse=", "))
 }, protected=TRUE)
 
 setMethodS3("getSegmentTrackPrefixes", "CBS", function(fit, ...) {
@@ -272,7 +272,7 @@ setMethodS3("getSegments", "CBS", function(fit, simplify=FALSE, splitters=TRUE, 
   # Add 'sampleName' column?
   if (nrow(segs) > 0) {
     sampleName <- rep(getSampleName(fit), times=nrow(segs))
-    sampleName[isSplitter] <- as.character(NA)
+    sampleName[isSplitter] <- NA_character_
     if (!is.element("sampleName", colnames(segs))) {
       segs <- cbind(sampleName=I(sampleName), segs)
     } else {
@@ -495,7 +495,7 @@ setMethodS3("updateMeans", "CBS", function(fit, ..., avg=c("asis", "mean", "medi
     } else if(avg == "median") {
       avgFUN <- weightedMedian
     } else {
-      throw("Value of argument 'avg' is not supported with weights: ", avg)
+      stop("Value of argument 'avg' is not supported with weights: ", avg)
     }
   } else {
     avgFUN <- get(avg, mode="function")

@@ -129,7 +129,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
   # Extract the input data
   data <- getLocusData(fit)
   if (is.null(data)) {
-    throw("Cannot plot segmentation results. No input data available.")
+    stop("Cannot plot segmentation results. No input data available.")
   }
 
   chromosomes <- getChromosomes(fit)
@@ -175,7 +175,7 @@ setMethodS3("plotTracks1", "PairedPSCBS", function(x, tracks=c("tcn", "dh", "tcn
         (regexpr(pattern, callColumns) != -1)
       })
       if (is.matrix(keep)) {
-        keep <- rowAnys(keep)
+        keep <- rowAnys(keep, useNames=FALSE)
       }
       callColumns <- callColumns[keep]
       callLabels <- gsub(pattern, "", callColumns)
@@ -799,7 +799,7 @@ setMethodS3("getChromosomeRanges", "PairedPSCBS", function(fit, ...) {
   # To please R CMD check, cf. subset()
   chromosome <- NULL; rm(list="chromosome")
 
-  segs <- getSegments(fit, splitter=FALSE)
+  segs <- getSegments(fit, splitters=FALSE)
   chromosomes <- sort(unique(segs$chromosome))
 
   # Allocate

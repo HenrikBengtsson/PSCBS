@@ -79,7 +79,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
   params <- list()
 
   # Allocate calls
-  naValue <- as.logical(NA)
+  naValue <- NA
   nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE)
   segs <- getSegments(fit, splitters=TRUE)
   nbrOfRows <- nrow(segs)
@@ -118,7 +118,7 @@ setMethodS3("callGainsAndLosses", "CBS", function(fit, adjust=1.0, method=c("ucs
                                          method="diff", estimator="mad")
       sigmaKey <- "sigmaDelta"
     } else {
-      throw("INTERNAL ERROR: Unknown method: ", method)
+      stop("INTERNAL ERROR: Unknown method: ", method)
     }
 
     # Sanity check
@@ -277,7 +277,7 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
   params <- list()
 
   # Allocate calls
-  naValue <- as.logical(NA)
+  naValue <- NA
   nbrOfSegments <- nbrOfSegments(fit, splitters=TRUE)
   calls <- rep(naValue, times=nbrOfSegments)
 
@@ -343,8 +343,8 @@ setMethodS3("callAmplifications", "CBS", function(fit, adjust=1.0, maxLength=20e
     #          flanking segments.
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     # The mean levels of the flanking segments
-    muL <- c(NA, mu[-nbrOfSegments])
-    muR <- c(mu[-1], NA)
+    muL <- c(NA_real_, mu[-nbrOfSegments])
+    muR <- c(mu[-1], NA_real_)
 
     # The difference in mean levels to the flanking segments
     deltaL <- mu - muL
@@ -474,7 +474,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
 
   # Allocate calls
   nbrOfLoci <- nbrOfLoci(fit)
-  naValue <- as.logical(NA)
+  naValue <- NA
   negOutlierCall <- posOutlierCall <- rep(naValue, times=nbrOfLoci)
 
   if (method == "ucsf-mad") {
@@ -543,7 +543,7 @@ setMethodS3("callOutliers", "CBS", function(fit, adjust=1.0, method=c("ucsf-mad"
       tau <- adjust * tau
 
       # Call outliers
-      naValue <- as.logical(NA)
+      naValue <- NA
       callsSS <- rep(naValue, times=length(dySS))
       callsSS[-tau <= dySS & dySS <= +tau] <- 0L
       callsSS[dySS > +tau] <- +1L
@@ -613,7 +613,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   y <- data[,3]
 
   # Allocate locus calls
-  naValue <- as.logical(NA)
+  naValue <- NA
   callsL <- matrix(naValue, nrow=nbrOfLoci, ncol=nbrOfCalls)
   colnames(callsL) <- colnames(segs)[callCols]
   callsL <- as.data.frame(callsL)
@@ -636,7 +636,7 @@ setMethodS3("extractCallsByLocus", "CBS", function(fit, ...) {
   # The calls for loci that have missing annotations or observations,
   # should also be missing, i.e. NA.
   nok <- (is.na(chromosome) | is.na(x) | is.na(y))
-  callsL[nok,] <- as.logical(NA)
+  callsL[nok,] <- NA
 
   # Sanity check
   .stop_if_not(nrow(callsL) == nbrOfLoci)
@@ -733,7 +733,7 @@ setMethodS3("getCallStatistics", "CBS", function(fit, regions=NULL, shrinkRegion
   callTypes <- grep("Call$", colnames(segs), value=TRUE)
   verbose && cat(verbose, "Call types: ", hpaste(callTypes))
   if (length(callTypes) == 0) {
-    throw("Cannot calculate call statistics. No calls have been made.")
+    stop("Cannot calculate call statistics. No calls have been made.")
   }
 
   verbose && cat(verbose, "Regions of interest:")
@@ -1180,7 +1180,7 @@ setMethodS3("mergeNonCalledSegments", "CBS", function(fit, ..., verbose=FALSE) {
       calls <- as.matrix(segs[,keep])
 
       # Find two neighboring segments that are not called
-      isCalled <- rowAnys(calls, na.rm=TRUE)
+      isCalled <- rowAnys(calls, na.rm=TRUE, useNames=FALSE)
       verbose && printf(verbose, "Number of segments not called: %d of %d\n", sum(!isCalled, na.rm=TRUE), length(isCalled))
 
       notCalled <- which(!isCalled)
@@ -1282,7 +1282,7 @@ setMethodS3("estimateDeltaCN", "CBS", function(fit, flavor=c("density(TCN)", "de
     # Weights "between" peaks (AD HOC: sum up peak weights)
     dw <- pw[-length(pw)] + pw[-1L]
 
-    throw("Still not implemented.")
+    stop("Still not implemented.")
   } else if (flavor == "dTCN") {
     # Get change-point magnitudes
     x <- getChangePoints(fit)[[1L]]

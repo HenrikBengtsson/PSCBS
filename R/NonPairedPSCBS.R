@@ -30,7 +30,7 @@
 setConstructorS3("NonPairedPSCBS", function(fit=list(), ...) {
   # Argument 'fit':
   if (!is.list(fit)) {
-    throw("Argument 'fit' is not a list: ", class(fit)[1])
+    stop("Argument 'fit' is not a list: ", class(fit)[1])
   }
 
   extend(PSCBS(fit=fit, ...), "NonPairedPSCBS")
@@ -75,7 +75,7 @@ setMethodS3("getLocusData", "NonPairedPSCBS", function(fit, ..., fields=c("asis"
 
 
 setMethodS3("callROH", "NonPairedPSCBS", function(fit, ...) {
-  throw(sprintf("Cannot call ROH from '%s' data.", class(fit)[1L]))
+  stop(sprintf("Cannot call ROH from '%s' data.", class(fit)[1L]))
 }, private=TRUE) # callROH()
 
 
@@ -149,21 +149,21 @@ setMethodS3("updateMeans", "NonPairedPSCBS", function(fit, from=c("loci", "segme
   if (is.element("ab", adjustFor)) {
     if (!is.element("abCall", names(segs))) {
       adjustFor <- setdiff(adjustFor, "ab")
-      throw("Cannot adjust for AB, because they haven't been called.")
+      stop("Cannot adjust for AB, because they haven't been called.")
     }
   }
 
   if (is.element("loh", adjustFor)) {
     if (!is.element("lohCall", names(segs))) {
       adjustFor <- setdiff(adjustFor, "loh")
-      throw("Cannot adjust for LOH, because they haven't been called.")
+      stop("Cannot adjust for LOH, because they haven't been called.")
     }
   }
 
   if (is.element("roh", adjustFor)) {
     if (!is.element("rohCall", names(segs))) {
       adjustFor <- setdiff(adjustFor, "roh")
-      throw("Cannot adjust for ROH, because they haven't been called.")
+      stop("Cannot adjust for ROH, because they haven't been called.")
     }
   }
 

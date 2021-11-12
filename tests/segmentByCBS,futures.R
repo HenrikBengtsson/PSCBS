@@ -40,12 +40,12 @@ message("*** segmentByCBS() via futures with 'future' attached ...")
 library("future")
 oplan <- plan()
 
-strategies <- c("sequential", "multiprocess")
+strategies <- c("sequential", "multisession")
 
-## Test 'future.BatchJobs' futures?
-pkg <- "future.BatchJobs"
+## Test 'future.batchtools' futures?
+pkg <- "future.batchtools"
 if (require(pkg, character.only=TRUE)) {
-  strategies <- c(strategies, "batchjobs_local")
+  strategies <- c(strategies, "batchtools_local")
 }
 
 message("Future strategies to test: ", paste(sQuote(strategies), collapse=", "))
