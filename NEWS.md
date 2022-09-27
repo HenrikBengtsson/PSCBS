@@ -3,7 +3,8 @@
 ## Deprecated and Defunct
 
  * Removed defunct `append()` for `AbtractCBS`.
- * ...
+
+ * Removed defunct `load()` and `save()` for `AbtractCBS`.
  
 
 # Version 0.66.0 [2021-10-22]

@@ -24,7 +24,7 @@
 \bold{Directly known subclasses:}\cr
 \emph{\link[PSCBS]{CBS}}, \emph{\link[PSCBS]{NonPairedPSCBS}}, \emph{\link[PSCBS]{PSCBS}}, \emph{\link[PSCBS]{PairedPSCBS}}\cr
 
-public abstract static class \bold{AbstractCBS}\cr
+public abstract class \bold{AbstractCBS}\cr
 extends list\cr
 
 
@@ -53,7 +53,6 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
  \tab \code{getLocusData} \tab  -\cr
  \tab \code{getSegmentSizes} \tab  -\cr
  \tab \code{getSegments} \tab  -\cr
- \tab \code{load} \tab  -\cr
  \tab \code{mergeThreeSegments} \tab  -\cr
  \tab \code{nbrOfChangePoints} \tab  -\cr
  \tab \code{nbrOfChromosomes} \tab  -\cr
@@ -64,7 +63,6 @@ AbstractCBS(fit=list(), sampleName=fit$sampleName, ...)
  \tab \code{ploidy<-} \tab  -\cr
  \tab \code{plotTracks} \tab  -\cr
  \tab \code{sampleCNs} \tab  -\cr
- \tab \code{save} \tab  -\cr
  \tab \code{writeWIG} \tab  -\cr
 }
 
