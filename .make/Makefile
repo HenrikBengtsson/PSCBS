@@ -52,7 +52,7 @@ R_SCRIPT = Rscript
 R_HOME := $(shell $(R_SCRIPT) -e "cat(R.home())")
 
 ## R_USE_CRAN := $(shell $(R_SCRIPT) -e "cat(Sys.getenv('R_USE_CRAN', 'FALSE'))")
-R_NO_INIT := --no-init-file
+R_NO_INIT := 
 R_VERSION_STATUS := $(shell $(R_SCRIPT) -e "status <- tolower(R.version[['status']]); if (regexpr('unstable', status) != -1L) status <- 'devel'; cat(status)")
 R_VERSION_X_Y := $(shell $(R_SCRIPT) -e "cat(gsub('[.][0-9]+$$', '', getRversion()))")
 R_VERSION := $(shell $(R_SCRIPT) -e "cat(as.character(getRversion()))")
@@ -218,7 +218,7 @@ build: $(R_OUTDIR)/$(PKG_TARBALL)
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	$(CD) $(R_OUTDIR);\
-	$(R) --no-init-file CMD INSTALL $(PKG_TARBALL)
+	$(R) CMD INSTALL $(PKG_TARBALL)
 
 install: $(R_LIBS_USER_X)/$(PKG_NAME)/DESCRIPTION
 
@@ -228,13 +228,13 @@ install_force:
 
 install_fast:
 	$(CD) $(R_OUTDIR);\
-	$(R) --no-init-file CMD INSTALL --no-docs --no-multiarch --no-byte-compile --no-test-load $(PKG_TARBALL)
+	$(R) CMD INSTALL --no-docs --no-multiarch --no-byte-compile --no-test-load $(PKG_TARBALL)
 
 
 $(R_LIBS_BRANCH)/$(PKG_NAME)/DESCRIPTION: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	$(CD) $(R_OUTDIR);\
 	$(MKDIR) $(R_LIBS_BRANCH);\
-	$(R) --no-init-file CMD INSTALL --library=$(R_LIBS_BRANCH) $(PKG_TARBALL)
+	$(R) CMD INSTALL --library=$(R_LIBS_BRANCH) $(PKG_TARBALL)
 
 install_branch: $(R_LIBS_BRANCH)/$(PKG_NAME)/DESCRIPTION
 
@@ -254,7 +254,7 @@ $(R_CHECK_OUTDIR)/.check.complete: $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	export _R_CHECK_FORCE_SUGGESTS_=0;\
 	export R_RD4PDF=$(R_RD4PDF);\
 	export _R_CHECK_FULL_=$(_R_CHECK_FULL_);\
-	$(R) --no-init-file CMD check $(R_CHECK_OPTS) $(PKG_TARBALL);\
+	$(R) CMD check $(R_CHECK_OPTS) $(PKG_TARBALL);\
 	echo done > $(PKG_NAME).Rcheck/.check.complete
 
 check: $(R_CHECK_OUTDIR)/.check.complete
@@ -294,7 +294,7 @@ covr:
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 $(R_OUTDIR)/$(PKG_ZIP): $(R_OUTDIR)/$(PKG_TARBALL) build_fix
 	$(CD) $(R_OUTDIR);\
-	$(R) --no-init-file CMD INSTALL --build --merge-multiarch $(PKG_TARBALL)
+	$(R) CMD INSTALL --build --merge-multiarch $(PKG_TARBALL)
 
 binary: $(R_OUTDIR)/$(PKG_ZIP)
 

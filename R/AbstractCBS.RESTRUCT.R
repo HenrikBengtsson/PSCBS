@@ -8,9 +8,6 @@
 #   @see "AbstractCBS" object.
 #
 #   \itemize{
-#     \item @seemethod "append"
-#           - Appends one @see "AbstractCBS" to another.
-#
 #     \item @seemethod "extractChromosomes" /
 #           @seemethod "extractChromosome"
 #           - Extracts an @see "AbstractCBS" with the specified chromosomes.
@@ -59,44 +56,6 @@
 #
 # @keyword internal
 #*/###########################################################################
-
-
-###########################################################################/**
-# @set "class=AbstractCBS"
-# @RdocMethod append
-#
-# @title "Appends one segmentation result to another"
-#
-# \description{
-#   @get "title",
-#   where both holds segmentation results \emph{of the same sample}.
-# }
-#
-# @synopsis
-#
-# \arguments{
-#  \item{x, other}{The two @see "AbstractCBS" objects to be combined.}
-#  \item{addSplit}{If @TRUE, a "divider" is added between chromosomes.}
-#  \item{...}{Not used.}
-# }
-#
-# \value{
-#   Returns a object of the same class as argument \code{x}.
-# }
-#
-# @author "HB"
-#
-# \seealso{
-#   @seeclass
-# }
-#
-# @keyword internal
-#*/###########################################################################
-setMethodS3("append", "AbstractCBS", function(x, other, addSplit = TRUE, ...) {
-  new <- if (addSplit) "c(x, other, addSplit = TRUE)" else "c(x, other)"
-  msg <- sprintf("append() for %s is defunct. Use %s instead.", class(x)[1], new)
-  .Defunct(msg = msg, package = .packageName)
-})
 
 
 setMethodS3("renameChromosomes", "AbstractCBS", function(fit, from, to, ...) {

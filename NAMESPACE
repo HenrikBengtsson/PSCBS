@@ -75,14 +75,9 @@ export("load") # Re-export from R.oo
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # S3 methods
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# From 006.fixVarArgs.R
-S3method("append", "default")
-
-
 # AbstractCBS
 S3method("adjustPloidyScale", "AbstractCBS")
 S3method("all.equal", "AbstractCBS")
-S3method("append", "AbstractCBS")
 S3method("as.data.frame", "AbstractCBS")
 S3method("clearCalls", "AbstractCBS")
 S3method("drawChangePoints", "AbstractCBS")
