@@ -1,17 +1,17 @@
 Package: PSCBS
-Version: 0.66.0-9003
+Version: 0.66.0-9004
 Depends:
   R (>= 3.2.0)
 Imports:
-  R.methodsS3 (>= 1.8.1),
-  R.oo (>= 1.24.0),
-  R.utils (>= 2.11.0),
-  R.cache (>= 0.15.0),
-  matrixStats (>= 0.61.0),
+  R.methodsS3 (>= 1.8.2),
+  R.oo (>= 1.25.0),
+  R.utils (>= 2.12.0),
+  R.cache (>= 0.16.0),
+  matrixStats (>= 0.62.0),
   aroma.light (>= 2.4.0),
   DNAcopy (>= 1.42.0),
   listenv (>= 0.8.0),
-  future (>= 1.22.1),
+  future (>= 1.28.0),
   parallel,
   graphics,
   grDevices,
@@ -19,8 +19,8 @@ Imports:
   utils
 Suggests:
   Hmisc,
-  R.rsp (>= 0.44.0),
-  R.devices (>= 2.17.0),
+  R.rsp (>= 0.45.0),
+  R.devices (>= 2.17.1),
   ggplot2 (>= 3.2.1)
 SuggestsNote:
   BioC (>= 3.1)
