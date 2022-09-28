@@ -6,6 +6,9 @@
 
  * Removed defunct `load()` and `save()` for `AbtractCBS`.
  
+ * After removing the above functions, `library(PSCBS)` no longer
+   reports on functions being masked.
+   
 
 # Version 0.66.0 [2021-10-22]
 
