@@ -41,18 +41,18 @@ Run `revdep_details(, "EstMix")` for more info
       installed size is  5.5Mb
       sub-directories of 1Mb or more:
         extdata   1.3Mb
-        libs      3.9Mb
+        libs      4.1Mb
     ```
 
 # PureCN
 
 <details>
 
-* Version: 1.22.2
+* Version: 2.2.0
 * GitHub: https://github.com/lima1/PureCN
 * Source code: https://github.com/cran/PureCN
-* Date/Publication: 2021-07-04
-* Number of recursive dependencies: 153
+* Date/Publication: 2022-04-26
+* Number of recursive dependencies: 157
 
 Run `revdep_details(, "PureCN")` for more info
 
@@ -67,11 +67,11 @@ Run `revdep_details(, "PureCN")` for more info
     Loading required package: DNAcopy
     Loading required package: VariantAnnotation
     Loading required package: BiocGenerics
-    Loading required package: parallel
     
     Attaching package: 'BiocGenerics'
     
-    The following objects are masked from 'package:parallel':
+    The following objects are masked from 'package:stats':
+    
     ...
     l.189 \RequirePackage
                          {parnotes}^^M
@@ -92,9 +92,9 @@ Run `revdep_details(, "PureCN")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is  9.4Mb
+      installed size is  7.7Mb
       sub-directories of 1Mb or more:
         doc       3.5Mb
-        extdata   4.1Mb
+        extdata   2.7Mb
     ```
 
