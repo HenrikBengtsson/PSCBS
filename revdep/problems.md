@@ -38,7 +38,7 @@ Run `revdep_details(, "EstMix")` for more info
 
 *   checking installed package size ... NOTE
     ```
-      installed size is  5.5Mb
+      installed size is  5.6Mb
       sub-directories of 1Mb or more:
         extdata   1.3Mb
         libs      4.1Mb
@@ -48,11 +48,11 @@ Run `revdep_details(, "EstMix")` for more info
 
 <details>
 
-* Version: 2.2.0
+* Version: 2.4.0
 * GitHub: https://github.com/lima1/PureCN
 * Source code: https://github.com/cran/PureCN
-* Date/Publication: 2022-04-26
-* Number of recursive dependencies: 157
+* Date/Publication: 2022-11-01
+* Number of recursive dependencies: 159
 
 Run `revdep_details(, "PureCN")` for more info
 
