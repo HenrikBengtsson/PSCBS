@@ -2,10 +2,10 @@
 
 <details>
 
-* Version: 3.2.2
+* Version: 3.3.0
 * GitHub: https://github.com/HenrikBengtsson/aroma.core
 * Source code: https://github.com/cran/aroma.core
-* Date/Publication: 2021-01-05 05:10:12 UTC
+* Date/Publication: 2022-11-15 18:30:13 UTC
 * Number of recursive dependencies: 48
 
 Run `revdep_details(, "aroma.core")` for more info
