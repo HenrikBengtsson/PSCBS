@@ -1,4 +1,4 @@
-# Version (development version)
+# Version 0.67.0 [2024-02-16]
 
 ## Documentation
 
