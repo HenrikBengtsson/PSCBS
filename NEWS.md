@@ -1,5 +1,9 @@
 # Version (development version)
 
+## Documentation
+
+ * Fix minor help-page issues.
+ 
 ## Deprecated and Defunct
 
  * Removed defunct `append()` for `AbtractCBS`.

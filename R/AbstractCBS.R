@@ -216,8 +216,6 @@ setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
 # @synopsis
 #
 # \arguments{
-#  \item{splitters}{If @TRUE, "splitters" between chromosomes are
-#     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
 # }
 #
@@ -299,9 +297,6 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{simplify}{If @TRUE, redundant and intermediate information is dropped.}
-#  \item{splitters}{If @TRUE, "splitters" between chromosomes are
-#     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
 # }
 #

@@ -27,8 +27,6 @@
 }
 
 \arguments{
- \item{splitters}{If \code{\link[base:logical]{TRUE}}, "splitters" between chromosomes are
-    preserved, otherwise dropped.}
  \item{...}{Not used.}
 }
 

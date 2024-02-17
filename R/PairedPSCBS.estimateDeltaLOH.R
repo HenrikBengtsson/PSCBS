@@ -11,7 +11,6 @@
 # @synopsis
 #
 # \arguments{
-#   \item{scale}{An optional @numeric scale factor.}
 #   \item{flavor}{A @character string specifying which type of
 #    estimator to use.}
 #   \item{...}{Additional arguments passed to the estimator.}

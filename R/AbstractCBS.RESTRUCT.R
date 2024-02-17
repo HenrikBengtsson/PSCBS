@@ -193,10 +193,6 @@ setMethodS3("extractRegion", "AbstractCBS", function(this, region, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{left}{An @integer specifying the segments (left, left+1)
-#    to be merged.}
-#  \item{update}{If @TRUE, segment statistics are updated.}
-#  \item{verbose}{A @logical or a @see "R.utils::Verbose" object.}
 #  \item{...}{Not used.}
 # }
 #

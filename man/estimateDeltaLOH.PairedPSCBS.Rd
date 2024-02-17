@@ -23,7 +23,6 @@
 }
 
 \arguments{
-  \item{scale}{An optional \code{\link[base]{numeric}} scale factor.}
   \item{flavor}{A \code{\link[base]{character}} string specifying which type of
    estimator to use.}
   \item{...}{Additional arguments passed to the estimator.}
