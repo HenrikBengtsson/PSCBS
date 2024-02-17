@@ -1,18 +1,18 @@
-citHeader("Please cite PSCBS using one or more of the following references:");
+utils::bibentry(
+  header = "Please cite PSCBS using one or more of the following references:",
 
-citEntry(
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # BibTeX entry:
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  entry = "Article",
-  author = "Adam B. Olshen and Henrik Bengtsson and Pierre Neuvial and Paul Spellman and Richard A. Olshen and Venkatraman E. Seshan",
-  title = "Parent-specific copy number in paired tumor-normal studies using circular binary segmentation",
+  bibtype = "Article",
+  author  = "Adam B. Olshen and Henrik Bengtsson and Pierre Neuvial and Paul Spellman and Richard A. Olshen and Venkatraman E. Seshan",
+  title   = "Parent-specific copy number in paired tumor-normal studies using circular binary segmentation",
   journal = "Bioinformatics",
-  year = "2011",
-  volume = "27",
-  number = "15",
-  doi = "10.1093/bioinformatics/btr329",
-  url = "https://doi.org/10.1093/bioinformatics/btr329",
+  year    = "2011",
+  volume  = "27",
+  number  = "15",
+  doi     = "10.1093/bioinformatics/btr329",
+  url     = "https://doi.org/10.1093/bioinformatics/btr329",
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Plain-text citation:
@@ -23,23 +23,25 @@ citEntry(
     "Bioinformatics, ",
     "2011"
   )
-);
+)
 
 
-citEntry(
+utils::bibentry(
+  header = "Please cite PSCBS using one or more of the following references:",
+
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # BibTeX entry:
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  entry = "Article",
-  author = "H. Bengtsson and Pierre Neuvial and Terence P Speed",
-  title = "TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays",
+  bibtype = "Article",
+  author  = "H. Bengtsson and Pierre Neuvial and Terence P Speed",
+  title   = "TumorBoost: Normalization of allele-specific tumor copy numbers from a single pair of tumor-normal genotyping microarrays",
   journal = "BMC Bioinformatics",
-  year = "2010",
-  month = "May",
-  volume = "11",
-  number = "245",
-  doi = "10.1186/1471-2105-11-245",
-  url = "https://doi.org/10.1186/1471-2105-11-245",
+  year    = "2010",
+  month   = "May",
+  volume  = "11",
+  number  = "245",
+  doi     = "10.1186/1471-2105-11-245",
+  url     = "https://doi.org/10.1186/1471-2105-11-245",
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Plain-text citation:
@@ -50,4 +52,5 @@ citEntry(
     "BMC Bioinformatics, ",
     "2010"
   )
-);
+)
+

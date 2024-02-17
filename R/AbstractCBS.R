@@ -114,104 +114,6 @@ setMethodS3("all.equal", "AbstractCBS", function(target, current, check.attribut
 
 
 ###########################################################################/**
-# @RdocMethod save
-#
-# @title "Saves an AbstractCBS object to file"
-#
-# \description{
-#  @get "title".
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{...}{Additional arguments passed to @see "R.utils::saveObject".}
-# }
-#
-# \value{
-#   Returns what @see "R.utils::saveObject" returns.
-# }
-#
-# @author
-#
-# \seealso{
-#   Internally @see "R.utils::saveObject" is used.
-#   To load an object, see @seemethod "load".
-#   @seeclass.
-# }
-#
-# @keyword internal
-#*/###########################################################################
-setMethodS3("save", "AbstractCBS", function(this, ...) {
-  action <- Sys.getenv("R_PSCBS_SAVE_LOAD_DEPRECATED", "defunct")
-  action <- match.arg(action, choices = c("deprecated", "defunct"))
-  fcn <- switch(action, deprecated = .Deprecated, defunct = .Defunct)
-  fcn(msg = sprintf("save() for %s is %s. It is recommended to use saveRDS() from the 'base' package. If you need backward compatibility with save(), use R.utils::saveObject().", class(this)[1], action), package = .packageName)
-  saveObject(this, ...)
-})
-
-
-###########################################################################/**
-# @RdocMethod load
-# @alias load
-#
-# @title "Loads an AbstractCBS object from file"
-#
-# \description{
-#  @get "title" and assert that it is of the requested class.
-# }
-#
-# @synopsis
-#
-# \arguments{
-#   \item{...}{Additional arguments passed to @see "R.utils::loadObject".}
-# }
-#
-# \value{
-#   Returns the loaded AbstractCBS object.
-# }
-#
-# @author
-#
-# \seealso{
-#   Internally @see "R.utils::loadObject" is used.
-#   To save an object, see @seemethod "save".
-#   @seeclass.
-# }
-#
-# @keyword internal
-#*/###########################################################################
-setMethodS3("load", "AbstractCBS", function(static, ...) {
-  action <- Sys.getenv("R_PSCBS_SAVE_LOAD_DEPRECATED", "defunct")
-  action <- match.arg(action, choices = c("deprecated", "defunct"))
-  fcn <- switch(action, deprecated = .Deprecated, defunct = .Defunct)
-  fcn(msg = sprintf("%s$load() is %s. It is recommended to use readRDS() from the 'base' package instead. If you need backward compatibility with load(), use R.utils::loadObject().", class(static)[1], action), package = .packageName)
-  
-  object <- loadObject(...)
-
-  # Patch for changes in class structure in PSCBS v0.13.2 -> v0.13.3.
-  if (!inherits(object, "AbstractCBS")) {
-    if (inherits(object, "CBS")) {
-      class(object) <- c(class(object), "AbstractCBS")
-      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.")
-    } else if (inherits(object, "PairedPSCBS")) {
-      class(object) <- c(class(object), "AbstractCBS")
-      warning("Added 'AbstractCBS' to the class hierarchy of the loaded ", class(object)[1], " object.")
-    }
-  }
-
-  # Sanity check
-  if (!inherits(object, class(static)[1])) {
-    stop("Loaded an object from file, but it does not inherit from ",
-          class(static)[1], " as expected: ", hpaste(class(object)))
-  }
-
-  object
-}, static=TRUE)
-
-
-
-###########################################################################/**
 # @RdocMethod getSampleName
 # @aliasmethod sampleName
 #
@@ -314,8 +216,6 @@ setMethodS3("sampleName<-", "AbstractCBS", function(x, value) {
 # @synopsis
 #
 # \arguments{
-#  \item{splitters}{If @TRUE, "splitters" between chromosomes are
-#     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
 # }
 #
@@ -397,9 +297,6 @@ setMethodS3("nbrOfLoci", "AbstractCBS", function(fit, splitters=FALSE, ...) {
 # @synopsis
 #
 # \arguments{
-#  \item{simplify}{If @TRUE, redundant and intermediate information is dropped.}
-#  \item{splitters}{If @TRUE, "splitters" between chromosomes are
-#     preserved, otherwise dropped.}
 #  \item{...}{Not used.}
 # }
 #

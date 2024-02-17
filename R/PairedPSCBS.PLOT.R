@@ -1,7 +1,7 @@
 ###########################################################################/**
 # @set "class=PairedPSCBS"
-# @RdocMethod plotTracks
-# @aliasmethod plotTracks1
+# @RdocMethod plotTracks1
+# @aliasmethod plotTracks
 # @aliasmethod plotTracks2
 # @aliasmethod plotTracksManyChromosomes
 # @alias plot

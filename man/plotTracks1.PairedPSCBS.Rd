@@ -7,13 +7,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\name{plotTracks.PairedPSCBS}
-\alias{plotTracks.PairedPSCBS}
-\alias{PairedPSCBS.plotTracks}
-\alias{plotTracks,PairedPSCBS-method}
-\alias{PairedPSCBS.plotTracks1}
+\name{plotTracks1.PairedPSCBS}
 \alias{plotTracks1.PairedPSCBS}
+\alias{PairedPSCBS.plotTracks1}
 \alias{plotTracks1,PairedPSCBS-method}
+\alias{PairedPSCBS.plotTracks}
+\alias{plotTracks.PairedPSCBS}
+\alias{plotTracks,PairedPSCBS-method}
 
 \alias{PairedPSCBS.plotTracks2}
 \alias{plotTracks2.PairedPSCBS}
@@ -34,7 +34,11 @@
 }
 
 \usage{
-\method{plotTracks}{PairedPSCBS}(fit, ...)
+\method{plotTracks1}{PairedPSCBS}(x, tracks=c("tcn", "dh", "tcn,c1,c2", "tcn,c1", "tcn,c2", "c1,c2", "betaN",
+  "betaT", "betaTN")[1:3], scatter="*", calls=".*", pch=".", col=NULL, cex=1,
+  changepoints=FALSE, grid=FALSE, quantiles=c(0.05, 0.95), xlim=NULL,
+  Clim=c(0, 3 * ploidy(x)), Blim=c(0, 1), xScale=1e-06, ..., add=FALSE,
+  subplots=!add && (length(tracks) > 1), verbose=FALSE)
 }
 
 \arguments{

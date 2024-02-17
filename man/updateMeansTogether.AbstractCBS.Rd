@@ -26,11 +26,7 @@
 }
 
 \arguments{
- \item{idxList}{A \code{\link[base]{list}}, where each element is an \code{\link[base]{integer}} \code{\link[base]{vector}}
-   specifying segment indices of segments for which the mean levels
-   should be calculated jointly.}
  \item{...}{Not used.}
- \item{verbose}{See \code{\link[R.utils]{Verbose}}.}
 }
 
 \value{

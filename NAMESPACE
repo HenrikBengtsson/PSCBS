@@ -11,12 +11,6 @@ importFrom("R.oo", "Package")
 importFrom("R.utils", "Arguments")
 importFrom("R.utils", "GenericSummary")
 
-
-## Importing generics
-importFrom("R.oo", "load") ## Multi-sources: R.oo, base
-importFrom("R.oo", "save") ## Multi-sources: R.oo, base
-
-
 ## Importing functions
 importFrom("R.oo",
            "extend", "attachLocally", "startupMessage")
@@ -70,19 +64,13 @@ importFrom("parallel", "nextRNGStream")
 # in their names.
 exportPattern("^[^\\.]")
 
-export("load") # Re-export from R.oo
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # S3 methods
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-# From 006.fixVarArgs.R
-S3method("append", "default")
-
-
 # AbstractCBS
 S3method("adjustPloidyScale", "AbstractCBS")
 S3method("all.equal", "AbstractCBS")
-S3method("append", "AbstractCBS")
 S3method("as.data.frame", "AbstractCBS")
 S3method("clearCalls", "AbstractCBS")
 S3method("drawChangePoints", "AbstractCBS")
@@ -110,7 +98,6 @@ S3method("getSegments", "AbstractCBS")
 S3method("getSegmentSizes", "AbstractCBS")
 S3method("getSegmentTrackPrefixes", "AbstractCBS")
 S3method("hclustCNs", "AbstractCBS")
-S3method("load", "AbstractCBS")
 S3method("mergeThreeSegments", "AbstractCBS")
 S3method("mergeTwoSegments", "AbstractCBS")
 S3method("nbrOfChangePoints", "AbstractCBS")
@@ -132,7 +119,6 @@ S3method("resetSegments", "AbstractCBS")
 S3method("sampleCNs", "AbstractCBS")
 S3method("sampleName", "AbstractCBS")
 S3method("sampleName<-", "AbstractCBS")
-S3method("save", "AbstractCBS")
 S3method("seqOfSegmentsByDP", "AbstractCBS")
 S3method("setLocusData", "AbstractCBS")
 S3method("setMeanEstimators", "AbstractCBS")

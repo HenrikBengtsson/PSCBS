@@ -18,9 +18,6 @@
   \code{\link{AbstractCBS}} object.
 
   \itemize{
-    \item \code{\link[PSCBS:append.AbstractCBS]{*append}()}
-          - Appends one \code{\link{AbstractCBS}} to another.
-
     \item \code{\link[PSCBS:extractChromosomes.AbstractCBS]{*extractChromosomes}()} /
           \code{\link[PSCBS:extractChromosome.AbstractCBS]{*extractChromosome}()}
           - Extracts an \code{\link{AbstractCBS}} with the specified chromosomes.

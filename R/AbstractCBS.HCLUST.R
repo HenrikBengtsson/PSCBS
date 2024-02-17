@@ -14,11 +14,7 @@
 # @synopsis
 #
 # \arguments{
-#  \item{idxList}{A @list, where each element is an @integer @vector
-#    specifying segment indices of segments for which the mean levels
-#    should be calculated jointly.}
 #  \item{...}{Not used.}
-#  \item{verbose}{See @see "R.utils::Verbose".}
 # }
 #
 # \value{

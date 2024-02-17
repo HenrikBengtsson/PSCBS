@@ -18,8 +18,6 @@
 \alias{extractWIG.PSCBS}
 \alias{all.equal.AbstractCBS}
 \alias{all.equal.CBS}
-\alias{append}
-\alias{append.default}
 \alias{applyByRegion}
 \alias{applyByRegion.PairedPSCBS}
 \alias{arrowsC1C2}
