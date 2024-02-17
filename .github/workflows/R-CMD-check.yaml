@@ -20,15 +20,15 @@ jobs:
           - {os: windows-latest, r: 'release'  }
           - {os: macOS-latest,   r: 'devel'    }
           - {os: macOS-latest,   r: 'release'  }
-          - {os: ubuntu-20.04,   r: 'devel'    }
-          - {os: ubuntu-20.04,   r: 'release'  }
-          - {os: ubuntu-20.04,   r: 'oldrel'   }
-          - {os: ubuntu-20.04,   r: 'oldrel-1' }
-          - {os: ubuntu-20.04,   r: '3.6'      }
+          - {os: ubuntu-latest,  r: 'devel'    }
+          - {os: ubuntu-latest,  r: 'release'  }
+          - {os: ubuntu-latest,  r: 'oldrel'   }
+          - {os: ubuntu-latest,  r: 'oldrel-1' }
+          - {os: ubuntu-latest,  r: '3.6'      }
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      RSPM: https://packagemanager.rstudio.com/cran/__linux__/focal/latest
+      RSPM: https://packagemanager.rstudio.com/cran/__linux__/jammy/latest
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       ## R CMD check
       _R_CHECK_CRAN_INCOMING_: false
@@ -40,7 +40,7 @@ jobs:
       R_FUTURE_RNG_ONMISUSE: error
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: r-lib/actions/setup-pandoc@v2
 
@@ -60,7 +60,7 @@ jobs:
 
       - name: Cache R packages
         if: runner.os != 'Windows'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
@@ -102,7 +102,7 @@ jobs:
 
       - name: Upload check results
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
