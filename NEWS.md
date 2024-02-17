@@ -3,7 +3,12 @@
 ## Documentation
 
  * Fix minor help-page issues.
- 
+
+## Miscellaneous
+
+ * Package no longer suggests the **Hmisc** package, because it's
+   actually not used. See NEWS entry for v0.66.0 for details.
+
 ## Deprecated and Defunct
 
  * Removed defunct `append()` for `AbtractCBS`.

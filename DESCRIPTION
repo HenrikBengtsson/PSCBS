@@ -1,5 +1,5 @@
 Package: PSCBS
-Version: 0.66.0-9005
+Version: 0.66.0-9006
 Depends:
   R (>= 3.2.0)
 Imports:
@@ -18,7 +18,6 @@ Imports:
   stats,
   utils
 Suggests:
-  Hmisc,
   R.rsp (>= 0.45.0),
   R.devices (>= 2.17.1),
   ggplot2 (>= 3.2.1)
