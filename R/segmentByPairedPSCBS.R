@@ -47,6 +47,7 @@
 #        This argument is also used for annotation purposes.}
 #   \item{x}{Optional @numeric @vector of J genomic locations.
 #            If @NULL, index locations \code{1:J} are used.}
+#   \item{w}{Optional @numeric @vector in [0,1] of J weights.}
 #   \item{alphaTCN, alphaDH}{The significance levels for segmenting total
 #        copy numbers (TCNs) and decrease-in-heterozygosity signals (DHs),
 #        respectively.}
@@ -151,7 +152,7 @@
 #
 # @keyword IO
 #*/###########################################################################
-setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT=NULL, betaN=NULL, muN=NULL, rho=NULL, chromosome=0, x=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE, preserveScale=FALSE) {
+setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=NULL, betaT=NULL, betaN=NULL, muN=NULL, rho=NULL, chromosome=0, x=NULL, w=NULL, alphaTCN=0.009, alphaDH=0.001, undoTCN=0, undoDH=0, ..., avgTCN=c("mean", "median"), avgDH=c("mean", "median"), flavor=c("tcn&dh", "tcn,dh", "sqrt(tcn),dh", "sqrt(tcn)&dh", "tcn"), tbn=is.null(rho), joinSegments=TRUE, knownSegments=NULL, dropMissingCT=TRUE, seed=NULL, verbose=FALSE, preserveScale=FALSE) {
   # WORKAROUND: If Hmisc is loaded after R.utils, it provides a buggy
   # capitalize() that overrides the one we want to use. Until PSCBS
   # gets a namespace, we do the following workaround. /HB 2011-07-14
@@ -193,6 +194,10 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   if (!is.null(betaN)) {
     betaN <- Arguments$getDoubles(betaN, length=length2, disallow="Inf")
   }
+  if (!is.null(w)) {
+    w <- Arguments$getDoubles(w, length=length2, disallow="Inf")
+  }
+
 
   # Argument 'muN':
   if (!is.null(muN)) {
@@ -371,11 +376,12 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   if (!is.null(betaT)) data$betaT <- betaT
   if (!is.null(betaTN)) data$betaTN <- betaTN
   if (!is.null(betaN)) data$betaN <- betaN
+  if (!is.null(w)) data$w <- w
   if (!is.null(muN)) data$muN <- muN
   if (!is.null(rho)) data$rho <- rho
   verbose && str(verbose, data)
   # Not needed anymore
-  chromosome <- x <- CT <- thetaT <- thetaN <- betaT <- betaTN <- betaN <- muN <- rho <- NULL
+  chromosome <- x <- CT <- thetaT <- thetaN <- betaT <- betaTN <- betaN <- w <- muN <- rho <- NULL
 
   # Sanity check
   .stop_if_not(nrow(data) == nbrOfLoci)
@@ -492,7 +498,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       # Extract subset of data and parameters for this chromosome
       dataKK <- subset(data, chromosome == chromosomeKK)
       verbose && str(verbose, dataKK)
-      fields <- attachLocally(dataKK, fields=c("CT", "thetaT", "thetaN", "betaT", "betaTN", "betaN", "muN", "rho", "chromosome", "x"))
+      fields <- attachLocally(dataKK, fields=c("CT", "thetaT", "thetaN", "betaT", "betaTN", "betaN", "muN", "rho", "chromosome", "x", "w"))
       dataKK <- NULL # Not needed anymore
 
       knownSegmentsKK <- NULL
@@ -504,7 +510,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
 
       fitList[[chrTag]] %<-% {
         fit <- segmentByPairedPSCBS(CT=CT, thetaT=thetaT, thetaN=thetaN,
-                  betaT=betaTN, betaN=betaN, muN=muN, rho=rho,
+                  betaT=betaTN, betaN=betaN, w=w, muN=muN, rho=rho,
                   chromosome=chromosome, x=x,
                   tbn=FALSE, joinSegments=joinSegments,
                   knownSegments=knownSegmentsKK,
@@ -665,7 +671,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   verbose && enter(verbose, "Identification of change points by total copy numbers")
 
-  fields <- attachLocally(data, fields=c("CT", "thetaT", "thetaN", "chromosome", "x", "index"))
+  fields <- attachLocally(data, fields=c("CT", "thetaT", "thetaN", "chromosome", "x", "w", "index"))
 
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Assert no missing values in (chromosome, x, CT)
@@ -689,6 +695,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
   # Calculate tumor-normal TCN ratios?
   fit <- segmentByCBS(CT,
                       chromosome=chromosome, x=x, index=index,
+                      w=w,
                       joinSegments=joinSegments,
                       knownSegments=knownSegments,
                       alpha=alphaTCN, undo=undoTCN, ...,
@@ -941,7 +948,7 @@ setMethodS3("segmentByPairedPSCBS", "default", function(CT, thetaT=NULL, thetaN=
       knownSegmentsT <- data.frame(chromosome=currChromosome, start=xStart, end=xEnd)
 
       verbose && enter(verbose, "Segmenting DH signals")
-      fields <- attachLocally(dataKK, fields=c("chromosome", "x", "rho", "index"))
+      fields <- attachLocally(dataKK, fields=c("chromosome", "x", "w", "rho", "index"))
 
       fit <- segmentByCBS(rho,
                           chromosome=chromosome, x=x,
@@ -1194,10 +1201,12 @@ setMethodS3("segmentByPairedPSCBS", "data.frame", function(CT, ...) {
   # To please R CMD check
   data <- CT
 
-  segmentByPairedPSCBS(CT=data$CT, thetaT=data$thetaT, thetaN=data$thetaN,
-                       betaT=data$betaT, betaN=data$betaN,
-                       muN=data$muN, rho=data$rho,
-                       chromosome=data$chromosome, x=data$x, ...)
+  segmentByPairedPSCBS(CT=data[["CT"]], 
+                       thetaT=data[["thetaT"]], thetaN=data[["thetaN"]],
+                       betaT=data[["betaT"]], betaN=data[["betaN"]],
+                       w=data[["w"]],
+                       muN=data[["muN"]], rho=data[["rho"]],
+                       chromosome=data[["chromosome"]], x=data[["x"]], ...)
 })
 
 

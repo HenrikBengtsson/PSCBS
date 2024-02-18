@@ -116,7 +116,12 @@
 #*/###########################################################################
 setMethodS3("segmentByCBS", "default", function(y, chromosome=0L, x=NULL, index=seq_along(y), w=NULL, undo=0, avg=c("mean", "median"), ..., joinSegments=TRUE, knownSegments=NULL, seed=NULL, verbose=FALSE) {
   R_SANITY_CHECK <- TRUE
-
+  
+  #if(!is.null(w)) { 
+  #    cat("w: ", length(w), min(w), max(w))
+  #} else {
+  #    cat("unweighted CBS", length(w))
+  #}      
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   # Local functions
   # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
